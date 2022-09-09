@@ -19,7 +19,9 @@ const Home: NextPage = () => {
         <ConnectButton />
 
         <h1 className={styles.title}>
-          Welcome to <a href="">RainbowKit</a> + <a href="">wagmi</a> +{' '}
+          Welcome to GameJutsu Demos!
+          <p/>
+          Powered by <a href="">RainbowKit</a> + <a href="">wagmi</a> +{' '}
           <a href="https://nextjs.org">Next.js!</a>
         </h1>
 
