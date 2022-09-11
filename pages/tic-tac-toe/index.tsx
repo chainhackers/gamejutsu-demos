@@ -17,16 +17,24 @@ function App() {
         }
         const _history = history.slice(0, stepNumber + 1);
         const squares = [..._history[_history.length - 1].squares];
-        console.log("history:", _history.length, stepNumber);
+        
+
         if (squares[i]) {
             return;
         }
+
+        
         const winner = calculateWinner(squares);
+        const summaryState = [[..._history, { squares }], winner === 'X', winner === 'O'];
         if (winner) {
+            console.log('sumarry', summaryState);
             setFinished(true);
             return;
         }
         squares[i] = xIsNext ? "X" : "O";
+        // console.log('history:', [..._history, { squares }], _history.length, stepNumber);
+        
+        console.log('sumarry', summaryState)
         setHistory([..._history, {squares}]);
         setStepNumber(_history.length);
         setXIsNext(!xIsNext);
