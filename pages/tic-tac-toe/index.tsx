@@ -29,7 +29,8 @@ function App() {
     const [currentPlayer, setCurrentPlayer] = useState<IPlayer | null>(null);
     const [peerPlayer, setPeerPlayer] = useState<IPlayer | null>(null);
     const [newPlayerInputValue, setNewPlayerInputValue] = useState<string>(
-        '0x1215991085d541A586F0e1968355A36E58C9b2b4',
+        // '0x1215991085d541A586F0e1968355A36E58C9b2b4',
+        '',
     );
     const [conversation, setConversation] = useState<Conversation | null>(null);
     const [log, setLog] = useState<IChatLog[]>([]);
@@ -256,16 +257,16 @@ function App() {
             });
     }, [conversation, gameState, type]);
 
-    useEffect(() => {
-        if (currentPlayer?.id === '0xDb0b11d1281da49e950f89bD0F6B47D464d25F91') {
-            setNewPlayerInputValue('0x1215991085d541A586F0e1968355A36E58C9b2b4');
-        }
-        if (currentPlayer?.id === '0x1215991085d541A586F0e1968355A36E58C9b2b4') {
-            setNewPlayerInputValue('0xDb0b11d1281da49e950f89bD0F6B47D464d25F91');
-        }
-    }, [currentPlayer]);
+    // useEffect(() => {
+    //     if (currentPlayer?.id === '0xDb0b11d1281da49e950f89bD0F6B47D464d25F91') {
+    //         setNewPlayerInputValue('0x1215991085d541A586F0e1968355A36E58C9b2b4');
+    //     }
+    //     if (currentPlayer?.id === '0x1215991085d541A586F0e1968355A36E58C9b2b4') {
+    //         setNewPlayerInputValue('0xDb0b11d1281da49e950f89bD0F6B47D464d25F91');
+    //     }
+    // }, [currentPlayer]);
 
-    const viewers = [{ id: 'id1Viewer' }, { id: 'id2Viewer' }];
+    const viewers = [{ id: '0x1a712f71e963ba000' }, { id: '0x2b6a6ab5625b76000' }];
 
     return (
         <div className={styles.game}>
@@ -275,7 +276,7 @@ function App() {
                         Players {!!gameState[1] && <span>X won!</span>}
                         {!!gameState[2] && <span>O won!</span>}
                     </h2>
-                    <p className={styles.player}>
+                    <div className={styles.player}>
                         <span>Current Player:</span>{' '}
                         <div>
                             Type: {type}{' '}
@@ -293,12 +294,12 @@ function App() {
                             </button>
                         </div>
                         <span>{currentPlayer?.id}</span>
-                    </p>
-                    {(
+                    </div>
+                    {
                         <p className={styles.player}>
                             <span>Peer Player:</span> <span>{peerPlayer?.id}</span>
                         </p>
-                    )}
+                    }
                     <div className={styles.addPlayer}>
                         <button onClick={addNewPlayerHandler}>Add new Player</button>
                         <input
@@ -311,9 +312,7 @@ function App() {
                 <div>
                     <h2>Viewers</h2>
                     {viewers.map(({ id }) => (
-                        <Viewer key={id}>{`Viewer: 0x${(Math.random() * 10 ** 20).toString(
-                            16,
-                        )}`}</Viewer>
+                        <Viewer key={id}>{`Viewer: ${id}`}</Viewer>
                     ))}
                 </div>
             </div>
