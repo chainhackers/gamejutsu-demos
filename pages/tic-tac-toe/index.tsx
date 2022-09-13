@@ -271,33 +271,49 @@ function App() {
         <div className={styles.game}>
             <div className={styles.leftPanel}>
                 <div>
-                    Type: {type}{' '}
-                    <button onClick={() => setTypeHandler('O')}>Set Type O</button>
-                    <button onClick={() => setTypeHandler('X')}>Set Type X</button>
-                </div>
-                <div>
                     <h2>
                         Players {!!gameState[1] && <span>X won!</span>}
                         {!!gameState[2] && <span>O won!</span>}
                     </h2>
-                    <p>
-                        {'Current Player: (X)'} {currentPlayer?.id}
+                    <p className={styles.player}>
+                        <span>Current Player:</span>{' '}
+                        <div>
+                            Type: {type}{' '}
+                            <button
+                                className={styles.typeSelect}
+                                onClick={() => setTypeHandler('O')}
+                            >
+                                Set Type O
+                            </button>
+                            <button
+                                className={styles.typeSelect}
+                                onClick={() => setTypeHandler('X')}
+                            >
+                                Set Type X
+                            </button>
+                        </div>
+                        <span>{currentPlayer?.id}</span>
                     </p>
-                    <p>
-                        {'Peer Player: (O)'} : {peerPlayer?.id}
-                    </p>
-                    <div>
+                    {(
+                        <p className={styles.player}>
+                            <span>Peer Player:</span> <span>{peerPlayer?.id}</span>
+                        </p>
+                    )}
+                    <div className={styles.addPlayer}>
                         <button onClick={addNewPlayerHandler}>Add new Player</button>
                         <input
                             value={newPlayerInputValue}
                             onChange={(event) => setNewPlayerInputValue(event.target.value)}
+                            placeholder="Add rival id"
                         ></input>
                     </div>
                 </div>
                 <div>
                     <h2>Viewers</h2>
                     {viewers.map(({ id }) => (
-                        <Viewer key={id}>{`Viewer: ${id}`}</Viewer>
+                        <Viewer key={id}>{`Viewer: 0x${(Math.random() * 10 ** 20).toString(
+                            16,
+                        )}`}</Viewer>
                     ))}
                 </div>
             </div>
