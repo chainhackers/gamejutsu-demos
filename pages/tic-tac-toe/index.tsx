@@ -1,16 +1,20 @@
 import React, { useState, ReactElement, useEffect, useCallback } from 'react';
 import Board from './Board';
 
+import { IChatLog } from 'types';
 import { Player, Viewer } from 'components';
 import { IPlayer } from 'types';
 import { Conversation, Message, Stream } from '@xmtp/xmtp-js';
 
 import { useXmptContext } from '../../context/XmtpContext';
 
+import { XMTPChatLog } from 'components';
+
 import styles from './game.module.scss';
 import { useFeeData } from 'wagmi';
 
 //https://codesandbox.io/embed/react-typescript-tic-tac-toe-yw13p
+let stream: Stream<Message>;
 function App() {
     const { client } = useXmptContext();
     const checkIfOnNetwork = useCallback(
@@ -28,8 +32,10 @@ function App() {
         '0x1215991085d541A586F0e1968355A36E58C9b2b4',
     );
     const [conversation, setConversation] = useState<Conversation | null>(null);
+    const [log, setLog] = useState<IChatLog[]>([]);
     const [gameState, setGameState] = useState<any[]>([[{ squares: [] }], false, false]);
     const [type, setType] = useState<'O' | 'X'>('O');
+    const [isLogLoading, setIsLogLoading] = useState<boolean>(true);
     // const [finished, setFinished] = useState<boolean>(false);
 
     const [history, setHistory] = useState([{ squares: new Array(9) }]);
@@ -161,6 +167,7 @@ function App() {
 
     const getPeerPleer = () => peerPlayer;
     const getCurrentPleer = () => currentPlayer;
+    const getLog = () => [...log];
 
     useEffect(() => {
         if (!conversation) {
@@ -168,17 +175,28 @@ function App() {
             return;
         }
 
-        let stream: Stream<Message>;
-
         const streamMessages = async () => {
             stream = await conversation.streamMessages();
 
             for await (const msg of stream) {
                 // setIncomingMessages([...incommingMessages, msg]);
-                // console.log('stream message', msg);
+                console.log('stream message', msg);
                 // console.log('stream mesage content', JSON.parse(msg.content));
                 const messageContent = JSON.parse(msg.content);
                 // const sender = msg.senderAddress;
+                // const logMessage: IChatLog = {
+                //     id: msg.id,
+                //     sender: msg.senderAddress!,
+                //     recepient: msg.recipientAddress!,
+                //     timestamp: msg.sent!.getTime(),
+                //     content: msg.content!,
+                // };
+                // console.log('logMessage', logMessage);
+                // console.log('log', getLog());
+                // const prevLog = getLog();
+                // console.log('prevLog', prevLog);
+                // prevLog.push(logMessage);
+                // setLog(prevLog);
 
                 if (!!messageContent && messageContent.message === 'type') {
                     setType(messageContent.data[currentPlayer!.id]);
@@ -195,12 +213,48 @@ function App() {
         };
 
         streamMessages();
+        return () => {
+            if (!!stream) stream.return();
+        };
     }, [conversation, peerPlayer, currentPlayer, type]);
 
     useEffect(() => {
         console.log('gameState', gameState);
         // console.log('squares', squares);
     }, [gameState]);
+
+    useEffect(() => {
+        const fetchMessages = async () => {
+            if (!conversation) {
+                console.warn('no conversation');
+                return [];
+            }
+
+            const msgs = await conversation.messages();
+            const sortedMessages = msgs
+                .sort((msg1, msg2) => msg2.sent!.getTime() - msg1.sent!.getTime())
+                .map(({ id, senderAddress, recipientAddress, sent, content }) => ({
+                    id,
+                    sender: senderAddress!,
+                    recepient: recipientAddress!,
+                    timestamp: sent!.getTime(),
+                    content,
+                }));
+            return sortedMessages;
+            // setLog(
+
+            // );
+        };
+        setIsLogLoading(true);
+
+        fetchMessages()
+            .then((data) => {
+                setLog(data!);
+            })
+            .finally(() => {
+                setIsLogLoading(false);
+            });
+    }, [conversation, gameState, type]);
 
     useEffect(() => {
         if (currentPlayer?.id === '0xDb0b11d1281da49e950f89bD0F6B47D464d25F91') {
@@ -247,6 +301,7 @@ function App() {
                     ))}
                 </div>
             </div>
+
             <div>
                 <Board
                     squares={gameState[0][gameState[0].length - 1].squares}
@@ -258,6 +313,7 @@ function App() {
                     {/* <ol>{moves}</ol> */}
                 </div>
             </div>
+            <XMTPChatLog logData={log} isLoading={isLogLoading} />
         </div>
     );
 }
