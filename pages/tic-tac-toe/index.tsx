@@ -1,5 +1,6 @@
-import React, { useState, ReactElement, useEffect, useCallback } from 'react';
-import Board from './Board';
+import React, { useState, useEffect, useCallback } from 'react';
+
+import { Board } from 'components/Games/Tic-Tac-Toe/Board';
 
 import { IChatLog } from 'types';
 import { Player, Viewer } from 'components';
@@ -11,7 +12,6 @@ import { useXmptContext } from '../../context/XmtpContext';
 import { XMTPChatLog } from 'components';
 
 import styles from './game.module.scss';
-import { useFeeData } from 'wagmi';
 
 //https://codesandbox.io/embed/react-typescript-tic-tac-toe-yw13p
 let stream: Stream<Message>;
