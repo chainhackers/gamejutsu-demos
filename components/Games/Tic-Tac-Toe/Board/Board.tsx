@@ -2,7 +2,6 @@ import { Square } from 'components/Games/Tic-Tac-Toe';
 import { BoardPropsI } from './BoardProps';
 import styles from './Board.module.scss';
 export const Board: React.FC<BoardPropsI> = ({ squares, onClick }) => {
-    console.log('squers', squares);
     const renderSquare = (i: number) => (
         <Square value={squares[i]} onClick={() => onClick(i)} />
     );

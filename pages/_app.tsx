@@ -9,50 +9,49 @@ import { WalletContextProvider } from '../context/WalltetContext';
 import { XmtpContextProvider } from '../context/XmtpContext';
 
 const { chains, provider, webSocketProvider } = configureChains(
-  [
-    chain.mainnet,
-    chain.polygon,
-    chain.optimism,
-    chain.arbitrum,
-    ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === 'true'
-      ? [chain.goerli, chain.kovan, chain.rinkeby, chain.ropsten]
-      : []),
-  ],
-  [
-    alchemyProvider({
-      // This is Alchemy's default API key.
-      // You can get your own at https://dashboard.alchemyapi.io
-      apiKey: '_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC',
-    }),
-    publicProvider(),
-  ]
+    [
+        chain.mainnet,
+        chain.polygon,
+        chain.optimism,
+        chain.arbitrum,
+        ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === 'true'
+            ? [chain.goerli, chain.kovan, chain.rinkeby, chain.ropsten]
+            : []),
+    ],
+    [
+        alchemyProvider({
+            // This is Alchemy's default API key.
+            // You can get your own at https://dashboard.alchemyapi.io
+            apiKey: '_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC',
+        }),
+        publicProvider(),
+    ],
 );
 
 const { connectors } = getDefaultWallets({
-  appName: 'RainbowKit App',
-  chains,
+    appName: 'RainbowKit App',
+    chains,
 });
 
 const wagmiClient = createClient({
-  autoConnect: true,
-  connectors,
-  provider,
-  webSocketProvider,
+    autoConnect: true,
+    connectors,
+    provider,
+    webSocketProvider,
 });
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return (
-    <WalletContextProvider>
-      <XmtpContextProvider>
-<WagmiConfig client={wagmiClient}>
-        <RainbowKitProvider chains={chains}>
-          <Component {...pageProps} />
-        </RainbowKitProvider>
-      </WagmiConfig>
-      </XmtpContextProvider>
-      
-    </WalletContextProvider>
-  );
+    return (
+        <WalletContextProvider>
+            <XmtpContextProvider>
+                <WagmiConfig client={wagmiClient}>
+                    <RainbowKitProvider chains={chains}>
+                        <Component {...pageProps} />
+                    </RainbowKitProvider>
+                </WagmiConfig>
+            </XmtpContextProvider>
+        </WalletContextProvider>
+    );
 }
 
 export default MyApp;
