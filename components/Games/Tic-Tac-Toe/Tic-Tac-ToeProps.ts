@@ -1,3 +1,3 @@
 export interface TikTakToePropsI {
-    children?: React.ReactNode;
+  children?: React.ReactNode;
 }
