@@ -20,9 +20,9 @@ const { chains, provider, webSocketProvider } = configureChains(
   ],
   [
     alchemyProvider({
-    // This is Alchemy's default API key.
-    // You can get your own at https://dashboard.alchemyapi.io
-    apiKey: '_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC',
+      // This is Alchemy's default API key.
+      // You can get your own at https://dashboard.alchemyapi.io
+      apiKey: '_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC',
     }),
     publicProvider(),
   ],
@@ -41,17 +41,17 @@ const wagmiClient = createClient({
 });
 
 function MyApp({ Component, pageProps }: AppProps) {
-    return (
-        <WalletContextProvider>
-            <XmtpContextProvider>
-                <WagmiConfig client={wagmiClient}>
-                    <RainbowKitProvider chains={chains}>
-                        <Component {...pageProps} />
-                    </RainbowKitProvider>
-                </WagmiConfig>
-            </XmtpContextProvider>
-        </WalletContextProvider>
-    );
+  return (
+    <WalletContextProvider>
+      <XmtpContextProvider>
+        <WagmiConfig client={wagmiClient}>
+          <RainbowKitProvider chains={chains}>
+            <Component {...pageProps} />
+          </RainbowKitProvider>
+        </WagmiConfig>
+      </XmtpContextProvider>
+    </WalletContextProvider>
+  );
 }
 
 export default MyApp;
