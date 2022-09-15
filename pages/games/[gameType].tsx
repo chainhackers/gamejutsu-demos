@@ -18,13 +18,13 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   const account = useAccount();
   const connect = useConnect();
   const disconnect = useDisconnect();
-  console.log('account', account);
-  console.log('connect', connect);
-  console.log('disconnect', disconnect);
-  console.log('InjectedConnector', InjectedConnector);
+  // console.log('account', account);
+  // console.log('connect', connect);
+  // console.log('disconnect', disconnect);
+  // console.log('InjectedConnector', InjectedConnector);
 
   const { address } = useWalletContext();
-  console.log('address', address);
+  // console.log('address', address);
   if (!!gameType && gameType === 'tic-tac-toe') {
     return <TicTacToe />;
   }
