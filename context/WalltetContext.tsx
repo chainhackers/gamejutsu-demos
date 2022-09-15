@@ -53,9 +53,11 @@ export const WalletContextProvider = ({ children }: { children: React.ReactNode 
       const newSigner = provider.getSigner();
       console.log('newSigner', newSigner);
 
-      // setSigner(newSigner);
+      setSigner(newSigner);
 
-      // const address = await newSigner.getAddress();
+      const address = await newSigner.getAddress();
+
+      console.log(address);
 
       // setAddress(address);
     };
