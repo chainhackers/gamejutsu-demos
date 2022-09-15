@@ -55,11 +55,11 @@ export const WalletContextProvider = ({ children }: { children: React.ReactNode 
 
       setSigner(newSigner);
 
-      const address = await newSigner.getAddress();
+      newSigner.getAddress().then((data) => {
+        setAddress(data);
+      });
 
-      console.log(address);
-
-      // setAddress(address);
+      // console.log(address);
     };
     connect();
   }, [web3Modal]);
