@@ -42,15 +42,15 @@ const wagmiClient = createClient({
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <WalletContextProvider>
-      <XmtpContextProvider>
-        <WagmiConfig client={wagmiClient}>
+    <WagmiConfig client={wagmiClient}>
+      <WalletContextProvider>
+        <XmtpContextProvider>
           <RainbowKitProvider chains={chains}>
             <Component {...pageProps} />
           </RainbowKitProvider>
-        </WagmiConfig>
-      </XmtpContextProvider>
-    </WalletContextProvider>
+        </XmtpContextProvider>
+      </WalletContextProvider>
+    </WagmiConfig>
   );
 }
 
