@@ -48,12 +48,12 @@ export const WalletContextProvider = ({ children }: { children: React.ReactNode 
       if (!instance) return;
       const provider = new ethers.providers.Web3Provider(instance, 'any');
 
-      const newSigner = provider.getSigner();
+      // const newSigner = provider.getSigner();
       // console.log('newSigner', newSigner);
 
-      setSigner(newSigner);
+      // setSigner(newSigner);
 
-      const address = await newSigner.getAddress();
+      // const address = await newSigner.getAddress();
 
       setAddress(address);
     };

@@ -13,31 +13,32 @@ export const connectContract = async (abi: AbiItem[], address: string) => {
 export const proposeGame = async (
   arbiterContractData: IContractData,
   curentPlayerId: string,
-): Promise<any> => {
+): Promise<{ gameId: string; proposer: string; stake: string }> => {
   const contract = await connectContract(arbiterContractData.abi, arbiterContractData.address);
 
-  const gameId = await contract.methods
+  const response = await contract.methods
     .proposeGame(curentPlayerId)
     .send({ from: curentPlayerId });
 
-  return gameId;
+  const { gameId, proposer, stake } = response.events.GameProposed.returnValues;
+  return { gameId, proposer, stake };
 };
 
 export const acceptGame = async (
   arbiterContractData: IContractData,
   curentPlayerId: string,
-  gamdId: string,
-): Promise<any> => {
+  gamdIdToAccept: string,
+): Promise<{ gameId: string; players: [string, string]; stake: string }> => {
   const contract = await connectContract(arbiterContractData.abi, arbiterContractData.address);
 
-  const acceptedGameData = await contract.methods
-    .acceptGame(gamdId)
+  const response = await contract.methods
+    .acceptGame(gamdIdToAccept)
     .send({ from: curentPlayerId });
-
-  return acceptedGameData;
+  const { gameId, players, stake } = response.events.GamesStarted.returnValues;
+  return { gameId, players, stake };
 };
 
-export const getPlayers = async (arbiterContractData: IContractData, gamdId: number) => {
+export const getPlayers = async (arbiterContractData: IContractData, gamdId: string) => {
   const contract = await connectContract(arbiterContractData.abi, arbiterContractData.address);
   const players = await contract.methods.getPlayers(gamdId).call();
   return players;

@@ -7,13 +7,14 @@ import { ParsedUrlQuery } from 'querystring';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { useWalletContext } from 'context/WalltetContext';
 import { InjectedConnector } from 'wagmi/connectors/injected';
-
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { ControlPanel } from 'components/ControlPanel';
 import { AbiItem } from 'web3-utils';
 
-import arbiterContract from 'contracts/Arbiter.json';
+import arbiterContract from 'contracts/Arbiter2.json';
 import rulesContract from 'contracts/TicTacToeRules.json';
 
+import styles from 'pages/games/gameType.module.scss';
 interface IGamePageProps {
   gameType?: string;
 }
@@ -35,7 +36,8 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   // console.log('address', address);
   if (!!gameType && gameType === 'tic-tac-toe') {
     return (
-      <div>
+      <div className={styles.container}>
+        
         <ControlPanel
           arbiterContractData={{
             abi: arbiterContract.abi as AbiItem[],

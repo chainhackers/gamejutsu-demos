@@ -156,7 +156,7 @@ export const TicTacToe: React.FC<TikTakToePropsI> = ({ children }) => {
   const getContract = async () => {
     const contract = await connectContract();
 
-    console.log('contract', contract);
+    // console.log('contract', contract);
   };
   getContract();
 
@@ -175,7 +175,7 @@ export const TicTacToe: React.FC<TikTakToePropsI> = ({ children }) => {
   useEffect(() => {
     const fetchMessages = async () => {
       if (!conversation) {
-        console.warn('no conversation');
+        // console.warn('no conversation');
         return [];
       }
       const msgs = await conversation.messages();
@@ -205,7 +205,7 @@ export const TicTacToe: React.FC<TikTakToePropsI> = ({ children }) => {
 
   useEffect(() => {
     if (!conversation) {
-      console.log('no conversation');
+      // console.log('no conversation');
       return;
     }
 

@@ -3,7 +3,7 @@ import rulesContreact from 'contracts/TicTacToeRules.json';
 import Web3 from 'web3';
 import { AbiItem } from 'web3-utils';
 import { ethers} from 'ethers'
-console.log('arbiter', arbiterContract);
+// console.log('arbiter', arbiterContract);
 
 const web3 = new Web3(Web3.givenProvider);
 
@@ -15,8 +15,8 @@ export const connectContract = async () => {
     arbiterContract.address,
   );
 
-  console.log('contract connected', contract);
-  console.log(contract.methods.proposeGame);
+  // console.log('contract connected', contract);
+  // console.log(contract.methods.proposeGame);
   return contract;
 };
 
