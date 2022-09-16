@@ -1,11 +1,19 @@
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { TicTacToe } from 'components/Games';
+import { XMTPChatLog } from 'components/XMTPChatLog';
 import { ParsedUrlQuery } from 'querystring';
 
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { useWalletContext } from 'context/WalltetContext';
 import { InjectedConnector } from 'wagmi/connectors/injected';
+
+import { ControlPanel } from 'components/ControlPanel';
+import { AbiItem } from 'web3-utils';
+
+import arbiterContract from 'contracts/Arbiter.json';
+import rulesContract from 'contracts/TicTacToeRules.json';
+
 interface IGamePageProps {
   gameType?: string;
 }
@@ -26,7 +34,22 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   const { address } = useWalletContext();
   // console.log('address', address);
   if (!!gameType && gameType === 'tic-tac-toe') {
-    return <TicTacToe />;
+    return (
+      <div>
+        <ControlPanel
+          arbiterContractData={{
+            abi: arbiterContract.abi as AbiItem[],
+            address: arbiterContract.address,
+          }}
+          gameRulesContractData={{
+            abi: rulesContract.abi as AbiItem[],
+            address: rulesContract.address,
+          }}
+        />
+        <TicTacToe />
+        <XMTPChatLog logData={[]} isLoading={false} />
+      </div>
+    );
   }
   return <div>No Games Available</div>;
 };
