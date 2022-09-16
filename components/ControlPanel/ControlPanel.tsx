@@ -1,6 +1,8 @@
 import { ControlPanelPropsI } from './ControlPanelProps';
 import styles from './ControlPanel.module.scss';
-import { connectContract } from 'components/gameApi';
+import { useAccount } from 'wagmi';
+import gameApi from 'gameApi';
+import { TBoardState } from 'types';
 export const ControlPanel: React.FC<ControlPanelPropsI> = ({
   onAcceptGame,
   onProposeGame,
@@ -11,42 +13,100 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
   arbiterContractData,
   gameRulesContractData,
 }) => {
-  const currentPlayer = { id: '0x1215991085d541A586F0e1968355A36E58C9b2b4' };
-  const rivalPlayer = { id: '0xDb0b11d1281da49e950f89bD0F6B47D464d25F91' };
-  const proposeGameHandler = async (rivalPlayerId: string, curentPlayerId: string) => {
-    const contract = await connectContract(
-      arbiterContractData.abi,
-      arbiterContractData.address,
-    );
-    const gameId = await contract.methods
-      .proposeGame(rivalPlayerId)
-      .send({ from: curentPlayerId });
-    console.log('proposed gameId:', gameId);
+  const gameId = '6';
+  const account = useAccount();
+  const rivalPlayer = {
+    id:
+      account.address === '0xDb0b11d1281da49e950f89bD0F6B47D464d25F91'
+        ? '0x1215991085d541A586F0e1968355A36E58C9b2b4'
+        : '0xDb0b11d1281da49e950f89bD0F6B47D464d25F91',
+  };
+
+  console.log('account', account.address);
+
+  const proposeGameHandler = async (curentPlayerId: string) => {
+    const proposedGameId = await gameApi.proposeGame(arbiterContractData, curentPlayerId);
+    console.log('proposed GameId', proposedGameId);
     if (!!onProposeGame) onProposeGame(gameId);
   };
 
-  const acceptGameHandler = () => {
-    console.log('run acceptGameHandler');
+  const acceptGameHandler = async (curentPlayerId: string, gamdId: string) => {
+    const acceptedGameData = await gameApi.acceptGame(
+      arbiterContractData,
+      curentPlayerId,
+      gamdId,
+    );
+    console.log('accepted Game data', acceptedGameData);
     if (!!onAcceptGame) onAcceptGame();
   };
 
-  const checkValidMoveHandler = () => {
-    console.log('run checkValidMove');
-    if (!!onCheckValidMove) onCheckValidMove();
-  };
-
-  const disputeMoveHandler = () => {
-    console.log('run disputemovehandler');
-    if (!!onDisputeMove) onDisputeMove();
-  };
-
-  const getPlayersHandler = () => {
-    console.log('run getplayersHandler');
+  const getPlayersHandler = async (gamdId: number) => {
+    const players = await gameApi.getPlayers(arbiterContractData, gamdId);
+    console.log('players', players);
     if (!!onGetPlayers) onGetPlayers();
   };
 
-  const transitionHandler = () => {
-    console.log('run transitionHandler');
+  const disputeMoveHandler = async (
+    gameId: number,
+    nonce: number,
+    playerAddress: string,
+    oldBoardState: TBoardState,
+    newBoardState: TBoardState,
+    move: number,
+    signatures: string[],
+  ) => {
+    const disputeMoveResult = await gameApi.disputeMove(
+      arbiterContractData,
+      gameId,
+      nonce,
+      playerAddress,
+      oldBoardState,
+      newBoardState,
+      move,
+      signatures,
+    );
+
+    console.log('Dispute move result', disputeMoveResult);
+
+    if (!!onDisputeMove) onDisputeMove();
+  };
+
+  const checkValidMoveHandler = async (
+    gameId: number,
+    nonce: number,
+    boardState: TBoardState,
+    playerIngameId: number,
+    move: number,
+  ) => {
+    const isMoveValid = await gameApi.checkIsValidMove(
+      gameRulesContractData,
+      gameId,
+      nonce,
+      boardState,
+      playerIngameId,
+      move,
+    );
+
+    console.log('isMoveValid', isMoveValid);
+    if (!!onCheckValidMove) onCheckValidMove();
+  };
+
+  const transitionHandler = async (
+    gameId: number,
+    nonce: number,
+    boardState: TBoardState,
+    playerIngameId: number,
+    move: number,
+  ) => {
+    const transitionResult = await gameApi.transition(
+      gameRulesContractData,
+      gameId,
+      nonce,
+      boardState,
+      playerIngameId,
+      move,
+    );
+    console.log('transitionResult', transitionResult);
     if (!!onTransition) onTransition();
   };
 
@@ -54,24 +114,50 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     <div className={styles.container}>
       <div>
         <div>
-          <button onClick={() => proposeGameHandler(currentPlayer.id, rivalPlayer.id)}>
-            PROPOSE GAME
+          <button onClick={() => proposeGameHandler(account.address!)}>PROPOSE GAME</button>
+        </div>
+        <div>
+          <button onClick={() => acceptGameHandler(account.address!, gameId)}>
+            ACCEPT GAME
           </button>
         </div>
         <div>
-          <button onClick={acceptGameHandler}>ACCEPT GAME</button>
+          <button
+            onClick={() =>
+              checkValidMoveHandler(5, 0, [[0, 0, 0, 0, 0, 0, 0, 0, 0], false, false], 0, 0)
+            }
+          >
+            CHECK VALID MOVE
+          </button>
         </div>
         <div>
-          <button onClick={checkValidMoveHandler}>CHECK VALID MOVE</button>
+          <button
+            onClick={() =>
+              disputeMoveHandler(
+                5,
+                1,
+                rivalPlayer.id,
+                [[0, 0, 1, 0, 0, 0, 0, 0, 0], false, false],
+                [[0, 0, 1, 0, 2, 0, 0, 0, 0], false, false],
+                2,
+                [],
+              )
+            }
+          >
+            DISPUTE MOVE
+          </button>
         </div>
         <div>
-          <button onClick={disputeMoveHandler}>DISPUTE MOVE</button>
+          <button onClick={() => getPlayersHandler(5)}>GET PLAYERS HANDLER</button>
         </div>
         <div>
-          <button onClick={getPlayersHandler}>DISPUTE MOVE</button>
-        </div>
-        <div>
-          <button onClick={transitionHandler}>DISPUTE MOVE</button>
+          <button
+            onClick={() =>
+              transitionHandler(5, 1, [[0, 0, 1, 0, 0, 0, 0, 0, 0], false, false], 0, 2)
+            }
+          >
+            TRANSITION
+          </button>
         </div>
       </div>
     </div>

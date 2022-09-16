@@ -15,7 +15,7 @@ import { ControlPanel } from 'components/ControlPanel';
 import web3 from 'web3';
 import { AbiItem } from 'web3-utils';
 import { Contract, ContractInterface } from 'ethers';
-import arbiterContract from 'contracts/arbiter.json';
+import arbiterContract from 'contracts/Arbiter.json';
 import rulesContract from 'contracts/TicTacToeRules.json';
 interface IGameMessage {
   gameId: number;
@@ -26,7 +26,7 @@ interface IGameMessage {
   move: string;
 }
 
-export const TicTacToe: React.FC<TikTakToePropsI> = () => {
+export const TicTacToe: React.FC<TikTakToePropsI> = ({ children }) => {
   const [boardState, setBoardState] = useState<any[]>([...new Array(9)]);
   const [isFinished, setIsFinished] = useState<boolean>(false);
   const [winner, setWinner] = useState<'X' | 'O' | null>(null);
@@ -235,26 +235,8 @@ export const TicTacToe: React.FC<TikTakToePropsI> = () => {
 
   return (
     <div className={styles.container}>
-      <ControlPanel
-        arbiterContractData={{
-          abi: arbiterContract.abi as AbiItem[],
-          address: arbiterContract.address,
-        }}
-        gameRulesContractData={{
-          abi: rulesContract.abi as AbiItem[],
-          address: rulesContract.address,
-        }}
-      />
+      {children}
       <div className={styles.leftPanel}>
-        <div>
-          <button onClick={proposeGameHandler}>PROPOSE GAME</button>
-        </div>
-        <div>
-          <button onClick={acceptGameHandler}>ACCEPT GAME</button>
-        </div>
-        <div>
-          <button onClick={checkValidMove}>CHECK VALID MOVE</button>
-        </div>
         <div>
           <h2 className={styles.title}>Players {!!winner && <span>{winner} won!</span>}</h2>
           <div className={styles.player}>
