@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import arbiterContract from 'contracts/arbiter.json';
+import arbiterContract from 'contracts/Arbiter.json';
 
 export function getSessionWallet(address:string, gameId:number): ethers.Wallet {
     let localStorage = window.localStorage;
