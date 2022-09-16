@@ -11,7 +11,12 @@ import { defaultAbiCoder } from 'ethers/lib/utils';
 import { connectContract, connectRulesContract } from './utils';
 import { IPlayer } from 'types';
 import { Conversation, Stream, Message } from '@xmtp/xmtp-js';
+import { ControlPanel } from 'components/ControlPanel';
 import web3 from 'web3';
+import { AbiItem } from 'web3-utils';
+import { Contract, ContractInterface } from 'ethers';
+import arbiterContract from 'contracts/arbiter.json';
+import rulesContract from 'contracts/TicTacToeRules.json';
 interface IGameMessage {
   gameId: number;
   nonce: number;
@@ -230,6 +235,16 @@ export const TicTacToe: React.FC<TikTakToePropsI> = () => {
 
   return (
     <div className={styles.container}>
+      <ControlPanel
+        arbiterContractData={{
+          abi: arbiterContract.abi as AbiItem[],
+          address: arbiterContract.address,
+        }}
+        gameRulesContractData={{
+          abi: rulesContract.abi as AbiItem[],
+          address: rulesContract.address,
+        }}
+      />
       <div className={styles.leftPanel}>
         <div>
           <button onClick={proposeGameHandler}>PROPOSE GAME</button>
