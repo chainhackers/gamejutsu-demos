@@ -26,7 +26,6 @@ export type MessageStoreEvent = {
 
 export type XmtpContextType = {
   client: Client | undefined | null;
-  conversations: Map<string, Conversation> | null;
   loadingConversations: boolean;
   initClient: (wallet: Signer) => void;
 };
@@ -37,32 +36,8 @@ export const useXmptContext = () => useContext(XmtpContext);
 
 export const XmtpContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [client, setClient] = useState<Client | null>();
-  const { signer } = useWalletContext();
-  const [loadingConversations, setLoadingConversations] = useState<boolean>(false);
 
-  const [conversations, dispatchConversations] = useReducer(
-    (
-      state: Map<string, Conversation>,
-      newConvos: Conversation[] | undefined,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ): any => {
-      if (newConvos === undefined) {
-        return null;
-      }
-      newConvos.forEach((convo) => {
-        if (convo.peerAddress !== client?.address) {
-          if (state && !state.has(convo.peerAddress)) {
-            state.set(convo.peerAddress, convo);
-          } else if (state === null) {
-            state = new Map();
-            state.set(convo.peerAddress, convo);
-          }
-        }
-      });
-      return state ?? null;
-    },
-    [],
-  );
+  const [loadingConversations, setLoadingConversations] = useState<boolean>(false);
 
   const initClient = useCallback(async (wallet: Signer) => {
     if (wallet) {
@@ -77,31 +52,10 @@ export const XmtpContextProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   const disconnect = () => {
     setClient(undefined);
-    dispatchConversations(undefined);
   };
-
-  useEffect(() => {
-    signer ? initClient(signer) : disconnect();
-  }, [initClient, signer]);
-
-  useEffect(() => {
-    if (!client) return;
-
-    const listConversations = async () => {
-      console.log('Listing conversations');
-      setLoadingConversations(true);
-      const convos = await client.conversations.list();
-      convos.forEach((convo: Conversation) => {
-        dispatchConversations([convo]);
-      });
-      setLoadingConversations(false);
-    };
-    listConversations();
-  }, [client]);
 
   const [providerState, setProviderState] = useState<XmtpContextType>({
     client,
-    conversations,
     loadingConversations,
     initClient,
   });
@@ -109,11 +63,10 @@ export const XmtpContextProvider: React.FC<{ children: React.ReactNode }> = ({ c
   useEffect(() => {
     setProviderState({
       client,
-      conversations,
       loadingConversations,
       initClient,
     });
-  }, [client, conversations, initClient, loadingConversations]);
+  }, [client, initClient, loadingConversations]);
 
   return <XmtpContext.Provider value={providerState}>{children}</XmtpContext.Provider>;
 };

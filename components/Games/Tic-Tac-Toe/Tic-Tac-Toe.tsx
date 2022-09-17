@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, memo } from 'react';
 import { XMTPChatLog } from 'components/XMTPChatLog';
 import { Viewer, Board } from 'components/Games/Tic-Tac-Toe';
 import { IChatLog } from 'types';
@@ -17,6 +17,8 @@ import { AbiItem } from 'web3-utils';
 import { Contract, ContractInterface } from 'ethers';
 import arbiterContract from 'contracts/Arbiter.json';
 import rulesContract from 'contracts/TicTacToeRules.json';
+import { TCellData, TGameBoardState, TGameState } from './types';
+
 interface IGameMessage {
   gameId: number;
   nonce: number;
@@ -26,11 +28,16 @@ interface IGameMessage {
   move: string;
 }
 
-export const TicTacToe: React.FC<TikTakToePropsI> = ({ children }) => {
-  const [boardState, setBoardState] = useState<any[]>([...new Array(9)]);
+export const TicTacToe: React.FC<TikTakToePropsI> = ({
+  children,
+  gameState,
+  playerIngameId,
+  onGameStateChange,
+}) => {
+  console.log('gameState TicTacInput', gameState);
   const [isFinished, setIsFinished] = useState<boolean>(false);
-  const [winner, setWinner] = useState<'X' | 'O' | null>(null);
-  const [playerType, setPlayerType] = useState<'X' | 'O'>('X');
+
+  // const [playerType, setPlayerType] = useState<'X' | 'O'>('X');
 
   const [conversation, setConversation] = useState<Conversation | null>(null);
   const [currentPlayer, setCurrentPlayer] = useState<IPlayer | null>(null);
@@ -59,50 +66,50 @@ export const TicTacToe: React.FC<TikTakToePropsI> = ({ children }) => {
     await conversation.send(messageText);
   };
 
-  const cellClickHandler = (i: any) => {
-    if (isFinished) return;
-    boardState[i] = playerType;
-    const winner = calculateWinner(boardState);
-    setIsFinished(!!winner);
-    setWinner(winner);
-    setBoardState([...boardState]);
+  // const cellClickHandler = (i: any) => {
+  //   if (isFinished) return;
+  //   boardState[i] = playerType;
+  //   const winner = calculateWinner(boardState);
+  //   setIsFinished(!!winner);
+  //   setWinner(winner);
+  //   setBoardState([...boardState]);
 
-    console.log(
-      'click handler',
-      boardState,
-      boardState.map((el) => (!!el ? (el === 'O' ? 2 : 1) : 0)),
-    );
+  //   console.log(
+  //     'click handler',
+  //     boardState,
+  //     boardState.map((el) => (!!el ? (el === 'O' ? 2 : 1) : 0)),
+  //   );
 
-    const numberedBoardState = boardState.map((el) => (!!el ? (el === 'O' ? 2 : 1) : 0));
+  //   const numberedBoardState = boardState.map((el) => (!!el ? (el === 'O' ? 2 : 1) : 0));
 
-    const gameState = [];
+  //   const gameState = [];
 
-    const encoded = defaultAbiCoder.encode(
-      ['uint8[9]', 'bool', 'bool'],
-      [numberedBoardState, winner === 'X', winner === 'O'],
-    );
-    sendMessageHandler(encoded);
-  };
+  //   const encoded = defaultAbiCoder.encode(
+  //     ['uint8[9]', 'bool', 'bool'],
+  //     [numberedBoardState, winner === 'X', winner === 'O'],
+  //   );
+  //   sendMessageHandler(encoded);
+  // };
 
-  const selectPlayerTypeHandler = async (type: 'O' | 'X') => {
-    setPlayerType(type);
-    if (!conversation) {
-      console.warn('no conversation!');
-      return;
-    }
-    if (!!currentPlayer && !!rivalPlayer) {
-      const typeMessage: {
-        message: string;
-        peerPlayer: string;
-        data: { [id: string]: string };
-      } = {
-        message: 'type',
-        peerPlayer: rivalPlayer.id,
-        data: { [currentPlayer.id]: type, [rivalPlayer.id]: type === 'O' ? 'X' : 'O' },
-      };
-      sendMessageHandler(typeMessage);
-    }
-  };
+  // const selectPlayerTypeHandler = async (type: 'O' | 'X') => {
+  //   setPlayerType(type);
+  //   if (!conversation) {
+  //     console.warn('no conversation!');
+  //     return;
+  //   }
+  //   if (!!currentPlayer && !!rivalPlayer) {
+  //     const typeMessage: {
+  //       message: string;
+  //       peerPlayer: string;
+  //       data: { [id: string]: string };
+  //     } = {
+  //       message: 'type',
+  //       peerPlayer: rivalPlayer.id,
+  //       data: { [currentPlayer.id]: type, [rivalPlayer.id]: type === 'O' ? 'X' : 'O' },
+  //     };
+  //     sendMessageHandler(typeMessage);
+  //   }
+  // };
 
   const addRivalPlayerHandler = async () => {
     const isInNetwork = !!newPlayerInputValue
@@ -215,7 +222,7 @@ export const TicTacToe: React.FC<TikTakToePropsI> = ({ children }) => {
       for await (const msg of stream) {
         const messageContent = JSON.parse(msg.content);
         if (!!messageContent && messageContent.message === 'type') {
-          setPlayerType(messageContent.data[currentPlayer!.id]);
+          // setPlayerType(messageContent.data[currentPlayer!.id]);
         } else {
           console.log(messageContent);
           const decoded = defaultAbiCoder.decode(['uint8[9]', 'bool', 'bool'], messageContent);
@@ -233,63 +240,41 @@ export const TicTacToe: React.FC<TikTakToePropsI> = ({ children }) => {
     };
   }, [conversation, currentPlayer]);
 
+  const [boardState, setBoardState] = useState<TGameBoardState>([0, 0, 0, 0, 0, 0, 0, 0, 0]);
+  const cellClickHandler = (i: any) => {
+    if (isFinished) return;
+
+    boardState[i] = (playerIngameId + 1) as TCellData;
+    const winner = calculateWinner(boardState);
+    setIsFinished(!!winner);
+    const newGameState: TGameState = [[...boardState], winner === 1, winner === 2];
+    setBoardState([...boardState]);
+    onGameStateChange(newGameState);
+  };
+
+  useEffect(() => {
+    setBoardState(gameState[0]);
+    if (!!gameState[1] || !!gameState[2]) setIsFinished(true);
+  }, [gameState]);
+
+  useEffect(() => {
+    console.log('board', boardState);
+    console.log('finished', isFinished);
+  }, [boardState, isFinished]);
+
   return (
     <div className={styles.container}>
       {children}
-      <div className={styles.leftPanel}>
-        <div>
-          <h2 className={styles.title}>Players {!!winner && <span>{winner} won!</span>}</h2>
-          <div className={styles.player}>
-            <span>Current Player:</span>{' '}
-            <div>
-              Type: {playerType}{' '}
-              <button
-                className={styles.typeSelect}
-                onClick={() => selectPlayerTypeHandler('O')}
-              >
-                Set Type O
-              </button>
-              <button
-                className={styles.typeSelect}
-                onClick={() => selectPlayerTypeHandler('X')}
-              >
-                Set Type X
-              </button>
-            </div>
-            <span>{currentPlayer?.id}</span>
-          </div>
-          {
-            <p className={styles.player}>
-              <span>Peer Player:</span> <span>{rivalPlayer?.id}</span>
-            </p>
-          }
-          <div className={styles.addPlayer}>
-            <button onClick={addRivalPlayerHandler}>Add new Player</button>
-            <input
-              value={newPlayerInputValue}
-              onChange={(event) => setNewPlayerInputValue(event.target.value)}
-              placeholder="Add rival id"
-            ></input>
-          </div>
-        </div>
-        <div>
-          <h2 className={styles.title}>Viewers</h2>
-          {viewersMock.map(({ id }) => (
-            <Viewer key={id}>{`Viewer: ${id}`}</Viewer>
-          ))}
-        </div>
-      </div>
-
       <div className={styles.boardPanel}>
         <Board
           squares={boardState}
-          finished={isFinished}
           onClick={(i) => cellClickHandler(i)}
+          isFinished={isFinished}
         />
       </div>
-      <div className={styles.rightPanel}>
+      {/* <div className={styles.rightPanel}>
         <XMTPChatLog logData={log} isLoading={isLogLoading} />
-      </div>
+      </div> */}
     </div>
   );
 };

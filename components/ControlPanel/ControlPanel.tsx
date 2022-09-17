@@ -23,9 +23,22 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
   arbiterContractData,
   gameRulesContractData,
   playersTypes,
+  onConnectPlayer,
+  onSetPlayerIngameId,
+  rivalPlayerConversationStatus,
+  winner,
 }) => {
+  console.log('cp winner', winner);
+  console.log('rivalPlaea', rivalPlayerConversationStatus);
   const [currentPlayerAddress, setCurrentPlayerAddress] = useState<string | null>(null);
   const [rivalPlayerAddress, setRivalPlayerAddress] = useState<string | null>(null);
+  // const [rivalPlayerConversationStatus, setRivalPlayerConversationStatus] = useState<
+  //   string | null
+  // >(null);
+  // const rivalPlayerAddress =
+  //   currentPlayerAddress === '0x1215991085d541A586F0e1968355A36E58C9b2b4'
+  //     ? '0xDb0b11d1281da49e950f89bD0F6B47D464d25F91'
+  //     : '0x1215991085d541A586F0e1968355A36E58C9b2b4';
   const [rivalAddressStatus, setRivalAddressStatus] = useState<
     'Fetching rival address...' | 'Failed to get rival address' | null
   >(null);
@@ -56,6 +69,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     setError(null);
     setPlayerType(null);
     setPlayerIngameId(null);
+
     try {
       const { gameId } = await gameApi.proposeGame(arbiterContractData, curentPlayerId);
       if (!!gameId) {
@@ -204,6 +218,9 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
 
   const connectPeerPlayerHandler = async () => {
     console.log('connect peer player handler');
+    // onConnectPlayer(rivalPlayerAddress);
+    if (!rivalPlayerAddress) return;
+    onConnectPlayer(rivalPlayerAddress);
   };
 
   useEffect(() => {
@@ -250,12 +267,40 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     return () => clearTimeout(timeout);
   }, [gameId, playerIngameId, rivalPlayerAddress]);
 
+  useEffect(() => {
+    // setPlayerIngameId(playerIngameId);
+    onSetPlayerIngameId(Number(playerIngameId));
+    // currentPlayerAddress === '0x1215991085d541A586F0e1968355A36E58C9b2b4'
+    //   ? '0xDb0b11d1281da49e950f89bD0F6B47D464d25F91'
+    //   : '0x1215991085d541A586F0e1968355A36E58C9b2b4';
+    // setPlayerIngameId(
+    //   currentPlayerAddress === '0x1215991085d541A586F0e1968355A36E58C9b2b4' ? '0' : '1',
+    // );
+    // onSetPlayerIngameId(
+    //   currentPlayerAddress === '0x1215991085d541A586F0e1968355A36E58C9b2b4' ? 0 : 1,
+    // );
+  }, [playerIngameId]);
+
   return (
     <div className={styles.container}>
       <ConnectButton />
       {error && <div className={styles.error}>{error}</div>}
+
       <div>
-        <div className={styles.headTitle}>Game controls</div>
+        <div className={styles.headTitle}>
+          Game controls
+          {winner !== null && (
+            <div
+              className={cn(
+                styles.winner,
+                playerIngameId === String(winner) ? styles.win : styles.lose,
+              )}
+            >
+              You {playerIngameId === String(winner) ? 'win!' : 'lose!'}
+              {/* {playersTypes[winner]} player wins! */}
+            </div>
+          )}
+        </div>
         <div className={styles.block}>
           <div className={styles.blockTitle}>Current player</div>
           <div className={styles.blockData}>
@@ -352,6 +397,11 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
             >
               Connect peer player
             </button>
+            {!!rivalPlayerAddress && (
+              <span className={styles.connectPlayerStatus}>
+                {rivalPlayerConversationStatus}
+              </span>
+            )}
           </div>
         </div>
 

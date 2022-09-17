@@ -11,4 +11,8 @@ export interface ControlPanelPropsI {
   arbiterContractData: IContractData;
   gameRulesContractData: IContractData;
   playersTypes: { [id: number]: string };
+  onConnectPlayer: (ivalPlayerAddress: string) => Promise<void>;
+  onSetPlayerIngameId: any;
+  winner: number | null;
+  rivalPlayerConversationStatus: string | null;
 }

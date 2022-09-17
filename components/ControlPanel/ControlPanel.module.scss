@@ -27,9 +27,33 @@
   }
 
   .headTitle {
+    position: relative;
     font-size: 36px;
     font-weight: 700;
     padding: 10px 10px;
+
+    .winner {
+      position: absolute;
+      background-color: white;
+      right: 0;
+      top: 0;
+      font-size: 36px;
+      font-weight: 700;
+      padding: 10px 10px;
+      border-radius: 5px;
+
+      &.win {
+        color: green;
+        border: 1px solid green;
+        box-shadow: 0px 0px 10px -4px green;
+      }
+
+      &.lose {
+        color: red;
+        border: 1px solid red;
+        box-shadow: 0px 0px 10px -4px red;
+      }
+    }
   }
 
   .block {
@@ -86,6 +110,10 @@
         line-height: 14px;
         font-weight: 700;
         cursor: pointer;
+      }
+
+      .connectPlayerStatus {
+        padding: 0 20px;
       }
     }
 

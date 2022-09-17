@@ -1,5 +1,6 @@
+import { TCellData } from '../types';
 export interface SquarePropsI {
   children?: React.ReactNode;
-  value: string;
+  value: TCellData;
   onClick: () => void;
 }
