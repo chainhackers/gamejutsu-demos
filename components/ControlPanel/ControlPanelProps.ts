@@ -10,4 +10,5 @@ export interface ControlPanelPropsI {
   onTransition?: () => void;
   arbiterContractData: IContractData;
   gameRulesContractData: IContractData;
+  playersTypes: { [id: number]: string };
 }

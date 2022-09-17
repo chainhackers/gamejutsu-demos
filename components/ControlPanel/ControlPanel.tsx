@@ -7,6 +7,12 @@ import gameApi from 'gameApi';
 import { TBoardState } from 'types';
 import { useEffect, useState } from 'react';
 import cn from 'classnames';
+
+const PROPOSER_INGAME_ID = '0';
+const ACCEPTER_INGAME_ID = '1';
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+const FETCH_RIVAL_ADDRESS_TIMEOUT = 5000;
+
 export const ControlPanel: React.FC<ControlPanelPropsI> = ({
   onAcceptGame,
   onProposeGame,
@@ -16,12 +22,24 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
   onTransition,
   arbiterContractData,
   gameRulesContractData,
+  playersTypes,
 }) => {
   const [currentPlayerAddress, setCurrentPlayerAddress] = useState<string | null>(null);
   const [rivalPlayerAddress, setRivalPlayerAddress] = useState<string | null>(null);
-  const [playerIngameId, setPlayerIngameId] = useState<number | null>(null);
+  const [rivalAddressStatus, setRivalAddressStatus] = useState<
+    'Fetching rival address...' | 'Failed to get rival address' | null
+  >(null);
+  const [playerIngameId, setPlayerIngameId] = useState<string | null>(null);
   const [playerType, setPlayerType] = useState<string | null>(null);
-  const [gameStatus, setGameStatus] = useState<string | null>(null);
+  const [gameStatus, setGameStatus] = useState<
+    | 'Proposed'
+    | 'Proposing...'
+    | 'Accepted'
+    | 'Accepting...'
+    | 'Propose failed, check console'
+    | 'Accepting failed, check console'
+    | null
+  >(null);
   const [gameId, setGameId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -32,28 +50,45 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
 
   const proposeGameHandler = async (curentPlayerId: string) => {
     setGameStatus('Proposing...');
+    setRivalPlayerAddress(null);
+    setRivalAddressStatus(null);
+    setGameId(null);
+    setError(null);
+    setPlayerType(null);
+    setPlayerIngameId(null);
     try {
       const { gameId } = await gameApi.proposeGame(arbiterContractData, curentPlayerId);
       if (!!gameId) {
         setGameId(gameId);
+        setPlayerIngameId(PROPOSER_INGAME_ID);
+        setPlayerType(playersTypes[PROPOSER_INGAME_ID]);
         setGameStatus('Proposed');
       }
     } catch (error) {
       console.error('Propose game failed', error);
-      setGameStatus('Propose failed, check console and try again');
+      setGameStatus('Propose failed, check console');
+      setError('Proposing failed');
     }
   };
 
-  const acceptGameHandler = async (curentPlayerId: string, gamdId: string | null) => {
-    if (!gamdId) return;
-    const acceptedGameData = await gameApi.acceptGame(
-      arbiterContractData,
-      curentPlayerId,
-      gamdId,
-    );
-    console.log('accepted Game data', acceptedGameData);
-    if (!!onAcceptGame) onAcceptGame();
-  };
+  // const acceptGameHandler = async (curentPlayerId: string, gameId: string | null) => {
+  // setGameStatus('Accepting...');
+  // console.log(gameId);
+  // try {
+  //   if (!gameId) throw new Error(`Empty game id`);
+  //   const acceptedGameData = await gameApi.acceptGame(
+  //     arbiterContractData,
+  //     curentPlayerId,
+  //     gameId,
+  //   );
+  //   setGameId(gameId);
+  //   setGameStatus('Accepted');
+  // } catch (error) {
+  //   console.error('Accepting game failed', error);
+  //   setGameStatus('Accepting failed, check console');
+  //   setError('Accepting failed');
+  // }
+  // };
 
   const submitAcceptGameHandler: React.FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
@@ -63,6 +98,13 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     try {
       if (!currentPlayerAddress)
         throw new Error(`No currentPlayerAddress: ${currentPlayerAddress}`);
+      if (!gameId || gameId.length === 0) throw new Error(`Empty game id`);
+      setRivalPlayerAddress(null);
+      setRivalAddressStatus(null);
+      setGameId(null);
+      setGameStatus('Accepting...');
+      setError(null);
+
       const { players } = await gameApi.acceptGame(
         arbiterContractData,
         currentPlayerAddress,
@@ -73,6 +115,10 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
         (address) => address !== currentPlayerAddress,
       )[0];
       setRivalPlayerAddress(fetchedRivalPlayerAddress);
+      setPlayerIngameId(ACCEPTER_INGAME_ID);
+      setPlayerType(playersTypes[ACCEPTER_INGAME_ID]);
+      setGameStatus('Accepted');
+      setGameId(gameId);
     } catch (error) {
       setError('Error! Check console!');
       console.error('Error: ', error);
@@ -87,8 +133,8 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
   };
 
   const getPlayersHandler = async (gamdId: string) => {
-    const players = await gameApi.getPlayers(arbiterContractData, gamdId);
-    console.log('players', players);
+    const players = (await gameApi.getPlayers(arbiterContractData, gamdId)) as string[];
+
     if (!!onGetPlayers) onGetPlayers();
   };
 
@@ -164,6 +210,46 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     setCurrentPlayerAddress(account.address ? account.address : null);
   }, [account]);
 
+  useEffect(() => {
+    if (!gameId || !!rivalPlayerAddress || playerIngameId === ACCEPTER_INGAME_ID) return;
+    setRivalAddressStatus('Fetching rival address...');
+
+    const getRivalPlayerLoop = async (timeout: NodeJS.Timeout) => {
+      clearTimeout(timeout);
+      try {
+        const players = (await gameApi.getPlayers(arbiterContractData, gameId)) as [
+          string,
+          string,
+        ];
+
+        const zeroPlayer = players.find((player) => player === ZERO_ADDRESS);
+
+        if (!zeroPlayer) {
+          setRivalAddressStatus(null);
+          setRivalPlayerAddress(
+            players.filter((address) => address !== currentPlayerAddress)[0],
+          );
+
+          return;
+        }
+        const newTimeout: NodeJS.Timeout = setTimeout(
+          () => getRivalPlayerLoop(newTimeout),
+          FETCH_RIVAL_ADDRESS_TIMEOUT,
+        );
+      } catch (error) {
+        setRivalPlayerAddress(null);
+        setRivalAddressStatus('Failed to get rival address');
+      }
+    };
+
+    const timeout: NodeJS.Timeout = setTimeout(
+      () => getRivalPlayerLoop(timeout),
+      FETCH_RIVAL_ADDRESS_TIMEOUT,
+    );
+
+    return () => clearTimeout(timeout);
+  }, [gameId, playerIngameId, rivalPlayerAddress]);
+
   return (
     <div className={styles.container}>
       <ConnectButton />
@@ -192,7 +278,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
           </div>
           <div className={styles.blockData}>
             <span>Player Type:</span>
-            <span>{playerType ? playerIngameId : 'No Type: propose or accept new game'}</span>
+            <span>{playerType ? playerType : 'No Type: propose or accept new game'}</span>
           </div>
         </div>
         <div className={styles.block}>
@@ -221,10 +307,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
           <div className={styles.blockTitle}>Accept proposed game</div>
           <div className={styles.blockData}>
             <form onSubmit={submitAcceptGameHandler}>
-              <button
-                className={styles.submitButton}
-                onClick={() => acceptGameHandler(account.address!, gameId)}
-              >
+              <button className={styles.submitButton} type="submit">
                 Accept game
               </button>
               <input
@@ -240,10 +323,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
           <div className={styles.blockTitle}>Connect peer player</div>
           <div className={styles.blockData}>
             <form onSubmit={submitRivalAddressHandler}>
-              <button
-                className={styles.submitButton}
-                onClick={() => acceptGameHandler(account.address!, gameId)}
-              >
+              <button className={styles.submitButton} type="submit">
                 Submit peer address
               </button>
               <input
@@ -257,7 +337,9 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
           <div className={cn(styles.blockData, styles.peerAddress)}>
             <span>Peer player address:</span>
             <span>
-              {rivalPlayerAddress
+              {rivalAddressStatus
+                ? rivalAddressStatus
+                : rivalPlayerAddress
                 ? rivalPlayerAddress
                 : 'Accept game or input rival player address'}
             </span>

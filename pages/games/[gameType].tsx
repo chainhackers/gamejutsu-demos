@@ -37,7 +37,6 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   if (!!gameType && gameType === 'tic-tac-toe') {
     return (
       <div className={styles.container}>
-        
         <ControlPanel
           arbiterContractData={{
             abi: arbiterContract.abi as AbiItem[],
@@ -47,6 +46,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
             abi: rulesContract.abi as AbiItem[],
             address: rulesContract.address,
           }}
+          playersTypes={{ 0: 'X', 1: 'O' }}
         />
         <TicTacToe />
         <XMTPChatLog logData={[]} isLoading={false} />
