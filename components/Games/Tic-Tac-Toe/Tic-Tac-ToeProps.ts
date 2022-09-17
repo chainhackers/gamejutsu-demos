@@ -4,6 +4,5 @@ export interface TikTakToePropsI {
   gameState: TGameState;
   playerType: 'X' | 'O' | null;
   playerIngameId: 0 | 1;
-  onGameStateChange: (gameState: TGameState) => void;
-  // sendState: () => void;
+  onGameStateChange: (gameState: TGameState, move: number) => void;
 }
