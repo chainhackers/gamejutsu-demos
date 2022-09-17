@@ -9,7 +9,7 @@ export async function setSessionKey(gameId:number, wallet: ethers.Wallet): Promi
     return contract.setSessionKey(gameId, wallet.address, {gasLimit: gasEstimatedRedeem.mul(4)});
 }
 
-export async function getSessionWallet(gameId:number, address:string, callback: (gameId:number, wallet: ethers.Wallet) => Promise<void>): Promise<ethers.Wallet> {
+export async function getSessionWallet(gameId:number, address:string, registerAddressCallback: (wallet: ethers.Wallet) => Promise<void>): Promise<ethers.Wallet> {
     let localStorage = window.localStorage;
     let privateStore = `${address}_${gameId}_private`;
     let privateKey = localStorage.getItem(privateStore);
@@ -17,7 +17,7 @@ export async function getSessionWallet(gameId:number, address:string, callback: 
         return new ethers.Wallet(privateKey);
     }
     let wallet = ethers.Wallet.createRandom();
-    await callback(gameId, wallet);
+    await registerAddressCallback(wallet);
     localStorage.setItem(privateStore, wallet.privateKey);
     return wallet;
 }
