@@ -1,4 +1,4 @@
-type TCellData = 0 | 1 | 2;
+type TCellData = null | 0 | 1;
 export interface BoardPropsI {
   children?: React.ReactNode;
   squares: TCellData[];

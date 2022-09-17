@@ -27,9 +27,10 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
   onSetPlayerIngameId,
   rivalPlayerConversationStatus,
   winner,
+  isInDispute,
+  isInvalidMove,
+  onDispute,
 }) => {
-  console.log('cp winner', winner);
-  console.log('rivalPlaea', rivalPlayerConversationStatus);
   const [currentPlayerAddress, setCurrentPlayerAddress] = useState<string | null>(null);
   const [rivalPlayerAddress, setRivalPlayerAddress] = useState<string | null>(null);
   // const [rivalPlayerConversationStatus, setRivalPlayerConversationStatus] = useState<
@@ -77,6 +78,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
         setPlayerIngameId(PROPOSER_INGAME_ID);
         setPlayerType(playersTypes[PROPOSER_INGAME_ID]);
         setGameStatus('Proposed');
+        onProposeGame(gameId);
       }
     } catch (error) {
       console.error('Propose game failed', error);
@@ -84,25 +86,6 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
       setError('Proposing failed');
     }
   };
-
-  // const acceptGameHandler = async (curentPlayerId: string, gameId: string | null) => {
-  // setGameStatus('Accepting...');
-  // console.log(gameId);
-  // try {
-  //   if (!gameId) throw new Error(`Empty game id`);
-  //   const acceptedGameData = await gameApi.acceptGame(
-  //     arbiterContractData,
-  //     curentPlayerId,
-  //     gameId,
-  //   );
-  //   setGameId(gameId);
-  //   setGameStatus('Accepted');
-  // } catch (error) {
-  //   console.error('Accepting game failed', error);
-  //   setGameStatus('Accepting failed, check console');
-  //   setError('Accepting failed');
-  // }
-  // };
 
   const submitAcceptGameHandler: React.FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
@@ -177,25 +160,25 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     if (!!onDisputeMove) onDisputeMove();
   };
 
-  // const checkValidMoveHandler = async (
-  //   gameId: number,
-  //   nonce: number,
-  //   boardState: TBoardState,
-  //   playerIngameId: number,
-  //   move: number,
-  // ) => {
-  //   const isMoveValid = await gameApi.checkIsValidMove(
-  //     gameRulesContractData,
-  //     gameId,
-  //     nonce,
-  //     boardState,
-  //     playerIngameId,
-  //     move,
-  //   );
+  const checkValidMoveHandler = async (
+    gameId: number,
+    nonce: number,
+    boardState: TBoardState,
+    playerIngameId: number,
+    move: number,
+  ) => {
+    const isMoveValid = await gameApi.checkIsValidMove(
+      gameRulesContractData,
+      gameId,
+      nonce,
+      boardState,
+      playerIngameId,
+      move,
+    );
 
-  //   console.log('isMoveValid', isMoveValid);
-  //   if (!!onCheckValidMove) onCheckValidMove();
-  // };
+    console.log('isMoveValid', isMoveValid);
+    if (!!onCheckValidMove) onCheckValidMove();
+  };
 
   // const transitionHandler = async (
   //   gameId: number,
@@ -345,6 +328,15 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
               onClick={() => proposeGameHandler(account.address!)}
             >
               PROPOSE GAME
+            </button>
+
+            <button
+              className={styles.button}
+              style={{ marginLeft: '150px' }}
+              onClick={onDispute}
+              disabled={!isInvalidMove}
+            >
+              {isInDispute ? 'DISPUTE MODE ACTIVE' : 'DISPUTE MOVE'}
             </button>
           </div>
         </div>

@@ -1,4 +1,4 @@
-export type TCellData = 0 | 1 | 2;
+export type TCellData = null | 0 | 1;
 
 export type TGameBoardState = [
   TCellData,

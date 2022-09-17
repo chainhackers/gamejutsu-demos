@@ -41,7 +41,7 @@ export function calculateWinner(boardState: TGameBoardState) {
   for (let i = 0; i < length; i++) {
     const [a, b, c] = lines[i];
     const player = boardState[a];
-    if (player && player === boardState[b] && player === boardState[c]) {
+    if (player !== null && player === boardState[b] && player === boardState[c]) {
       return player;
     }
   }

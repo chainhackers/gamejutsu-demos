@@ -1,34 +1,179 @@
 import { useEffect, useState } from 'react';
+import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { Board } from 'components/Games/Tic-Tac-Toe';
+import gameApi from 'gameApi';
 import { TikTakToePropsI } from './Tic-Tac-ToeProps';
 import { calculateWinner } from './utils';
+import { defaultAbiCoder } from 'ethers/lib/utils';
+import rulesContract from 'contracts/TicTacToeRules.json';
 import styles from './Tic-Tac-Toe.module.scss';
 import { TCellData, TGameBoardState, TGameState } from './types';
+import { AbiItem } from 'web3-utils';
+import { TBoardState } from 'types';
 export const TicTacToe: React.FC<TikTakToePropsI> = ({
   children,
-  gameState,
+  // gameState,
   playerIngameId,
   onGameStateChange,
+  encodedMessage,
+  onChangeMessage,
+  gameId,
+  onInvalidMove,
+  onWinner,
 }) => {
   const [isFinished, setIsFinished] = useState<boolean>(false);
 
-  const [boardState, setBoardState] = useState<TGameBoardState>([0, 0, 0, 0, 0, 0, 0, 0, 0]);
+  const [boardState, setBoardState] = useState<TGameBoardState>([
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ]);
+
+  const account = useAccount();
   const cellClickHandler = (i: any) => {
+    // onChangeMessage('ecoded message');
     if (isFinished) return;
 
     const updatedBoardState = [...boardState] as TGameBoardState;
-    updatedBoardState[i] = (playerIngameId + 1) as TCellData;
+    updatedBoardState[i] = playerIngameId as TCellData;
+    // console.log(updatedBoardState);
     const winner = calculateWinner(updatedBoardState);
-    setIsFinished(!!winner);
-    const newGameState: TGameState = [updatedBoardState, winner === 1, winner === 2];
+    // console.log('winner', winner);
+    setIsFinished(winner !== null);
+    onWinner(winner);
+    const newGameState = [
+      updatedBoardState.map((el) => {
+        switch (el) {
+          case null:
+            return 0;
+          case 0:
+            return 1;
+          case 1:
+            return 2;
+          default:
+            return 0;
+        }
+      }),
+      winner === 0,
+      winner === 1,
+    ];
     setBoardState(updatedBoardState);
-    onGameStateChange(newGameState, i as number);
+
+    const encodedMessage = defaultAbiCoder.encode(['uint8[9]', 'bool', 'bool'], newGameState);
+    // onGameStateChange(newGameState, i as number);
+    onChangeMessage(encodedMessage);
   };
 
+  // useEffect(() => {
+  //   setBoardState(gameState[0]);
+  //   if (!!gameState[1] || !!gameState[2]) setIsFinished(true);
+  // }, [gameState]);
+
+  // console.log('encodedMessage1', encodedMessage);
+
   useEffect(() => {
-    setBoardState(gameState[0]);
-    if (!!gameState[1] || !!gameState[2]) setIsFinished(true);
-  }, [gameState]);
+    if (!encodedMessage) return;
+    const decodedMessage = defaultAbiCoder.decode(
+      ['uint8[9]', 'bool', 'bool'],
+      encodedMessage.content,
+    ) as TBoardState;
+    if (
+      decodedMessage[0] instanceof Array &&
+      typeof decodedMessage[1] === 'boolean' &&
+      typeof decodedMessage[2] === 'boolean'
+    ) {
+      const newBoardState = decodedMessage[0].map((el) => {
+        switch (el) {
+          case 0:
+            return null;
+          case 1:
+            return 0;
+          case 2:
+            return 1;
+          default:
+            return null;
+        }
+      }) as TGameBoardState;
+      console.log('sender', encodedMessage.sender);
+      if (encodedMessage.sender !== account.address) {
+        console.log('incoming message need to check');
+
+        console.log('newBoardState', newBoardState);
+
+        const currnetNonce = newBoardState.filter((el) => el !== null).length;
+
+        const move = newBoardState.reduce<null | number>((acc, val, index) => {
+          return val !== boardState[index] ? index : acc;
+        }, null);
+
+        console.log(move);
+
+        if (move !== null) {
+          const boardToCheck = [
+            boardState.map((el) => {
+              switch (el) {
+                case null:
+                  return 0;
+                case 0:
+                  return 1;
+                case 1:
+                  return 2;
+                default:
+                  return 0;
+              }
+            }),
+            false,
+            false,
+          ];
+          console.log('boaradToChecl', boardToCheck);
+          console.log('nonce', currnetNonce);
+          console.log('move', move);
+          console.log('player', playerIngameId);
+
+          gameApi
+            .checkIsValidMove(
+              {
+                abi: rulesContract.abi as AbiItem[],
+                address: rulesContract.address,
+              },
+              Number(gameId!),
+              currnetNonce,
+              [
+                boardState.map((el) => {
+                  switch (el) {
+                    case null:
+                      return 0;
+                    case 0:
+                      return 1;
+                    case 1:
+                      return 2;
+                    default:
+                      return 0;
+                  }
+                }),
+                false,
+                false,
+              ],
+              playerIngameId,
+              move,
+            )
+            .then((isValid) => {
+              console.log('isvalidResponse', isValid);
+              if (!isValid) {
+                onInvalidMove();
+              }
+            });
+        }
+      }
+      setBoardState(newBoardState);
+    }
+  }, [encodedMessage]);
 
   return (
     <div className={styles.container}>

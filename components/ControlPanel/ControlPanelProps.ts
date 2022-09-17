@@ -2,7 +2,7 @@ import { Contract, ContractInterface } from 'ethers';
 import { IContractData } from 'types';
 export interface ControlPanelPropsI {
   children?: React.ReactNode;
-  onProposeGame?: (gameId: string) => void;
+  onProposeGame: (gameId: string | null) => void;
   onAcceptGame?: () => void;
   onCheckValidMove?: () => void;
   onDisputeMove?: () => void;
@@ -15,4 +15,7 @@ export interface ControlPanelPropsI {
   onSetPlayerIngameId: any;
   winner: number | null;
   rivalPlayerConversationStatus: string | null;
+  isInDispute: boolean;
+  isInvalidMove: boolean;
+  onDispute: () => void;
 }
