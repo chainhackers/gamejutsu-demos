@@ -6,10 +6,10 @@ export async function setSessionKey(gameId:number, wallet: ethers.Wallet): Promi
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const contract = new ethers.Contract(arbiterContract.address, arbiterContract.abi, provider.getSigner());
     const gasEstimatedRedeem =  await contract.estimateGas.setSessionKey(gameId, wallet.address);
-    return await contract.setSessionKey(gameId, wallet.address, {gasLimit: gasEstimatedRedeem.mul(4)});
+    return contract.setSessionKey(gameId, wallet.address, {gasLimit: gasEstimatedRedeem.mul(4)});
 }
 
-export async function getSessionWallet(gameId:number, address:string): Promise<ethers.Wallet> {
+export async function getSessionWallet(gameId:number, address:string, callback: (gameId:number, wallet: ethers.Wallet) => Promise<void>): Promise<ethers.Wallet> {
     let localStorage = window.localStorage;
     let privateStore = `${address}_${gameId}_private`;
     let privateKey = localStorage.getItem(privateStore);
@@ -17,18 +17,18 @@ export async function getSessionWallet(gameId:number, address:string): Promise<e
         return new ethers.Wallet(privateKey);
     }
     let wallet = ethers.Wallet.createRandom();
-    await setSessionKey(gameId, wallet);
+    await callback(gameId, wallet);
     localStorage.setItem(privateStore, wallet.privateKey);
     return wallet;
 }
 
-// All properties on a domain are optional
 const domain = {
-    // name: 'Ether Mail',
-    // version: '1',
-    // chainId: 1,
-    // verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC'
-};
+    name: "GameJutsu",
+    version: "0.1",
+    chainId: 137,
+    verifyingContract: "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC",
+    salt: "0x920dfa98b3727bbfe860dd7341801f2e2a55cd7f637dea958edfc5df56c35e4d"
+}
 
 const types = { GameMove: [
     { name: "gameId", type: "uint256" },
