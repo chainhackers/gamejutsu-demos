@@ -33,14 +33,11 @@ export const WalletContextProvider = ({ children }: { children: React.ReactNode 
 
       let ethereum = await detectEthereumProvider();
       
-      const provider = new ethers.providers.JsonRpcProvider();
-
+      const provider = new ethers.providers.Web3Provider(window.ethereum as ethers.providers.ExternalProvider);
       console.log('provider', provider);
-
-      const newSigner = provider.getSigner();
-      setSigner(newSigner);
-
-      console.log('newSigner', newSigner);
+      const signer = provider.getSigner();
+      console.log('signer', signer);
+      setSigner(signer);
 
       console.log(account);
       
