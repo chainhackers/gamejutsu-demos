@@ -44,7 +44,7 @@ const wagmiClient = createClient({
 
 const cache = new InMemoryCache();
 const client = new ApolloClient({
-  uri: process.env.GRAPHQL_ENDPOINT,
+  uri: 'https://api.thegraph.com/subgraphs/name/chainhackers/gamejutsu-subgraph',
   cache,
 });
 
