@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
+import { useQuery } from '@apollo/client';
+
 import { Board } from 'components/Games/Tic-Tac-Toe';
 import gameApi from 'gameApi';
 import { TikTakToePropsI } from './Tic-Tac-ToeProps';
@@ -35,6 +37,7 @@ export const TicTacToe: React.FC<TikTakToePropsI> = ({
   ]);
 
   const account = useAccount();
+  const 
   const cellClickHandler = (i: any) => {
     // onChangeMessage('ecoded message');
     if (isFinished) return;
