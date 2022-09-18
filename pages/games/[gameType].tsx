@@ -9,7 +9,7 @@ import { XMTPChatLog } from 'components/XMTPChatLog';
 import { useWalletContext } from 'context/WalltetContext';
 import { ControlPanel } from 'components/ControlPanel';
 
-import arbiterContract from 'contracts/Arbiter3.json';
+import arbiterContract from 'contracts/Arbiter.json';
 import rulesContract from 'contracts/TicTacToeRules.json';
 
 import styles from 'pages/games/gameType.module.scss';
