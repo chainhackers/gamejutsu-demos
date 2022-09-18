@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import Web3Modal, { IProviderOptions, providers } from 'web3modal';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { ethers, Signer } from 'ethers';
+import { useAccount, useConnect, useDisconnect } from 'wagmi';
 interface WalletContextProps {
   signer: Signer | undefined;
   address: string | undefined;
@@ -18,6 +19,12 @@ export const WalletContextProvider = ({ children }: { children: React.ReactNode 
   const [web3Modal, setWeb3Modal] = useState<Web3Modal>();
   const [signer, setSigner] = useState<Signer>();
   const [address, setAddress] = useState<string>();
+  const account = useAccount();
+  // const connect = useConnect();
+  // const disconnect = useDisconnect();
+  console.log('account', account);
+  // console.log('connect', connect);
+  // console.log('disconnect', disconnect);
 
   useEffect(() => {
     const infuraId = process.env.NEXT_PUBLIC_INFURA_ID || 'b6058e03f2cd4108ac890d3876a56d0d'; // TODO: set up own infuraID
@@ -46,11 +53,18 @@ export const WalletContextProvider = ({ children }: { children: React.ReactNode 
       if (!instance) return;
       const provider = new ethers.providers.Web3Provider(instance, 'any');
 
+      console.log('provider', provider);
+
       const newSigner = provider.getSigner();
       setSigner(newSigner);
-      const address = await newSigner.getAddress();
 
-      setAddress(address);
+      //const address = await newSigner.getAddress();
+      // newSigner.getAddress().then((data) => {
+      //   setAddress(data);
+      // });
+
+
+      console.log(account);
     };
     connect();
   }, [web3Modal]);
