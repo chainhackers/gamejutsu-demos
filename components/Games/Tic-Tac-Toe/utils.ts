@@ -1,4 +1,4 @@
-import arbiterContract from 'contracts/Arbiter3.json';
+import arbiterContract from 'contracts/Arbiter.json';
 import rulesContreact from 'contracts/TicTacToeRules.json';
 import Web3 from 'web3';
 import { AbiItem } from 'web3-utils';

@@ -17,7 +17,7 @@ export const proposeGame = async (
   const contract = await connectContract(arbiterContractData.abi, arbiterContractData.address);
 
   const response = await contract.methods
-    .proposeGame(curentPlayerId)
+    .proposeGame(curentPlayerId, []) //TODO fix session addresses https://github.com/ChainHackers/gamejutsu-demos/issues/6
     .send({ from: curentPlayerId });
 
   const { gameId, proposer, stake } = response.events.GameProposed.returnValues;
@@ -32,9 +32,9 @@ export const acceptGame = async (
   const contract = await connectContract(arbiterContractData.abi, arbiterContractData.address);
 
   const response = await contract.methods
-    .acceptGame(gamdIdToAccept)
+    .acceptGame(gamdIdToAccept, []) //TODO fix session addresses https://github.com/ChainHackers/gamejutsu-demos/issues/6
     .send({ from: curentPlayerId });
-  const { gameId, players, stake } = response.events.GamesStarted.returnValues;
+  const { gameId, players, stake } = response.events.GameStarted.returnValues;
   return { gameId, players, stake };
 };
 

@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import arbiterContract from 'contracts/Arbiter3.json';
+import arbiterContract from 'contracts/Arbiter.json';
 
 
 export async function registerSessionAddress(provider: ethers.providers.Web3Provider, gameId:number, wallet: ethers.Wallet): Promise<void> {
