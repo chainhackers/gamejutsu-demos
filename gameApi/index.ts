@@ -49,6 +49,20 @@ export const acceptGame = async (
   return { gameId, players, stake };
 };
 
+export const resign = async (
+  contract: ethers.Contract,
+  gameIdToResign: string,
+): Promise<{ gameId: string; winner: string; loser:string; draw: boolean }> => {
+  const gasEstimated =  await contract.estimateGas.resign(gameIdToResign);
+  const tx =  await contract.resign(gameIdToResign, {gasLimit: gasEstimated.mul(2)});
+  console.log('tx', tx);
+  const rc = await tx.wait(); 
+  console.log('rc', rc);
+  const event = rc.events.find((event: { event: string; }) => event.event === 'GameFinished');
+  const { gameId, winner, loser, draw } = event.args;
+  return { gameId, winner, loser, draw };
+};
+
 export const getPlayers = async (contract: ethers.Contract, gamdId: string) => {
   const response =  contract.getPlayers(gamdId);
   return response;
@@ -137,6 +151,7 @@ export default {
   newContract,
   proposeGame,
   acceptGame,
+  resign,
   getPlayers,
   disputeMove,
   checkIsValidMove,

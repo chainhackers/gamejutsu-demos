@@ -50,8 +50,11 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     | 'Proposing...'
     | 'Accepted'
     | 'Accepting...'
+    | 'Resigned'
+    | 'Resigning...'
     | 'Propose failed, check console'
     | 'Accepting failed, check console'
+    | 'Resigne failed, check console'
     | null
   >(null);
   const [gameId, setGameId] = useState<string | null>(null);
@@ -117,6 +120,31 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
       setPlayerType(playersTypes[ACCEPTER_INGAME_ID]);
       setGameStatus('Accepted');
       setGameId(gameId);
+    } catch (error) {
+      setError('Error! Check console!');
+      console.error('Error: ', error);
+    }
+  };
+
+  const submitResignGameHandler: React.FormEventHandler<HTMLFormElement> = async (event) => {
+    event.preventDefault();
+
+    // @ts-ignore TODO: to solve once it make sense
+    const gameId = event.target.children.gameId.value;
+    try {
+      if (!currentPlayerAddress)
+        throw new Error(`No currentPlayerAddress: ${currentPlayerAddress}`);
+      if (!gameId || gameId.length === 0) throw new Error(`Empty game id`);
+      setGameStatus('Resigning...');
+      setError(null);
+
+      const { winner, loser } = await gameApi.resign(
+        gameApi.fromContractData(arbiterContractData),
+        gameId
+      );
+      
+      setGameId(gameId);
+      setGameStatus('Resigned');
     } catch (error) {
       setError('Error! Check console!');
       console.error('Error: ', error);
@@ -347,6 +375,22 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
             <form onSubmit={submitAcceptGameHandler}>
               <button className={styles.submitButton} type="submit">
                 Accept game
+              </button>
+              <input
+                className={styles.input}
+                name="gameId"
+                type="text"
+                placeholder={'Input game id...'}
+              ></input>
+            </form>
+          </div>
+        </div>
+        <div className={styles.block}>
+          <div className={styles.blockTitle}>Resign game</div>
+          <div className={styles.blockData}>
+            <form onSubmit={submitResignGameHandler}>
+              <button className={styles.submitButton} type="submit">
+                Resign game
               </button>
               <input
                 className={styles.input}
