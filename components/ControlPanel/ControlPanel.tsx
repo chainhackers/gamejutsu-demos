@@ -72,8 +72,10 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     setPlayerIngameId(null);
 
     try {
-      const { gameId } = await gameApi.proposeGame(arbiterContractData, curentPlayerId);
+      let { gameId } = await gameApi.proposeGame(gameApi.fromContractData(arbiterContractData), curentPlayerId);
       if (!!gameId) {
+        gameId = gameId.toString();
+        console.log('gameId', gameId);
         setGameId(gameId);
         setPlayerIngameId(PROPOSER_INGAME_ID);
         setPlayerType(playersTypes[PROPOSER_INGAME_ID]);
@@ -103,9 +105,8 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
       setError(null);
 
       const { players } = await gameApi.acceptGame(
-        arbiterContractData,
-        currentPlayerAddress,
-        gameId,
+        gameApi.fromContractData(arbiterContractData),
+        gameId
       );
 
       const fetchedRivalPlayerAddress = players.filter(
@@ -130,7 +131,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
   };
 
   const getPlayersHandler = async (gamdId: string) => {
-    const players = (await gameApi.getPlayers(arbiterContractData, gamdId)) as string[];
+    const players = (await gameApi.getPlayers(gameApi.fromContractData(arbiterContractData), gamdId)) as string[];
 
     if (!!onGetPlayers) onGetPlayers();
   };
@@ -145,7 +146,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     signatures: string[],
   ) => {
     const disputeMoveResult = await gameApi.disputeMove(
-      arbiterContractData,
+      gameApi.fromContractData(arbiterContractData),
       gameId,
       nonce,
       playerAddress,
@@ -168,7 +169,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     move: number,
   ) => {
     const isMoveValid = await gameApi.checkIsValidMove(
-      gameRulesContractData,
+      gameApi.fromContractData(gameRulesContractData),
       gameId,
       nonce,
       boardState,
@@ -188,7 +189,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
   //   move: number,
   // ) => {
   //   const transitionResult = await gameApi.transition(
-  //     gameRulesContractData,
+  //     gameApi.fromContractData(gameRulesContractData),
   //     gameId,
   //     nonce,
   //     boardState,
@@ -217,7 +218,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     const getRivalPlayerLoop = async (timeout: NodeJS.Timeout) => {
       clearTimeout(timeout);
       try {
-        const players = (await gameApi.getPlayers(arbiterContractData, gameId)) as [
+        const players = (await gameApi.getPlayers(gameApi.fromContractData(arbiterContractData), gameId)) as [
           string,
           string,
         ];

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { ParsedUrlQuery } from 'querystring';
 import { Conversation, Stream, Message } from '@xmtp/xmtp-js';
-import { AbiItem } from 'web3-utils';
 import { useXmptContext } from 'context/XmtpContext';
 
 import { TicTacToe } from 'components/Games';
@@ -122,11 +121,11 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       <div className={styles.container}>
         <ControlPanel
           arbiterContractData={{
-            abi: arbiterContract.abi as AbiItem[],
+            abi: arbiterContract.abi,
             address: arbiterContract.address,
           }}
           gameRulesContractData={{
-            abi: rulesContract.abi as AbiItem[],
+            abi: rulesContract.abi,
             address: rulesContract.address,
           }}
           playersTypes={{ 0: 'X', 1: 'O' }}
