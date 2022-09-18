@@ -2,10 +2,10 @@ import { ethers } from "ethers";
 import arbiterContract from 'contracts/Arbiter3.json';
 
 
-export async function setSessionKey(provider: ethers.providers.Web3Provider, gameId:number, wallet: ethers.Wallet): Promise<void> {
+export async function registerSessionAddress(provider: ethers.providers.Web3Provider, gameId:number, wallet: ethers.Wallet): Promise<void> {
     const contract = new ethers.Contract(arbiterContract.address, arbiterContract.abi, provider.getSigner());
-    const gasEstimatedRedeem =  await contract.estimateGas.setSessionKey(gameId, wallet.address);
-    return contract.setSessionKey(gameId, wallet.address, {gasLimit: gasEstimatedRedeem.mul(4)});
+    const gasEstimatedRedeem =  await contract.estimateGas.registerSessionAddress(gameId, wallet.address);
+    return contract.registerSessionAddress(gameId, wallet.address, {gasLimit: gasEstimatedRedeem.mul(4)});
 }
 
 export async function getSessionWallet(gameId:number, address:string, registerAddressCallback: (wallet: ethers.Wallet) => Promise<void>): Promise<ethers.Wallet> {
