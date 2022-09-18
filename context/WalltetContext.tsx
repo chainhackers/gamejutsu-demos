@@ -50,21 +50,19 @@ export const WalletContextProvider = ({ children }: { children: React.ReactNode 
       }
       const instance = await web3Modal.connect();
 
-      console.log('instance', instance);
-
       if (!instance) return;
       const provider = new ethers.providers.Web3Provider(instance, 'any');
 
       console.log('provider', provider);
 
       const newSigner = provider.getSigner();
-      console.log('newSigner', newSigner);
-
       setSigner(newSigner);
 
+      //const address = await newSigner.getAddress();
       // newSigner.getAddress().then((data) => {
       //   setAddress(data);
       // });
+
 
       console.log(account);
     };

@@ -1,10 +1,11 @@
+import cn from 'classnames';
 import { Square } from 'components/Games/Tic-Tac-Toe';
 import { BoardPropsI } from './BoardProps';
 import styles from './Board.module.scss';
-export const Board: React.FC<BoardPropsI> = ({ squares, onClick }) => {
+export const Board: React.FC<BoardPropsI> = ({ squares, onClick, isFinished }) => {
   const renderSquare = (i: number) => <Square value={squares[i]} onClick={() => onClick(i)} />;
   return (
-    <div className={styles.container}>
+    <div className={cn(styles.container, isFinished ? styles.finished : null)}>
       <div className="board-row">
         {renderSquare(0)}
         {renderSquare(1)}

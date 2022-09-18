@@ -1,4 +1,32 @@
-export function calculateWinner(squares: Array<'X' | 'O'>) {
+import arbiterContract from 'contracts/Arbiter3.json';
+import rulesContreact from 'contracts/TicTacToeRules.json';
+import Web3 from 'web3';
+import { AbiItem } from 'web3-utils';
+
+import { TGameBoardState } from './types';
+const web3 = new Web3(Web3.givenProvider);
+
+// const parsedContract = JSON.parse(arbiterContact);
+
+export const connectContract = async () => {
+  const contract = await new web3.eth.Contract(
+    arbiterContract.abi as AbiItem[],
+    arbiterContract.address,
+  );
+
+  return contract;
+};
+
+export const connectRulesContract = async () => {
+  const contract = await new web3.eth.Contract(
+    rulesContreact.abi as AbiItem[],
+    rulesContreact.address,
+  );
+  return contract;
+};
+
+export function calculateWinner(boardState: TGameBoardState) {
+  console.log('calc winnder', 'state', boardState);
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -12,8 +40,8 @@ export function calculateWinner(squares: Array<'X' | 'O'>) {
   const length = lines.length;
   for (let i = 0; i < length; i++) {
     const [a, b, c] = lines[i];
-    const player = squares[a];
-    if (player && player === squares[b] && player === squares[c]) {
+    const player = boardState[a];
+    if (player !== null && player === boardState[b] && player === boardState[c]) {
       return player;
     }
   }
