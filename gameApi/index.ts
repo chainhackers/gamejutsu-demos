@@ -40,7 +40,7 @@ export const acceptGame = async (
   gamdIdToAccept: string,
 ): Promise<{ gameId: string; players: [string, string]; stake: string }> => {
   const gasEstimated =  await contract.estimateGas.acceptGame(gamdIdToAccept, []);
-  const tx =  contract.acceptGame(gamdIdToAccept, [], {gasLimit: gasEstimated.mul(2)});
+  const tx =  await contract.acceptGame(gamdIdToAccept, [], {gasLimit: gasEstimated.mul(2)});
   console.log('tx', tx);
   const rc = await tx.wait(); 
   console.log('rc', rc);
