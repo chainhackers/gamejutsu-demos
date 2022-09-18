@@ -9,7 +9,6 @@ import React, {
 import { Client, Message } from '@xmtp/xmtp-js';
 import { Conversation } from '@xmtp/xmtp-js';
 import { Signer } from 'ethers';
-import { useWalletContext } from './WalltetContext';
 import { getEnv } from '../helpers';
 
 const xmtpContextDefault = {

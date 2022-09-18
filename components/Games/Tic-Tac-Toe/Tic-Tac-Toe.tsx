@@ -8,7 +8,6 @@ import { defaultAbiCoder } from 'ethers/lib/utils';
 import rulesContract from 'contracts/TicTacToeRules.json';
 import styles from './Tic-Tac-Toe.module.scss';
 import { TCellData, TGameBoardState, TGameState } from './types';
-import { AbiItem } from 'web3-utils';
 import { TBoardState } from 'types';
 export const TicTacToe: React.FC<TikTakToePropsI> = ({
   children,
@@ -138,10 +137,7 @@ export const TicTacToe: React.FC<TikTakToePropsI> = ({
 
           gameApi
             .checkIsValidMove(
-              {
-                abi: rulesContract.abi as AbiItem[],
-                address: rulesContract.address,
-              },
+              gameApi.fromContractData(rulesContract),
               Number(gameId!),
               currnetNonce,
               [

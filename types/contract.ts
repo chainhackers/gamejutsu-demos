@@ -1,5 +1,5 @@
-import { AbiItem } from 'web3-utils';
+import { ethers } from "ethers";
 export interface IContractData {
-  abi: AbiItem[];
+  abi: ethers.ContractInterface;
   address: string;
 }

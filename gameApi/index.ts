@@ -1,51 +1,61 @@
-import { AbiItem } from 'web3-utils';
-import Web3 from 'web3';
 import { defaultAbiCoder } from 'ethers/lib/utils';
 import { IContractData, TBoardState } from 'types';
+import { ethers, Transaction } from 'ethers';
 
-const web3 = new Web3(Web3.givenProvider);
+export function fromContractData(data: IContractData):ethers.Contract {
+  const provider = new ethers.providers.Web3Provider(window.ethereum as ethers.providers.ExternalProvider);
+  console.log('provider', provider);
+  const signer = provider.getSigner();
+  console.log('signer', signer);
+  return newContract(data.address, data.abi, signer);
+}
 
-export const connectContract = async (abi: AbiItem[], address: string) => {
-  const contract = await new web3.eth.Contract(abi as AbiItem[], address);
+
+export function newContract(addressOrName: string,
+  contractInterface: ethers.ContractInterface,
+  signerOrProvider?: ethers.Signer | ethers.providers.Provider
+  ):ethers.Contract {
+  const contract = new ethers.Contract(addressOrName, contractInterface, signerOrProvider);
   return contract;
-};
+}
 
 export const proposeGame = async (
-  arbiterContractData: IContractData,
-  curentPlayerId: string,
+  contract: ethers.Contract,
+  currentPlayerId: string,
 ): Promise<{ gameId: string; proposer: string; stake: string }> => {
-  const contract = await connectContract(arbiterContractData.abi, arbiterContractData.address);
 
-  const response = await contract.methods
-    .proposeGame(curentPlayerId, []) //TODO fix session addresses https://github.com/ChainHackers/gamejutsu-demos/issues/6
-    .send({ from: curentPlayerId });
-
-  const { gameId, proposer, stake } = response.events.GameProposed.returnValues;
+  //TODO d be rules contract address;
+  const gasEstimated =  await contract.estimateGas.proposeGame(currentPlayerId, []);
+  const tx = await contract.proposeGame(currentPlayerId, [], {gasLimit: gasEstimated.mul(2)});
+  console.log('tx', tx);
+  const rc = await tx.wait(); 
+  console.log('rc', rc);
+  const event = rc.events.find((event: { event: string; }) => event.event === 'GameProposed');
+  const { gameId, proposer, stake } = event.args;
   return { gameId, proposer, stake };
 };
 
 export const acceptGame = async (
-  arbiterContractData: IContractData,
-  curentPlayerId: string,
+  contract: ethers.Contract,
   gamdIdToAccept: string,
 ): Promise<{ gameId: string; players: [string, string]; stake: string }> => {
-  const contract = await connectContract(arbiterContractData.abi, arbiterContractData.address);
-
-  const response = await contract.methods
-    .acceptGame(gamdIdToAccept, []) //TODO fix session addresses https://github.com/ChainHackers/gamejutsu-demos/issues/6
-    .send({ from: curentPlayerId });
-  const { gameId, players, stake } = response.events.GameStarted.returnValues;
+  const gasEstimated =  await contract.estimateGas.acceptGame(gamdIdToAccept, []);
+  const tx =  contract.acceptGame(gamdIdToAccept, [], {gasLimit: gasEstimated.mul(2)});
+  console.log('tx', tx);
+  const rc = await tx.wait(); 
+  console.log('rc', rc);
+  const event = rc.events.find((event: { event: string; }) => event.event === 'GameStarted');
+  const { gameId, players, stake } = event.args;
   return { gameId, players, stake };
 };
 
-export const getPlayers = async (arbiterContractData: IContractData, gamdId: string) => {
-  const contract = await connectContract(arbiterContractData.abi, arbiterContractData.address);
-  const players = await contract.methods.getPlayers(gamdId).call();
-  return players;
+export const getPlayers = async (contract: ethers.Contract, gamdId: string) => {
+  const response =  contract.getPlayers(gamdId);
+  return response;
 };
 
 export const disputeMove = async (
-  arbiterContractData: IContractData,
+  contract: ethers.Contract,
   gameId: number,
   nonce: number,
   playerAddress: string,
@@ -54,8 +64,6 @@ export const disputeMove = async (
   move: number,
   signatures: string[],
 ) => {
-  const contract = await connectContract(arbiterContractData.abi, arbiterContractData.address);
-
   const encodedOldBoardState = defaultAbiCoder.encode(
     ['uint8[9]', 'bool', 'bool'],
     oldBoardState,
@@ -79,49 +87,40 @@ export const disputeMove = async (
 
   const signedMove = [gameMove, signatures];
 
-  const disputeMoveResult = await contract.methods.disputeMove(signedMove).call();
+  const gasEstimated =  await contract.estimateGas.disputeMove(signedMove);
+  const response =  contract.disputeMove(signedMove, {gasLimit: gasEstimated.mul(2)});
 
-  return disputeMoveResult;
+  return response;
 };
 
 export const checkIsValidMove = async (
-  gameRulesContractData: IContractData,
+  contract: ethers.Contract,
   gameId: number,
   nonce: number,
   boardState: TBoardState,
   playerIngameId: number,
   move: number,
 ) => {
-  const contract = await connectContract(
-    gameRulesContractData.abi,
-    gameRulesContractData.address,
-  );
-
+  
   const encodedBoardState = defaultAbiCoder.encode(['uint8[9]', 'bool', 'bool'], boardState);
 
   const gameState = [gameId, nonce, encodedBoardState];
 
   const encodedMove = defaultAbiCoder.encode(['uint8'], [move]);
 
-  const isMoveValid = await contract.methods
-    .isValidMove(gameState, playerIngameId, encodedMove)
-    .call();
+  const response =  contract.isValidMove(gameState, playerIngameId, encodedMove);
 
-  return isMoveValid;
+  return response;
 };
 
 export const transition = async (
-  gameRulesContractData: IContractData,
+  contract: ethers.Contract,
   gameId: number,
   nonce: number,
   boardState: TBoardState,
   playerIngameId: number,
   move: number,
 ) => {
-  const contract = await connectContract(
-    gameRulesContractData.abi,
-    gameRulesContractData.address,
-  );
 
   const encodedBoardState = defaultAbiCoder.encode(['uint8[9]', 'bool', 'bool'], boardState);
 
@@ -129,14 +128,13 @@ export const transition = async (
 
   const encodedMove = defaultAbiCoder.encode(['uint8'], [move]);
 
-  const transitionResult = await contract.methods
-    .transition(gameState, playerIngameId, encodedMove)
-    .call();
-
-  return transitionResult;
+  const response = await contract.transition(gameState, playerIngameId, encodedMove);
+  return response;
 };
 
 export default {
+  fromContractData,
+  newContract,
   proposeGame,
   acceptGame,
   getPlayers,

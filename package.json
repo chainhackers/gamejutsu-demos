@@ -10,6 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@metamask/detect-provider": "^1.2.0",
     "@rainbow-me/rainbowkit": "^0.5.1",
     "@walletconnect/web3-provider": "^1.8.0",
     "@xmtp/xmtp-js": "^6.1.0",
@@ -20,9 +21,7 @@
     "react-dom": "^18.1.0",
     "sass": "^1.54.9",
     "tictactoe-ai": "^1.0.4",
-    "wagmi": "^0.6.0",
-    "web3": "^1.8.0",
-    "web3modal": "^1.9.9"
+    "wagmi": "^0.6.0"
   },
   "devDependencies": {
     "@types/node": "^17.0.35",
