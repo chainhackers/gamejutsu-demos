@@ -1,4 +1,4 @@
-import { Logo } from 'components';
+// import { Logo } from 'components';
 import { HeaderPropsI } from './HeaderProps';
 import styles from './Header.module.scss';
 export const Header: React.FC<HeaderPropsI> = () => {
