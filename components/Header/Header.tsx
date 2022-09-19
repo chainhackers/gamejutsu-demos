@@ -4,7 +4,7 @@ import styles from './Header.module.scss';
 export const Header: React.FC<HeaderPropsI> = () => {
   return (
     <div className={styles.container}>
-      <Logo />
+      {/* <Logo /> */}
     </div>
   );
 };
