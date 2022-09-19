@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
+import { useQuery } from '@apollo/client';
+
 import { Board } from 'components/Games/Tic-Tac-Toe';
 import gameApi from 'gameApi';
 import { TikTakToePropsI } from './Tic-Tac-ToeProps';
@@ -9,6 +11,8 @@ import rulesContract from 'contracts/TicTacToeRules.json';
 import styles from './Tic-Tac-Toe.module.scss';
 import { TCellData, TGameBoardState, TGameState } from './types';
 import { TBoardState } from 'types';
+
+import { gameEntitiesQuery, inRowCounterEntitiesQuery } from 'queries';
 export const TicTacToe: React.FC<TikTakToePropsI> = ({
   children,
   // gameState,
@@ -35,6 +39,21 @@ export const TicTacToe: React.FC<TikTakToePropsI> = ({
   ]);
 
   const account = useAccount();
+  const {
+    data: gamesEnities,
+    error: gamesError,
+    loading: gamesLoading,
+  } = useQuery(gameEntitiesQuery);
+
+  const {
+    data: inRowGamesEnitites,
+    error: inRowGamesError,
+    loading: inRowGamesLoading,
+  } = useQuery(inRowCounterEntitiesQuery);
+  console.log('query data games: ', gamesEnities);
+  console.log('query data inRowGames: ', inRowGamesEnitites);
+
+  
   const cellClickHandler = (i: any) => {
     // onChangeMessage('ecoded message');
     if (isFinished) return;
