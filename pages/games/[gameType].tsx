@@ -138,7 +138,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     //     bytes[] signatures;
     // }
 
-    sendMessageHandler({ gameMove, signatures: [signature] });
+    sendMessageHandler({ gameMove: structureToSign, signatures: [signature] });
   };
 
   const inValidMoveHandler = () => {

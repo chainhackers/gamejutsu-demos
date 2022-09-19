@@ -115,7 +115,7 @@ export const TicTacToe: React.FC<TikTakToePropsI> = ({
     if (!encodedMessage) return;
 
     const processIncomingMove = async (gameMove: any, signatures: string[]) => {
-      const { newState, oldState, nonce } = gameMove;
+      const { newState, oldState, nonce, gameId, player, move: originMove } = gameMove;
       const decodedNewState = defaultAbiCoder.decode(
         ['uint8[9]', 'bool', 'bool'],
         newState,
@@ -148,7 +148,7 @@ export const TicTacToe: React.FC<TikTakToePropsI> = ({
         Number(gameId!),
         nonce,
         decodeOldState,
-        playerIngameId,
+        playerIngameId === 0 ? 1 : 0,
         move!,
       );
 
