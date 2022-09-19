@@ -12,7 +12,12 @@ import styles from './Tic-Tac-Toe.module.scss';
 import { TCellData, TGameBoardState, TGameState } from './types';
 import { TBoardState } from 'types';
 
+import { signMove, getSessionWallet } from 'helpers/session_signatures';
+import { ethers } from 'ethers';
+
+
 import { gameEntitiesQuery, inRowCounterEntitiesQuery } from 'queries';
+
 export const TicTacToe: React.FC<TikTakToePropsI> = ({
   children,
   // gameState,
@@ -38,6 +43,8 @@ export const TicTacToe: React.FC<TikTakToePropsI> = ({
     null,
   ]);
 
+  const [disputiveMove, setDisputiveMove] = useState<number | null>(null);
+
   const account = useAccount();
   const {
     data: gamesEnities,
@@ -60,9 +67,9 @@ export const TicTacToe: React.FC<TikTakToePropsI> = ({
 
     const updatedBoardState = [...boardState] as TGameBoardState;
     updatedBoardState[i] = playerIngameId as TCellData;
-    // console.log(updatedBoardState);
+
     const winner = calculateWinner(updatedBoardState);
-    // console.log('winner', winner);
+
     setIsFinished(winner !== null);
     onWinner(winner);
     const newGameState = [
@@ -81,32 +88,67 @@ export const TicTacToe: React.FC<TikTakToePropsI> = ({
       winner === 0,
       winner === 1,
     ];
+
+    const oldGameState = [
+      boardState.map((el) => {
+        switch (el) {
+          case null:
+            return 0;
+          case 0:
+            return 1;
+          case 1:
+            return 2;
+          default:
+            return 0;
+        }
+      }),
+      false,
+      false,
+    ];
     setBoardState(updatedBoardState);
 
-    const encodedMessage = defaultAbiCoder.encode(['uint8[9]', 'bool', 'bool'], newGameState);
+    const encodedNewGameState = defaultAbiCoder.encode(
+      ['uint8[9]', 'bool', 'bool'],
+      newGameState,
+    );
+    const encodedOldGameState = defaultAbiCoder.encode(
+      ['uint8[9]', 'bool', 'bool'],
+      oldGameState,
+    );
     // onGameStateChange(newGameState, i as number);
-    onChangeMessage(encodedMessage);
+    const nonce = updatedBoardState.filter((el) => el !== null).length - 1;
+    console.log(updatedBoardState);
+    const move = updatedBoardState.reduce<null | number>((acc, val, index) => {
+      return val !== boardState[index] ? index : acc;
+    }, 0)!;
+
+    console.log('move', move);
+
+    const gameMove: { nonce: number; oldState: string; newState: string; move: string } = {
+      nonce,
+      move: defaultAbiCoder.encode(['uint8'], [move]),
+      oldState: encodedOldGameState,
+      newState: encodedNewGameState,
+    };
+    onChangeMessage(encodedNewGameState, gameMove);
   };
-
-  // useEffect(() => {
-  //   setBoardState(gameState[0]);
-  //   if (!!gameState[1] || !!gameState[2]) setIsFinished(true);
-  // }, [gameState]);
-
-  // console.log('encodedMessage1', encodedMessage);
 
   useEffect(() => {
     if (!encodedMessage) return;
-    const decodedMessage = defaultAbiCoder.decode(
-      ['uint8[9]', 'bool', 'bool'],
-      encodedMessage.content,
-    ) as TBoardState;
-    if (
-      decodedMessage[0] instanceof Array &&
-      typeof decodedMessage[1] === 'boolean' &&
-      typeof decodedMessage[2] === 'boolean'
-    ) {
-      const newBoardState = decodedMessage[0].map((el) => {
+
+    const processIncomingMove = async (gameMove: any, signatures: string[]) => {
+      const { newState, oldState, nonce } = gameMove;
+      const decodedNewState = defaultAbiCoder.decode(
+        ['uint8[9]', 'bool', 'bool'],
+        newState,
+      ) as TBoardState;
+
+      const decodeOldState = defaultAbiCoder.decode(
+        ['uint8[9]', 'bool', 'bool'],
+        oldState,
+      ) as TBoardState;
+
+      const newBoardState = decodedNewState[0].map((el) => {
         switch (el) {
           case 0:
             return null;
@@ -118,75 +160,66 @@ export const TicTacToe: React.FC<TikTakToePropsI> = ({
             return null;
         }
       }) as TGameBoardState;
-      console.log('sender', encodedMessage.sender);
-      if (encodedMessage.sender !== account.address) {
-        console.log('incoming message need to check');
 
-        console.log('newBoardState', newBoardState);
+      const move = newBoardState.reduce<null | number>((acc, val, index) => {
+        return val !== boardState[index] ? index : acc;
+      }, null);
 
-        const currnetNonce = newBoardState.filter((el) => el !== null).length;
+      const isValidMove = await gameApi.checkIsValidMove(
+        gameApi.fromContractData(rulesContract),
+        Number(gameId!),
+        nonce,
+        decodeOldState,
+        playerIngameId,
+        move!,
+      );
 
-        const move = newBoardState.reduce<null | number>((acc, val, index) => {
-          return val !== boardState[index] ? index : acc;
-        }, null);
-
-        console.log(move);
-
-        if (move !== null) {
-          const boardToCheck = [
-            boardState.map((el) => {
-              switch (el) {
-                case null:
-                  return 0;
-                case 0:
-                  return 1;
-                case 1:
-                  return 2;
-                default:
-                  return 0;
-              }
-            }),
-            false,
-            false,
-          ];
-          console.log('boaradToChecl', boardToCheck);
-          console.log('nonce', currnetNonce);
-          console.log('move', move);
-          console.log('player', playerIngameId);
-
-          gameApi
-            .checkIsValidMove(
-              gameApi.fromContractData(rulesContract),
-              Number(gameId!),
-              currnetNonce,
-              [
-                boardState.map((el) => {
-                  switch (el) {
-                    case null:
-                      return 0;
-                    case 0:
-                      return 1;
-                    case 1:
-                      return 2;
-                    default:
-                      return 0;
-                  }
-                }),
-                false,
-                false,
-              ],
-              playerIngameId,
-              move,
-            )
-            .then((isValid) => {
-              console.log('isvalidResponse', isValid);
-              if (!isValid) {
-                onInvalidMove();
-              }
-            });
-        }
-      }
       setBoardState(newBoardState);
+
+      if (!isValidMove) {
+        console.log('invalid move', gameMove, signatures);
+        setDisputiveMove(move);
+        onInvalidMove();
+        return;
+      }
+
+      setBoardState(newBoardState);
+
+      const structureToSign: {
+        gameId: number;
+        nonce: number;
+        player: string;
+        oldState: string;
+        newState: string;
+        move: string;
+      } = {
+        gameId: Number(gameId),
+        nonce: nonce,
+        player: encodedMessage.sender,
+        oldState,
+        newState,
+        move: defaultAbiCoder.encode(['uint8'], [move]),
+      };
+
+      const signature = await signMove(
+        structureToSign,
+        await getSessionWallet(
+          Number(gameId),
+          encodedMessage.sender,
+          (wallet: ethers.Wallet) => Promise.resolve(),
+        ),
+      );
+
+      console.log('incoming message signed back, signature: ', signature);
+    };
+
+    if (encodedMessage.content.gameMove) {
+      if (encodedMessage.sender !== account.address) {
+        processIncomingMove(
+          encodedMessage.content.gameMove,
+          encodedMessage.content.signatures,
+        );
+      }
     }
   }, [encodedMessage]);
 
@@ -198,6 +231,7 @@ export const TicTacToe: React.FC<TikTakToePropsI> = ({
           squares={boardState}
           onClick={(i) => cellClickHandler(i)}
           isFinished={isFinished}
+          disputiveMove={disputiveMove}
         />
       </div>
     </div>
@@ -406,3 +440,91 @@ export const TicTacToe: React.FC<TikTakToePropsI> = ({
 //     if (!!stream) stream.return();
 //   };
 // }, [conversation, currentPlayer]);
+
+// if (
+//   decodedMessage[0] instanceof Array &&
+//   typeof decodedMessage[1] === 'boolean' &&
+//   typeof decodedMessage[2] === 'boolean'
+// ) {
+// const newBoardState = decodedMessage[0].map((el) => {
+//   switch (el) {
+//     case 0:
+//       return null;
+//     case 1:
+//       return 0;
+//     case 2:
+//       return 1;
+//     default:
+//       return null;
+//   }
+// }) as TGameBoardState;
+//   console.log('sender', encodedMessage.sender);
+//   if (encodedMessage.sender !== account.address) {
+//     console.log('incoming message need to check');
+
+//     console.log('newBoardState', newBoardState);
+
+//     const currnetNonce = newBoardState.filter((el) => el !== null).length;
+
+//     const move = newBoardState.reduce<null | number>((acc, val, index) => {
+//       return val !== boardState[index] ? index : acc;
+//     }, null);
+
+//     console.log(move);
+
+//     if (move !== null) {
+//       const boardToCheck = [
+//         boardState.map((el) => {
+//           switch (el) {
+//             case null:
+//               return 0;
+//             case 0:
+//               return 1;
+//             case 1:
+//               return 2;
+//             default:
+//               return 0;
+//           }
+//         }),
+//         false,
+//         false,
+//       ];
+//       console.log('boaradToChecl', boardToCheck);
+//       console.log('nonce', currnetNonce);
+//       console.log('move', move);
+//       console.log('player', playerIngameId);
+
+//       gameApi
+//         .checkIsValidMove(
+//           gameApi.fromContractData(rulesContract),
+//           Number(gameId!),
+//           currnetNonce,
+//           [
+//             boardState.map((el) => {
+//               switch (el) {
+//                 case null:
+//                   return 0;
+//                 case 0:
+//                   return 1;
+//                 case 1:
+//                   return 2;
+//                 default:
+//                   return 0;
+//               }
+//             }),
+//             false,
+//             false,
+//           ],
+//           playerIngameId,
+//           move,
+//         )
+//         .then((isValid) => {
+//           console.log('isvalidResponse', isValid);
+//           if (!isValid) {
+//             onInvalidMove();
+//           }
+//         });
+//     }
+//   }
+//   setBoardState(newBoardState);
+// }

@@ -37,9 +37,9 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
   //   string | null
   // >(null);
   // const rivalPlayerAddress =
-  //   currentPlayerAddress === '0x1215991085d541A586F0e1968355A36E58C9b2b4'
-  //     ? '0xDb0b11d1281da49e950f89bD0F6B47D464d25F91'
-  //     : '0x1215991085d541A586F0e1968355A36E58C9b2b4';
+  // currentPlayerAddress === '0x1215991085d541A586F0e1968355A36E58C9b2b4'
+  //   ? '0xDb0b11d1281da49e950f89bD0F6B47D464d25F91'
+  //   : '0x1215991085d541A586F0e1968355A36E58C9b2b4';
   const [rivalAddressStatus, setRivalAddressStatus] = useState<
     'Fetching rival address...' | 'Failed to get rival address' | null
   >(null);
@@ -75,7 +75,10 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     setPlayerIngameId(null);
 
     try {
-      let { gameId } = await gameApi.proposeGame(gameApi.fromContractData(arbiterContractData), curentPlayerId);
+      let { gameId } = await gameApi.proposeGame(
+        gameApi.fromContractData(arbiterContractData),
+        curentPlayerId,
+      );
       if (!!gameId) {
         gameId = gameId.toString();
         console.log('gameId', gameId);
@@ -109,7 +112,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
 
       const { players } = await gameApi.acceptGame(
         gameApi.fromContractData(arbiterContractData),
-        gameId
+        gameId,
       );
 
       const fetchedRivalPlayerAddress = players.filter(
@@ -140,9 +143,9 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
 
       const { winner, loser } = await gameApi.resign(
         gameApi.fromContractData(arbiterContractData),
-        gameId
+        gameId,
       );
-      
+
       setGameId(gameId);
       setGameStatus('Resigned');
     } catch (error) {
@@ -159,7 +162,10 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
   };
 
   const getPlayersHandler = async (gamdId: string) => {
-    const players = (await gameApi.getPlayers(gameApi.fromContractData(arbiterContractData), gamdId)) as string[];
+    const players = (await gameApi.getPlayers(
+      gameApi.fromContractData(arbiterContractData),
+      gamdId,
+    )) as string[];
 
     if (!!onGetPlayers) onGetPlayers();
   };
@@ -246,10 +252,10 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     const getRivalPlayerLoop = async (timeout: NodeJS.Timeout) => {
       clearTimeout(timeout);
       try {
-        const players = (await gameApi.getPlayers(gameApi.fromContractData(arbiterContractData), gameId)) as [
-          string,
-          string,
-        ];
+        const players = (await gameApi.getPlayers(
+          gameApi.fromContractData(arbiterContractData),
+          gameId,
+        )) as [string, string];
 
         const zeroPlayer = players.find((player) => player === ZERO_ADDRESS);
 
@@ -292,6 +298,16 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     //   currentPlayerAddress === '0x1215991085d541A586F0e1968355A36E58C9b2b4' ? 0 : 1,
     // );
   }, [playerIngameId]);
+
+// useEffect(() => {
+//     setRivalPlayerAddress(
+//       currentPlayerAddress === '0x1215991085d541A586F0e1968355A36E58C9b2b4'
+//         ? '0xDb0b11d1281da49e950f89bD0F6B47D464d25F91'
+//         : '0x1215991085d541A586F0e1968355A36E58C9b2b4',
+//     );
+//   }, [currentPlayerAddress]);
+
+  // console.log('rivalPlayerAddress', currentPlayerAddress, rivalPlayerAddress);
 
   return (
     <div className={styles.container}>
@@ -424,6 +440,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
                 : rivalPlayerAddress
                 ? rivalPlayerAddress
                 : 'Accept game or input rival player address'}
+              {/* {rivalPlayerAddress} */}
             </span>
           </div>
           <div className={styles.blockData}>

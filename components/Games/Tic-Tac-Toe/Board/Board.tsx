@@ -2,8 +2,16 @@ import cn from 'classnames';
 import { Square } from 'components/Games/Tic-Tac-Toe';
 import { BoardPropsI } from './BoardProps';
 import styles from './Board.module.scss';
-export const Board: React.FC<BoardPropsI> = ({ squares, onClick, isFinished }) => {
-  const renderSquare = (i: number) => <Square value={squares[i]} onClick={() => onClick(i)} />;
+// import { disputeMove } from 'gameApi';
+export const Board: React.FC<BoardPropsI> = ({
+  squares,
+  onClick,
+  isFinished,
+  disputiveMove,
+}) => {
+  const renderSquare = (i: number) => (
+    <Square value={squares[i]} onClick={() => onClick(i)} disputive={i === disputiveMove} />
+  );
   return (
     <div className={cn(styles.container, isFinished ? styles.finished : null)}>
       <div className="board-row">

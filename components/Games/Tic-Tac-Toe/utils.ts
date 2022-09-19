@@ -1,7 +1,7 @@
 import { TGameBoardState } from './types';
 
 export function calculateWinner(boardState: TGameBoardState) {
-  console.log('calc winnder', 'state', boardState);
+  // console.log('calc winnder', 'state', boardState);
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
