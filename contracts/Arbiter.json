@@ -1,11 +1,6 @@
 {
-  "address": "0xcdf1742F9289C85286b0639d5Bb5052FB5D7b2A8",
+  "address": "0xc403667a1c550BFB365Aba91a5A6400308042378",
   "abi": [
-    {
-      "inputs": [],
-      "stateMutability": "nonpayable",
-      "type": "constructor"
-    },
     {
       "anonymous": false,
       "inputs": [
@@ -151,82 +146,60 @@
       "type": "event"
     },
     {
-      "inputs": [],
-      "name": "DEFAULT_TIMEOUT",
-      "outputs": [
+      "anonymous": false,
+      "inputs": [
         {
+          "indexed": false,
           "internalType": "uint256",
-          "name": "",
+          "name": "gameId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "player",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "nonce",
           "type": "uint256"
         }
       ],
-      "stateMutability": "view",
-      "type": "function"
+      "name": "TimeoutResolved",
+      "type": "event"
     },
     {
-      "inputs": [],
-      "name": "DEFAULT_TIMEOUT_STAKE",
-      "outputs": [
+      "anonymous": false,
+      "inputs": [
         {
+          "indexed": false,
           "internalType": "uint256",
-          "name": "",
+          "name": "gameId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "player",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "nonce",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "timeout",
           "type": "uint256"
         }
       ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "DOMAIN_SEPARATOR",
-      "outputs": [
-        {
-          "internalType": "bytes32",
-          "name": "",
-          "type": "bytes32"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "DOMAIN_TYPEHASH",
-      "outputs": [
-        {
-          "internalType": "bytes32",
-          "name": "",
-          "type": "bytes32"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "GAME_MOVE_TYPEHASH",
-      "outputs": [
-        {
-          "internalType": "bytes32",
-          "name": "",
-          "type": "bytes32"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "NUM_PLAYERS",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
+      "name": "TimeoutStarted",
+      "type": "event"
     },
     {
       "inputs": [
@@ -420,9 +393,9 @@
               "type": "bytes[]"
             }
           ],
-          "internalType": "struct IGameJutsuArbiter.SignedGameMove[]",
+          "internalType": "struct IGameJutsuArbiter.SignedGameMove[2]",
           "name": "signedMoves",
-          "type": "tuple[]"
+          "type": "tuple[2]"
         }
       ],
       "name": "finishGame",
@@ -440,7 +413,7 @@
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "",
+          "name": "gameId",
           "type": "uint256"
         }
       ],
@@ -465,69 +438,6 @@
           "internalType": "bool",
           "name": "finished",
           "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "components": [
-            {
-              "components": [
-                {
-                  "internalType": "uint256",
-                  "name": "gameId",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "nonce",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "address",
-                  "name": "player",
-                  "type": "address"
-                },
-                {
-                  "internalType": "bytes",
-                  "name": "oldState",
-                  "type": "bytes"
-                },
-                {
-                  "internalType": "bytes",
-                  "name": "newState",
-                  "type": "bytes"
-                },
-                {
-                  "internalType": "bytes",
-                  "name": "move",
-                  "type": "bytes"
-                }
-              ],
-              "internalType": "struct IGameJutsuArbiter.GameMove",
-              "name": "gameMove",
-              "type": "tuple"
-            },
-            {
-              "internalType": "bytes[]",
-              "name": "signatures",
-              "type": "bytes[]"
-            }
-          ],
-          "internalType": "struct IGameJutsuArbiter.SignedGameMove",
-          "name": "signedGameMove",
-          "type": "tuple"
-        }
-      ],
-      "name": "getPlayerFromSignedGameMove",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
         }
       ],
       "stateMutability": "view",
@@ -600,37 +510,13 @@
             }
           ],
           "internalType": "struct IGameJutsuArbiter.SignedGameMove[2]",
-          "name": "signedMove",
+          "name": "signedMoves",
           "type": "tuple[2]"
         }
       ],
       "name": "initTimeout",
       "outputs": [],
       "stateMutability": "payable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "gameId",
-          "type": "uint256"
-        },
-        {
-          "internalType": "address",
-          "name": "player",
-          "type": "address"
-        }
-      ],
-      "name": "isPlayer",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -669,7 +555,7 @@
             }
           ],
           "internalType": "struct IGameJutsuArbiter.GameMove",
-          "name": "signedMove",
+          "name": "gameMove",
           "type": "tuple"
         }
       ],
@@ -682,43 +568,6 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "nextGameId",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "contract IGameJutsuRules",
-          "name": "rules",
-          "type": "address"
-        },
-        {
-          "internalType": "address[]",
-          "name": "sessionAddresses",
-          "type": "address[]"
-        }
-      ],
-      "name": "proposeGame",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "gameId",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -773,12 +622,12 @@
           "type": "tuple"
         }
       ],
-      "name": "publicGetSigners",
+      "name": "isValidSignedMove",
       "outputs": [
         {
-          "internalType": "address[]",
+          "internalType": "bool",
           "name": "",
-          "type": "address[]"
+          "type": "bool"
         }
       ],
       "stateMutability": "view",
@@ -787,57 +636,25 @@
     {
       "inputs": [
         {
-          "components": [
-            {
-              "internalType": "uint256",
-              "name": "gameId",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "nonce",
-              "type": "uint256"
-            },
-            {
-              "internalType": "address",
-              "name": "player",
-              "type": "address"
-            },
-            {
-              "internalType": "bytes",
-              "name": "oldState",
-              "type": "bytes"
-            },
-            {
-              "internalType": "bytes",
-              "name": "newState",
-              "type": "bytes"
-            },
-            {
-              "internalType": "bytes",
-              "name": "move",
-              "type": "bytes"
-            }
-          ],
-          "internalType": "struct IGameJutsuArbiter.GameMove",
-          "name": "gameMove",
-          "type": "tuple"
+          "internalType": "contract IGameJutsuRules",
+          "name": "rules",
+          "type": "address"
         },
         {
-          "internalType": "bytes",
-          "name": "signature",
-          "type": "bytes"
+          "internalType": "address[]",
+          "name": "sessionAddresses",
+          "type": "address[]"
         }
       ],
-      "name": "recoverAddress",
+      "name": "proposeGame",
       "outputs": [
         {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
+          "internalType": "uint256",
+          "name": "gameId",
+          "type": "uint256"
         }
       ],
-      "stateMutability": "view",
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -926,79 +743,6 @@
       "name": "resolveTimeout",
       "outputs": [],
       "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "name": "timeouts",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "startTime",
-          "type": "uint256"
-        },
-        {
-          "components": [
-            {
-              "components": [
-                {
-                  "internalType": "uint256",
-                  "name": "gameId",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "uint256",
-                  "name": "nonce",
-                  "type": "uint256"
-                },
-                {
-                  "internalType": "address",
-                  "name": "player",
-                  "type": "address"
-                },
-                {
-                  "internalType": "bytes",
-                  "name": "oldState",
-                  "type": "bytes"
-                },
-                {
-                  "internalType": "bytes",
-                  "name": "newState",
-                  "type": "bytes"
-                },
-                {
-                  "internalType": "bytes",
-                  "name": "move",
-                  "type": "bytes"
-                }
-              ],
-              "internalType": "struct IGameJutsuArbiter.GameMove",
-              "name": "gameMove",
-              "type": "tuple"
-            },
-            {
-              "internalType": "bytes[]",
-              "name": "signatures",
-              "type": "bytes[]"
-            }
-          ],
-          "internalType": "struct IGameJutsuArbiter.SignedGameMove",
-          "name": "signedMove",
-          "type": "tuple"
-        },
-        {
-          "internalType": "uint256",
-          "name": "stake",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
       "type": "function"
     }
   ]
