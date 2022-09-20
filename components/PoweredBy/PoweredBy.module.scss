@@ -1,0 +1,15 @@
+.container {
+  text-align: end;
+
+  .title {
+    padding-bottom: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    padding-right: 30px;
+  }
+
+  .units {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
