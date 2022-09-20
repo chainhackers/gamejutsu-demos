@@ -17,6 +17,8 @@ import { signMove, getSessionWallet } from 'helpers/session_signatures';
 
 import styles from 'pages/games/gameType.module.scss';
 import { ethers } from 'ethers';
+import {ETTicTacToe} from "../../components/Games/ET-Tic-Tac-Toe";
+import {ITicTacToeState, TicTacToeBoard, TicTacToeState} from "../../components/Games/ET-Tic-Tac-Toe/types";
 
 interface IGamePageProps {
   gameType?: string;
@@ -35,6 +37,17 @@ interface IParams extends ParsedUrlQuery {
 //   : '0x1215991085d541A586F0e1968355A36E58C9b2b4';
 
 const Game: NextPage<IGamePageProps> = ({ gameType }) => {
+  const initialState =  new TicTacToeState(
+      1,
+      'X',
+      new TicTacToeBoard(['X', 'O', 'X', null, null, null, null, null, null]),
+  )
+      .makeMove(7)
+      .makeMove(8)
+      .makeMove(6)
+      .makeMove(5);
+  const [gameState, setGameState] = useState<ITicTacToeState>(initialState);
+
   const [playerIngameId, setPlayerIngameId] = useState<0 | 1>(0);
   const [conversation, setConversation] = useState<Conversation | null>(null);
   const [isInDispute, setIsInDispute] = useState<boolean>(false);
@@ -212,14 +225,9 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
           isInDispute={isInDispute}
           onDispute={runDisputeHandler}
         />
-        <TicTacToe
-          gameId={gameId}
-          // playerType={playerType}
-          playerIngameId={playerIngameId}
-          encodedMessage={newMessage}
-          onChangeMessage={onGameStateChangeHandler}
-          onInvalidMove={inValidMoveHandler}
-          onWinner={setWinner}
+        <ETTicTacToe
+          gameState={gameState}
+          setGameState={setGameState}
         />
         <XMTPChatLog logData={[]} isLoading={false} />
       </div>
