@@ -6,8 +6,9 @@ import styles from '../styles/Home.module.scss';
 import 'i18n/index';
 import { Button } from 'components';
 import { PoweredBy } from 'components/PoweredBy';
-import { IPoweredByUnit } from 'components/PoweredBy/PoweredByUnit/PoweredByUnitProps';
+
 import companies from 'data/partners.json';
+import { useRouter } from 'next/router';
 
 interface IHomePageProps {
   partners: { image: string; name: string; href: string }[];
@@ -15,28 +16,8 @@ interface IHomePageProps {
 const Home: NextPage<IHomePageProps> = ({ partners }) => {
   const { t } = useTranslation();
 
-  const poweredByList: IPoweredByUnit[] = [
-    {
-      name: 'company1company1asdf',
-      image: 'asdf/asdf',
-      href: 'asdfasf/asdfdsf',
-    },
-    {
-      name: 'company1',
-      image: 'asdf/asdf',
-      href: 'asdfasf/asdfdsf',
-    },
-    {
-      name: 'company',
-      image: 'asdf/asdf',
-      href: 'asdfasf/asdfdsf',
-    },
-    {
-      name: 'company',
-      image: 'asdf/asdf',
-      href: 'asdfasf/asdfdsf',
-    },
-  ];
+  const router = useRouter();
+
   return (
     <div className={styles.container}>
       <Head>
@@ -51,12 +32,17 @@ const Home: NextPage<IHomePageProps> = ({ partners }) => {
           <div className={styles.description}>{t('frontpage.description.l1')}</div>
           <div className={styles.description}>{t('frontpage.description.l2')}</div>
           <div className={styles.tryButton}>
-            <Button title={t('buttons.tryDemo')} color="black" borderless />
+            <Button
+              title={t('buttons.tryDemo')}
+              color="black"
+              borderless
+              onClick={() => router.push('/games')}
+            />
           </div>
         </div>
         <div className={styles.sponsorBlock}>
           <div className={styles.logo}>Image</div>
-          <PoweredBy poweredByList={poweredByList} />
+          <PoweredBy poweredByList={partners} />
         </div>
       </main>
     </div>
