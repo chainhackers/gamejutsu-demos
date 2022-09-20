@@ -1,0 +1,47 @@
+.container {
+  background-color: aqua;
+  padding: 16px 64px;
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  cursor: pointer;
+
+  &.disabled {
+    cursor: not-allowed;
+  }
+
+  &.white {
+    background-color: var(--white);
+    color: var(--black);
+    border: solid 1px var(--black);
+
+    &.disabled {
+      background-color: var(--gray-lightest);
+      color: var(--gray-dark);
+      border: solid 1px var(--gray-dark);
+    }
+
+    &.borderless {
+      border: solid 1px var(--white);
+    }
+  }
+
+  &.black {
+    background-color: var(--black);
+    color: var(--white);
+    border: solid 1px var(--white);
+    &.disabled {
+      background-color: var(--gray-darker);
+      color: var(--gray-light);
+      border: solid 1px var(--gray-darker);
+    }
+
+    &.borderless {
+      border: solid 1px var(--black);
+    }
+  }
+}
