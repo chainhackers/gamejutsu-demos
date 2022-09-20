@@ -21,7 +21,7 @@ export const Header: React.FC<HeaderPropsI> = () => {
       </div>
       <div className={styles.right}>
         <Navigation />
-        <Button title={t('buttons.connectWAllet')} onClick={() => console.log('dfs')} />
+        <Button title={t('buttons.connectWAllet')} />
       </div>
     </div>
   );
