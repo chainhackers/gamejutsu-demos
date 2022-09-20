@@ -1,6 +1,7 @@
 import { NextPage } from 'next';
 import Link from 'next/link';
 import styles from 'pages/games/games.module.scss';
+import 'i18n/index';
 
 const GamesPage: NextPage = () => {
   return (

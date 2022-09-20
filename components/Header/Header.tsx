@@ -1,12 +1,18 @@
 import { useTranslation } from 'react-i18next';
-import { Logo, Navigation, Button } from 'components';
+import { Logo, Navigation, Button, NavPath } from 'components';
 import { HeaderPropsI } from './HeaderProps';
 import styles from './Header.module.scss';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 export const Header: React.FC<HeaderPropsI> = () => {
   const { t } = useTranslation();
+  const { asPath } = useRouter();
+  const parsedPath = asPath.split('/').filter((el) => el.length !== 0);
+  const currentPath = parsedPath[0];
+
   return (
     <div className={styles.container}>
+      {asPath !== '/' && <NavPath path={asPath} />}
       <div className={styles.left}>
         <Link href="/">
           <a>
@@ -20,7 +26,7 @@ export const Header: React.FC<HeaderPropsI> = () => {
         </Link>
       </div>
       <div className={styles.right}>
-        <Navigation />
+        <Navigation active={currentPath} />
         <Button title={t('buttons.connectWAllet')} />
       </div>
     </div>

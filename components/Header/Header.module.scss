@@ -1,4 +1,5 @@
 .container {
+  position: relative;
   background-color: aqua;
   background-color: var(--white);
   display: flex;
@@ -6,7 +7,7 @@
   align-items: center;
   max-width: 1250px;
   margin: auto;
-  padding: 53px 15px 20px;
+  padding: 53px 15px 53px;
   font-weight: bold;
 
   .title {

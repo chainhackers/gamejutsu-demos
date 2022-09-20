@@ -1,0 +1,10 @@
+.container {
+  position: absolute;
+  bottom: 10px;
+  color: var(--gray);
+
+  .active {
+    color: var(--black);
+    font-weight: bold;
+  }
+}
