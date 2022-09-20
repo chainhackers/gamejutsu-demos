@@ -20,7 +20,7 @@ export const WalletContextProvider = ({ children }: { children: React.ReactNode 
   const account = useAccount();
   // const connect = useConnect();
   // const disconnect = useDisconnect();
-  console.log('account', account);
+  // console.log('account', account);
   // console.log('connect', connect);
   // console.log('disconnect', disconnect);
 
@@ -34,12 +34,12 @@ export const WalletContextProvider = ({ children }: { children: React.ReactNode 
       let ethereum = await detectEthereumProvider();
       
       const provider = new ethers.providers.Web3Provider(window.ethereum as ethers.providers.ExternalProvider);
-      console.log('provider', provider);
+      // console.log('provider', provider);
       const signer = provider.getSigner();
-      console.log('signer', signer);
+      // console.log('signer', signer);
       setSigner(signer);
 
-      console.log(account);
+      // console.log(account);
       
     };
     connect();

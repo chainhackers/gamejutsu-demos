@@ -2,17 +2,21 @@ import { useEffect, useState } from 'react';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { ParsedUrlQuery } from 'querystring';
 import { Conversation, Stream, Message } from '@xmtp/xmtp-js';
+import { useAccount } from 'wagmi';
 import { useXmptContext } from 'context/XmtpContext';
 
 import { TicTacToe } from 'components/Games';
 import { XMTPChatLog } from 'components/XMTPChatLog';
 import { useWalletContext } from 'context/WalltetContext';
 import { ControlPanel } from 'components/ControlPanel';
-
+import { defaultAbiCoder } from 'ethers/lib/utils';
 import arbiterContract from 'contracts/Arbiter.json';
 import rulesContract from 'contracts/TicTacToeRules.json';
 
+import { signMove, getSessionWallet } from 'helpers/session_signatures';
+
 import styles from 'pages/games/gameType.module.scss';
+import { ethers } from 'ethers';
 
 interface IGamePageProps {
   gameType?: string;
@@ -36,6 +40,13 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   const [isInDispute, setIsInDispute] = useState<boolean>(false);
   const [conversationStatus, setConversationStatus] = useState<string | null>('not connected');
   const [rivalPlayerAddress, setRivalPlayerAddress] = useState<string | null>(null);
+  // const [rivalPlayerConversationStatus, setRivalPlayerConversationStatus] = useState<
+  //   string | null
+  // >(null);
+  // const rivalPlayerAddress =
+  // currentPlayerAddress === '0x1215991085d541A586F0e1968355A36E58C9b2b4'
+  //   ? '0xDb0b11d1281da49e950f89bD0F6B47D464d25F91'
+  //   : '0x1215991085d541A586F0e1968355A36E58C9b2b4';
   const [newMessage, setNewMessage] = useState<{ content: string; sender: string } | null>(
     null,
   );
@@ -45,6 +56,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
 
   const { client, initClient } = useXmptContext();
   const { signer } = useWalletContext();
+  const account = useAccount();
 
   const setConversationHandler = async (rivalPlayerAddress: string) => {
     setRivalPlayerAddress(rivalPlayerAddress);
@@ -52,8 +64,14 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     initClient(signer);
   };
 
-  const sendMessageHandler = async (state: any) => {
-    const messageText = JSON.stringify(state);
+  const sendMessageHandler = async ({
+    gameMove,
+    signatures,
+  }: {
+    gameMove: any;
+    signatures: string[];
+  }) => {
+    const messageText = JSON.stringify({ gameMove, signatures });
     if (!conversation) {
       console.warn('no conversation!');
       return;
@@ -62,9 +80,65 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     await conversation.send(messageText);
   };
 
-  const onChangeHandler = (encodedMessage: string) => {
+  const onGameStateChangeHandler = async (
+    encodedMessage: string,
+    gameMove: { nonce: number; oldState: string; newState: string; move: string },
+  ) => {
     // TODO: Signing messages
-    sendMessageHandler(encodedMessage);
+    if (!account.address) {
+      console.warn('No wallet connected');
+      return;
+    }
+    // console.log('onGameStateChangeHandler gameMove:', gameMove);
+
+    // const decodedNewState = defaultAbiCoder.decode(
+    //   ['uint8[9]', 'bool', 'bool'],
+    //   gameMove.newState,
+    // );
+    // const decodedOldState = defaultAbiCoder.decode(
+    //   ['uint8[9]', 'bool', 'bool'],
+    //   gameMove.oldState,
+    // );
+
+    // console.log('onGameStateChangeHandler gameMove, decoded newState', decodedNewState);
+    // console.log('onGameStateChangeHandler gameMove, decoded oldState', decodedOldState);
+
+    // const encodedMove = defaultAbiCoder.encode(['uint8'], [gameMove.move]);
+    const structureToSign: {
+      gameId: number;
+      nonce: number;
+      player: string;
+      oldState: string;
+      newState: string;
+      move: string;
+    } = {
+      gameId: Number(gameId),
+      nonce: gameMove.nonce,
+      player: account.address,
+      oldState: gameMove.oldState,
+      newState: gameMove.newState,
+      move: gameMove.move,
+    };
+    console.log('onChangeHandler structureToSign: ', structureToSign);
+    // const encondedstructureToSign = defaultAbiCoder.encode(['uint8']);
+
+    const cb = (wallet: ethers.Wallet) => Promise.resolve();
+
+    const signature = await signMove(
+      structureToSign,
+      await getSessionWallet(Number(gameId), account.address, cb),
+    );
+
+    console.log('outgoing signature', signature);
+
+    // console.log('GameMove signature, nonce: ', gameMove.nonce, signature);
+
+    // struct SignedGameMove {
+    //     GameMove gameMove;
+    //     bytes[] signatures;
+    // }
+
+    sendMessageHandler({ gameMove, signatures: [signature] });
   };
 
   const inValidMoveHandler = () => {
@@ -74,8 +148,8 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   const runDisputeHandler = () => {
     setIsInDispute(true);
     // TODO: Add disputing messages
-    console.log(newMessage); // LAst Message with invalid move
     console.log('run dispute');
+    console.log('moveToDispute:', newMessage); // LAst Message with invalid move
   };
 
   useEffect(() => {
@@ -143,7 +217,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
           // playerType={playerType}
           playerIngameId={playerIngameId}
           encodedMessage={newMessage}
-          onChangeMessage={onChangeHandler}
+          onChangeMessage={onGameStateChangeHandler}
           onInvalidMove={inValidMoveHandler}
           onWinner={setWinner}
         />

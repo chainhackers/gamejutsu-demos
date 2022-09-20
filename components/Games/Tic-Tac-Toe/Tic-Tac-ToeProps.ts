@@ -5,8 +5,11 @@ export interface TikTakToePropsI {
   playerType?: 'X' | 'O' | null;
   playerIngameId: 0 | 1;
   onGameStateChange?: (gameState: TGameState, move: number) => void;
-  encodedMessage: { content: string; sender: string } | null;
-  onChangeMessage: (encodedMessage: string) => void;
+  encodedMessage: { content: any; sender: string } | null;
+  onChangeMessage: (
+    encodedMessage: string,
+    gameMove: { nonce: number; oldState: string; newState: string; move: string },
+  ) => void;
   gameId: string | null;
   onInvalidMove: () => void;
   onWinner: any;

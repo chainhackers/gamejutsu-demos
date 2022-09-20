@@ -13,6 +13,11 @@
   text-align: center;
   width: 25vw;
   max-width: 150px;
+
+  &.disputive {
+    color: red;
+
+  }
 }
 .square:focus {
   outline: none;

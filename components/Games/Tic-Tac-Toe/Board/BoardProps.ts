@@ -4,4 +4,5 @@ export interface BoardPropsI {
   squares: TCellData[];
   onClick: (i: number) => void;
   isFinished: boolean;
+  disputiveMove: number | null;
 }

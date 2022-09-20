@@ -4,6 +4,8 @@ import { RainbowKitProvider, getDefaultWallets } from '@rainbow-me/rainbowkit';
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
+import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
+
 
 import { Layout } from 'components';
 import { WalletContextProvider } from 'context/WalltetContext';
@@ -44,22 +46,31 @@ const wagmiClient = createClient({
   webSocketProvider,
 });
 
+const cache = new InMemoryCache();
+const client = new ApolloClient({
+  // uri: 'https://api.thegraph.com/subgraphs/name/chainhackers/gamejutsu-subgraph',
+  uri: process.env.GRAPHQL_ENDPOINT,
+  cache,
+});
+
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <WagmiConfig client={wagmiClient}>
-      <WalletContextProvider>
-        <XmtpContextProvider>
-          <RainbowKitProvider chains={chains}>
+      <ApolloProvider client={client}>
+        <WalletContextProvider>
+          <XmtpContextProvider>
+            <RainbowKitProvider chains={chains}>
             <Layout>
               <Head>
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
               </Head>
-              <Component {...pageProps} />
+                <Component {...pageProps} />
             </Layout>
             {/* <Component {...pageProps} /> */}
-          </RainbowKitProvider>
-        </XmtpContextProvider>
-      </WalletContextProvider>
+            </RainbowKitProvider>
+          </XmtpContextProvider>
+        </WalletContextProvider>
+      </ApolloProvider>
     </WagmiConfig>
   );
 }
