@@ -22,7 +22,7 @@ export const ETTicTacToe: React.FC<ITicTacToeProps> = ({
                                                            onGameStateChange,
                                                            setGameState,
                                                        }) => {
-    const [boardState, setBoardState] = useState<TicTacToeBoard>(gameState?.myGameState || new TicTacToeBoard());
+    const boardState = gameState?.myGameState || new TicTacToeBoard();
 
     return (
         <div className={styles.container}>
