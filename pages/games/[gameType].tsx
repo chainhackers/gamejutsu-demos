@@ -19,7 +19,7 @@ import { signMove, getSessionWallet } from 'helpers/session_signatures';
 import styles from 'pages/games/gameType.module.scss';
 import { ethers } from 'ethers';
 import {ETTicTacToe} from "../../components/Games/ET-Tic-Tac-Toe";
-import {ITicTacToeState, TicTacToeBoard, TicTacToeState} from "../../components/Games/ET-Tic-Tac-Toe/types";
+import {TicTacToeState, TTTMove} from "../../components/Games/ET-Tic-Tac-Toe/types";
 
 interface IGamePageProps {
   gameType?: string;
@@ -29,38 +29,17 @@ interface IParams extends ParsedUrlQuery {
   gameType: string;
 }
 
-// const [rivalPlayerConversationStatus, setRivalPlayerConversationStatus] = useState<
-//   string | null
-// >(null);
-// const rivalPlayerAddress =
-// currentPlayerAddress === '0x1215991085d541A586F0e1968355A36E58C9b2b4'
-//   ? '0xDb0b11d1281da49e950f89bD0F6B47D464d25F91'
-//   : '0x1215991085d541A586F0e1968355A36E58C9b2b4';
-
 const Game: NextPage<IGamePageProps> = ({ gameType }) => {
-  const initialState =  new TicTacToeState(
-      1,
-      'X',
-      new TicTacToeBoard(['X', 'O', 'X', null, null, null, null, null, null]),
-  )
-      .makeMove(7)
-      .makeMove(8)
-      .makeMove(6)
-      .makeMove(5);
-  const [gameState, setGameState] = useState<ITicTacToeState>(initialState);
+  const initialState =  new TicTacToeState(1, 'X')
+      .makeMove(TTTMove.fromMove(5, 'O'))
+      .makeMove(TTTMove.fromMove(6, 'X'))
+  const [gameState, setGameState] = useState<TicTacToeState>(initialState);
 
-  const [playerIngameId, setPlayerIngameId] = useState<0 | 1>(0);
+  const [playerIngameId, setPlayerIngameId] = useState<0 | 1>(0); //TODO use in game state creation
   const [conversation, setConversation] = useState<Conversation | null>(null);
   const [isInDispute, setIsInDispute] = useState<boolean>(false);
   const [conversationStatus, setConversationStatus] = useState<string | null>('not connected');
   const [rivalPlayerAddress, setRivalPlayerAddress] = useState<string | null>(null);
-  // const [rivalPlayerConversationStatus, setRivalPlayerConversationStatus] = useState<
-  //   string | null
-  // >(null);
-  // const rivalPlayerAddress =
-  // currentPlayerAddress === '0x1215991085d541A586F0e1968355A36E58C9b2b4'
-  //   ? '0xDb0b11d1281da49e950f89bD0F6B47D464d25F91'
-  //   : '0x1215991085d541A586F0e1968355A36E58C9b2b4';
   const [newMessage, setNewMessage] = useState<{ content: string; sender: string } | null>(
     null,
   );
