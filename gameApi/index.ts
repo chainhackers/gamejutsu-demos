@@ -69,7 +69,8 @@ export const isValidSignedMove = async (
   gameMove: IGameMove,
   signatures: string[] = []
 ) => {
-  let signature:string  = await signMove(gameMove, await getSessionWallet(await getSigner().getAddress()));
+  let wallet = await getSessionWallet(await getSigner().getAddress());
+  let signature:string  = await signMove(gameMove, wallet);
   signatures.push(signature);
   return _isValidSignedMove(contract, {gameMove, signatures});
 };
@@ -98,14 +99,17 @@ export async function registerSessionAddress(
   });
 }
 
+
 export const proposeGame = async (
   contract: ethers.Contract,
   rulesContractAddress: string,
 ): Promise<{ gameId: string; proposer: string; stake: string }> => {
+  console.log('proposeGame', {contract, rulesContractAddress});
+  let wallet = await getSessionWallet(await getSigner().getAddress());
   const gasEstimated = await contract.estimateGas.proposeGame(rulesContractAddress, []);
   const tx = await contract.proposeGame(
     rulesContractAddress,
-    [(await getSessionWallet(await getSigner().getAddress())).address],
+    [wallet.address],
     { gasLimit: gasEstimated.mul(2) });
   console.log('tx', tx);
   const rc = await tx.wait();
@@ -120,8 +124,9 @@ export const acceptGame = async (
   gamdIdToAccept: string,
 ): Promise<{ gameId: string; players: [string, string]; stake: string }> => {
   const gasEstimated = await contract.estimateGas.acceptGame(gamdIdToAccept, []);
+  let wallet = await getSessionWallet(await getSigner().getAddress());
   const tx = await contract.acceptGame(gamdIdToAccept,
-      [(await getSessionWallet(await getSigner().getAddress())).address],
+      [wallet.address],
       { gasLimit: gasEstimated.mul(2) });
   console.log('tx', tx);
   const rc = await tx.wait();
