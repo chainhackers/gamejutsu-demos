@@ -29,7 +29,7 @@ export const SelectGame: React.FC<SelectGamePropsI> = ({ userName, gameType }) =
         <div className={styles.join}>
           <div className={styles.title}>{t('selectGame.join.title')}</div>
           <div className={styles.description}>{t('selectGame.join.description')}</div>
-          <Link href={'/games/' + gameType}>
+          <Link href={'/games/' + gameType + '?join=true'}>
             <a>
               <div className={styles.button}>{t('selectGame.join.button')}</div>
             </a>

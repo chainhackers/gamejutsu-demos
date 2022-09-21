@@ -10,3 +10,5 @@ export * from 'components/Navigation';
 export * from 'components/shared';
 export * from 'components/GameThumbnail';
 export * from 'components/SelectGame';
+export * from 'components/JoinGame';
+export * from 'components/ActualGamesList';

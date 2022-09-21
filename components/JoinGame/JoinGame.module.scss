@@ -1,0 +1,20 @@
+.container {
+  background-color: aqua;
+  background-color: var(--white);
+  max-width: 1250px;
+  margin: auto;
+  padding: 53px 15px 33px;
+  text-align: center;
+
+  > .title {
+    font-size: 42px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+  > .description {
+    font-size: 26px;
+    font-weight: normal;
+    margin-bottom: 42px;
+  }
+}

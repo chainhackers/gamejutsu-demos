@@ -1,0 +1,36 @@
+.container {
+  background-color: var(--gray-lightest);
+
+  text-align: start;
+  margin: 2px auto;
+  max-width: 1000px;
+  padding: 5px 10px;
+  cursor: pointer;
+
+  &.header {
+    font-weight: bold;
+    &:hover {
+      background-color: var(--gray-lightest);
+    }
+  }
+
+  &:hover {
+    background-color: var(--gray-lighter);
+  }
+
+  .id {
+    display: inline-block;
+    width: 50px;
+    text-align: center;
+  }
+  .winner {
+    display: inline-block;
+    width: 450px;
+    text-align: center;
+  }
+  .loser {
+    display: inline-block;
+    width: 450px;
+    text-align: center;
+  }
+}

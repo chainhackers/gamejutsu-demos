@@ -42,6 +42,17 @@ const en = {
         button: 'JOIN',
       },
     },
+    joinGame: {
+      title: 'Join a game',
+      description: 'Select from one of the sessions to join',
+    },
+    gamesList: {
+      header: {
+        id: 'id',
+        winner: 'winner',
+        loser: 'loser',
+      },
+    },
     poweredBy: {
       title: 'Powered By',
     },

@@ -46,20 +46,12 @@ export const TicTacToe: React.FC<TikTakToePropsI> = ({
   const [disputiveMove, setDisputiveMove] = useState<number | null>(null);
 
   const account = useAccount();
-  const {
-    data: gamesEnities,
-    error: gamesError,
-    loading: gamesLoading,
-  } = useQuery(gameEntitiesQuery);
-
-  const {
-    data: inRowGamesEnitites,
-    error: inRowGamesError,
-    loading: inRowGamesLoading,
-  } = useQuery(inRowCounterEntitiesQuery);
-  console.log('query data games: ', gamesEnities);
-  console.log('query data inRowGames: ', inRowGamesEnitites);
-
+  
+// const {
+//   data: inRowGamesEnitites,
+//   error: inRowGamesError,
+//   loading: inRowGamesLoading,
+// } = useQuery(inRowCounterEntitiesQuery);
   
   const cellClickHandler = (i: any) => {
     // onChangeMessage('ecoded message');

@@ -21,7 +21,7 @@ import { signMove, getSessionWallet } from 'helpers/session_signatures';
 import styles from 'pages/games/gameType.module.scss';
 import { ethers } from 'ethers';
 import path from 'path';
-import { SelectGame } from 'components';
+import { JoinGame, SelectGame } from 'components';
 
 interface IGamePageProps {
   gameType?: string;
@@ -41,7 +41,7 @@ interface IParams extends ParsedUrlQuery {
 //   ? '0xDb0b11d1281da49e950f89bD0F6B47D464d25F91'
 //   : '0x1215991085d541A586F0e1968355A36E58C9b2b4';
 
-const Game: NextPage<IGamePageProps> = ({ gameType, select }) => {
+const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   const [playerIngameId, setPlayerIngameId] = useState<0 | 1>(0);
   const [conversation, setConversation] = useState<Conversation | null>(null);
   const [isInDispute, setIsInDispute] = useState<boolean>(false);
@@ -229,6 +229,9 @@ const Game: NextPage<IGamePageProps> = ({ gameType, select }) => {
       });
   }, [conversation, newMessage]);
 
+  if (!!gameType && !!query && query?.join === 'true') {
+    return <JoinGame />;
+  }
   if (!!gameType && !!query && query?.select === 'true') {
     return <SelectGame userName={account.address} gameType={gameType} />;
   }
@@ -284,7 +287,6 @@ export const getStaticPaths: GetStaticPaths<IParams> = () => {
   const gamesType = ['tic-tac-toe', 'other'];
 
   const paths = gamesType.map((gameType) => ({ params: { gameType } }));
-  console.log('paths', paths);
   return {
     paths,
     fallback: false,
