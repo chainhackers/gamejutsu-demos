@@ -1,5 +1,5 @@
 import {IGameState, IMyGameMove, IMyGameState, TGameHistory} from "../types";
-import {GameMove, ISignedGameMove, SignedGameMove} from "../../../types/arbiter";
+import {GameMove, IGameMove, ISignedGameMove, SignedGameMove} from "../../../types/arbiter";
 import {defaultAbiCoder} from 'ethers/lib/utils';
 import {signMoveWithAddress} from "../../../helpers/session_signatures";
 
@@ -94,18 +94,38 @@ export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
         this.playerId = playerType === 'X' ? 0 : 1;
     }
 
-    makeMove(move: TTTMove): TicTacToeState {
+    makeMove(move: TTTMove, valid: boolean = true): TicTacToeState {
         const nextState = new TicTacToeState(this.gameId, this.playerType);
         nextState.nonce = this.nonce + 1;
         nextState.decodedMovesHistory = [...this.decodedMovesHistory, move];
         const nextDisputableMoveNonces = new Set(this.disputableMoveNumbers);
-        if (this.nonce % 2 === 0) {
+
+        if (!valid) {
             nextDisputableMoveNonces.add(nextState.nonce);
         }
+
         nextState.disputableMoveNumbers = nextDisputableMoveNonces;
         nextState.myGameState = TicTacToeBoard.fromHistory(nextState.decodedMovesHistory, nextState.disputableMoveNumbers);
         return Object.seal(nextState);
     }
+
+    opponentMove(encodedMove: string, valid: boolean = true): TicTacToeState {
+        const move = TTTMove.fromEncoded(encodedMove, this.playerId == 0 ? 'O' : 'X'); //TODO reversed, remove hack
+        return this.makeMove(move, valid)
+    }
+
+    //TODO deduplicate
+    composeMove(move: TTTMove, playerAddress: string): IGameMove {
+        return new GameMove(
+            this.gameId,
+            this.nonce,
+            playerAddress,
+            this.encode(),
+            this.makeMove(move).encode(),
+            move.encodedMove,
+        )
+    }
+
 
     async signMove(move: TTTMove, playerAddress: string): Promise<ISignedGameMove> {
         const gameMove = new GameMove(

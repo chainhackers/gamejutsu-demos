@@ -1,4 +1,5 @@
-import {ISignedGameMove} from '../../types/arbiter';
+import {IGameMove, ISignedGameMove} from '../../types/arbiter';
+import {TTTMove} from "./ET-Tic-Tac-Toe/types";
 
 
 export type TGameHistory = ISignedGameMove[]
@@ -26,5 +27,11 @@ export interface IGameState<IMyGameState, IMyGameMove> {
     myGameState: IMyGameState;
     isFinished: boolean;
     winner: number | null;
+
     makeMove(move: IMyGameMove): IGameState<IMyGameState, IMyGameMove> //TODO make signed move
+    composeMove(move: IMyGameMove, playerAddress: string): IGameMove
 }
+
+// export interface IGameProps {
+//
+// }

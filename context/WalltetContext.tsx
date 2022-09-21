@@ -32,9 +32,9 @@ export const WalletContextProvider = ({ children }: { children: React.ReactNode 
   useEffect(() => {
     const connect = async () => {
 
-      let ethereum = await detectEthereumProvider();
+      // let ethereum = await detectEthereumProvider();
       
-      getSigner();
+      let signer = getSigner();
       setSigner(signer);
 
       // console.log(account);

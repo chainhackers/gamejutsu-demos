@@ -9,7 +9,7 @@
 
   .row {
     position: relative;
-    white-space: nowrap;
+    //white-space: nowrap;
     .title {
       position: relative;
       bottom: 0;
@@ -20,11 +20,10 @@
     .data {
       position: relative;
       bottom: -5px;
-      max-width: 300px;
+      max-width: 600px;
       display: inline-block;
       overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      word-break: break-all;
     }
   }
 }

@@ -64,6 +64,19 @@ export const isValidGameMove = async (
   return response;
 };
 
+
+export const _isValidGameMove = async (iGameMove: IGameMove) => {
+
+  const arbiter = await getArbiter();
+
+  const isValid = await arbiter.isValidGameMove(
+      iGameMove.toContractParams()
+  );
+  console.log(iGameMove.move, 'isValidGameMove', isValid);
+  return isValid;
+};
+
+
 export const isValidSignedMove = async (
   contract: ethers.Contract,
   gameMove: IGameMove,
