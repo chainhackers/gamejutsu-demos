@@ -1,38 +1,17 @@
 import { ethers } from 'ethers';
 import arbiterContract from 'contracts/Arbiter.json';
 
-export async function registerSessionAddress(
-  provider: ethers.providers.Web3Provider,
-  gameId: number,
-  wallet: ethers.Wallet,
-): Promise<void> {
-  const contract = new ethers.Contract(
-    arbiterContract.address,
-    arbiterContract.abi,
-    provider.getSigner(),
-  );
-  const gasEstimatedRedeem = await contract.estimateGas.registerSessionAddress(
-    gameId,
-    wallet.address,
-  );
-  return contract.registerSessionAddress(gameId, wallet.address, {
-    gasLimit: gasEstimatedRedeem.mul(4),
-  });
-}
-
 export async function getSessionWallet(
-  gameId: number,
   address: string,
-  registerAddressCallback: (wallet: ethers.Wallet) => Promise<void>,
 ): Promise<ethers.Wallet> {
+  console.log(`Waller requested for address ${address}`);
   let localStorage = window.localStorage;
-  let privateStore = `${address}_${gameId}_private`;
+  let privateStore = `${address}_private`;
   let privateKey = localStorage.getItem(privateStore);
   if (privateKey) {
     return new ethers.Wallet(privateKey);
   }
   let wallet = ethers.Wallet.createRandom();
-  await registerAddressCallback(wallet);
   localStorage.setItem(privateStore, wallet.privateKey);
   return wallet;
 }

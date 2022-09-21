@@ -77,7 +77,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     try {
       let { gameId } = await gameApi.proposeGame(
         gameApi.fromContractData(arbiterContractData),
-        curentPlayerId,
+        gameRulesContractData.address,
       );
       if (!!gameId) {
         gameId = gameId.toString();

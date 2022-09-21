@@ -5,6 +5,7 @@ import { Conversation, Stream, Message } from '@xmtp/xmtp-js';
 import { useAccount } from 'wagmi';
 import { useXmptContext } from 'context/XmtpContext';
 
+
 import { TicTacToe } from 'components/Games';
 import { XMTPChatLog } from 'components/XMTPChatLog';
 import { useWalletContext } from 'context/WalltetContext';
@@ -135,11 +136,13 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     console.log('onChangeHandler structureToSign: ', structureToSign);
     // const encondedstructureToSign = defaultAbiCoder.encode(['uint8']);
 
-    const cb = (wallet: ethers.Wallet) => Promise.resolve();
 
     const signature = await signMove(
       structureToSign,
-      await getSessionWallet(Number(gameId), account.address, cb),
+      await getSessionWallet(
+        //Number(gameId),
+        account.address
+      ),
     );
 
     console.log('outgoing signature', signature);

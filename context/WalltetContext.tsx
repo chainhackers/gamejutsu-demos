@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { ethers, Signer } from 'ethers';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import detectEthereumProvider from '@metamask/detect-provider';
+import { getSigner } from 'gameApi';
 interface WalletContextProps {
   signer: Signer | undefined;
   address: string | undefined;
@@ -33,10 +34,7 @@ export const WalletContextProvider = ({ children }: { children: React.ReactNode 
 
       let ethereum = await detectEthereumProvider();
       
-      const provider = new ethers.providers.Web3Provider(window.ethereum as ethers.providers.ExternalProvider);
-      // console.log('provider', provider);
-      const signer = provider.getSigner();
-      // console.log('signer', signer);
+      getSigner();
       setSigner(signer);
 
       // console.log(account);
