@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { Logo, Navigation, Button, NavPath } from 'components';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { Logo, Navigation, NavPath } from 'components';
 import { HeaderPropsI } from './HeaderProps';
 import styles from './Header.module.scss';
 import Link from 'next/link';
@@ -27,7 +28,7 @@ export const Header: React.FC<HeaderPropsI> = () => {
       </div>
       <div className={styles.right}>
         <Navigation active={currentPath} />
-        <Button title={t('buttons.connectWAllet')} />
+        <ConnectButton />
       </div>
     </div>
   );
