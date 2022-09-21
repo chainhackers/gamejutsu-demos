@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "start-dev": "next start -p 3355",
-    "lint": "next lint"
+    "lint": "next lint",
+    "clear": "rm -rf node_modules/ yarn.lock"
   },
   "dependencies": {
     "@apollo/client": "^3.6.9",
