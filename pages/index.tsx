@@ -3,7 +3,7 @@ import Head from 'next/head';
 
 import { useTranslation } from 'react-i18next';
 import styles from '../styles/Home.module.scss';
-import 'i18n/index';
+// import 'i18n/index';
 import { Button } from 'components';
 import { PoweredBy } from 'components/PoweredBy';
 

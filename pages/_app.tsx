@@ -6,10 +6,10 @@ import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
 
-
 import { Layout } from 'components';
 import { WalletContextProvider } from 'context/WalltetContext';
 import { XmtpContextProvider } from 'context/XmtpContext';
+import 'i18n/index';
 
 import '@rainbow-me/rainbowkit/styles.css';
 import 'styles/globals.css';
@@ -60,13 +60,13 @@ function MyApp({ Component, pageProps }: AppProps) {
         <WalletContextProvider>
           <XmtpContextProvider>
             <RainbowKitProvider chains={chains}>
-            <Layout>
-              <Head>
-                <meta name="viewport" content="width=device-width, initial-scale=1" />
-              </Head>
+              <Layout>
+                <Head>
+                  <meta name="viewport" content="width=device-width, initial-scale=1" />
+                </Head>
                 <Component {...pageProps} />
-            </Layout>
-            {/* <Component {...pageProps} /> */}
+              </Layout>
+              {/* <Component {...pageProps} /> */}
             </RainbowKitProvider>
           </XmtpContextProvider>
         </WalletContextProvider>

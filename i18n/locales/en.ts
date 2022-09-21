@@ -19,9 +19,17 @@ const en = {
         l2: 'Launch your awesome game on Web3 with us.',
       },
     },
+    gameTypePage: {
+      title: 'Choose a game demo',
+      description: 'Experience the protocol yourself. It just works. ✨',
+      games: {
+        ticTacToe: 'Tic-Tac-Toe',
+        checkers: 'Checkers',
+      }
+    },
     poweredBy: {
-      title: 'Powered By'
-    }
+      title: 'Powered By',
+    },
   },
 };
 
