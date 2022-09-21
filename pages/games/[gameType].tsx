@@ -12,6 +12,7 @@ import { ControlPanel } from 'components/ControlPanel';
 import { defaultAbiCoder } from 'ethers/lib/utils';
 import arbiterContract from 'contracts/Arbiter.json';
 import rulesContract from 'contracts/TicTacToeRules.json';
+import { IChatLog } from 'types';
 
 import { signMove, getSessionWallet } from 'helpers/session_signatures';
 
@@ -53,6 +54,8 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   const [winner, setWinner] = useState<0 | 1 | null>(null);
   const [gameId, setGameId] = useState<string | null>(null);
   const [isInvalidMove, setIsInvalidMove] = useState<boolean>(false);
+  const [log, setLog] = useState<IChatLog[]>([]);
+  const [isLogLoading, setIsLogLoading] = useState<boolean>(true);
 
   const { client, initClient } = useXmptContext();
   const { signer } = useWalletContext();
@@ -190,6 +193,35 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     };
   }, [conversation]);
 
+  useEffect(() => {
+    const fetchMessages = async () => {
+      if (!conversation) {
+        // console.warn('no conversation');
+        return [];
+      }
+      const msgs = await conversation.messages();
+      const sortedMessages = msgs
+        .sort((msg1, msg2) => msg2.sent!.getTime() - msg1.sent!.getTime())
+        .map(({ id, senderAddress, recipientAddress, sent, content }) => ({
+          id,
+          sender: senderAddress!,
+          recepient: recipientAddress!,
+          timestamp: sent!.getTime(),
+          content,
+        }));
+      return sortedMessages;
+    };
+    setIsLogLoading(true);
+
+    fetchMessages()
+      .then((data) => {
+        setLog(data!);
+      })
+      .finally(() => {
+        setIsLogLoading(false);
+      });
+  }, [conversation, newMessage]);
+
   if (!!gameType && gameType === 'tic-tac-toe') {
     return (
       <div className={styles.container}>
@@ -221,7 +253,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
           onInvalidMove={inValidMoveHandler}
           onWinner={setWinner}
         />
-        <XMTPChatLog logData={[]} isLoading={false} />
+        <XMTPChatLog logData={log} isLoading={isLogLoading} />
       </div>
     );
   }
