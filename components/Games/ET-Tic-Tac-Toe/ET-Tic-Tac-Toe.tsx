@@ -1,28 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import {useAccount, useConnect, useDisconnect} from 'wagmi';
-import {useQuery} from '@apollo/client';
-
 import {Board} from 'components/Games/ET-Tic-Tac-Toe';
-import gameApi from 'gameApi';
 import {ITicTacToeProps} from './ITicTacToeProps';
 
-import {defaultAbiCoder} from 'ethers/lib/utils';
-import rulesContract from 'contracts/TicTacToeRules.json';
 import styles from './ET-Tic-Tac-Toe.module.scss';
-import {TCellData, TicTacToeBoard, ITicTacToeState} from './types';
-
-import {signMove, getSessionWallet} from 'helpers/session_signatures';
-import {ethers} from 'ethers';
-
-
-import {gameEntitiesQuery, inRowCounterEntitiesQuery} from 'queries';
+import {TicTacToeBoard, TTTMove} from './types';
 
 export const ETTicTacToe: React.FC<ITicTacToeProps> = ({
                                                            gameState,
                                                            onGameStateChange,
                                                            setGameState,
                                                        }) => {
-    const boardState = gameState?.myGameState || new TicTacToeBoard();
+    const boardState = gameState?.myGameState || TicTacToeBoard.empty()
 
     return (
         <div className={styles.container}>
@@ -33,11 +21,13 @@ export const ETTicTacToe: React.FC<ITicTacToeProps> = ({
                     squares={boardState.cells}
                     onClick={(i) => {
                         console.log(i);
-                        !!gameState && setGameState(gameState.makeMove(i));
+                        if (gameState) {
+                            !!gameState && setGameState(gameState.makeMove(TTTMove.fromMove(i, gameState.playerType)));
+                        }
                     }
                     }
                     isFinished={!gameState || gameState?.isFinished}
-                    disputableMoves={gameState?.disputableMoveNumbers || new Set()}
+                    disputableMoves={boardState.disputableMoves}
                 />
             </div>
         </div>

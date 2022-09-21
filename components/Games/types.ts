@@ -3,7 +3,11 @@ import {ISignedGameMove} from '../../types/arbiter';
 
 export type TGameHistory = ISignedGameMove[]
 
-export interface IMyGameState {
+export interface IMyGameMove {
+    encodedMove: string;
+}
+
+export interface IMyGameState<IMyGameMove> {
 }
 
 /**
@@ -11,7 +15,7 @@ export interface IMyGameState {
  * 2 players only to make it doable during the hackathon
  *
  */
-export interface IGameState<IMyGameState> {
+export interface IGameState<IMyGameState, IMyGameMove> {
     gameId: number;
     playerId: number;
     movesHistory: TGameHistory;
@@ -21,5 +25,6 @@ export interface IGameState<IMyGameState> {
     isMyTurn: boolean;
     myGameState: IMyGameState;
     isFinished: boolean;
-    makeMove(move: number): IGameState<IMyGameState> //TODO number -> Move type
+
+    makeMove(move: IMyGameMove): IGameState<IMyGameState, IMyGameMove> //TODO make signed move
 }

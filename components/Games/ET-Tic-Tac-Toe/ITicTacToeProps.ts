@@ -1,8 +1,9 @@
-import {ITicTacToeState} from './types';
+import {TicTacToeBoard, TicTacToeState, TTTMove} from './types';
 import {Dispatch, SetStateAction} from "react";
+import {IGameState} from "../types";
 
 export interface ITicTacToeProps {
-    gameState?: ITicTacToeState;
-    onGameStateChange?: (gameState: ITicTacToeState, move: number) => void;
-    setGameState: Dispatch<SetStateAction<ITicTacToeState>>;
+    gameState?: TicTacToeState;
+    onGameStateChange?: (gameState: IGameState<TicTacToeBoard, TTTMove>, move: number) => void;
+    setGameState: Dispatch<SetStateAction<TicTacToeState>>;
 }
