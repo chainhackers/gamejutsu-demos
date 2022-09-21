@@ -25,7 +25,22 @@ const en = {
       games: {
         ticTacToe: 'Tic-Tac-Toe',
         checkers: 'Checkers',
-      }
+      },
+    },
+    selectGame: {
+      unknownUser: 'unknown',
+      title: 'How would you like to begin?',
+      description: 'Start a game or join a game',
+      new: {
+        title: 'New?',
+        description: 'Start a new game',
+        button: 'START',
+      },
+      join: {
+        title: 'Got a friend?',
+        description: 'Join their game',
+        button: 'JOIN',
+      },
     },
     poweredBy: {
       title: 'Powered By',

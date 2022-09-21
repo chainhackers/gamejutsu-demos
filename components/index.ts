@@ -9,3 +9,4 @@ export * from 'components/Header';
 export * from 'components/Navigation';
 export * from 'components/shared';
 export * from 'components/GameThumbnail';
+export * from 'components/SelectGame';

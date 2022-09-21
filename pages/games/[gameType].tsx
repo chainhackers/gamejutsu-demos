@@ -5,6 +5,8 @@ import { Conversation, Stream, Message } from '@xmtp/xmtp-js';
 import { useAccount } from 'wagmi';
 import { useXmptContext } from 'context/XmtpContext';
 
+import { useRouter } from 'next/router';
+
 import { TicTacToe } from 'components/Games';
 import { XMTPChatLog } from 'components/XMTPChatLog';
 import { useWalletContext } from 'context/WalltetContext';
@@ -18,13 +20,17 @@ import { signMove, getSessionWallet } from 'helpers/session_signatures';
 
 import styles from 'pages/games/gameType.module.scss';
 import { ethers } from 'ethers';
+import path from 'path';
+import { SelectGame } from 'components';
 
 interface IGamePageProps {
   gameType?: string;
+  select?: boolean;
 }
 
 interface IParams extends ParsedUrlQuery {
   gameType: string;
+  select?: string;
 }
 
 // const [rivalPlayerConversationStatus, setRivalPlayerConversationStatus] = useState<
@@ -35,7 +41,7 @@ interface IParams extends ParsedUrlQuery {
 //   ? '0xDb0b11d1281da49e950f89bD0F6B47D464d25F91'
 //   : '0x1215991085d541A586F0e1968355A36E58C9b2b4';
 
-const Game: NextPage<IGamePageProps> = ({ gameType }) => {
+const Game: NextPage<IGamePageProps> = ({ gameType, select }) => {
   const [playerIngameId, setPlayerIngameId] = useState<0 | 1>(0);
   const [conversation, setConversation] = useState<Conversation | null>(null);
   const [isInDispute, setIsInDispute] = useState<boolean>(false);
@@ -60,6 +66,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   const { client, initClient } = useXmptContext();
   const { signer } = useWalletContext();
   const account = useAccount();
+  const { query } = useRouter();
 
   const setConversationHandler = async (rivalPlayerAddress: string) => {
     setRivalPlayerAddress(rivalPlayerAddress);
@@ -222,6 +229,10 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       });
   }, [conversation, newMessage]);
 
+  if (!!gameType && !!query && query?.select === 'true') {
+    return <SelectGame userName={account.address} gameType={gameType} />;
+  }
+
   if (!!gameType && gameType === 'tic-tac-toe') {
     return (
       <div className={styles.container}>
@@ -261,17 +272,19 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
 };
 
 export const getStaticProps: GetStaticProps<IGamePageProps, IParams> = (context) => {
-  console.log('context', context.params?.gameType);
   return {
     props: {
       gameType: context.params?.gameType,
+      select: context.params?.select === 'true' ? true : false,
     },
   };
 };
 
 export const getStaticPaths: GetStaticPaths<IParams> = () => {
   const gamesType = ['tic-tac-toe', 'other'];
+
   const paths = gamesType.map((gameType) => ({ params: { gameType } }));
+  console.log('paths', paths);
   return {
     paths,
     fallback: false,
