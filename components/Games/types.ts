@@ -25,6 +25,6 @@ export interface IGameState<IMyGameState, IMyGameMove> {
     isMyTurn: boolean;
     myGameState: IMyGameState;
     isFinished: boolean;
-
+    winner: number | null;
     makeMove(move: IMyGameMove): IGameState<IMyGameState, IMyGameMove> //TODO make signed move
 }

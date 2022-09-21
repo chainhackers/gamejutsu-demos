@@ -4,6 +4,7 @@ import {ITicTacToeProps} from './ITicTacToeProps';
 
 import styles from './ET-Tic-Tac-Toe.module.scss';
 import {TicTacToeBoard, TTTMove} from './types';
+import {_isValidSignedMove, getArbiter, getSigner, isValidSignedMove} from "../../../gameApi";
 
 export const ETTicTacToe: React.FC<ITicTacToeProps> = ({
                                                            gameState,
@@ -20,9 +21,19 @@ export const ETTicTacToe: React.FC<ITicTacToeProps> = ({
                 <Board
                     squares={boardState.cells}
                     onClick={(i) => {
-                        console.log(i);
                         if (gameState) {
-                            !!gameState && setGameState(gameState.makeMove(TTTMove.fromMove(i, gameState.playerType)));
+                            const move: TTTMove = TTTMove.fromMove(i, gameState.playerType)
+                            getSigner().getAddress().then((address) => {
+                                const signedMove = gameState.signMove(move, address)
+                                console.log({signedMove, move});
+                                setGameState(gameState.makeMove(move));
+                                return signedMove
+                            }).then((signedMove) => { //TODO remove
+                                _isValidSignedMove(getArbiter(), signedMove).then((isValid) => {
+                                    console.log({signedMove, isValid});
+                                });
+
+                            });
                         }
                     }
                     }

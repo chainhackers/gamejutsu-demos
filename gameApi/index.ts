@@ -4,7 +4,9 @@ import { ethers, Transaction } from 'ethers';
 import rulesContract from 'contracts/TicTacToeRules.json';
 import { getSessionWallet, signMove } from 'helpers/session_signatures';
 import { IGameMove, ISignedGameMove } from 'types/arbiter';
+import arbiterContract from 'contracts/Arbiter.json';
 
+export const getArbiter = () => fromContractData(arbiterContract);
 
 export function getSigner(): ethers.Signer {
   const provider = new ethers.providers.Web3Provider(window.ethereum as ethers.providers.ExternalProvider);
@@ -77,7 +79,7 @@ export const _isValidSignedMove = async (
   signedgameMove: ISignedGameMove,
 ) => {
   console.log('isValidSignedMove', {contract, signedgameMove});
-  const response = contract.isValidSignedGameMove(signedgameMove);
+  const response = contract.isValidSignedMove(signedgameMove);
   console.log({response});
   return response;
 };
@@ -103,7 +105,7 @@ export const proposeGame = async (
   const gasEstimated = await contract.estimateGas.proposeGame(rulesContractAddress, []);
   const tx = await contract.proposeGame(
     rulesContractAddress,
-    [getSessionWallet(await getSigner().getAddress())],
+    [(await getSessionWallet(await getSigner().getAddress())).address],
     { gasLimit: gasEstimated.mul(2) });
   console.log('tx', tx);
   const rc = await tx.wait();
@@ -119,8 +121,8 @@ export const acceptGame = async (
 ): Promise<{ gameId: string; players: [string, string]; stake: string }> => {
   const gasEstimated = await contract.estimateGas.acceptGame(gamdIdToAccept, []);
   const tx = await contract.acceptGame(gamdIdToAccept,
-    [getSessionWallet(await getSigner().getAddress())],
-    { gasLimit: gasEstimated.mul(2) });
+      [(await getSessionWallet(await getSigner().getAddress())).address],
+      { gasLimit: gasEstimated.mul(2) });
   console.log('tx', tx);
   const rc = await tx.wait();
   console.log('rc', rc);

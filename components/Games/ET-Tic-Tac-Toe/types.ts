@@ -1,6 +1,7 @@
 import {IGameState, IMyGameMove, IMyGameState, TGameHistory} from "../types";
-import {ISignedGameMove} from "../../../types/arbiter";
+import {GameMove, ISignedGameMove, SignedGameMove} from "../../../types/arbiter";
 import {defaultAbiCoder} from 'ethers/lib/utils';
+import {signMoveWithAddress} from "../../../helpers/session_signatures";
 
 
 const STATE_TYPES = ['uint8[9]', 'bool', 'bool'] as const;
@@ -77,7 +78,7 @@ export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
     lastMove: ISignedGameMove | null = null;
     lastOpponentMove: ISignedGameMove | null = null;
     isFinished: boolean = false;
-
+    winner = null; //TODO: implement
     gameId: number;
     isMyTurn: boolean;
     myGameState: TicTacToeBoard;
@@ -104,5 +105,33 @@ export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
         nextState.disputableMoveNumbers = nextDisputableMoveNonces;
         nextState.myGameState = TicTacToeBoard.fromHistory(nextState.decodedMovesHistory, nextState.disputableMoveNumbers);
         return Object.seal(nextState);
+    }
+
+    async signMove(move: TTTMove, playerAddress: string): Promise<ISignedGameMove> {
+        const gameMove = new GameMove(
+            this.gameId,
+            this.nonce,
+            playerAddress,
+            this.encode(),
+            this.makeMove(move).encode(),
+            move.encodedMove,
+        )
+        const signature = await signMoveWithAddress(gameMove, playerAddress);
+        return new SignedGameMove(gameMove, [signature]);
+    }
+
+    private encode(): string {
+        const xWins = this.winner === 'X';
+        const oWins = this.winner === 'O';
+        const cellsToEncode = this.myGameState.cells.map((cell) => {
+            if (cell === null) {
+                return 0;
+            } else if (cell === 'X') {
+                return 1;
+            } else {
+                return 2;
+            }
+        });
+        return defaultAbiCoder.encode(STATE_TYPES, [cellsToEncode, xWins, oWins]);
     }
 }

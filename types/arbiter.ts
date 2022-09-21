@@ -39,7 +39,7 @@ export class GameMove implements IGameMove {
     constructor(gameId: number, nonce: number, player: string, oldState: string, newState: string, move: string) {
         this.gameId = gameId;
         this.nonce = nonce;
-        this.player = player;
+        this.player = player; //address
         this.oldState = oldState;
         this.newState = newState;
         this.move = move;

@@ -11,7 +11,6 @@ export const Board: React.FC<IBoardProps> = ({
                                                  disputableMoves,
                                              }) => {
     const renderSquare = (i: number) => {
-        console.log('renderSquare disputableMoves: ', disputableMoves);
         return <Square
             value={squares[i]}
             onClick={() => onClick(i)}

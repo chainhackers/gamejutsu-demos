@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import arbiterContract from 'contracts/Arbiter.json';
+import {GameMove, IGameMove} from "../types/arbiter";
 
 export async function getSessionWallet(
   address: string,
@@ -36,16 +36,17 @@ const types = {
 };
 
 export async function signMove(
-  gameMove: {
-    gameId: number;
-    nonce: number;
-    player: string;
-    oldState: string;
-    newState: string;
-    move: string;
-  },
+  gameMove: IGameMove,
   wallet: ethers.Wallet,
 ): Promise<string> {
   let signPromise = wallet._signTypedData(domain, types, gameMove);
+  console.log({signPromise});
   return signPromise;
+}
+
+export async function signMoveWithAddress(
+    gameMove: IGameMove,
+    address: string,
+): Promise<string> {
+  return signMove(gameMove, await getSessionWallet(address));
 }
