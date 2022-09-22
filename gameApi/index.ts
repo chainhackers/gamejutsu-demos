@@ -1,10 +1,9 @@
 import { defaultAbiCoder } from 'ethers/lib/utils';
 import { IContractData, TBoardState } from 'types';
-import { ethers, Transaction } from 'ethers';
-import rulesContract from 'contracts/TicTacToeRules.json';
+import { ethers } from 'ethers';
 import { getSessionWallet, signMove } from 'helpers/session_signatures';
-import { IGameMove, ISignedGameMove } from 'types/arbiter';
 import arbiterContract from 'contracts/Arbiter.json';
+import {IGameMove, ISignedGameMove} from "../types/arbiter";
 
 export const getArbiter = () => fromContractData(arbiterContract);
 

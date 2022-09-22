@@ -16,8 +16,8 @@ import styles from 'pages/games/gameType.module.scss';
 import {ETTicTacToe} from "../../components/Games/ET-Tic-Tac-Toe";
 import {TicTacToeState, TTTMove} from "../../components/Games/ET-Tic-Tac-Toe/types";
 import {IChatLog} from "../../types";
+import {_isValidSignedMove, getArbiter, getSigner} from "../../gameApi";
 import {ISignedGameMove} from "../../types/arbiter";
-import {getSigner} from "../../gameApi";
 
 interface IGamePageProps {
     gameType?: string;
@@ -58,7 +58,6 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
 
     const {client, initClient} = useXmptContext();
     const {signer} = useWalletContext();
-    const account = useAccount();
 
     const setConversationHandler = async (rivalPlayerAddress: string) => {
         console.log('setConversationHandler');
@@ -70,24 +69,33 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
     };
 
 
-    const sendMessageHandler = async (msg: ISignedGameMove) => {
+    const sendSignedMoveHandler = async (msg: ISignedGameMove) => {
         const messageText = JSON.stringify(msg);
         console.log({messageText});
-
-        // const message = new Message(
-        //     `game_${msg.gameMove.gameId}_player_${msg.gameMove.player}_${msg.gameMove.nonce}`,
-        //     messageText,
 
         if (!conversation) {
             console.warn('no conversation!');
             return;
         }
-        conversation.send(messageText).then(() => {
-            const nextGameState = gameState.encodedMove(msg.gameMove.move);
-            console.log('message sent, setting new state:', nextGameState);
-            setGameState(nextGameState);
-            console.log('new state is set after sending the move', gameState);
-        });
+
+        _isValidSignedMove(getArbiter(), msg).then(isValid => {
+
+
+            const nextGameState = gameState.encodedMove(msg.gameMove.move, isValid);
+            conversation.send(messageText).then(() => {
+                console.log('message sent, setting new state:', nextGameState);
+                setGameState(nextGameState);
+                console.log('new state is set after sending the move', gameState);
+            });
+
+
+        })
+
+
+        // const message = new Message(
+        //     `game_${msg.gameMove.gameId}_player_${msg.gameMove.player}_${msg.gameMove.nonce}`,
+        //     messageText,
+
     }
 
     const runDisputeHandler = () => {
@@ -203,7 +211,7 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
                     getSignerAddress={() => {
                         return getSigner().getAddress()
                     }}
-                    sendSignedMove={sendMessageHandler}
+                    sendSignedMove={sendSignedMoveHandler}
                 />
                 <XMTPChatLog logData={log} isLoading={isLogLoading}/>
             </div>

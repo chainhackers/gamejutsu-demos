@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import {GameMove, IGameMove} from "../types/arbiter";
+import {IGameMove} from "../types/arbiter";
 
 export async function getSessionWallet(
   address: string,
