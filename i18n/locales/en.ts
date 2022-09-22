@@ -81,6 +81,12 @@ const en = {
     poweredBy: {
       title: 'Powered By',
     },
+    connectPage: {
+      title: 'Let’s get you started',
+      description: 'Connect with your wallet to continue',
+      wallets: '👛👝',
+      createWallet: 'Create wallet',
+    },
   },
 };
 

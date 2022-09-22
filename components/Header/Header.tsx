@@ -13,7 +13,11 @@ export const Header: React.FC<HeaderPropsI> = () => {
 
   return (
     <div className={styles.container}>
-      {asPath !== '/' && <NavPath path={asPath} />}
+      {asPath !== '/' && currentPath?.split('?')[0] !== 'connect' ? (
+        <NavPath path={asPath} />
+      ) : (
+        <NavPath path={'Game Demos'} />
+      )}
       <div className={styles.left}>
         <Link href="/">
           <a>
@@ -27,8 +31,8 @@ export const Header: React.FC<HeaderPropsI> = () => {
         </Link>
       </div>
       <div className={styles.right}>
-        <Navigation active={currentPath} />
-        <ConnectButton />
+        {currentPath?.split('?')[0] !== 'connect' && <Navigation active={currentPath} />}
+        {currentPath?.split('?')[0] !== 'connect' && <ConnectButton />}
       </div>
     </div>
   );
