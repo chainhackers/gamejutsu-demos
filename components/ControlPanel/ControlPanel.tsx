@@ -115,10 +115,9 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
         gameId,
       );
 
-      const fetchedRivalPlayerAddress = players.filter(
-        (address) => address !== currentPlayerAddress,
-      )[0];
-      setRivalPlayerAddress(fetchedRivalPlayerAddress);
+      let rivalPlayer = players[parseInt(PROPOSER_INGAME_ID)];
+
+      setRivalPlayerAddress(rivalPlayer);
       setPlayerIngameId(ACCEPTER_INGAME_ID);
       setPlayerType(playersTypes[ACCEPTER_INGAME_ID]);
       setGameStatus('Accepted');
@@ -251,41 +250,19 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
   useEffect(() => {
     if (!gameId || !!rivalPlayerAddress || playerIngameId === ACCEPTER_INGAME_ID) return;
     setRivalAddressStatus('Fetching rival address...');
-
-    const getRivalPlayerLoop = async (timeout: NodeJS.Timeout) => {
-      clearTimeout(timeout);
-      try {
-        const players = (await gameApi.getPlayers(
-          gameApi.fromContractData(arbiterContractData),
-          gameId,
-        )) as [string, string];
-
-        const zeroPlayer = players.find((player) => player === ZERO_ADDRESS);
-
-        if (!zeroPlayer) {
-          setRivalAddressStatus(null);
-          setRivalPlayerAddress(
-            players.filter((address) => address !== currentPlayerAddress)[0],
-          );
-
-          return;
-        }
-        const newTimeout: NodeJS.Timeout = setTimeout(
-          () => getRivalPlayerLoop(newTimeout),
-          FETCH_RIVAL_ADDRESS_TIMEOUT,
-        );
-      } catch (error) {
-        setRivalPlayerAddress(null);
+    gameApi.getPlayers(
+      gameApi.fromContractData(arbiterContractData),
+      gameId,
+    ).then((players:[string, string]) => {
+      let rivalPlayer = players[parseInt(ACCEPTER_INGAME_ID)];
+      if (rivalPlayer) {
+        setRivalAddressStatus(null);
+        setRivalPlayerAddress(rivalPlayer);
+      } else {
         setRivalAddressStatus('Failed to get rival address');
+        setRivalPlayerAddress(null);
       }
-    };
-
-    const timeout: NodeJS.Timeout = setTimeout(
-      () => getRivalPlayerLoop(timeout),
-      FETCH_RIVAL_ADDRESS_TIMEOUT,
-    );
-
-    return () => clearTimeout(timeout);
+    })    
   }, [gameId, playerIngameId, rivalPlayerAddress]);
 
   useEffect(() => {
