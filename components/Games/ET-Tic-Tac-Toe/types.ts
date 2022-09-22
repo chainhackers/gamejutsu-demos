@@ -109,6 +109,11 @@ export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
         return Object.seal(nextState);
     }
 
+    encodedMove(encodedMove: string, valid: boolean = true): TicTacToeState {
+        const move = TTTMove.fromEncoded(encodedMove, this.playerId == 0 ? 'X' : 'O');
+        return this.makeMove(move, valid)
+    }
+
     opponentMove(encodedMove: string, valid: boolean = true): TicTacToeState {
         const move = TTTMove.fromEncoded(encodedMove, this.playerId == 0 ? 'O' : 'X'); //TODO reversed, remove hack
         return this.makeMove(move, valid)
