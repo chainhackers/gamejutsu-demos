@@ -11,6 +11,8 @@ const en = {
     buttons: {
       connectWAllet: 'Connect Wallet',
       tryDemo: 'Try Demo',
+      play: 'Let’s play!',
+      return: 'Return',
     },
     frontpage: {
       introduction: { l1: 'Say goodbye 👋🏼', l2: 'to signing transactions on every game move' },
@@ -51,6 +53,29 @@ const en = {
         id: 'id',
         winner: 'winner',
         loser: 'loser',
+      },
+    },
+    selectPrize: {
+      title: '🏆 Winner gets',
+      description: {
+        free: 'A badge of honour',
+        stake: '',
+      },
+      prize: {
+        free: '🎖',
+        stake: 'MATIC',
+      },
+      free: {
+        title: 'Play for free',
+        description: 'Winner gets a Sismo Badge',
+      },
+      stake: {
+        title: 'Stake a prize pool',
+        description: 'Winner gets MATIC Tokens',
+      },
+      notification: {
+        p1: 'If each player stake',
+        p2: 'the winner gets',
       },
     },
     poweredBy: {

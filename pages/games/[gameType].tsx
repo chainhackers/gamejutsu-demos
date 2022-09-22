@@ -7,10 +7,10 @@ import { useXmptContext } from 'context/XmtpContext';
 
 import { useRouter } from 'next/router';
 
-import { TicTacToe } from 'components/Games';
-import { XMTPChatLog } from 'components/XMTPChatLog';
+import { TicTacToe } from 'components';
+import { XMTPChatLog, SelectPrize, JoinGame, SelectGame } from 'components';
 import { useWalletContext } from 'context/WalltetContext';
-import { ControlPanel } from 'components/ControlPanel';
+import { ControlPanel } from 'components';
 import { defaultAbiCoder } from 'ethers/lib/utils';
 import arbiterContract from 'contracts/Arbiter.json';
 import rulesContract from 'contracts/TicTacToeRules.json';
@@ -20,8 +20,6 @@ import { signMove, getSessionWallet } from 'helpers/session_signatures';
 
 import styles from 'pages/games/gameType.module.scss';
 import { ethers } from 'ethers';
-import path from 'path';
-import { JoinGame, SelectGame } from 'components';
 
 interface IGamePageProps {
   gameType?: string;
@@ -234,6 +232,10 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   }
   if (!!gameType && !!query && query?.select === 'true') {
     return <SelectGame userName={account.address} gameType={gameType} />;
+  }
+  if (!!gameType && !!query && query?.prize === 'true' && query?.gameId) {
+    console.log('prize', query?.prize, query?.gameId);
+    return <SelectPrize />;
   }
 
   if (!!gameType && gameType === 'tic-tac-toe') {

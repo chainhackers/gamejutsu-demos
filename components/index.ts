@@ -12,3 +12,4 @@ export * from 'components/GameThumbnail';
 export * from 'components/SelectGame';
 export * from 'components/JoinGame';
 export * from 'components/ActualGamesList';
+export * from 'components/SelectPrize';
