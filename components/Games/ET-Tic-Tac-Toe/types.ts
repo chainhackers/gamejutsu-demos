@@ -84,7 +84,7 @@ export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
     myGameState: TicTacToeBoard;
     playerType: TPlayer;
     playerId: number;
-    nonce: number = 0; //TODO implement
+    nonce: number = 0;
 
     constructor(gameId: number, playerType: TPlayer, board: TicTacToeBoard | null = null) {
         this.gameId = gameId;
@@ -101,7 +101,7 @@ export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
         const nextDisputableMoveNonces = new Set(this.disputableMoveNumbers);
 
         if (!valid) {
-            nextDisputableMoveNonces.add(nextState.nonce);
+            nextDisputableMoveNonces.add(this.nonce);
         }
 
         nextState.disputableMoveNumbers = nextDisputableMoveNonces;

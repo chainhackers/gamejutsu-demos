@@ -5,7 +5,7 @@ import { useAccount, useConnect } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import gameApi from 'gameApi';
 import { TBoardState } from 'types';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import cn from 'classnames';
 
 const PROPOSER_INGAME_ID = '0';
@@ -144,6 +144,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
       setPlayerType(playersTypes[ACCEPTER_INGAME_ID]);
       setGameStatus('Accepted');
       setGameId(gameId);
+      onAcceptGame(gameId);
     } catch (error) {
       setError('Error! Check console!');
       console.error('Error: ', error);

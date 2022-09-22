@@ -2,7 +2,6 @@ import {useEffect, useState} from 'react';
 import {GetStaticPaths, GetStaticProps, NextPage} from 'next';
 import {ParsedUrlQuery} from 'querystring';
 import {Conversation, Stream, Message} from '@xmtp/xmtp-js';
-import {useAccount} from 'wagmi';
 import {useXmptContext} from 'context/XmtpContext';
 
 
@@ -202,6 +201,7 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
                     winner={winner}
                     rivalPlayerConversationStatus={conversationStatus}
                     onProposeGame={setGameId}
+                    onAcceptGame={setGameId}
                     isInvalidMove={isInvalidMove}
                     isInDispute={isInDispute}
                     onDispute={runDisputeHandler}
