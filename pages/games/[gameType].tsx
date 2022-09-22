@@ -143,7 +143,7 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
         return () => {
             if (!!stream) stream.return();
         };
-    }, [conversation]);
+    }, [conversation, gameState]);
 
 
     useEffect(() => {
