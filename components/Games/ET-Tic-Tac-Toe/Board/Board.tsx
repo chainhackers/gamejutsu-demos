@@ -18,7 +18,6 @@ export const Board: React.FC<IBoardProps> = ({
     };
     return (
         <div className={cn(styles.container, isFinished ? styles.finished : null)}>
-            E.T.Board
             <div className="board-row">
                 {renderSquare(0)}
                 {renderSquare(1)}

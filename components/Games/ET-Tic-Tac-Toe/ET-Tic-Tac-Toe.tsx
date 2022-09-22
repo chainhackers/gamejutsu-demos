@@ -42,8 +42,6 @@ export const ETTicTacToe: React.FC<ITicTacToeProps> = ({
 
     return (
         <div className={styles.container}>
-            <p>E.T. TTT</p>
-
             <div className={styles.boardPanel}>
                 <Board
                     squares={boardState.cells}
