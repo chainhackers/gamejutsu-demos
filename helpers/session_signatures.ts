@@ -1,38 +1,17 @@
 import { ethers } from 'ethers';
-import arbiterContract from 'contracts/Arbiter.json';
-
-export async function registerSessionAddress(
-  provider: ethers.providers.Web3Provider,
-  gameId: number,
-  wallet: ethers.Wallet,
-): Promise<void> {
-  const contract = new ethers.Contract(
-    arbiterContract.address,
-    arbiterContract.abi,
-    provider.getSigner(),
-  );
-  const gasEstimatedRedeem = await contract.estimateGas.registerSessionAddress(
-    gameId,
-    wallet.address,
-  );
-  return contract.registerSessionAddress(gameId, wallet.address, {
-    gasLimit: gasEstimatedRedeem.mul(4),
-  });
-}
+import {GameMove, IGameMove} from "../types/arbiter";
 
 export async function getSessionWallet(
-  gameId: number,
   address: string,
-  registerAddressCallback: (wallet: ethers.Wallet) => Promise<void>,
 ): Promise<ethers.Wallet> {
+  console.log(`Waller requested for address ${address}`);
   let localStorage = window.localStorage;
-  let privateStore = `${address}_${gameId}_private`;
+  let privateStore = `${address}_private`;
   let privateKey = localStorage.getItem(privateStore);
   if (privateKey) {
     return new ethers.Wallet(privateKey);
   }
   let wallet = ethers.Wallet.createRandom();
-  await registerAddressCallback(wallet);
   localStorage.setItem(privateStore, wallet.privateKey);
   return wallet;
 }
@@ -57,16 +36,17 @@ const types = {
 };
 
 export async function signMove(
-  gameMove: {
-    gameId: number;
-    nonce: number;
-    player: string;
-    oldState: string;
-    newState: string;
-    move: string;
-  },
+  gameMove: IGameMove,
   wallet: ethers.Wallet,
 ): Promise<string> {
   let signPromise = wallet._signTypedData(domain, types, gameMove);
+  console.log({signPromise});
   return signPromise;
+}
+
+export async function signMoveWithAddress(
+    gameMove: IGameMove,
+    address: string,
+): Promise<string> {
+  return signMove(gameMove, await getSessionWallet(address));
 }

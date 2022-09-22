@@ -77,7 +77,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     try {
       let { gameId } = await gameApi.proposeGame(
         gameApi.fromContractData(arbiterContractData),
-        arbiterContractData.address,
+        gameRulesContractData.address,
       );
       if (!!gameId) {
         gameId = gameId.toString();
@@ -237,8 +237,11 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
   const connectPeerPlayerHandler = async () => {
     console.log('connect peer player handler');
     // onConnectPlayer(rivalPlayerAddress);
-    if (!rivalPlayerAddress) return;
-    onConnectPlayer(rivalPlayerAddress);
+    if (rivalPlayerAddress){
+        await onConnectPlayer(rivalPlayerAddress);
+    } else {
+        console.log('no rival player address');
+    }
   };
 
   useEffect(() => {

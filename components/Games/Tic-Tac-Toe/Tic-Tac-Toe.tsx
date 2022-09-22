@@ -204,9 +204,8 @@ export const TicTacToe: React.FC<TikTakToePropsI> = ({
       const signature = await signMove(
         structureToSign,
         await getSessionWallet(
-          Number(gameId),
+          //Number(gameId),
           encodedMessage.sender,
-          (wallet: ethers.Wallet) => Promise.resolve(),
         ),
       );
 
