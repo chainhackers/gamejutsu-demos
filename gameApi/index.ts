@@ -20,8 +20,8 @@ export function fromContractData(data: IContractData): ethers.Contract {
   return newContract(data.address, data.abi, getSigner());
 }
 
-
-export function newContract(addressOrName: string,
+export function newContract(
+  addressOrName: string,
   contractInterface: ethers.ContractInterface,
   signerOrProvider?: ethers.Signer | ethers.providers.Provider
 ): ethers.Contract {
@@ -127,7 +127,7 @@ export const proposeGame = async (
   console.log('tx', tx);
   const rc = await tx.wait();
   console.log('rc', rc);
-  const event = rc.events.find((event: { event: string; }) => event.event === 'GameProposed');
+  const event = rc.events.find((event: { event: string }) => event.event === 'GameProposed');
   const { gameId, proposer, stake } = event.args;
   return { gameId, proposer, stake };
 };
@@ -144,7 +144,7 @@ export const acceptGame = async (
   console.log('tx', tx);
   const rc = await tx.wait();
   console.log('rc', rc);
-  const event = rc.events.find((event: { event: string; }) => event.event === 'GameStarted');
+  const event = rc.events.find((event: { event: string }) => event.event === 'GameStarted');
   const { gameId, players, stake } = event.args;
   return { gameId, players, stake };
 };
@@ -158,7 +158,7 @@ export const resign = async (
   console.log('tx', tx);
   const rc = await tx.wait();
   console.log('rc', rc);
-  const event = rc.events.find((event: { event: string; }) => event.event === 'GameFinished');
+  const event = rc.events.find((event: { event: string }) => event.event === 'GameFinished');
   const { gameId, winner, loser, draw } = event.args;
   return { gameId, winner, loser, draw };
 };
@@ -215,7 +215,6 @@ export const checkIsValidMove = async (
   playerIngameId: number,
   move: number,
 ) => {
-
   const encodedBoardState = defaultAbiCoder.encode(['uint8[9]', 'bool', 'bool'], boardState);
 
   const gameState = [gameId, nonce, encodedBoardState];
@@ -235,7 +234,6 @@ export const transition = async (
   playerIngameId: number,
   move: number,
 ) => {
-
   const encodedBoardState = defaultAbiCoder.encode(['uint8[9]', 'bool', 'bool'], boardState);
 
   const gameState = [gameId, nonce, encodedBoardState];

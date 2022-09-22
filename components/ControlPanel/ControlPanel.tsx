@@ -302,13 +302,13 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     // );
   }, [playerIngameId]);
 
-// useEffect(() => {
-//     setRivalPlayerAddress(
-//       currentPlayerAddress === '0x1215991085d541A586F0e1968355A36E58C9b2b4'
-//         ? '0xDb0b11d1281da49e950f89bD0F6B47D464d25F91'
-//         : '0x1215991085d541A586F0e1968355A36E58C9b2b4',
-//     );
-//   }, [currentPlayerAddress]);
+  // useEffect(() => {
+  //     setRivalPlayerAddress(
+  //       currentPlayerAddress === '0x1215991085d541A586F0e1968355A36E58C9b2b4'
+  //         ? '0xDb0b11d1281da49e950f89bD0F6B47D464d25F91'
+  //         : '0x1215991085d541A586F0e1968355A36E58C9b2b4',
+  //     );
+  //   }, [currentPlayerAddress]);
 
   // console.log('rivalPlayerAddress', currentPlayerAddress, rivalPlayerAddress);
 
