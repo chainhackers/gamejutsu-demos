@@ -14,7 +14,7 @@ export const ActualGamesList: React.FC<ActualGamesListPropsI> = ({ gamesList, on
       />
       {gamesList
         .slice()
-        .sort((a, b) => a.id - b.id)
+        .sort((a, b) => b.id - a.id)
         .map((game) => (
           <ActualGame key={game.gameId} {...game} onClick={onClick} />
         ))}
