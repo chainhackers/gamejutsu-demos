@@ -51,6 +51,9 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
   isInDispute,
   isInvalidMove,
   onDispute,
+  onInitTimeout,
+  onResolveTimeout,
+  onFinalizeTimeout,
 }) => {
   const [delay, setDelay] = useState(FETCH_RIVAL_ADDRESS_TIMEOUT);
   const [currentPlayerAddress, setCurrentPlayerAddress] = useState<string | null>(null);
@@ -344,10 +347,31 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
 
             <button
               className={styles.button}
-              style={{ marginLeft: '150px' }}
+              style={{ marginLeft: '30px' }}
               onClick={onDispute}
             >
               {isInDispute ? 'IN DISPUTE' : (isInvalidMove? 'DISPUTE INVALID MOVE' : 'DISPUTE MOVE')}
+            </button>
+            <button
+              className={styles.button}
+              style={{ marginLeft: '30px' }}
+              onClick={onInitTimeout}
+            >
+              INIT TIMEOUT
+            </button>
+            <button
+              className={styles.button}
+              style={{ marginLeft: '30px' }}
+              onClick={onResolveTimeout}
+            >
+              RESOLVE TIMEOUT
+            </button>
+            <button
+              className={styles.button}
+              style={{ marginLeft: '30px' }}
+              onClick={onFinalizeTimeout}
+            >
+              FINISH TIMEOUT
             </button>
           </div>
         </div>

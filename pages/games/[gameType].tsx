@@ -15,7 +15,7 @@ import styles from 'pages/games/gameType.module.scss';
 import {ETTicTacToe} from "components/Games/ET-Tic-Tac-Toe";
 import {TicTacToeState, TTTMove} from "components/Games/ET-Tic-Tac-Toe/types";
 import {IChatLog} from "../../types";
-import {_isValidSignedMove, checkIsValidMove, getArbiter, getSigner, getRulesContract, disputeMove} from "../../gameApi";
+import {_isValidSignedMove, checkIsValidMove, getArbiter, getSigner, getRulesContract, disputeMove, initTimeout, resolveTimeout, finalizeTimeout} from "../../gameApi";
 import {ISignedGameMove} from "../../types/arbiter";
 
 interface IGamePageProps {
@@ -82,18 +82,54 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
             const nextGameState = gameState.encodedMove(msg.gameMove.move, isValid);
             conversation.send(messageText).then(() => {
                 console.log('message sent, setting new state:', nextGameState);
+                nextGameState.lastMove = msg;
                 setGameState(nextGameState);
                 console.log('new state is set after sending the move', gameState);
             });
 
         })
 
-
-        // const message = new Message(
-        //     `game_${msg.gameMove.gameId}_player_${msg.gameMove.player}_${msg.gameMove.nonce}`,
-        //     messageText,
-
     }
+
+    const runInitTimeoutHandler = async () => {
+        if (!gameState.lastOpponentMove) {
+            console.log("no lastOpponentMove")
+            return;
+        }
+        if (!gameState.lastMove) {
+            console.log("no lastMove")
+            return;
+        }
+        const initTimeoutResult = await initTimeout(
+            getArbiter(),
+            [gameState.lastOpponentMove, gameState.lastMove]
+        );
+        console.log('initTimeoutResult', initTimeoutResult);
+    };
+
+    const runResolveTimeoutHandler = async () => {
+        if (!gameState.lastMove) {
+            console.log("no lastMove")
+            return;
+        }
+        const resolveTimeoutResult = await resolveTimeout(
+            getArbiter(),
+            gameState.lastMove
+        );
+        console.log('resolveTimeoutResult', resolveTimeoutResult);
+    };
+
+    const runFinalizeTimeoutHandler = async () => {
+        if (!gameState.gameId) {
+            console.log("no gameId")
+            return;
+        }
+        const finalizeTimeoutResult = await finalizeTimeout(
+            getArbiter(),
+            gameState.gameId
+        );
+        console.log('finalizeTimeoutResult', finalizeTimeoutResult);
+    };
 
     const runDisputeHandler = async () => {
         setIsInDispute(true);
@@ -150,6 +186,7 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
 
                     _isValidSignedMove(getArbiter(), signedMove).then(isValid => {
                         const nextGameState = gameState.opponentMove(signedMove.gameMove.move, isValid);
+                        nextGameState.lastOpponentMove = signedMove;
                         console.log('nextGameState', nextGameState);
                         setGameState(nextGameState);
                         setIsInvalidMove(!isValid);
@@ -220,6 +257,9 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
                     isInvalidMove={isInvalidMove}
                     isInDispute={isInDispute}
                     onDispute={runDisputeHandler}
+                    onInitTimeout={runInitTimeoutHandler}
+                    onResolveTimeout={runResolveTimeoutHandler}
+                    onFinalizeTimeout={runFinalizeTimeoutHandler}
                 />
                 <ETTicTacToe
                     gameState={gameState}

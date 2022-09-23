@@ -18,4 +18,7 @@ export interface ControlPanelPropsI {
   isInDispute: boolean;
   isInvalidMove: boolean;
   onDispute: () => void;
+  onInitTimeout: () => void;
+  onResolveTimeout: () => void;
+  onFinalizeTimeout: () => void;
 }
