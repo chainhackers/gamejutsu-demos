@@ -16,6 +16,27 @@
     margin: 20px;
   }
 
+  .play {
+    position: relative;
+    padding-top: 50px;
+
+    .creating {
+      position: absolute;
+      right: 0;
+      left: 0;
+      top: 0;
+      font-size: 32px;
+    }
+    .error {
+      position: absolute;
+      right: 0;
+      left: 0;
+      top: 0;
+      font-size: 32px;
+      color: red;
+    }
+  }
+
   > .selected {
     height: 200px;
     background-color: var(--white);

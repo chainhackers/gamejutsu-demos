@@ -29,7 +29,7 @@ interface IGamePageProps {
 interface IParams extends ParsedUrlQuery {
   gameType: string;
 }
-const PROPOSER_INGAME_ID = '0';
+const PROPOSER_INGAME_ID = 0;
 const ACCEPTER_INGAME_ID = '1';
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 const FETCH_RIVAL_ADDRESS_TIMEOUT = 2500;
@@ -37,6 +37,11 @@ const FETCH_RIVAL_ADDRESS_TIMEOUT = 2500;
 const arbiterContractData = {
   abi: arbiterContract.abi,
   address: arbiterContract.address,
+};
+
+const gameRulesContractData = {
+  abi: rulesContract.abi,
+  address: rulesContract.address,
 };
 
 //mb this better https://pgarciacamou.medium.com/react-simple-polling-custom-hook-usepollingeffect-1e9b6b8c9c71
@@ -137,6 +142,35 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     console.log('moveToDispute:', newMessage); // LAst Message with invalid move
   };
 
+  const createNewGameHandler = async () => {
+    // setCreatingNewGame(true);
+    // setCreatingGameError(null);
+
+    try {
+      let { gameId } = await gameApi.proposeGame(
+        gameApi.fromContractData(arbiterContractData),
+        gameRulesContractData.address,
+      );
+      // console.log(gameId);
+      if (!!gameId) {
+        gameId = gameId.toString();
+        // console.log('gameId', gameId);
+        setGameId(gameId);
+        setPlayerIngameId(PROPOSER_INGAME_ID);
+        // setPlayerType(playersTypes[PROPOSER_INGAME_ID]);
+        // setGameStatus('Proposed');
+        // onProposeGame(gameId);
+        // router.push('/games/' + gameType + '?prize=true');
+      }
+    } catch (error) {
+      // setCreatingGameError('Failed to create new game');
+      console.error(error);
+      throw new Error('creating ')
+    } finally {
+      // setTimeout(() => setCreatingNewGame(false), 3000);
+    }
+  };
+
   const acceptGameHandler = async (gameId: string): Promise<void> => {
     // event.preventDefault();
 
@@ -154,12 +188,12 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
         gameApi.fromContractData(arbiterContractData),
         gameId,
       );
-      let rivalPlayer = players[parseInt(PROPOSER_INGAME_ID)];
+      let rivalPlayer = players[PROPOSER_INGAME_ID];
       setRivalPlayerAddress(rivalPlayer);
       // setPlayerIngameId(ACCEPTER_INGAME_ID);
       // setPlayerType(playersTypes[ACCEPTER_INGAME_ID]);
       // setGameStatus('Accepted');
-      // setGameId(gameId);
+      setGameId(gameId);
       // onAcceptGame(gameId);
     } catch (error) {
       // setError('Error! Check console!');
@@ -251,7 +285,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     setPlayers([
       {
         playerName: playerIngameId === 0 ? 'Player1' : 'Player2',
-        address: account.address ? account.address : null,
+        address: gameId && account.address ? account.address : null,
         avatarUrl: '/images/empty_avatar.png',
         playerType: playersTypesMap[playerIngameId],
       },
@@ -262,7 +296,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
         playerType: playersTypesMap[playerIngameId === 0 ? 1 : 0],
       },
     ]);
-  }, [rivalPlayerAddress]);
+  }, [rivalPlayerAddress, gameId]);
 
   useInterval(async () => {
     if (rivalPlayerAddress) {
@@ -297,23 +331,25 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       <SelectGame
         userName={account.address}
         gameType={gameType}
-        onProposeGame={setGameId}
-        arbiterContractData={{
-          abi: arbiterContract.abi,
-          address: arbiterContract.address,
-        }}
-        gameRulesContractData={{
-          abi: rulesContract.abi,
-          address: rulesContract.address,
-        }}
+        // onProposeGame={setGameId}
+        // arbiterContractData={{
+        //   abi: arbiterContract.abi,
+        //   address: arbiterContract.address,
+        // }}
+        // gameRulesContractData={{
+        //   abi: rulesContract.abi,
+        //   address: rulesContract.address,
+        // }}
       />
     );
   }
+
   if (!!gameType && !!query && query?.prize === 'true') {
     console.log('prize', query?.prize, query?.gameId);
-    return <SelectPrize gameId={gameId} />;
+    return <SelectPrize gameId={gameId} createNewGameHandler={createNewGameHandler} />;
   }
 
+  console.log('gameId12341234' , gameId)
   if (!!gameType && gameType === 'tic-tac-toe') {
     return (
       <div className={styles.container}>

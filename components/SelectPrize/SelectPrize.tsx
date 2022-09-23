@@ -5,7 +5,9 @@ import { SelectPrizePropsI } from './SelectPrizeProps';
 import styles from './SelectPrize.module.scss';
 import { useState } from 'react';
 import { Button } from 'components/shared';
-export const SelectPrize: React.FC<SelectPrizePropsI> = ({ gameId }) => {
+export const SelectPrize: React.FC<SelectPrizePropsI> = ({ createNewGameHandler }) => {
+  const [isCreatingNewGame, setCreatingNewGame] = useState<boolean>(false);
+  const [creatingGameError, setCreatingGameError] = useState<string | null>(null);
   const [selected, setSelected] = useState<'free' | 'stake' | null>('free');
   const [disabled, setDisabled] = useState<('free' | 'stake')[]>([]);
   const [stakeValue, setStakeValue] = useState<string>('0.00');
@@ -15,7 +17,7 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({ gameId }) => {
   const { query } = router;
   // console.log(query);
 
-  console.log('gameId in prize', gameId);
+  // console.log('gameId in prize', gameId);
 
   const selectPrizeHandler = (prize: 'free' | 'stake' | null) => {
     setSelected(prize);
@@ -23,23 +25,26 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({ gameId }) => {
   };
 
   const playButtonClickHandler = () => {
-    router.push(`/games/${query.gameType}`);
+    setCreatingNewGame(true);
+    setCreatingGameError(null);
+
+    createNewGameHandler()
+      .then(() => {
+        router.push(`/games/${query.gameType}`);
+      })
+      .catch((error) => {
+        setCreatingGameError('Failed to create new game');
+        console.error(error);
+      })
+      .finally(() => {
+        setCreatingNewGame(false);
+      });
   };
   const returnButtonClickHandler = () => {
     router.push(`/games/${query.gameType}?join=true`);
   };
   return (
     <div className={styles.container}>
-      {query.acceptGameId && (
-        <div className={styles.title}>
-          {t('selectPrize.acceptGameId')} {gameId}
-        </div>
-      )}
-      {gameId && (
-        <div className={styles.title}>
-          {t('selectPrize.gameId')} {gameId}
-        </div>
-      )}
       <div className={styles.title}>{t('selectPrize.title')}</div>
       <div className={styles.selected}>
         {selected === 'free' && (
@@ -120,12 +125,16 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({ gameId }) => {
           </div>
         </div>
       </div>
+
       <div className={styles.play}>
+        {isCreatingNewGame && <div className={styles.creating}>Creating new game...</div>}
+        {creatingGameError && <div className={styles.error}>{creatingGameError}</div>}
         <Button
           title={t('buttons.play')}
           color="black"
           borderless
           onClick={playButtonClickHandler}
+          disabled={isCreatingNewGame}
         />
       </div>
 

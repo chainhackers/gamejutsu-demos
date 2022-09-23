@@ -10,42 +10,15 @@ import gameApi from 'gameApi';
 export const SelectGame: React.FC<SelectGamePropsI> = ({
   userName,
   gameType,
-  onProposeGame,
-  arbiterContractData,
-  gameRulesContractData,
+  // onProposeGame,
+  // arbiterContractData,
+  // gameRulesContractData,
 }) => {
-  const [isCreatingNewGame, setCreatingNewGame] = useState<boolean>(false);
-  const [creatingGameError, setCreatingGameError] = useState<string | null>(null);
+  // const [isCreatingNewGame, setCreatingNewGame] = useState<boolean>(false);
+  // const [creatingGameError, setCreatingGameError] = useState<string | null>(null);
 
   const router = useRouter();
 
-  const createNewGameHandler = async () => {
-    setCreatingNewGame(true);
-    setCreatingGameError(null);
-
-    try {
-      let { gameId } = await gameApi.proposeGame(
-        gameApi.fromContractData(arbiterContractData),
-        gameRulesContractData.address,
-      );
-      console.log(gameId);
-      if (!!gameId) {
-        gameId = gameId.toString();
-        // console.log('gameId', gameId);
-        // setGameId(gameId);
-        // setPlayerIngameId(PROPOSER_INGAME_ID);
-        // setPlayerType(playersTypes[PROPOSER_INGAME_ID]);
-        // setGameStatus('Proposed');
-        onProposeGame(gameId);
-        router.push('/games/' + gameType + '?prize=true');
-      }
-    } catch (e) {
-      setCreatingGameError('Failed to create new game');
-      console.error(e);
-    } finally {
-      setTimeout(() => setCreatingNewGame(false), 3000);
-    }
-  };
   const { t } = useTranslation();
   return (
     <div className={styles.container}>
@@ -57,18 +30,18 @@ export const SelectGame: React.FC<SelectGamePropsI> = ({
       <div className={styles.userName}>
         {userName ? userName : t('selectGame.unknownUser')}
       </div>
-      {!isCreatingNewGame && (
+      {
         <div className={styles.selection}>
           <div className={styles.new}>
             <div className={styles.title}>{t('selectGame.new.title')}</div>
             <div className={styles.description}>{t('selectGame.new.description')}</div>
-            {/* <Link href={'/games/' + gameType + '?prize=true'}> */}
-            {/* <a> */}
-            <div className={styles.button} onClick={createNewGameHandler}>
-              {t('selectGame.new.button')}
-            </div>
-            {/* </a> */}
-            {/* </Link> */}
+            <Link href={'/games/' + gameType + '?prize=true'}>
+              <a>
+                <div className={styles.button} >
+                {t('selectGame.new.button')}
+                </div>
+              </a>
+            </Link>
           </div>
           <div className={styles.join}>
             <div className={styles.title}>{t('selectGame.join.title')}</div>
@@ -80,9 +53,9 @@ export const SelectGame: React.FC<SelectGamePropsI> = ({
             </Link>
           </div>
         </div>
-      )}
-      {creatingGameError && <div className={styles.error}>{creatingGameError}</div>}
-      {isCreatingNewGame && <div className={styles.newGameLoader}>Creating new game...</div>}
+      }
+      {/* {creatingGameError && <div className={styles.error}>{creatingGameError}</div>} */}
+      {/* {isCreatingNewGame && <div className={styles.newGameLoader}>Creating new game...</div>} */}
     </div>
   );
 };
