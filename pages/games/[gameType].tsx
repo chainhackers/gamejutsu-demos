@@ -16,7 +16,8 @@ import {ETTicTacToe} from "components/Games/ET-Tic-Tac-Toe";
 import {TicTacToeState, TTTMove} from "components/Games/ET-Tic-Tac-Toe/types";
 import {IChatLog} from "../../types";
 import {_isValidSignedMove, checkIsValidMove, getArbiter, getSigner, getRulesContract, disputeMove, initTimeout, resolveTimeout, finalizeTimeout} from "../../gameApi";
-import {ISignedGameMove} from "../../types/arbiter";
+import {ISignedGameMove, SignedGameMove} from "../../types/arbiter";
+import { signMove, signMoveWithAddress } from 'helpers/session_signatures';
 
 interface IGamePageProps {
     gameType?: string;
@@ -102,9 +103,14 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
             console.log("no lastMove")
             return;
         }
+        let address = await getSigner().getAddress();
+        const signature = await signMoveWithAddress(lastOpponentMove.gameMove, address);
+        const signatures = [...lastOpponentMove.signatures, signature]
+        let lastOpponentMoveSignedByAll = new SignedGameMove(lastOpponentMove.gameMove, signatures);
+        console.log('lastOpponentMoveSignedByAll');
         const initTimeoutResult = await initTimeout(
             getArbiter(),
-            [lastOpponentMove, lastMove]
+            [lastOpponentMoveSignedByAll, lastMove]
         );
         console.log('initTimeoutResult', initTimeoutResult);
     };
