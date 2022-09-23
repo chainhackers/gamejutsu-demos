@@ -44,8 +44,10 @@ export const initTimeout = async (
   contract: ethers.Contract,
   signedGameMoves: [ISignedGameMove, ISignedGameMove],
 ) => {
-  const gasEstimated = await contract.estimateGas.initTimeout(signedGameMoves);
-  const tx = await contract.initTimeout(signedGameMoves, { gasLimit: gasEstimated.mul(2) });
+  console.log('signedGameMoves', signedGameMoves);
+  const value = ethers.BigNumber.from(10).pow(17);
+  const gasEstimated = await contract.estimateGas.initTimeout(signedGameMoves, {value});
+  const tx = await contract.initTimeout(signedGameMoves, { value, gasLimit: gasEstimated.mul(2) });
   console.log('tx', tx);
   const rc = await tx.wait();
   console.log('rc', rc);

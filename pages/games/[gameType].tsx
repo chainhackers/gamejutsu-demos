@@ -107,7 +107,7 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
         const signature = await signMoveWithAddress(lastOpponentMove.gameMove, address);
         const signatures = [...lastOpponentMove.signatures, signature]
         let lastOpponentMoveSignedByAll = new SignedGameMove(lastOpponentMove.gameMove, signatures);
-        console.log('lastOpponentMoveSignedByAll');
+        console.log('lastOpponentMoveSignedByAll', lastOpponentMoveSignedByAll);
         const initTimeoutResult = await initTimeout(
             getArbiter(),
             [lastOpponentMoveSignedByAll, lastMove]
