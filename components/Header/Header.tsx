@@ -11,12 +11,14 @@ export const Header: React.FC<HeaderPropsI> = () => {
   const parsedPath = asPath.split('/').filter((el) => el.length !== 0);
   const currentPath = parsedPath[0];
 
+
   return (
     <div className={styles.container}>
       {asPath !== '/' && currentPath?.split('?')[0] !== 'connect' ? (
         <NavPath path={asPath} />
       ) : (
-        <NavPath path={'Game Demos'} />
+          // <NavPath path={'Game Demo'} />
+          null
       )}
       <div className={styles.left}>
         <Link href="/">

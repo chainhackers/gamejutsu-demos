@@ -8,7 +8,15 @@ import { useXmptContext } from 'context/XmtpContext';
 import { useRouter } from 'next/router';
 
 import { TicTacToe } from 'components';
-import { XMTPChatLog, SelectPrize, JoinGame, SelectGame } from 'components';
+import {
+  XMTPChatLog,
+  SelectPrize,
+  JoinGame,
+  SelectGame,
+  GameField,
+  LeftPanel,
+  RightPanel,
+} from 'components';
 import { useWalletContext } from 'context/WalltetContext';
 import { ControlPanel } from 'components';
 import { defaultAbiCoder } from 'ethers/lib/utils';
@@ -241,35 +249,40 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   if (!!gameType && gameType === 'tic-tac-toe') {
     return (
       <div className={styles.container}>
-        <ControlPanel
-          arbiterContractData={{
-            abi: arbiterContract.abi,
-            address: arbiterContract.address,
-          }}
-          gameRulesContractData={{
-            abi: rulesContract.abi,
-            address: rulesContract.address,
-          }}
-          playersTypes={{ 0: 'X', 1: 'O' }}
-          onConnectPlayer={setConversationHandler}
-          onSetPlayerIngameId={setPlayerIngameId}
-          winner={winner}
-          rivalPlayerConversationStatus={conversationStatus}
-          onProposeGame={setGameId}
-          isInvalidMove={isInvalidMove}
-          isInDispute={isInDispute}
-          onDispute={runDisputeHandler}
-        />
-        <TicTacToe
-          gameId={gameId}
-          // playerType={playerType}
-          playerIngameId={playerIngameId}
-          encodedMessage={newMessage}
-          onChangeMessage={onGameStateChangeHandler}
-          onInvalidMove={inValidMoveHandler}
-          onWinner={setWinner}
-        />
-        <XMTPChatLog logData={log} isLoading={isLogLoading} />
+        <LeftPanel />
+        <GameField />
+        <RightPanel />
+        {/* <div>
+          <ControlPanel
+            arbiterContractData={{
+              abi: arbiterContract.abi,
+              address: arbiterContract.address,
+            }}
+            gameRulesContractData={{
+              abi: rulesContract.abi,
+              address: rulesContract.address,
+            }}
+            playersTypes={{ 0: 'X', 1: 'O' }}
+            onConnectPlayer={setConversationHandler}
+            onSetPlayerIngameId={setPlayerIngameId}
+            winner={winner}
+            rivalPlayerConversationStatus={conversationStatus}
+            onProposeGame={setGameId}
+            isInvalidMove={isInvalidMove}
+            isInDispute={isInDispute}
+            onDispute={runDisputeHandler}
+          />
+          <TicTacToe
+            gameId={gameId}
+            // playerType={playerType}
+            playerIngameId={playerIngameId}
+            encodedMessage={newMessage}
+            onChangeMessage={onGameStateChangeHandler}
+            onInvalidMove={inValidMoveHandler}
+            onWinner={setWinner}
+          />
+          <XMTPChatLog logData={log} isLoading={isLogLoading} />
+        </div> */}
       </div>
     );
   }

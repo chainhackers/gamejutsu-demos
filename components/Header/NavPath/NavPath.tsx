@@ -1,4 +1,5 @@
 import cn from 'classnames';
+import Link from 'next/link';
 import { NavPathPropsI } from './NavPathProps';
 import styles from './NavPath.module.scss';
 import { Fragment } from 'react';
@@ -23,16 +24,24 @@ export const NavPath: React.FC<NavPathPropsI> = ({ path }) => {
 
   return (
     <div className={styles.container}>
-      <span>GameJutsu</span>
+      <Link href="/">
+        <a>
+          <span>GameJutsu</span>
+        </a>
+      </Link>
       {newPaths.map((el, index, arr) => (
         <Fragment key={el + index}>
           {' > '}
-          <span
-            // key={el + index}
-            className={cn(index === arr.length - 1 ? styles.active : null)}
-          >
-            {el}
-          </span>
+          <Link href="/games">
+            <a>
+              <span
+                // key={el + index}
+                className={cn(index === arr.length - 1 ? styles.active : null)}
+              >
+                {el}
+              </span>
+            </a>
+          </Link>
         </Fragment>
       ))}
     </div>

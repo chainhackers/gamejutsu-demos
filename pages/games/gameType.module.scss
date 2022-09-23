@@ -1,7 +1,10 @@
 .container {
   // background-color: rgb(255, 249, 78);
   background-color: var(--gray-lightest);
+  background-color: var(--white);
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-top: 90px;
+  
 }

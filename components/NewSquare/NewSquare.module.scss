@@ -1,0 +1,13 @@
+.square {
+  width: calc(420px / 3);
+  height: calc(420px / 3);
+  // background-color: beige;
+  font-size: 68px;
+  text-align: center;
+  padding: 30px 0;
+
+  &:nth-child(2) {
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+  }
+}

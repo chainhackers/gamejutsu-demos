@@ -1,0 +1,14 @@
+.container {
+  // background-color: aqua;
+  width: 420px;
+  height: 420px;
+
+  .row {
+    height: calc(420px / 3);
+    display: flex;
+  }
+  .row:nth-child(2) {
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+  }
+}

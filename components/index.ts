@@ -13,3 +13,8 @@ export * from 'components/SelectGame';
 export * from 'components/JoinGame';
 export * from 'components/ActualGamesList';
 export * from 'components/SelectPrize';
+export * from 'components/GameField';
+export * from 'components/NewGameBoard';
+export * from 'components/NewSquare';
+export * from 'components/LeftPanel';
+export * from 'components/RightPanel';

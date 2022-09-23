@@ -1,0 +1,29 @@
+.container {
+  background-color: aqua;
+  background-color: var(--gray-lightest);
+  width: 610px;
+  height: 610px;
+  border-radius: 10px;
+  .header {
+    padding: 25px 50px 25px;
+    // background-color: aquamarine;
+    display: flex;
+    justify-content: space-between;
+    height: 15%;
+    .room,
+    .prize {
+      font-size: 16px;
+      font-weight: bold;
+    }
+    .message {
+      max-width: 65%;
+      text-align: center;
+    }
+  }
+  .gameBoardContainer {
+    height: 84%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
