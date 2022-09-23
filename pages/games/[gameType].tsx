@@ -51,6 +51,8 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
     const [newMessage, setNewMessage] = useState<{ content: object; sender: string } | null>(
         null,
     );
+    const [lastMove, setLastMove] = useState<ISignedGameMove| null>(null);
+    const [lastOpponentMove, setLastOpponentMove] = useState<ISignedGameMove| null>(null);
     const [winner, setWinner] = useState<0 | 1 | null>(null);
     const [gameId, setGameId] = useState<string | null>(null);
     const [isInvalidMove, setIsInvalidMove] = useState<boolean>(false);
@@ -82,7 +84,7 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
             const nextGameState = gameState.encodedMove(msg.gameMove.move, isValid);
             conversation.send(messageText).then(() => {
                 console.log('message sent, setting new state:', nextGameState);
-                nextGameState.lastMove = msg;
+                setLastMove(msg);
                 setGameState(nextGameState);
                 console.log('new state is set after sending the move', gameState);
             });
@@ -92,41 +94,41 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
     }
 
     const runInitTimeoutHandler = async () => {
-        if (!gameState.lastOpponentMove) {
+        if (!lastOpponentMove) {
             console.log("no lastOpponentMove")
             return;
         }
-        if (!gameState.lastMove) {
+        if (!lastMove) {
             console.log("no lastMove")
             return;
         }
         const initTimeoutResult = await initTimeout(
             getArbiter(),
-            [gameState.lastOpponentMove, gameState.lastMove]
+            [lastOpponentMove, lastMove]
         );
         console.log('initTimeoutResult', initTimeoutResult);
     };
 
     const runResolveTimeoutHandler = async () => {
-        if (!gameState.lastMove) {
+        if (!lastMove) {
             console.log("no lastMove")
             return;
         }
         const resolveTimeoutResult = await resolveTimeout(
             getArbiter(),
-            gameState.lastMove
+            lastMove
         );
         console.log('resolveTimeoutResult', resolveTimeoutResult);
     };
 
     const runFinalizeTimeoutHandler = async () => {
-        if (!gameState.gameId) {
+        if (!gameId) {
             console.log("no gameId")
             return;
         }
         const finalizeTimeoutResult = await finalizeTimeout(
             getArbiter(),
-            gameState.gameId
+            parseInt(gameId)
         );
         console.log('finalizeTimeoutResult', finalizeTimeoutResult);
     };
@@ -186,7 +188,7 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
 
                     _isValidSignedMove(getArbiter(), signedMove).then(isValid => {
                         const nextGameState = gameState.opponentMove(signedMove.gameMove.move, isValid);
-                        nextGameState.lastOpponentMove = signedMove;
+                        setLastOpponentMove(signedMove);
                         console.log('nextGameState', nextGameState);
                         setGameState(nextGameState);
                         setIsInvalidMove(!isValid);
