@@ -16,6 +16,13 @@ export interface IMyGameState<IMyGameMove> {
  * 2 players only to make it doable during the hackathon
  *
  */
+
+export type TGameStateContractParams = {
+    gameId: number,
+    nonce: number,
+    state: string
+}
+
 export interface IGameState<IMyGameState, IMyGameMove> {
     gameId: number;
     playerId: number;
@@ -27,9 +34,11 @@ export interface IGameState<IMyGameState, IMyGameMove> {
     myGameState: IMyGameState;
     isFinished: boolean;
     winner: number | null;
+    nonce: number
 
     makeMove(move: IMyGameMove): IGameState<IMyGameState, IMyGameMove> //TODO make signed move
     composeMove(move: IMyGameMove, playerAddress: string): IGameMove
+    toGameStateContractParams() : TGameStateContractParams
 }
 
 // export interface IGameProps {

@@ -3,7 +3,7 @@ import React from "react";
 export interface ControlPanelPropsI {
   children?: React.ReactNode;
   onProposeGame: (gameId: string | null) => void;
-  onAcceptGame?: () => void;
+  onAcceptGame: (gameId: string | null) => void;
   onCheckValidMove?: () => void;
   onDisputeMove?: () => void;
   onGetPlayers?: () => void;
