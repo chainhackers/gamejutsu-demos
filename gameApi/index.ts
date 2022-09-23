@@ -66,6 +66,7 @@ export const resolveTimeout = async (
   contract: ethers.Contract,
   signedGameMove: ISignedGameMove,
 ) => {
+  console.log('signedGameMove', signedGameMove);
   const gasEstimated = await contract.estimateGas.resolveTimeout(signedGameMove);
   const tx = await contract.resolveTimeout(signedGameMove, { gasLimit: gasEstimated.mul(2) });
   console.log('tx', tx);
