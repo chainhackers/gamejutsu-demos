@@ -138,19 +138,12 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
                     const signedMove = JSON.parse(msg.content) as ISignedGameMove
                     console.log('signedMove from stream', signedMove);
                     console.log('gameState before move', gameState);
-                    
-                    checkIsValidMove(
-                        getRulesContract(gameType),
-                        gameState.toGameStateContractParams(),
-                        playerIngameId,
-                        signedMove.gameMove.move, //todo encode
-                      ).then(isValid => {
+
+                    _isValidSignedMove(getArbiter(), signedMove).then(isValid => {
                         const nextGameState = gameState.opponentMove(signedMove.gameMove.move, isValid);
                         console.log('nextGameState', nextGameState);
                         setGameState(nextGameState);
-
-                        //if (!!onCheckValidMove) onCheckValidMove();
-                      });
+                    });
                 }
 
             }
