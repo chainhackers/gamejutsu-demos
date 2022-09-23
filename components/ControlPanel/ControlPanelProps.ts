@@ -1,9 +1,9 @@
-import { Contract, ContractInterface } from 'ethers';
 import { IContractData } from 'types';
+import React from "react";
 export interface ControlPanelPropsI {
   children?: React.ReactNode;
   onProposeGame: (gameId: string | null) => void;
-  onAcceptGame?: () => void;
+  onAcceptGame: (gameId: string | null) => void;
   onCheckValidMove?: () => void;
   onDisputeMove?: () => void;
   onGetPlayers?: () => void;
@@ -11,7 +11,7 @@ export interface ControlPanelPropsI {
   arbiterContractData: IContractData;
   gameRulesContractData: IContractData;
   playersTypes: { [id: number]: string };
-  onConnectPlayer: (ivalPlayerAddress: string) => Promise<void>;
+  onConnectPlayer: (rivalPlayerAddress: string) => Promise<void>;
   onSetPlayerIngameId: any;
   winner: number | null;
   rivalPlayerConversationStatus: string | null;

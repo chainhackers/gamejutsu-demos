@@ -1,1 +1,1 @@
-export * from 'components/Games/Tic-Tac-Toe';
+export * from 'components/Games/ET-Tic-Tac-Toe';

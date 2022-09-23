@@ -1,35 +1,134 @@
 import { defaultAbiCoder } from 'ethers/lib/utils';
 import { IContractData, TBoardState } from 'types';
-import { ethers, Transaction } from 'ethers';
+import { ethers } from 'ethers';
+import { getSessionWallet, signMove } from 'helpers/session_signatures';
+import arbiterContract from 'contracts/Arbiter.json';
+import tictacRulesContract from 'contracts/TicTacToeRules.json';
+import {IGameMove, ISignedGameMove} from "../types/arbiter";
+import { TGameStateContractParams } from 'components/Games/types';
 
-export function fromContractData(data: IContractData): ethers.Contract {
-  const provider = new ethers.providers.Web3Provider(
-    window.ethereum as ethers.providers.ExternalProvider,
-  );
+export const getArbiter = () => fromContractData(arbiterContract);
+export const getRulesContract = (gameType: string | undefined) => {
+  return fromContractData(tictacRulesContract);
+} 
+
+export function getSigner(): ethers.Signer {
+  const provider = new ethers.providers.Web3Provider(window.ethereum as ethers.providers.ExternalProvider);
   console.log('provider', provider);
   const signer = provider.getSigner();
   console.log('signer', signer);
-  return newContract(data.address, data.abi, signer);
+  return signer;
+}
+
+export function fromContractData(data: IContractData): ethers.Contract {
+  return newContract(data.address, data.abi, getSigner());
 }
 
 export function newContract(
   addressOrName: string,
   contractInterface: ethers.ContractInterface,
-  signerOrProvider?: ethers.Signer | ethers.providers.Provider,
+  signerOrProvider?: ethers.Signer | ethers.providers.Provider
 ): ethers.Contract {
   const contract = new ethers.Contract(addressOrName, contractInterface, signerOrProvider);
   return contract;
 }
 
+// struct GameMove {
+//   uint256 gameId;
+//   uint256 nonce;
+//   address player;
+//   bytes oldState;
+//   bytes newState;
+//   bytes move;
+// }
+
+// struct SignedGameMove {
+//   GameMove gameMove;
+//   bytes[] signatures;
+// }
+
+// struct GameState {
+//   uint256 gameId;
+//   uint256 nonce;
+//   bytes state;
+// }
+//Arbiter
+//function isValidGameMove(GameMove calldata gameMove) external view returns (bool);
+//function isValidSignedMove(SignedGameMove calldata signedMove) external view returns (bool);
+//Rules
+//function isValidMove(GameState calldata state, uint8 playerId, bytes calldata move) external pure returns (bool);
+
+export const checkIsValidMove = async (
+  contract: ethers.Contract,
+  gameState: TGameStateContractParams,
+  playerIngameId: number,
+  encodedMove: string,
+) => {
+  console.log('checkIsValidMove', {gameState, playerIngameId, encodedMove});
+  const response = contract.isValidMove(gameState, playerIngameId, encodedMove);
+  console.log('response', response);
+  return response;
+};
+
+
+export const isValidGameMove = async (
+  contract: ethers.Contract,
+  gameMove: IGameMove,
+) => {
+  console.log('isValidGameMove', {contract, gameMove});
+  const response = contract.isValidGameMove(gameMove);
+  console.log({response});
+  return response;
+};
+
+
+export const isValidSignedMove = async (
+  contract: ethers.Contract,
+  gameMove: IGameMove,
+  signatures: string[] = []
+) => {
+  let wallet = await getSessionWallet(await getSigner().getAddress());
+  let signature:string  = await signMove(gameMove, wallet);
+  signatures.push(signature);
+  return _isValidSignedMove(contract, {gameMove, signatures});
+};
+
+export const _isValidSignedMove = async (
+  contract: ethers.Contract,
+  signedgameMove: ISignedGameMove,
+) => {
+  console.log('isValidSignedMove', {contract, signedgameMove});
+  const response = contract.isValidSignedMove(signedgameMove);
+  console.log({response});
+  return response;
+};
+
+export async function registerSessionAddress(
+  contract: ethers.Contract,
+  gameId: number,
+  wallet: ethers.Wallet,
+): Promise<void> {
+  const gasEstimatedRedeem = await contract.estimateGas.registerSessionAddress(
+    gameId,
+    wallet.address,
+  );
+  return contract.registerSessionAddress(gameId, wallet.address, {
+    gasLimit: gasEstimatedRedeem.mul(4),
+  });
+}
+
+
 export const proposeGame = async (
   contract: ethers.Contract,
-  ruleContractAddress: string,
+  rulesContractAddress: string,
 ): Promise<{ gameId: string; proposer: string; stake: string }> => {
-  //TODO d be rules contract address;
-  const gasEstimated = await contract.estimateGas.proposeGame(ruleContractAddress, []);
-  const tx = await contract.proposeGame(ruleContractAddress, [], {
-    gasLimit: gasEstimated.mul(2),
-  });
+  console.log('proposeGame', {contract, rulesContractAddress});
+  let wallet = await getSessionWallet(await getSigner().getAddress());
+  const gasEstimated = await contract.estimateGas.proposeGame(rulesContractAddress, []);
+  const tx = await contract.proposeGame(
+    rulesContractAddress,
+    [wallet.address],
+    { gasLimit: gasEstimated.mul(2) });
   console.log('tx', tx);
   const rc = await tx.wait();
   console.log('rc', rc);
@@ -43,7 +142,10 @@ export const acceptGame = async (
   gamdIdToAccept: string,
 ): Promise<{ gameId: string; players: [string, string]; stake: string }> => {
   const gasEstimated = await contract.estimateGas.acceptGame(gamdIdToAccept, []);
-  const tx = await contract.acceptGame(gamdIdToAccept, [], { gasLimit: gasEstimated.mul(2) });
+  let wallet = await getSessionWallet(await getSigner().getAddress());
+  const tx = await contract.acceptGame(gamdIdToAccept,
+      [wallet.address],
+      { gasLimit: gasEstimated.mul(2) });
   console.log('tx', tx);
   const rc = await tx.wait();
   console.log('rc', rc);
@@ -106,25 +208,6 @@ export const disputeMove = async (
 
   const gasEstimated = await contract.estimateGas.disputeMove(signedMove);
   const response = contract.disputeMove(signedMove, { gasLimit: gasEstimated.mul(2) });
-
-  return response;
-};
-
-export const checkIsValidMove = async (
-  contract: ethers.Contract,
-  gameId: number,
-  nonce: number,
-  boardState: TBoardState,
-  playerIngameId: number,
-  move: number,
-) => {
-  const encodedBoardState = defaultAbiCoder.encode(['uint8[9]', 'bool', 'bool'], boardState);
-
-  const gameState = [gameId, nonce, encodedBoardState];
-
-  const encodedMove = defaultAbiCoder.encode(['uint8'], [move]);
-
-  const response = contract.isValidMove(gameState, playerIngameId, encodedMove);
 
   return response;
 };

@@ -5,13 +5,34 @@ import { useAccount, useConnect } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import gameApi from 'gameApi';
 import { TBoardState } from 'types';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import cn from 'classnames';
 
 const PROPOSER_INGAME_ID = '0';
 const ACCEPTER_INGAME_ID = '1';
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 const FETCH_RIVAL_ADDRESS_TIMEOUT = 5000;
+
+
+//mb this better https://pgarciacamou.medium.com/react-simple-polling-custom-hook-usepollingeffect-1e9b6b8c9c71
+export function useInterval(callback: () => any, delay: number | undefined) {
+  const savedCallback = useRef<() => any>(()=>{});
+  // Remember the latest callback.
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  // Set up the interval.
+  useEffect(() => {
+    function tick() {
+      savedCallback.current();
+    }
+    if (delay !== null) {
+      let id = setInterval(tick, delay);
+      return () => clearInterval(id);
+    }
+  }, [delay]);
+}
 
 export const ControlPanel: React.FC<ControlPanelPropsI> = ({
   onAcceptGame,
@@ -31,6 +52,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
   isInvalidMove,
   onDispute,
 }) => {
+  const [delay, setDelay] = useState(FETCH_RIVAL_ADDRESS_TIMEOUT);
   const [currentPlayerAddress, setCurrentPlayerAddress] = useState<string | null>(null);
   const [rivalPlayerAddress, setRivalPlayerAddress] = useState<string | null>(null);
   // const [rivalPlayerConversationStatus, setRivalPlayerConversationStatus] = useState<
@@ -77,7 +99,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     try {
       let { gameId } = await gameApi.proposeGame(
         gameApi.fromContractData(arbiterContractData),
-        arbiterContractData.address,
+        gameRulesContractData.address,
       );
       if (!!gameId) {
         gameId = gameId.toString();
@@ -115,14 +137,14 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
         gameId,
       );
 
-      const fetchedRivalPlayerAddress = players.filter(
-        (address) => address !== currentPlayerAddress,
-      )[0];
-      setRivalPlayerAddress(fetchedRivalPlayerAddress);
+      let rivalPlayer = players[parseInt(PROPOSER_INGAME_ID)];
+
+      setRivalPlayerAddress(rivalPlayer);
       setPlayerIngameId(ACCEPTER_INGAME_ID);
       setPlayerType(playersTypes[ACCEPTER_INGAME_ID]);
       setGameStatus('Accepted');
       setGameId(gameId);
+      onAcceptGame(gameId);
     } catch (error) {
       setError('Error! Check console!');
       console.error('Error: ', error);
@@ -195,26 +217,6 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     if (!!onDisputeMove) onDisputeMove();
   };
 
-  const checkValidMoveHandler = async (
-    gameId: number,
-    nonce: number,
-    boardState: TBoardState,
-    playerIngameId: number,
-    move: number,
-  ) => {
-    const isMoveValid = await gameApi.checkIsValidMove(
-      gameApi.fromContractData(gameRulesContractData),
-      gameId,
-      nonce,
-      boardState,
-      playerIngameId,
-      move,
-    );
-
-    console.log('isMoveValid', isMoveValid);
-    if (!!onCheckValidMove) onCheckValidMove();
-  };
-
   // const transitionHandler = async (
   //   gameId: number,
   //   nonce: number,
@@ -237,53 +239,43 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
   const connectPeerPlayerHandler = async () => {
     console.log('connect peer player handler');
     // onConnectPlayer(rivalPlayerAddress);
-    if (!rivalPlayerAddress) return;
-    onConnectPlayer(rivalPlayerAddress);
+    if (rivalPlayerAddress){
+        await onConnectPlayer(rivalPlayerAddress);
+    } else {
+        console.log('no rival player address');
+    }
   };
 
   useEffect(() => {
     setCurrentPlayerAddress(account.address ? account.address : null);
   }, [account]);
 
-  useEffect(() => {
-    if (!gameId || !!rivalPlayerAddress || playerIngameId === ACCEPTER_INGAME_ID) return;
-    setRivalAddressStatus('Fetching rival address...');
-
-    const getRivalPlayerLoop = async (timeout: NodeJS.Timeout) => {
-      clearTimeout(timeout);
-      try {
-        const players = (await gameApi.getPlayers(
-          gameApi.fromContractData(arbiterContractData),
-          gameId,
-        )) as [string, string];
-
-        const zeroPlayer = players.find((player) => player === ZERO_ADDRESS);
-
-        if (!zeroPlayer) {
-          setRivalAddressStatus(null);
-          setRivalPlayerAddress(
-            players.filter((address) => address !== currentPlayerAddress)[0],
-          );
-
-          return;
-        }
-        const newTimeout: NodeJS.Timeout = setTimeout(
-          () => getRivalPlayerLoop(newTimeout),
-          FETCH_RIVAL_ADDRESS_TIMEOUT,
-        );
-      } catch (error) {
-        setRivalPlayerAddress(null);
-        setRivalAddressStatus('Failed to get rival address');
-      }
-    };
-
-    const timeout: NodeJS.Timeout = setTimeout(
-      () => getRivalPlayerLoop(timeout),
-      FETCH_RIVAL_ADDRESS_TIMEOUT,
+  useInterval(async ()=> {
+    if (rivalPlayerAddress) {
+      return;
+    }
+    if(!gameId) {
+      return;
+    }
+    console.log('in poller');
+    let players: [string, string] = await gameApi.getPlayers(
+      gameApi.fromContractData(arbiterContractData),
+      gameId,
     );
+    let rivalPlayer = players[parseInt(ACCEPTER_INGAME_ID)];
+    if (rivalPlayer == ZERO_ADDRESS) {
+      return;
+    }
+    if (rivalPlayer) {
+      setRivalAddressStatus(null);
+      setRivalPlayerAddress(rivalPlayer);
+    } else {
+      setRivalAddressStatus('Failed to get rival address');
+      setRivalPlayerAddress(null);
+    }
+  }, delay);
 
-    return () => clearTimeout(timeout);
-  }, [gameId, playerIngameId, rivalPlayerAddress]);
+  //peraps dependencies [gameId, playerIngameId, rivalPlayerAddress];
 
   useEffect(() => {
     // setPlayerIngameId(playerIngameId);
@@ -465,15 +457,6 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
         <div>
           <button onClick={() => acceptGameHandler(account.address!, gameId)}>
             ACCEPT GAME
-          </button>
-        </div>
-        <div>
-          <button
-            onClick={() =>
-              checkValidMoveHandler(5, 0, [[0, 0, 0, 0, 0, 0, 0, 0, 0], false, false], 0, 0)
-            }
-          >
-            CHECK VALID MOVE
           </button>
         </div>
         <div>
