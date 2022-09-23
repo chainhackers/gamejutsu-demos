@@ -48,7 +48,7 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
     const [isInDispute, setIsInDispute] = useState<boolean>(false);
     const [conversationStatus, setConversationStatus] = useState<string | null>('not connected');
     const [rivalPlayerAddress, setRivalPlayerAddress] = useState<string | null>("0x3Be65C389F095aaa50D0b0F3801f64Aa0258940b"); //TODO
-    const [newMessage, setNewMessage] = useState<{ content: string; sender: string } | null>(
+    const [newMessage, setNewMessage] = useState<{ content: object; sender: string } | null>(
         null,
     );
     const [winner, setWinner] = useState<0 | 1 | null>(null);
@@ -102,7 +102,7 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
         console.log('newMessage', newMessage); // Last Message with invalid move
 
         if (newMessage) {
-          const signedMove = JSON.parse(newMessage.content) as ISignedGameMove;
+          const signedMove = newMessage.content as ISignedGameMove;
           console.log('moveToDispute', signedMove);
           const disputeMoveResult = await disputeMove(
             getArbiter(),
