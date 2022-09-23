@@ -12,10 +12,10 @@ import arbiterContract from 'contracts/Arbiter.json';
 import rulesContract from 'contracts/TicTacToeRules.json';
 
 import styles from 'pages/games/gameType.module.scss';
-import {ETTicTacToe} from "../../components/Games/ET-Tic-Tac-Toe";
-import {TicTacToeState, TTTMove} from "../../components/Games/ET-Tic-Tac-Toe/types";
+import {ETTicTacToe} from "components/Games/ET-Tic-Tac-Toe";
+import {TicTacToeState, TTTMove} from "components/Games/ET-Tic-Tac-Toe/types";
 import {IChatLog} from "../../types";
-import {_isValidSignedMove, checkIsValidMove, getArbiter, getSigner, getRulesContract} from "../../gameApi";
+import {_isValidSignedMove, checkIsValidMove, getArbiter, getSigner, getRulesContract, disputeMove} from "../../gameApi";
 import {ISignedGameMove} from "../../types/arbiter";
 
 interface IGamePageProps {
@@ -79,14 +79,12 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
 
         _isValidSignedMove(getArbiter(), msg).then(isValid => {
 
-
             const nextGameState = gameState.encodedMove(msg.gameMove.move, isValid);
             conversation.send(messageText).then(() => {
                 console.log('message sent, setting new state:', nextGameState);
                 setGameState(nextGameState);
                 console.log('new state is set after sending the move', gameState);
             });
-
 
         })
 
@@ -97,11 +95,22 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
 
     }
 
-    const runDisputeHandler = () => {
+    const runDisputeHandler = async () => {
         setIsInDispute(true);
         // TODO: Add disputing messages
         console.log('run dispute');
-        console.log('moveToDispute:', newMessage); // LAst Message with invalid move
+        console.log('newMessage', newMessage); // Last Message with invalid move
+
+        if (newMessage) {
+          const signedMove = JSON.parse(newMessage.content) as ISignedGameMove;
+          console.log('moveToDispute', signedMove);
+          const disputeMoveResult = await disputeMove(
+            getArbiter(),
+            signedMove
+          );
+          console.log('Dispute move result', disputeMoveResult);
+        }
+
     };
 
     useEffect(() => {
@@ -143,7 +152,10 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
                         const nextGameState = gameState.opponentMove(signedMove.gameMove.move, isValid);
                         console.log('nextGameState', nextGameState);
                         setGameState(nextGameState);
+                        setIsInvalidMove(!isValid);
                     });
+
+                    
                 }
 
             }

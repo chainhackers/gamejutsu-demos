@@ -192,31 +192,6 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     if (!!onGetPlayers) onGetPlayers();
   };
 
-  const disputeMoveHandler = async (
-    gameId: number,
-    nonce: number,
-    playerAddress: string,
-    oldBoardState: TBoardState,
-    newBoardState: TBoardState,
-    move: number,
-    signatures: string[],
-  ) => {
-    const disputeMoveResult = await gameApi.disputeMove(
-      gameApi.fromContractData(arbiterContractData),
-      gameId,
-      nonce,
-      playerAddress,
-      oldBoardState,
-      newBoardState,
-      move,
-      signatures,
-    );
-
-    console.log('Dispute move result', disputeMoveResult);
-
-    if (!!onDisputeMove) onDisputeMove();
-  };
-
   // const transitionHandler = async (
   //   gameId: number,
   //   nonce: number,

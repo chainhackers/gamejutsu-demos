@@ -33,30 +33,21 @@ export function newContract(
   return contract;
 }
 
-// struct GameMove {
-//   uint256 gameId;
-//   uint256 nonce;
-//   address player;
-//   bytes oldState;
-//   bytes newState;
-//   bytes move;
-// }
-
-// struct SignedGameMove {
-//   GameMove gameMove;
-//   bytes[] signatures;
-// }
-
-// struct GameState {
-//   uint256 gameId;
-//   uint256 nonce;
-//   bytes state;
-// }
-//Arbiter
-//function isValidGameMove(GameMove calldata gameMove) external view returns (bool);
-//function isValidSignedMove(SignedGameMove calldata signedMove) external view returns (bool);
-//Rules
-//function isValidMove(GameState calldata state, uint8 playerId, bytes calldata move) external pure returns (bool);
+//emit GameFinished(gameId, winner, cheater, false);
+//emit PlayerDisqualified(gameId, cheater);
+export const disputeMove = async (
+  contract: ethers.Contract,
+  signedGameMove: ISignedGameMove,
+) => {
+  const gasEstimated = await contract.estimateGas.disputeMove(signedGameMove);
+  const tx = await contract.disputeMove(signedGameMove, { gasLimit: gasEstimated.mul(2) });
+  console.log('tx', tx);
+  const rc = await tx.wait();
+  console.log('rc', rc);
+  const gameFinishedEvent = rc.events.find((event: { event: string }) => event.event === 'GameFinished');
+  const PlayerDisqualifiedEvent = rc.events.find((event: { event: string }) => event.event === 'PlayerDisqualified');
+  return {...gameFinishedEvent.args, ...PlayerDisqualifiedEvent.args};
+};
 
 export const checkIsValidMove = async (
   contract: ethers.Contract,
@@ -173,44 +164,7 @@ export const getPlayers = async (contract: ethers.Contract, gamdId: string) => {
   return response;
 };
 
-export const disputeMove = async (
-  contract: ethers.Contract,
-  gameId: number,
-  nonce: number,
-  playerAddress: string,
-  oldBoardState: TBoardState,
-  newBoardState: TBoardState,
-  move: number,
-  signatures: string[],
-) => {
-  const encodedOldBoardState = defaultAbiCoder.encode(
-    ['uint8[9]', 'bool', 'bool'],
-    oldBoardState,
-  );
 
-  const encodedNewBoardState = defaultAbiCoder.encode(
-    ['uint8[9]', 'bool', 'bool'],
-    newBoardState,
-  );
-
-  const encodedMove = defaultAbiCoder.encode(['uint8'], [move]);
-
-  const gameMove = [
-    gameId,
-    nonce,
-    playerAddress,
-    encodedOldBoardState,
-    encodedNewBoardState,
-    encodedMove,
-  ];
-
-  const signedMove = [gameMove, signatures];
-
-  const gasEstimated = await contract.estimateGas.disputeMove(signedMove);
-  const response = contract.disputeMove(signedMove, { gasLimit: gasEstimated.mul(2) });
-
-  return response;
-};
 
 export const transition = async (
   contract: ethers.Contract,
