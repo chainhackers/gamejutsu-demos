@@ -110,7 +110,7 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
           );
           console.log('Dispute move result', disputeMoveResult);
         }
-
+        setIsInDispute(false);
     };
 
     useEffect(() => {

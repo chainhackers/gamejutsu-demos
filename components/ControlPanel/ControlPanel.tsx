@@ -346,9 +346,8 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
               className={styles.button}
               style={{ marginLeft: '150px' }}
               onClick={onDispute}
-              disabled={!isInvalidMove}
             >
-              {isInDispute ? 'DISPUTE MODE ACTIVE' : 'DISPUTE MOVE'}
+              {isInDispute ? 'IN DISPUTE' : (isInvalidMove? 'DISPUTE INVALID MOVE' : 'DISPUTE MOVE')}
             </button>
           </div>
         </div>
