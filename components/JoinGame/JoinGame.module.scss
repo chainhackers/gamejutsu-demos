@@ -12,9 +12,15 @@
     margin-bottom: 20px;
   }
 
-  > .description {
+  > .description,
+  .accepting,
+  .error {
     font-size: 26px;
     font-weight: normal;
     margin-bottom: 42px;
+  }
+
+  .error {
+    color: red;
   }
 }

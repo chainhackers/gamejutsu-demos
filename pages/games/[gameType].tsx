@@ -137,6 +137,37 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     console.log('moveToDispute:', newMessage); // LAst Message with invalid move
   };
 
+  const acceptGameHandler = async (gameId: string): Promise<void> => {
+    // event.preventDefault();
+
+    // @ts-ignore TODO: to solve once it make sense
+    // const gameId = event.target.children.gameId.value;
+    try {
+      if (!account) throw new Error(`No wallet`);
+      if (!gameId || gameId.length === 0) throw new Error(`Empty game id`);
+      // setRivalPlayerAddress(null);
+      // setRivalAddressStatus(null);
+      // setGameId(null);
+      // setGameStatus('Accepting...');
+      // setError(null);
+      const { players } = await gameApi.acceptGame(
+        gameApi.fromContractData(arbiterContractData),
+        gameId,
+      );
+      let rivalPlayer = players[parseInt(PROPOSER_INGAME_ID)];
+      setRivalPlayerAddress(rivalPlayer);
+      // setPlayerIngameId(ACCEPTER_INGAME_ID);
+      // setPlayerType(playersTypes[ACCEPTER_INGAME_ID]);
+      // setGameStatus('Accepted');
+      // setGameId(gameId);
+      // onAcceptGame(gameId);
+    } catch (error) {
+      // setError('Error! Check console!');
+      console.error('Error: ', error);
+      throw new Error('test error ');
+    }
+  };
+
   useEffect(() => {
     if (!!client && !!rivalPlayerAddress) {
       setConversationStatus('Connecting...');
@@ -259,7 +290,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   }, FETCH_RIVAL_ADDRESS_TIMEOUT);
 
   if (!!gameType && !!query && query?.join === 'true') {
-    return <JoinGame />;
+    return <JoinGame acceptGameHandler={acceptGameHandler} />;
   }
   if (!!gameType && !!query && query?.select === 'true') {
     return (

@@ -47,6 +47,8 @@ const en = {
     joinGame: {
       title: 'Join a game',
       description: 'Select from one of the sessions to join',
+      accepting: 'Accepting game...',
+      error: 'Accepting game failed. Please try again',
     },
     gamesList: {
       header: {
