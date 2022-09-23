@@ -13,10 +13,9 @@ const ACCEPTER_INGAME_ID = '1';
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 const FETCH_RIVAL_ADDRESS_TIMEOUT = 5000;
 
-
 //mb this better https://pgarciacamou.medium.com/react-simple-polling-custom-hook-usepollingeffect-1e9b6b8c9c71
 export function useInterval(callback: () => any, delay: number | undefined) {
-  const savedCallback = useRef<() => any>(()=>{});
+  const savedCallback = useRef<() => any>(() => {});
   // Remember the latest callback.
   useEffect(() => {
     savedCallback.current = callback;
@@ -51,6 +50,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
   isInDispute,
   isInvalidMove,
   onDispute,
+  gameId: gameID,
 }) => {
   const [delay, setDelay] = useState(FETCH_RIVAL_ADDRESS_TIMEOUT);
   const [currentPlayerAddress, setCurrentPlayerAddress] = useState<string | null>(null);
@@ -72,14 +72,14 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     | 'Proposing...'
     | 'Accepted'
     | 'Accepting...'
-    | 'Resigned'
+  | 'Resigned'
     | 'Resigning...'
     | 'Propose failed, check console'
     | 'Accepting failed, check console'
     | 'Resigne failed, check console'
     | null
   >(null);
-  const [gameId, setGameId] = useState<string | null>(null);
+  const [gameId, setGameId] = useState<string | null>(gameID);
   const [error, setError] = useState<string | null>(null);
 
   const account = useAccount();
@@ -239,10 +239,10 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
   const connectPeerPlayerHandler = async () => {
     console.log('connect peer player handler');
     // onConnectPlayer(rivalPlayerAddress);
-    if (rivalPlayerAddress){
-        await onConnectPlayer(rivalPlayerAddress);
+    if (rivalPlayerAddress) {
+      await onConnectPlayer(rivalPlayerAddress);
     } else {
-        console.log('no rival player address');
+      console.log('no rival player address');
     }
   };
 
@@ -250,11 +250,11 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     setCurrentPlayerAddress(account.address ? account.address : null);
   }, [account]);
 
-  useInterval(async ()=> {
+  useInterval(async () => {
     if (rivalPlayerAddress) {
       return;
     }
-    if(!gameId) {
+    if (!gameId) {
       return;
     }
     console.log('in poller');

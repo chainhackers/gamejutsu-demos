@@ -2,14 +2,14 @@ import { useEffect, useState } from 'react';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { useQuery } from '@apollo/client';
 
-import { Board } from 'components/Games/Tic-Tac-Toe';
+// import { Board } from 'components/Games/Tic-Tac-Toe';
 import gameApi from 'gameApi';
-import { TikTakToePropsI } from './Tic-Tac-ToeProps';
-import { calculateWinner } from './utils';
+// import { TikTakToePropsI } from './Tic-Tac-ToeProps';
+// import { calculateWinner } from './utils';
 import { defaultAbiCoder } from 'ethers/lib/utils';
 import rulesContract from 'contracts/TicTacToeRules.json';
 import styles from './Tic-Tac-Toe.module.scss';
-import { TCellData, TGameBoardState, TGameState } from './types';
+// import { TCellData, TGameBoardState, TGameState } from './types';
 import { TBoardState } from 'types';
 
 import { signMove, getSessionWallet } from 'helpers/session_signatures';
@@ -18,206 +18,206 @@ import { ethers } from 'ethers';
 
 import { gameEntitiesQuery, inRowCounterEntitiesQuery } from 'queries';
 
-export const TicTacToe: React.FC<TikTakToePropsI> = ({
-  children,
-  // gameState,
-  playerIngameId,
-  onGameStateChange,
-  encodedMessage,
-  onChangeMessage,
-  gameId,
-  onInvalidMove,
-  onWinner,
+export const TicTacToe: React.FC = ({
+  // children,
+  // // gameState,
+  // playerIngameId,
+  // onGameStateChange,
+  // encodedMessage,
+  // onChangeMessage,
+  // gameId,
+  // onInvalidMove,
+  // onWinner,
 }) => {
-  const [isFinished, setIsFinished] = useState<boolean>(false);
+//   const [isFinished, setIsFinished] = useState<boolean>(false);
 
-  const [boardState, setBoardState] = useState<TGameBoardState>([
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-  ]);
+//   const [boardState, setBoardState] = useState<TGameBoardState>([
+//     null,
+//     null,
+//     null,
+//     null,
+//     null,
+//     null,
+//     null,
+//     null,
+//     null,
+//   ]);
 
-  const [disputiveMove, setDisputiveMove] = useState<number | null>(null);
+//   const [disputiveMove, setDisputiveMove] = useState<number | null>(null);
 
-  const account = useAccount();
+//   const account = useAccount();
   
-// const {
-//   data: inRowGamesEnitites,
-//   error: inRowGamesError,
-//   loading: inRowGamesLoading,
-// } = useQuery(inRowCounterEntitiesQuery);
+// // const {
+// //   data: inRowGamesEnitites,
+// //   error: inRowGamesError,
+// //   loading: inRowGamesLoading,
+// // } = useQuery(inRowCounterEntitiesQuery);
   
-  const cellClickHandler = (i: any) => {
-    // onChangeMessage('ecoded message');
-    if (isFinished) return;
+//   const cellClickHandler = (i: any) => {
+//     // onChangeMessage('ecoded message');
+//     if (isFinished) return;
 
-    const updatedBoardState = [...boardState] as TGameBoardState;
-    updatedBoardState[i] = playerIngameId as TCellData;
+//     const updatedBoardState = [...boardState] as TGameBoardState;
+//     updatedBoardState[i] = playerIngameId as TCellData;
 
-    const winner = calculateWinner(updatedBoardState);
+//     const winner = calculateWinner(updatedBoardState);
 
-    setIsFinished(winner !== null);
-    onWinner(winner);
-    const newGameState = [
-      updatedBoardState.map((el) => {
-        switch (el) {
-          case null:
-            return 0;
-          case 0:
-            return 1;
-          case 1:
-            return 2;
-          default:
-            return 0;
-        }
-      }),
-      winner === 0,
-      winner === 1,
-    ];
+//     setIsFinished(winner !== null);
+//     onWinner(winner);
+//     const newGameState = [
+//       updatedBoardState.map((el) => {
+//         switch (el) {
+//           case null:
+//             return 0;
+//           case 0:
+//             return 1;
+//           case 1:
+//             return 2;
+//           default:
+//             return 0;
+//         }
+//       }),
+//       winner === 0,
+//       winner === 1,
+//     ];
 
-    const oldGameState = [
-      boardState.map((el) => {
-        switch (el) {
-          case null:
-            return 0;
-          case 0:
-            return 1;
-          case 1:
-            return 2;
-          default:
-            return 0;
-        }
-      }),
-      false,
-      false,
-    ];
-    setBoardState(updatedBoardState);
+//     const oldGameState = [
+//       boardState.map((el) => {
+//         switch (el) {
+//           case null:
+//             return 0;
+//           case 0:
+//             return 1;
+//           case 1:
+//             return 2;
+//           default:
+//             return 0;
+//         }
+//       }),
+//       false,
+//       false,
+//     ];
+//     setBoardState(updatedBoardState);
 
-    const encodedNewGameState = defaultAbiCoder.encode(
-      ['uint8[9]', 'bool', 'bool'],
-      newGameState,
-    );
-    const encodedOldGameState = defaultAbiCoder.encode(
-      ['uint8[9]', 'bool', 'bool'],
-      oldGameState,
-    );
-    // onGameStateChange(newGameState, i as number);
-    const nonce = updatedBoardState.filter((el) => el !== null).length - 1;
-    console.log(updatedBoardState);
-    const move = updatedBoardState.reduce<null | number>((acc, val, index) => {
-      return val !== boardState[index] ? index : acc;
-    }, 0)!;
+//     const encodedNewGameState = defaultAbiCoder.encode(
+//       ['uint8[9]', 'bool', 'bool'],
+//       newGameState,
+//     );
+//     const encodedOldGameState = defaultAbiCoder.encode(
+//       ['uint8[9]', 'bool', 'bool'],
+//       oldGameState,
+//     );
+//     // onGameStateChange(newGameState, i as number);
+//     const nonce = updatedBoardState.filter((el) => el !== null).length - 1;
+//     console.log(updatedBoardState);
+//     const move = updatedBoardState.reduce<null | number>((acc, val, index) => {
+//       return val !== boardState[index] ? index : acc;
+//     }, 0)!;
 
-    console.log('move', move);
+//     console.log('move', move);
 
-    const gameMove: { nonce: number; oldState: string; newState: string; move: string } = {
-      nonce,
-      move: defaultAbiCoder.encode(['uint8'], [move]),
-      oldState: encodedOldGameState,
-      newState: encodedNewGameState,
-    };
-    onChangeMessage(encodedNewGameState, gameMove);
-  };
+//     const gameMove: { nonce: number; oldState: string; newState: string; move: string } = {
+//       nonce,
+//       move: defaultAbiCoder.encode(['uint8'], [move]),
+//       oldState: encodedOldGameState,
+//       newState: encodedNewGameState,
+//     };
+//     onChangeMessage(encodedNewGameState, gameMove);
+//   };
 
-  useEffect(() => {
-    if (!encodedMessage) return;
+//   useEffect(() => {
+//     if (!encodedMessage) return;
 
-    const processIncomingMove = async (gameMove: any, signatures: string[]) => {
-      const { newState, oldState, nonce } = gameMove;
-      const decodedNewState = defaultAbiCoder.decode(
-        ['uint8[9]', 'bool', 'bool'],
-        newState,
-      ) as TBoardState;
+//     const processIncomingMove = async (gameMove: any, signatures: string[]) => {
+//       const { newState, oldState, nonce } = gameMove;
+//       const decodedNewState = defaultAbiCoder.decode(
+//         ['uint8[9]', 'bool', 'bool'],
+//         newState,
+//       ) as TBoardState;
 
-      const decodeOldState = defaultAbiCoder.decode(
-        ['uint8[9]', 'bool', 'bool'],
-        oldState,
-      ) as TBoardState;
+//       const decodeOldState = defaultAbiCoder.decode(
+//         ['uint8[9]', 'bool', 'bool'],
+//         oldState,
+//       ) as TBoardState;
 
-      const newBoardState = decodedNewState[0].map((el) => {
-        switch (el) {
-          case 0:
-            return null;
-          case 1:
-            return 0;
-          case 2:
-            return 1;
-          default:
-            return null;
-        }
-      }) as TGameBoardState;
+//       const newBoardState = decodedNewState[0].map((el) => {
+//         switch (el) {
+//           case 0:
+//             return null;
+//           case 1:
+//             return 0;
+//           case 2:
+//             return 1;
+//           default:
+//             return null;
+//         }
+//       }) as TGameBoardState;
 
-      const move = newBoardState.reduce<null | number>((acc, val, index) => {
-        return val !== boardState[index] ? index : acc;
-      }, null);
+//       const move = newBoardState.reduce<null | number>((acc, val, index) => {
+//         return val !== boardState[index] ? index : acc;
+//       }, null);
 
-      const isValidMove = await gameApi.checkIsValidMove(
-        gameApi.fromContractData(rulesContract),
-        Number(gameId!),
-        nonce,
-        decodeOldState,
-        playerIngameId,
-        move!,
-      );
+//       const isValidMove = await gameApi.checkIsValidMove(
+//         gameApi.fromContractData(rulesContract),
+//         Number(gameId!),
+//         nonce,
+//         decodeOldState,
+//         playerIngameId,
+//         move!,
+//       );
 
-      setBoardState(newBoardState);
+//       setBoardState(newBoardState);
 
-      if (!isValidMove) {
-        console.log('invalid move', gameMove, signatures);
-        setDisputiveMove(move);
-        onInvalidMove();
-        return;
-      }
+//       if (!isValidMove) {
+//         console.log('invalid move', gameMove, signatures);
+//         setDisputiveMove(move);
+//         onInvalidMove();
+//         return;
+//       }
 
-      setBoardState(newBoardState);
+//       setBoardState(newBoardState);
 
-      const structureToSign: {
-        gameId: number;
-        nonce: number;
-        player: string;
-        oldState: string;
-        newState: string;
-        move: string;
-      } = {
-        gameId: Number(gameId),
-        nonce: nonce,
-        player: encodedMessage.sender,
-        oldState,
-        newState,
-        move: defaultAbiCoder.encode(['uint8'], [move]),
-      };
+//       const structureToSign: {
+//         gameId: number;
+//         nonce: number;
+//         player: string;
+//         oldState: string;
+//         newState: string;
+//         move: string;
+//       } = {
+//         gameId: Number(gameId),
+//         nonce: nonce,
+//         player: encodedMessage.sender,
+//         oldState,
+//         newState,
+//         move: defaultAbiCoder.encode(['uint8'], [move]),
+//       };
 
-      const signature = await signMove(
-        structureToSign,
-        await getSessionWallet(
-          Number(gameId),
-          encodedMessage.sender,
-          (wallet: ethers.Wallet) => Promise.resolve(),
-        ),
-      );
+//       const signature = await signMove(
+//         structureToSign,
+//         await getSessionWallet(
+//           Number(gameId),
+//           encodedMessage.sender,
+//           (wallet: ethers.Wallet) => Promise.resolve(),
+//         ),
+//       );
 
-      console.log('incoming message signed back, signature: ', signature);
-    };
+//       console.log('incoming message signed back, signature: ', signature);
+//     };
 
-    if (encodedMessage.content.gameMove) {
-      if (encodedMessage.sender !== account.address) {
-        processIncomingMove(
-          encodedMessage.content.gameMove,
-          encodedMessage.content.signatures,
-        );
-      }
-    }
-  }, [encodedMessage]);
+//     if (encodedMessage.content.gameMove) {
+//       if (encodedMessage.sender !== account.address) {
+//         processIncomingMove(
+//           encodedMessage.content.gameMove,
+//           encodedMessage.content.signatures,
+//         );
+//       }
+//     }
+//   }, [encodedMessage]);
 
   return (
     <div className={styles.container}>
-      {children}
+      {/* {children}
       <div className={styles.boardPanel}>
         <Board
           squares={boardState}
@@ -225,7 +225,7 @@ export const TicTacToe: React.FC<TikTakToePropsI> = ({
           isFinished={isFinished}
           disputiveMove={disputiveMove}
         />
-      </div>
+      </div> */}
     </div>
   );
 };

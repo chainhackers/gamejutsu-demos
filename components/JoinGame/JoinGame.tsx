@@ -11,7 +11,7 @@ export const JoinGame: React.FC<JoinGamePropsI> = () => {
   const router = useRouter();
 
   const clickHandler = (gameId: string) => {
-    router.push(`/games/${router.query.gameType}?gameId=${gameId}&prize=true`);
+    router.push(`/games/${router.query.gameType}?acceptGameId=${gameId}&prize=true`);
   };
   return (
     <div className={styles.container}>

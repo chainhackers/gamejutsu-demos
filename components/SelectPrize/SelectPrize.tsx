@@ -5,15 +5,17 @@ import { SelectPrizePropsI } from './SelectPrizeProps';
 import styles from './SelectPrize.module.scss';
 import { useState } from 'react';
 import { Button } from 'components/shared';
-export const SelectPrize: React.FC<SelectPrizePropsI> = () => {
+export const SelectPrize: React.FC<SelectPrizePropsI> = ({ gameId }) => {
   const [selected, setSelected] = useState<'free' | 'stake' | null>('free');
   const [disabled, setDisabled] = useState<('free' | 'stake')[]>([]);
   const [stakeValue, setStakeValue] = useState<string>('0.00');
   const { t } = useTranslation();
   const router = useRouter();
-  console.log(router);
+  // console.log(router);
   const { query } = router;
-  console.log(query);
+  // console.log(query);
+
+  console.log('gameId in prize', gameId);
 
   const selectPrizeHandler = (prize: 'free' | 'stake' | null) => {
     setSelected(prize);
@@ -28,6 +30,16 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = () => {
   };
   return (
     <div className={styles.container}>
+      {query.acceptGameId && (
+        <div className={styles.title}>
+          {t('selectPrize.acceptGameId')} {gameId}
+        </div>
+      )}
+      {gameId && (
+        <div className={styles.title}>
+          {t('selectPrize.gameId')} {gameId}
+        </div>
+      )}
       <div className={styles.title}>{t('selectPrize.title')}</div>
       <div className={styles.selected}>
         {selected === 'free' && (
@@ -116,6 +128,7 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = () => {
           onClick={playButtonClickHandler}
         />
       </div>
+
       <div className={styles.return}>
         <Button title={t('buttons.return')} borderless onClick={returnButtonClickHandler} />
       </div>

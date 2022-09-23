@@ -17,3 +17,4 @@ export * from 'components/NewGameBoard';
 export * from 'components/NewSquare';
 export * from 'components/LeftPanel';
 export * from 'components/RightPanel';
+export * from 'components/Players';

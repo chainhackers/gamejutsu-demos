@@ -31,7 +31,7 @@
     // background-color: aquamarine;
     display: flex;
     justify-content: center;
-    
+
     .new,
     .join {
       text-align: center;
@@ -56,7 +56,18 @@
         background-color: var(--gray-lightest);
         font-size: 26px;
         font-weight: bold;
+        cursor: pointer;
       }
     }
+  }
+
+  .newGameLoader {
+    font-size: 42px;
+    font-weight: bold;
+    margin-top: 60px;
+  }
+  .error {
+    color: red;
+    font-size: 24px;
   }
 }

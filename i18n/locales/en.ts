@@ -56,6 +56,8 @@ const en = {
       },
     },
     selectPrize: {
+      gameId: 'Created game ID:',
+      acceptGameId: 'Accepted game ID:',
       title: '🏆 Winner gets',
       description: {
         free: 'A badge of honour',
@@ -95,7 +97,10 @@ const en = {
       madeAppeal: 'made an appeal to the Game Master you cheated',
       notice: 'Pending decision from Game Master',
     },
-    wins: 'Wins'
+    wins: 'Wins',
+    players: {
+      title: 'Players',
+    },
   },
 };
 

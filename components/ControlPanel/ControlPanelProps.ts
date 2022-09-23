@@ -1,5 +1,5 @@
 import { IContractData } from 'types';
-import React from "react";
+import React from 'react';
 export interface ControlPanelPropsI {
   children?: React.ReactNode;
   onProposeGame: (gameId: string | null) => void;
@@ -18,4 +18,5 @@ export interface ControlPanelPropsI {
   isInDispute: boolean;
   isInvalidMove: boolean;
   onDispute: () => void;
+  gameId: string | null;
 }

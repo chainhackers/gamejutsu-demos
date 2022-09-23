@@ -1,5 +1,4 @@
 import { useTranslation } from 'react-i18next';
-import { NewGameBoard } from 'components/NewGameBoard';
 import { GameFieldPropsI } from './GameFieldProps';
 import styles from './GameField.module.scss';
 import { Button } from 'components/shared';
@@ -39,9 +38,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({ children }) => {
         </div>
         <div className={styles.prize}>Prize</div>
       </div>
-      <div className={styles.gameBoardContainer}>
-        <NewGameBoard />
-      </div>
+      <div className={styles.gameBoardContainer}>{children}</div>
     </div>
   );
 };
