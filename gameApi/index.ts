@@ -45,8 +45,8 @@ export const disputeMove = async (
   const rc = await tx.wait();
   console.log('rc', rc);
   const gameFinishedEvent = rc.events.find((event: { event: string }) => event.event === 'GameFinished');
-  const PlayerDisqualifiedEvent = rc.events.find((event: { event: string }) => event.event === 'PlayerDisqualified');
-  return {...gameFinishedEvent.args, ...PlayerDisqualifiedEvent.args};
+  const playerDisqualifiedEvent = rc.events.find((event: { event: string }) => event.event === 'PlayerDisqualified');
+  return {...gameFinishedEvent.args, ...playerDisqualifiedEvent.args};
 };
 
 export const checkIsValidMove = async (
