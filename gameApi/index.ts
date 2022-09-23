@@ -33,6 +33,66 @@ export function newContract(
   return contract;
 }
 
+//   @notice both moves must be in sequence
+//   @notice first move must be signed by both players
+//   @notice second move must be signed at least by the player making the move
+//   @notice no timeout should be active for the game
+//  */
+//   function initTimeout(SignedGameMove[2] calldata moves) payable external
+//   emit TimeoutStarted(gameId, moves[1].gameMove.player, moves[1].gameMove.nonce, block.timestamp + TIMEOUT);
+export const initTimeout = async (
+  contract: ethers.Contract,
+  signedGameMoves: [ISignedGameMove, ISignedGameMove],
+) => {
+  const gasEstimated = await contract.estimateGas.initTimeout(signedGameMoves);
+  const tx = await contract.initTimeout(signedGameMoves, { gasLimit: gasEstimated.mul(2) });
+  console.log('tx', tx);
+  const rc = await tx.wait();
+  console.log('rc', rc);
+  const event = rc.events.find((event: { event: string }) => event.event === 'TimeoutStarted');
+  return {...event.args};
+};        
+    
+// /**
+//     @notice a single valid signed move is enough to resolve the timout
+//     @notice the move must be signed by the player whos turn it is
+//     @notice the move must continue the game from the move started the timeout
+//    */
+//     function resolveTimeout(SignedGameMove calldata signedMove) external
+//     emit TimeoutResolved(gameId, signedMove.gameMove.player, signedMove.gameMove.nonce);
+export const resolveTimeout = async (
+  contract: ethers.Contract,
+  signedGameMove: ISignedGameMove,
+) => {
+  const gasEstimated = await contract.estimateGas.resolveTimeout(signedGameMove);
+  const tx = await contract.resolveTimeout(signedGameMove, { gasLimit: gasEstimated.mul(2) });
+  console.log('tx', tx);
+  const rc = await tx.wait();
+  console.log('rc', rc);
+  const event = rc.events.find((event: { event: string }) => event.event === 'TimeoutResolved');
+  return {...event.args};
+};        
+    
+// /**
+//     @notice the timeout must be expired
+//     @notice 2 player games only
+//    */
+// function finalizeTimeout(uint256 gameId) external
+// disqualifyPlayer(gameId, loser);
+export const finalizeTimeout = async (
+  contract: ethers.Contract,
+  gameId: number,
+) => {
+  const gasEstimated = await contract.estimateGas.finalizeTimeout(gameId);
+  const tx = await contract.finalizeTimeout(gameId, { gasLimit: gasEstimated.mul(2) });
+  console.log('tx', tx);
+  const rc = await tx.wait();
+  console.log('rc', rc);
+  const gameFinishedEvent = rc.events.find((event: { event: string }) => event.event === 'GameFinished');
+  const playerDisqualifiedEvent = rc.events.find((event: { event: string }) => event.event === 'PlayerDisqualified');
+  return {...gameFinishedEvent.args, ...playerDisqualifiedEvent.args};
+};
+
 //emit GameFinished(gameId, winner, cheater, false);
 //emit PlayerDisqualified(gameId, cheater);
 export const disputeMove = async (
