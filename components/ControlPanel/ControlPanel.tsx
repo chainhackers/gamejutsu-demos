@@ -217,26 +217,6 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     if (!!onDisputeMove) onDisputeMove();
   };
 
-  const checkValidMoveHandler = async (
-    gameId: number,
-    nonce: number,
-    boardState: TBoardState,
-    playerIngameId: number,
-    move: number,
-  ) => {
-    const isMoveValid = await gameApi.checkIsValidMove(
-      gameApi.fromContractData(gameRulesContractData),
-      gameId,
-      nonce,
-      boardState,
-      playerIngameId,
-      move,
-    );
-
-    console.log('isMoveValid', isMoveValid);
-    if (!!onCheckValidMove) onCheckValidMove();
-  };
-
   // const transitionHandler = async (
   //   gameId: number,
   //   nonce: number,
@@ -477,15 +457,6 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
         <div>
           <button onClick={() => acceptGameHandler(account.address!, gameId)}>
             ACCEPT GAME
-          </button>
-        </div>
-        <div>
-          <button
-            onClick={() =>
-              checkValidMoveHandler(5, 0, [[0, 0, 0, 0, 0, 0, 0, 0, 0], false, false], 0, 0)
-            }
-          >
-            CHECK VALID MOVE
           </button>
         </div>
         <div>

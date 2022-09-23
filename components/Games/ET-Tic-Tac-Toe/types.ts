@@ -1,4 +1,4 @@
-import {IGameState, IMyGameMove, IMyGameState, TGameHistory} from "../types";
+import {IGameState, IMyGameMove, IMyGameState, TGameHistory, TGameStateContractParams} from "../types";
 import {GameMove, IGameMove, ISignedGameMove, SignedGameMove} from "../../../types/arbiter";
 import {defaultAbiCoder} from 'ethers/lib/utils';
 import {signMoveWithAddress} from "../../../helpers/session_signatures";
@@ -143,6 +143,10 @@ export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
         )
         const signature = await signMoveWithAddress(gameMove, playerAddress);
         return new SignedGameMove(gameMove, [signature]);
+    }
+
+    toGameStateContractParams(): TGameStateContractParams {
+        return { gameId: this.gameId, nonce: this.nonce, state: this.encode()}
     }
 
     private encode(): string {

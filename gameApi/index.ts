@@ -3,9 +3,14 @@ import { IContractData, TBoardState } from 'types';
 import { ethers } from 'ethers';
 import { getSessionWallet, signMove } from 'helpers/session_signatures';
 import arbiterContract from 'contracts/Arbiter.json';
+import tictacRulesContract from 'contracts/TicTacToeRules.json';
 import {IGameMove, ISignedGameMove} from "../types/arbiter";
+import { TGameStateContractParams } from 'components/Games/types';
 
 export const getArbiter = () => fromContractData(arbiterContract);
+export const getRulesContract = (gameType: string | undefined) => {
+  return fromContractData(tictacRulesContract);
+} 
 
 export function getSigner(): ethers.Signer {
   const provider = new ethers.providers.Web3Provider(window.ethereum as ethers.providers.ExternalProvider);
@@ -53,6 +58,19 @@ export function newContract(
 //Rules
 //function isValidMove(GameState calldata state, uint8 playerId, bytes calldata move) external pure returns (bool);
 
+export const checkIsValidMove = async (
+  contract: ethers.Contract,
+  gameState: TGameStateContractParams,
+  playerIngameId: number,
+  encodedMove: string,
+) => {
+  console.log('checkIsValidMove', {gameState, playerIngameId, encodedMove});
+  const response = contract.isValidMove(gameState, playerIngameId, encodedMove);
+  console.log('response', response);
+  return response;
+};
+
+
 export const isValidGameMove = async (
   contract: ethers.Contract,
   gameMove: IGameMove,
@@ -61,18 +79,6 @@ export const isValidGameMove = async (
   const response = contract.isValidGameMove(gameMove);
   console.log({response});
   return response;
-};
-
-
-export const _isValidGameMove = async (iGameMove: IGameMove) => {
-
-  const arbiter = await getArbiter();
-
-  const isValid = await arbiter.isValidGameMove(
-      iGameMove.toContractParams()
-  );
-  console.log(iGameMove.move, 'isValidGameMove', isValid);
-  return isValid;
 };
 
 
@@ -202,25 +208,6 @@ export const disputeMove = async (
 
   const gasEstimated = await contract.estimateGas.disputeMove(signedMove);
   const response = contract.disputeMove(signedMove, { gasLimit: gasEstimated.mul(2) });
-
-  return response;
-};
-
-export const checkIsValidMove = async (
-  contract: ethers.Contract,
-  gameId: number,
-  nonce: number,
-  boardState: TBoardState,
-  playerIngameId: number,
-  move: number,
-) => {
-  const encodedBoardState = defaultAbiCoder.encode(['uint8[9]', 'bool', 'bool'], boardState);
-
-  const gameState = [gameId, nonce, encodedBoardState];
-
-  const encodedMove = defaultAbiCoder.encode(['uint8'], [move]);
-
-  const response = contract.isValidMove(gameState, playerIngameId, encodedMove);
 
   return response;
 };

@@ -15,7 +15,7 @@ import styles from 'pages/games/gameType.module.scss';
 import {ETTicTacToe} from "../../components/Games/ET-Tic-Tac-Toe";
 import {TicTacToeState, TTTMove} from "../../components/Games/ET-Tic-Tac-Toe/types";
 import {IChatLog} from "../../types";
-import {_isValidSignedMove, getArbiter, getSigner} from "../../gameApi";
+import {_isValidSignedMove, checkIsValidMove, getArbiter, getSigner, getRulesContract} from "../../gameApi";
 import {ISignedGameMove} from "../../types/arbiter";
 
 interface IGamePageProps {
@@ -138,9 +138,19 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
                     const signedMove = JSON.parse(msg.content) as ISignedGameMove
                     console.log('signedMove from stream', signedMove);
                     console.log('gameState before move', gameState);
-                    const nextGameState = gameState.opponentMove(signedMove.gameMove.move);
-                    console.log('nextGameState', nextGameState);
-                    setGameState(nextGameState);
+                    
+                    checkIsValidMove(
+                        getRulesContract(gameType),
+                        gameState.toGameStateContractParams(),
+                        playerIngameId,
+                        signedMove.gameMove.move, //todo encode
+                      ).then(isValid => {
+                        const nextGameState = gameState.opponentMove(signedMove.gameMove.move, isValid);
+                        console.log('nextGameState', nextGameState);
+                        setGameState(nextGameState);
+
+                        //if (!!onCheckValidMove) onCheckValidMove();
+                      });
                 }
 
             }
