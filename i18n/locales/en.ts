@@ -87,6 +87,15 @@ const en = {
       wallets: '👛👝',
       createWallet: 'Create wallet',
     },
+    shade: {
+      wait: 'Waiting for new player. . .',
+      whatToReport: 'What do you want to report?',
+      cheating: 'Cheating',
+      inactive: 'Inactive',
+      madeAppeal: 'made an appeal to the Game Master you cheated',
+      notice: 'Pending decision from Game Master',
+    },
+    wins: 'Wins'
   },
 };
 
