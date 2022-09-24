@@ -2,15 +2,45 @@ import { useTranslation } from 'react-i18next';
 import { GameFieldPropsI } from './GameFieldProps';
 import styles from './GameField.module.scss';
 import { Button } from 'components/shared';
-export const GameField: React.FC<GameFieldPropsI> = ({ children }) => {
+import { useEffect, useState } from 'react';
+export const GameField: React.FC<GameFieldPropsI> = ({
+  children,
+  gameId,
+  rivalPlayerAddress,
+  isConnected,
+}) => {
+  const [isShowShade, setShowShade] = useState<boolean>(true);
+  const [isWaiting, setIsWaiting] = useState<boolean>(true);
+  const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const { t } = useTranslation();
   const appealedPlayer = 'Player 1';
   const winner = 'Player 1';
+  useEffect(() => {
+    console.log('isConnected gameField', isConnected);
+    if (!rivalPlayerAddress) {
+      setShowShade(true);
+      setIsWaiting(true);
+      // return;
+    }
+    if (!!rivalPlayerAddress) {
+      setIsWaiting(false);
+      setIsConnecting(true);
+      // return;
+    }
+    if (isConnected) {
+      console.log('isConnected gameField', isConnected);
+      setIsConnecting(false);
+      setIsWaiting(false);
+      setShowShade(false);
+      // return;
+    }
+  }, [rivalPlayerAddress, isConnected]);
   return (
     <div className={styles.container}>
-      {false && (
+      {isShowShade && (
         <div className={styles.shade}>
-          {false && <div className={styles.wait}>{t('shade.wait')}</div>}
+          {isWaiting && <div className={styles.wait}>{t('shade.wait')}</div>}
+          {isConnecting && <div className={styles.wait}>{t('shade.connecting')}</div>}
           {false && (
             <div className={styles.report}>
               <div className={styles.whatToReport}>{t('shade.whatToReport')}</div>
@@ -32,7 +62,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({ children }) => {
         </div>
       )}
       <div className={styles.header}>
-        <div className={styles.room}>Room 1</div>
+        <div className={styles.room}>Game Id: {gameId ? gameId : 'n/a'}</div>
         <div className={styles.message}>
           Alice please make your first move by clicking on any one of the boxes
         </div>

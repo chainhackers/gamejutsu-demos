@@ -93,6 +93,7 @@ const en = {
     },
     shade: {
       wait: 'Waiting for new player. . .',
+      connecting: 'Connecting to another player. . .',
       whatToReport: 'What do you want to report?',
       cheating: 'Cheating',
       inactive: 'Inactive',

@@ -30,7 +30,7 @@ interface IParams extends ParsedUrlQuery {
   gameType: string;
 }
 const PROPOSER_INGAME_ID = 0;
-const ACCEPTER_INGAME_ID = '1';
+const ACCEPTER_INGAME_ID = 1;
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 const FETCH_RIVAL_ADDRESS_TIMEOUT = 2500;
 
@@ -165,7 +165,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     } catch (error) {
       // setCreatingGameError('Failed to create new game');
       console.error(error);
-      throw new Error('creating ')
+      throw new Error('creating ');
     } finally {
       // setTimeout(() => setCreatingNewGame(false), 3000);
     }
@@ -190,7 +190,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       );
       let rivalPlayer = players[PROPOSER_INGAME_ID];
       setRivalPlayerAddress(rivalPlayer);
-      // setPlayerIngameId(ACCEPTER_INGAME_ID);
+      setPlayerIngameId(ACCEPTER_INGAME_ID);
       // setPlayerType(playersTypes[ACCEPTER_INGAME_ID]);
       // setGameStatus('Accepted');
       setGameId(gameId);
@@ -201,6 +201,12 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       throw new Error('test error ');
     }
   };
+
+  useEffect(() => {
+    if (!!rivalPlayerAddress) {
+      setConversationHandler(rivalPlayerAddress);
+    }
+  }, [rivalPlayerAddress]);
 
   useEffect(() => {
     if (!!client && !!rivalPlayerAddress) {
@@ -219,6 +225,24 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
         });
     }
   }, [client]);
+
+  // useEffect(() => {
+  //   if (!!client && !!rivalPlayerAddress) {
+  //     setConversationStatus('Connecting...');
+
+  //     client?.conversations
+  //       .newConversation(rivalPlayerAddress)
+  //       .then((newConversation) => {
+  //         setConversation(newConversation);
+  //         setConversationStatus('Connected');
+  //         console.log('connected conv', newConversation);
+  //       })
+  //       .catch((error) => {
+  //         console.log('Conversation error', error);
+  //         setConversationStatus('Failed');
+  //       });
+  //   }
+  // }, [client]);
 
   useEffect(() => {
     let stream: Stream<Message>;
@@ -349,7 +373,8 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     return <SelectPrize gameId={gameId} createNewGameHandler={createNewGameHandler} />;
   }
 
-  console.log('gameId12341234' , gameId)
+  console.log('gameId12341234', gameId);
+  console.log('conversation', conversation, !!conversation);
   if (!!gameType && gameType === 'tic-tac-toe') {
     return (
       <div className={styles.container}>
@@ -375,7 +400,11 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
           gameId={gameId}
         />
         <LeftPanel players={players} />
-        <GameField>
+        <GameField
+          gameId={gameId}
+          rivalPlayerAddress={rivalPlayerAddress}
+          isConnected={!!conversation}
+        >
           <ETTicTacToe
             gameState={gameState}
             getSignerAddress={() => {
