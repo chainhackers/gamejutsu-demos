@@ -72,6 +72,10 @@ export class TicTacToeBoard implements IMyGameState<TTTMove> {
     }
 }
 
+export function decodeEncodedBoardState(encodedBoardState:string){
+    return defaultAbiCoder.decode(STATE_TYPES, encodedBoardState);
+}
+
 export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
     movesHistory: TGameHistory = [];
     decodedMovesHistory: TTTMove[] = [];
@@ -155,10 +159,6 @@ export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
 
     toGameStateContractParams(): TGameStateContractParams {
         return { gameId: this.gameId, nonce: this.nonce, state: this.encode()}
-    }
-
-    decode(encodedBoardState:string) {
-        return defaultAbiCoder.decode(STATE_TYPES, encodedBoardState);
     }
 
     private encode(): string {
