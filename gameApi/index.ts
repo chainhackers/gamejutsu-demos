@@ -33,30 +33,84 @@ export function newContract(
   return contract;
 }
 
-// struct GameMove {
-//   uint256 gameId;
-//   uint256 nonce;
-//   address player;
-//   bytes oldState;
-//   bytes newState;
-//   bytes move;
-// }
+//   @notice both moves must be in sequence
+//   @notice first move must be signed by both players
+//   @notice second move must be signed at least by the player making the move
+//   @notice no timeout should be active for the game
+//  */
+//   function initTimeout(SignedGameMove[2] calldata moves) payable external
+//   emit TimeoutStarted(gameId, moves[1].gameMove.player, moves[1].gameMove.nonce, block.timestamp + TIMEOUT);
+export const initTimeout = async (
+  contract: ethers.Contract,
+  signedGameMoves: [ISignedGameMove, ISignedGameMove],
+) => {
+  console.log('signedGameMoves', signedGameMoves);
+  const value = ethers.BigNumber.from(10).pow(17);
+  const gasEstimated = await contract.estimateGas.initTimeout(signedGameMoves, {value});
+  const tx = await contract.initTimeout(signedGameMoves, { value, gasLimit: gasEstimated.mul(2) });
+  console.log('tx', tx);
+  const rc = await tx.wait();
+  console.log('rc', rc);
+  const event = rc.events.find((event: { event: string }) => event.event === 'TimeoutStarted');
+  return {...event.args};
+};        
+    
+// /**
+//     @notice a single valid signed move is enough to resolve the timout
+//     @notice the move must be signed by the player whos turn it is
+//     @notice the move must continue the game from the move started the timeout
+//    */
+//     function resolveTimeout(SignedGameMove calldata signedMove) external
+//     emit TimeoutResolved(gameId, signedMove.gameMove.player, signedMove.gameMove.nonce);
+export const resolveTimeout = async (
+  contract: ethers.Contract,
+  signedGameMove: ISignedGameMove,
+) => {
+  console.log('signedGameMove', signedGameMove);
+  const gasEstimated = await contract.estimateGas.resolveTimeout(signedGameMove);
+  const tx = await contract.resolveTimeout(signedGameMove, { gasLimit: gasEstimated.mul(2) });
+  console.log('tx', tx);
+  const rc = await tx.wait();
+  console.log('rc', rc);
+  const event = rc.events.find((event: { event: string }) => event.event === 'TimeoutResolved');
+  return {...event.args};
+};        
+    
+// /**
+//     @notice the timeout must be expired
+//     @notice 2 player games only
+//    */
+// function finalizeTimeout(uint256 gameId) external
+// disqualifyPlayer(gameId, loser);
+export const finalizeTimeout = async (
+  contract: ethers.Contract,
+  gameId: number,
+) => {
+  const gasEstimated = await contract.estimateGas.finalizeTimeout(gameId);
+  const tx = await contract.finalizeTimeout(gameId, { gasLimit: gasEstimated.mul(2) });
+  console.log('tx', tx);
+  const rc = await tx.wait();
+  console.log('rc', rc);
+  const gameFinishedEvent = rc.events.find((event: { event: string }) => event.event === 'GameFinished');
+  const playerDisqualifiedEvent = rc.events.find((event: { event: string }) => event.event === 'PlayerDisqualified');
+  return {...gameFinishedEvent.args, ...playerDisqualifiedEvent.args};
+};
 
-// struct SignedGameMove {
-//   GameMove gameMove;
-//   bytes[] signatures;
-// }
-
-// struct GameState {
-//   uint256 gameId;
-//   uint256 nonce;
-//   bytes state;
-// }
-//Arbiter
-//function isValidGameMove(GameMove calldata gameMove) external view returns (bool);
-//function isValidSignedMove(SignedGameMove calldata signedMove) external view returns (bool);
-//Rules
-//function isValidMove(GameState calldata state, uint8 playerId, bytes calldata move) external pure returns (bool);
+//emit GameFinished(gameId, winner, cheater, false);
+//emit PlayerDisqualified(gameId, cheater);
+export const disputeMove = async (
+  contract: ethers.Contract,
+  signedGameMove: ISignedGameMove,
+) => {
+  const gasEstimated = await contract.estimateGas.disputeMove(signedGameMove);
+  const tx = await contract.disputeMove(signedGameMove, { gasLimit: gasEstimated.mul(2) });
+  console.log('tx', tx);
+  const rc = await tx.wait();
+  console.log('rc', rc);
+  const gameFinishedEvent = rc.events.find((event: { event: string }) => event.event === 'GameFinished');
+  const playerDisqualifiedEvent = rc.events.find((event: { event: string }) => event.event === 'PlayerDisqualified');
+  return {...gameFinishedEvent.args, ...playerDisqualifiedEvent.args};
+};
 
 export const checkIsValidMove = async (
   contract: ethers.Contract,
@@ -173,44 +227,7 @@ export const getPlayers = async (contract: ethers.Contract, gamdId: string) => {
   return response;
 };
 
-export const disputeMove = async (
-  contract: ethers.Contract,
-  gameId: number,
-  nonce: number,
-  playerAddress: string,
-  oldBoardState: TBoardState,
-  newBoardState: TBoardState,
-  move: number,
-  signatures: string[],
-) => {
-  const encodedOldBoardState = defaultAbiCoder.encode(
-    ['uint8[9]', 'bool', 'bool'],
-    oldBoardState,
-  );
 
-  const encodedNewBoardState = defaultAbiCoder.encode(
-    ['uint8[9]', 'bool', 'bool'],
-    newBoardState,
-  );
-
-  const encodedMove = defaultAbiCoder.encode(['uint8'], [move]);
-
-  const gameMove = [
-    gameId,
-    nonce,
-    playerAddress,
-    encodedOldBoardState,
-    encodedNewBoardState,
-    encodedMove,
-  ];
-
-  const signedMove = [gameMove, signatures];
-
-  const gasEstimated = await contract.estimateGas.disputeMove(signedMove);
-  const response = contract.disputeMove(signedMove, { gasLimit: gasEstimated.mul(2) });
-
-  return response;
-};
 
 export const transition = async (
   contract: ethers.Contract,

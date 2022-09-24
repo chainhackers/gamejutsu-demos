@@ -51,6 +51,9 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
   isInDispute,
   isInvalidMove,
   onDispute,
+  onInitTimeout,
+  onResolveTimeout,
+  onFinalizeTimeout,
 }) => {
   const [delay, setDelay] = useState(FETCH_RIVAL_ADDRESS_TIMEOUT);
   const [currentPlayerAddress, setCurrentPlayerAddress] = useState<string | null>(null);
@@ -190,31 +193,6 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     )) as string[];
 
     if (!!onGetPlayers) onGetPlayers();
-  };
-
-  const disputeMoveHandler = async (
-    gameId: number,
-    nonce: number,
-    playerAddress: string,
-    oldBoardState: TBoardState,
-    newBoardState: TBoardState,
-    move: number,
-    signatures: string[],
-  ) => {
-    const disputeMoveResult = await gameApi.disputeMove(
-      gameApi.fromContractData(arbiterContractData),
-      gameId,
-      nonce,
-      playerAddress,
-      oldBoardState,
-      newBoardState,
-      move,
-      signatures,
-    );
-
-    console.log('Dispute move result', disputeMoveResult);
-
-    if (!!onDisputeMove) onDisputeMove();
   };
 
   // const transitionHandler = async (
@@ -369,11 +347,31 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
 
             <button
               className={styles.button}
-              style={{ marginLeft: '150px' }}
+              style={{ marginLeft: '30px' }}
               onClick={onDispute}
-              disabled={!isInvalidMove}
             >
-              {isInDispute ? 'DISPUTE MODE ACTIVE' : 'DISPUTE MOVE'}
+              {isInDispute ? 'IN DISPUTE' : (isInvalidMove? 'DISPUTE INVALID MOVE' : 'DISPUTE MOVE')}
+            </button>
+            <button
+              className={styles.button}
+              style={{ marginLeft: '30px' }}
+              onClick={onInitTimeout}
+            >
+              INIT TIMEOUT
+            </button>
+            <button
+              className={styles.button}
+              style={{ marginLeft: '30px' }}
+              onClick={onResolveTimeout}
+            >
+              RESOLVE TIMEOUT
+            </button>
+            <button
+              className={styles.button}
+              style={{ marginLeft: '30px' }}
+              onClick={onFinalizeTimeout}
+            >
+              FINISH TIMEOUT
             </button>
           </div>
         </div>

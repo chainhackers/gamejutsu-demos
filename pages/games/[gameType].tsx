@@ -12,11 +12,12 @@ import arbiterContract from 'contracts/Arbiter.json';
 import rulesContract from 'contracts/TicTacToeRules.json';
 
 import styles from 'pages/games/gameType.module.scss';
-import {ETTicTacToe} from "../../components/Games/ET-Tic-Tac-Toe";
-import {TicTacToeState, TTTMove} from "../../components/Games/ET-Tic-Tac-Toe/types";
+import {ETTicTacToe} from "components/Games/ET-Tic-Tac-Toe";
+import {TicTacToeState, TTTMove} from "components/Games/ET-Tic-Tac-Toe/types";
 import {IChatLog} from "../../types";
-import {_isValidSignedMove, checkIsValidMove, getArbiter, getSigner, getRulesContract} from "../../gameApi";
-import {ISignedGameMove} from "../../types/arbiter";
+import {_isValidSignedMove, checkIsValidMove, getArbiter, getSigner, getRulesContract, disputeMove, initTimeout, resolveTimeout, finalizeTimeout} from "../../gameApi";
+import {ISignedGameMove, SignedGameMove} from "../../types/arbiter";
+import { signMove, signMoveWithAddress } from 'helpers/session_signatures';
 
 interface IGamePageProps {
     gameType?: string;
@@ -48,9 +49,11 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
     const [isInDispute, setIsInDispute] = useState<boolean>(false);
     const [conversationStatus, setConversationStatus] = useState<string | null>('not connected');
     const [rivalPlayerAddress, setRivalPlayerAddress] = useState<string | null>("0x3Be65C389F095aaa50D0b0F3801f64Aa0258940b"); //TODO
-    const [newMessage, setNewMessage] = useState<{ content: string; sender: string } | null>(
+    const [newMessage, setNewMessage] = useState<{ content: object; sender: string } | null>(
         null,
     );
+    const [lastMove, setLastMove] = useState<ISignedGameMove| null>(null);
+    const [lastOpponentMove, setLastOpponentMove] = useState<ISignedGameMove| null>(null);
     const [winner, setWinner] = useState<0 | 1 | null>(null);
     const [gameId, setGameId] = useState<string | null>(null);
     const [isInvalidMove, setIsInvalidMove] = useState<boolean>(false);
@@ -79,29 +82,79 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
 
         _isValidSignedMove(getArbiter(), msg).then(isValid => {
 
-
             const nextGameState = gameState.encodedMove(msg.gameMove.move, isValid);
             conversation.send(messageText).then(() => {
                 console.log('message sent, setting new state:', nextGameState);
+                setLastMove(msg);
                 setGameState(nextGameState);
                 console.log('new state is set after sending the move', gameState);
             });
 
-
         })
-
-
-        // const message = new Message(
-        //     `game_${msg.gameMove.gameId}_player_${msg.gameMove.player}_${msg.gameMove.nonce}`,
-        //     messageText,
 
     }
 
-    const runDisputeHandler = () => {
+    const runInitTimeoutHandler = async () => {
+        if (!lastOpponentMove) {
+            console.log("no lastOpponentMove")
+            return;
+        }
+        if (!lastMove) {
+            console.log("no lastMove")
+            return;
+        }
+        let address = await getSigner().getAddress();
+        const signature = await signMoveWithAddress(lastOpponentMove.gameMove, address);
+        const signatures = [...lastOpponentMove.signatures, signature]
+        let lastOpponentMoveSignedByAll = new SignedGameMove(lastOpponentMove.gameMove, signatures);
+        console.log('lastOpponentMoveSignedByAll', lastOpponentMoveSignedByAll);
+        const initTimeoutResult = await initTimeout(
+            getArbiter(),
+            [lastOpponentMoveSignedByAll, lastMove]
+        );
+        console.log('initTimeoutResult', initTimeoutResult);
+    };
+
+    const runResolveTimeoutHandler = async () => {
+        if (!lastMove) {
+            console.log("no lastMove")
+            return;
+        }
+        const resolveTimeoutResult = await resolveTimeout(
+            getArbiter(),
+            lastMove
+        );
+        console.log('resolveTimeoutResult', resolveTimeoutResult);
+    };
+
+    const runFinalizeTimeoutHandler = async () => {
+        if (!gameId) {
+            console.log("no gameId")
+            return;
+        }
+        const finalizeTimeoutResult = await finalizeTimeout(
+            getArbiter(),
+            parseInt(gameId)
+        );
+        console.log('finalizeTimeoutResult', finalizeTimeoutResult);
+    };
+
+    const runDisputeHandler = async () => {
         setIsInDispute(true);
         // TODO: Add disputing messages
         console.log('run dispute');
-        console.log('moveToDispute:', newMessage); // LAst Message with invalid move
+        console.log('newMessage', newMessage); // Last Message with invalid move
+
+        if (newMessage) {
+          const signedMove = newMessage.content as ISignedGameMove;
+          console.log('moveToDispute', signedMove);
+          const disputeMoveResult = await disputeMove(
+            getArbiter(),
+            signedMove
+          );
+          console.log('Dispute move result', disputeMoveResult);
+        }
+        setIsInDispute(false);
     };
 
     useEffect(() => {
@@ -141,9 +194,13 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
 
                     _isValidSignedMove(getArbiter(), signedMove).then(isValid => {
                         const nextGameState = gameState.opponentMove(signedMove.gameMove.move, isValid);
+                        setLastOpponentMove(signedMove);
                         console.log('nextGameState', nextGameState);
                         setGameState(nextGameState);
+                        setIsInvalidMove(!isValid);
                     });
+
+                    
                 }
 
             }
@@ -208,6 +265,9 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
                     isInvalidMove={isInvalidMove}
                     isInDispute={isInDispute}
                     onDispute={runDisputeHandler}
+                    onInitTimeout={runInitTimeoutHandler}
+                    onResolveTimeout={runResolveTimeoutHandler}
+                    onFinalizeTimeout={runFinalizeTimeoutHandler}
                 />
                 <ETTicTacToe
                     gameState={gameState}
