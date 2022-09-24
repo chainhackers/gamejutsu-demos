@@ -201,18 +201,18 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     move: number,
     signatures: string[],
   ) => {
-    const disputeMoveResult = await gameApi.disputeMove(
-      gameApi.fromContractData(arbiterContractData),
-      gameId,
-      nonce,
-      playerAddress,
-      oldBoardState,
-      newBoardState,
-      move,
-      signatures,
-    );
+    // const disputeMoveResult = await gameApi.disputeMove(
+    //   // gameApi.fromContractData(arbiterContractData),
+    //   // gameId,
+    //   // nonce,
+    //   // playerAddress,
+    //   // oldBoardState,
+    //   // newBoardState,
+    //   // move,
+    //   // signatures,
+    // );
 
-    console.log('Dispute move result', disputeMoveResult);
+    // console.log('Dispute move result', disputeMoveResult);
 
     if (!!onDisputeMove) onDisputeMove();
   };
