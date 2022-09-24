@@ -15,9 +15,10 @@ import styles from 'pages/games/gameType.module.scss';
 import {ETTicTacToe} from "components/Games/ET-Tic-Tac-Toe";
 import {TicTacToeState, TTTMove} from "components/Games/ET-Tic-Tac-Toe/types";
 import {IChatLog} from "../../types";
-import {_isValidSignedMove, checkIsValidMove, getArbiter, getSigner, getRulesContract, disputeMove, initTimeout, resolveTimeout, finalizeTimeout} from "../../gameApi";
+import {_isValidSignedMove, checkIsValidMove, getArbiter, getSigner, getRulesContract, finishGame, disputeMove, initTimeout, resolveTimeout, finalizeTimeout} from "../../gameApi";
 import {ISignedGameMove, SignedGameMove} from "../../types/arbiter";
 import { signMove, signMoveWithAddress } from 'helpers/session_signatures';
+import { ContractMethodNoResultError } from 'wagmi';
 
 interface IGamePageProps {
     gameType?: string;
@@ -53,6 +54,7 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
         null,
     );
     const [lastMove, setLastMove] = useState<ISignedGameMove| null>(null);
+    const [lastWinnerMove, setLastWinnerMove] = useState<ISignedGameMove| null>(null);
     const [lastOpponentMove, setLastOpponentMove] = useState<ISignedGameMove| null>(null);
     const [winner, setWinner] = useState<0 | 1 | null>(null);
     const [gameId, setGameId] = useState<string | null>(null);
@@ -80,19 +82,49 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
             return;
         }
 
-        _isValidSignedMove(getArbiter(), msg).then(isValid => {
+        let address = await getSigner().getAddress();
+        const lastWinnerMove = await gameState.signWinnerEncodedMove(msg.gameMove.move, address, nextGameState.playerType);
+
+        _isValidSignedMove(getArbiter(), msg).then((isValid) => {
 
             const nextGameState = gameState.encodedMove(msg.gameMove.move, isValid);
+            
             conversation.send(messageText).then(() => {
                 console.log('message sent, setting new state:', nextGameState);
                 setLastMove(msg);
                 setGameState(nextGameState);
+                setLastWinnerMove(lastWinnerMove);
                 console.log('new state is set after sending the move', gameState);
             });
 
         })
 
     }
+
+
+    const runFinishGameHandler = async () => {
+        if (!lastOpponentMove) {
+            console.log("no lastOpponentMove")
+            return;
+        }
+        if (!lastWinnerMove) {
+            console.log("no lastMove")
+            return;
+        }
+        let address = await getSigner().getAddress();
+        const signature = await signMoveWithAddress(lastOpponentMove.gameMove, address);
+        const signatures = [...lastOpponentMove.signatures, signature]
+        let lastOpponentMoveSignedByAll = new SignedGameMove(lastOpponentMove.gameMove, signatures);
+        
+        console.log('lastOpponentMoveSignedByAll', lastOpponentMoveSignedByAll);
+        console.log('lastWinnerMove', lastWinnerMove);
+        
+        const finishGameResult = await finishGame(
+            getArbiter(),
+            [lastOpponentMoveSignedByAll, lastWinnerMove]
+        );
+        console.log('finishGameResult', finishGameResult);
+    };
 
     const runInitTimeoutHandler = async () => {
         if (!lastOpponentMove) {
@@ -264,6 +296,7 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
                     onAcceptGame={setGameId}
                     isInvalidMove={isInvalidMove}
                     isInDispute={isInDispute}
+                    onFinishGame={runFinishGameHandler}
                     onDispute={runDisputeHandler}
                     onInitTimeout={runInitTimeoutHandler}
                     onResolveTimeout={runResolveTimeoutHandler}

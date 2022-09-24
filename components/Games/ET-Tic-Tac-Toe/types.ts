@@ -78,7 +78,7 @@ export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
     lastMove: ISignedGameMove | null = null;
     lastOpponentMove: ISignedGameMove | null = null;
     isFinished: boolean = false;
-    winner = null; //TODO: implement
+    winner: number | null = null;
     gameId: number;
     isMyTurn: boolean;
     myGameState: TicTacToeBoard;
@@ -94,8 +94,14 @@ export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
         this.playerId = playerType === 'X' ? 0 : 1;
     }
 
-    makeMove(move: TTTMove, valid: boolean = true): TicTacToeState {
+    makeMove(move: TTTMove, valid: boolean = true, winner: TPlayer | null = null): TicTacToeState {
+        //TODO it should be copy constructor, at least for lastMove and lastOpponentMove
         const nextState = new TicTacToeState(this.gameId, this.playerType);
+        if (winner == this.playerType) {
+            nextState.winner = this.playerId;
+        } else {
+            nextState.winner = 1 - this.playerId;
+        }
         nextState.nonce = this.nonce + 1;
         nextState.decodedMovesHistory = [...this.decodedMovesHistory, move];
         const nextDisputableMoveNonces = new Set(this.disputableMoveNumbers);
@@ -131,14 +137,19 @@ export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
         )
     }
 
+    //TODO drop it
+    async signWinnerEncodedMove(encodedMove: string, playerAddress: string, winner: TPlayer): Promise<ISignedGameMove>{
+        const move = TTTMove.fromEncoded(encodedMove, this.playerId == 0 ? 'X' : 'O');
+        return this.signMove(move, playerAddress, winner);
+    }
 
-    async signMove(move: TTTMove, playerAddress: string): Promise<ISignedGameMove> {
+    async signMove(move: TTTMove, playerAddress: string, winner: TPlayer | null): Promise<ISignedGameMove> {
         const gameMove = new GameMove(
             this.gameId,
             this.nonce,
             playerAddress,
             this.encode(),
-            this.makeMove(move).encode(),
+            this.makeMove(move, undefined, winner).encode(),
             move.encodedMove,
         )
         const signature = await signMoveWithAddress(gameMove, playerAddress);
@@ -150,8 +161,8 @@ export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
     }
 
     private encode(): string {
-        const xWins = this.winner === 'X';
-        const oWins = this.winner === 'O';
+        const xWins = this.winner == this.playerId && this.playerType === 'X' ;
+        const oWins = this.winner == this.playerId && this.playerType === 'O';
         const cellsToEncode = this.myGameState.cells.map((cell) => {
             if (cell === null) {
                 return 0;

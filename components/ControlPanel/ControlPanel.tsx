@@ -50,6 +50,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
   winner,
   isInDispute,
   isInvalidMove,
+  onFinishGame,
   onDispute,
   onInitTimeout,
   onResolveTimeout,
@@ -348,10 +349,19 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
             <button
               className={styles.button}
               style={{ marginLeft: '30px' }}
+              onClick={onFinishGame}
+            >
+              FINISH GAME
+            </button>
+
+            <button
+              className={styles.button}
+              style={{ marginLeft: '30px' }}
               onClick={onDispute}
             >
               {isInDispute ? 'IN DISPUTE' : (isInvalidMove? 'DISPUTE INVALID MOVE' : 'DISPUTE MOVE')}
             </button>
+
             <button
               className={styles.button}
               style={{ marginLeft: '30px' }}
@@ -359,6 +369,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
             >
               INIT TIMEOUT
             </button>
+
             <button
               className={styles.button}
               style={{ marginLeft: '30px' }}
@@ -366,6 +377,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
             >
               RESOLVE TIMEOUT
             </button>
+            
             <button
               className={styles.button}
               style={{ marginLeft: '30px' }}

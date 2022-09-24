@@ -33,6 +33,30 @@ export function newContract(
   return contract;
 }
 
+
+// mark the winning move as such - in case of tic-tac-toe, set the respective flag to True
+
+// struct Board {
+//     uint8[9] cells;
+//     bool crossesWin;
+//     bool naughtsWin;
+// }
+//function finishGame(SignedGameMove[2] calldata signedMoves) external returns (address winner);
+//emit GameFinished(gameId, winner, cheater, false);
+export const finishGame = async (
+  contract: ethers.Contract,
+  signedGameMoves: [ISignedGameMove, ISignedGameMove],
+) => {
+  console.log('signedGameMoves', signedGameMoves);
+  const gasEstimated = await contract.estimateGas.finishGame(signedGameMoves);
+  const tx = await contract.finishGame(signedGameMoves, { gasLimit: gasEstimated.mul(2) });
+  console.log('tx', tx);
+  const rc = await tx.wait();
+  console.log('rc', rc);
+  const gameFinishedEvent = rc.events.find((event: { event: string }) => event.event === 'GameFinished');
+  return gameFinishedEvent.args;
+};
+
 //   @notice both moves must be in sequence
 //   @notice first move must be signed by both players
 //   @notice second move must be signed at least by the player making the move
