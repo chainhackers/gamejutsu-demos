@@ -98,10 +98,12 @@ export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
     makeMove(move: TTTMove, valid: boolean = true, winner: TPlayer | null = null): TicTacToeState {
         //TODO it should be copy constructor, at least for lastMove and lastOpponentMove
         const nextState = new TicTacToeState(this.gameId, this.playerType);
-        if (winner == this.playerType) {
-            nextState.winner = this.playerId;
-        } else {
-            nextState.winner = 1 - this.playerId;
+        if (winner) {
+            if (winner == this.playerType) {
+                nextState.winner = this.playerId;
+            } else {
+                nextState.winner = 1 - this.playerId;
+            }
         }
         nextState.nonce = this.nonce + 1;
         nextState.decodedMovesHistory = [...this.decodedMovesHistory, move];
