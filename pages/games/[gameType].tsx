@@ -371,29 +371,27 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
             setIsResolveTimeOutAllowed(messageContent.initTimeout);
             setIsFinishTimeoutAllowed(!messageContent.initTimeout);
             setIsTimeoutRequested(messageContent.initTimeout);
-
-            return;
-          }
-          if (messageContent.resolveTimeout) {
+          } else if (messageContent.resolveTimeout) {
             console.log('incoming stream resolve timeout', messageContent.resolveTimeout);
             setIsTimeoutInited(!messageContent.resolveTimeout);
             setIsResolveTimeOutAllowed(!messageContent.resolveTimeout);
             setIsFinishTimeoutAllowed(!messageContent.resolveTimeout);
             setIsTimeoutRequested(!messageContent.resolveTimeout);
             return;
-          }
-          setNewMessage({ content: messageContent, sender: msg.senderAddress! });
-          const signedMove = JSON.parse(msg.content) as ISignedGameMove;
-          console.log('signedMove from stream', signedMove);
-          console.log('gameState before move', gameState);
+          } else {
+            setNewMessage({ content: messageContent, sender: msg.senderAddress! });
+            const signedMove = JSON.parse(msg.content) as ISignedGameMove;
+            console.log('signedMove from stream', signedMove);
+            console.log('gameState before move', gameState);
 
-          _isValidSignedMove(getArbiter(), signedMove).then((isValid) => {
-            const nextGameState = gameState.opponentMove(signedMove.gameMove.move, isValid);
-            setLastOpponentMove(signedMove);
-            console.log('nextGameState', nextGameState);
-            setGameState(nextGameState);
-            setIsInvalidMove(!isValid);
-          });
+            _isValidSignedMove(getArbiter(), signedMove).then((isValid) => {
+              const nextGameState = gameState.opponentMove(signedMove.gameMove.move, isValid);
+              setLastOpponentMove(signedMove);
+              console.log('nextGameState', nextGameState);
+              setGameState(nextGameState);
+              setIsInvalidMove(!isValid);
+            });
+          }
         }
       }
     };
