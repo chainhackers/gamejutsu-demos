@@ -297,12 +297,16 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       console.log('no gameId');
       return;
     }
-    const finalizeTimeoutResult = await finalizeTimeout(getArbiter(), parseInt(gameId));
-    console.log('finalizeTimeoutResult', finalizeTimeoutResult);
-    console.log('finish timeout handler');
-    setIsTimeoutInited(false);
-    setIsFinishTimeoutAllowed(false);
-    setIsTimeoutRequested(false);
+    try {
+      const finalizeTimeoutResult = await finalizeTimeout(getArbiter(), parseInt(gameId));
+      console.log('finalizeTimeoutResult', finalizeTimeoutResult);
+      console.log('finish timeout handler');
+      setIsTimeoutInited(false);
+      setIsFinishTimeoutAllowed(false);
+      setIsTimeoutRequested(false);
+    } catch (error) {
+      console.error('finilize Timeout error:', error);
+    }
   };
 
   const connectPlayerHandler = async () => {
@@ -311,7 +315,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
 
   useEffect(() => {
     if (!!rivalPlayerAddress) {
-      setConversationHandler(rivalPlayerAddress);
+      // setConversationHandler(rivalPlayerAddress);
     }
   }, [rivalPlayerAddress]);
 
