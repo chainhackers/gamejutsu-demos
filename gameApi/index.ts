@@ -148,6 +148,22 @@ export const checkIsValidMove = async (
   return response;
 };
 
+//function transition(GameState calldata state, uint8 playerId, bytes calldata move) external pure returns (GameState memory);
+export const transition = async (
+  contract: ethers.Contract,
+  gameState: TGameStateContractParams,
+  playerIngameId: number,
+  encodedMove: string,
+) => {
+  // const encodedBoardState = defaultAbiCoder.encode(['uint8[9]', 'bool', 'bool'], boardState);
+  // const gameState = [gameId, nonce, encodedBoardState];
+  // const encodedMove = defaultAbiCoder.encode(['uint8'], [move]);
+  console.log('transition', {gameState, playerIngameId, encodedMove});
+  const response = await contract.transition(gameState, playerIngameId, encodedMove);
+  console.log('response', response);
+  return response;
+};
+
 
 export const isValidGameMove = async (
   contract: ethers.Contract,
@@ -253,23 +269,7 @@ export const getPlayers = async (contract: ethers.Contract, gamdId: string) => {
 
 
 
-export const transition = async (
-  contract: ethers.Contract,
-  gameId: number,
-  nonce: number,
-  boardState: TBoardState,
-  playerIngameId: number,
-  move: number,
-) => {
-  const encodedBoardState = defaultAbiCoder.encode(['uint8[9]', 'bool', 'bool'], boardState);
 
-  const gameState = [gameId, nonce, encodedBoardState];
-
-  const encodedMove = defaultAbiCoder.encode(['uint8'], [move]);
-
-  const response = await contract.transition(gameState, playerIngameId, encodedMove);
-  return response;
-};
 
 export default {
   fromContractData,

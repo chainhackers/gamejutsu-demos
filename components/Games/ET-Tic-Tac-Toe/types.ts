@@ -2,6 +2,7 @@ import {IGameState, IMyGameMove, IMyGameState, TGameHistory, TGameStateContractP
 import {GameMove, IGameMove, ISignedGameMove, SignedGameMove} from "../../../types/arbiter";
 import {defaultAbiCoder} from 'ethers/lib/utils';
 import {signMoveWithAddress} from "../../../helpers/session_signatures";
+import { ChannelListener } from "diagnostics_channel";
 
 
 const STATE_TYPES = ['uint8[9]', 'bool', 'bool'] as const;
@@ -158,6 +159,10 @@ export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
 
     toGameStateContractParams(): TGameStateContractParams {
         return { gameId: this.gameId, nonce: this.nonce, state: this.encode()}
+    }
+
+    decode(encodedBoardState:string) {
+        return defaultAbiCoder.decode(STATE_TYPES, encodedBoardState);
     }
 
     private encode(): string {
