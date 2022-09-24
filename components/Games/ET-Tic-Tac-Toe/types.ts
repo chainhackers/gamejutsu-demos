@@ -138,12 +138,6 @@ export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
         )
     }
 
-    //TODO drop it
-    async signWinnerEncodedMove(encodedMove: string, playerAddress: string, winner: TPlayer): Promise<ISignedGameMove>{
-        const move = TTTMove.fromEncoded(encodedMove, this.playerId == 0 ? 'X' : 'O');
-        return this.signMove(move, playerAddress, winner);
-    }
-
     async signMove(move: TTTMove, playerAddress: string, winner: TPlayer | null): Promise<ISignedGameMove> {
         const gameMove = new GameMove(
             this.gameId,

@@ -54,7 +54,6 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
         null,
     );
     const [lastMove, setLastMove] = useState<ISignedGameMove| null>(null);
-    const [lastWinnerMove, setLastWinnerMove] = useState<ISignedGameMove| null>(null);
     const [lastOpponentMove, setLastOpponentMove] = useState<ISignedGameMove| null>(null);
     const [winner, setWinner] = useState<0 | 1 | null>(null);
     const [gameId, setGameId] = useState<string | null>(null);
@@ -93,9 +92,6 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
                 console.log('message sent, setting new state:', nextGameState);
                 setLastMove(msg);
                 setGameState(nextGameState);
-                gameState.signWinnerEncodedMove(msg.gameMove.move, address, nextGameState.playerType).then((lastWinnerMove) => {
-                    setLastWinnerMove(lastWinnerMove);
-                });
                 console.log('new state is set after sending the move', gameState);
             });
 
@@ -109,7 +105,7 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
             console.log("no lastOpponentMove")
             return;
         }
-        if (!lastWinnerMove) {
+        if (!lastMove) {
             console.log("no lastMove")
             return;
         }
@@ -119,11 +115,10 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
         let lastOpponentMoveSignedByAll = new SignedGameMove(lastOpponentMove.gameMove, signatures);
         
         console.log('lastOpponentMoveSignedByAll', lastOpponentMoveSignedByAll);
-        console.log('lastWinnerMove', lastWinnerMove);
 
         const finishGameResult = await finishGame(
             getArbiter(),
-            [lastOpponentMoveSignedByAll, lastWinnerMove]
+            [lastOpponentMoveSignedByAll, lastMove]
         );
         console.log('finishGameResult', finishGameResult);
     };
