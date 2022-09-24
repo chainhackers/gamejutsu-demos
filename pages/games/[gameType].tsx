@@ -123,8 +123,11 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
 
   const playersTypesMap = { 0: 'X', 1: 'O' };
 
-  const setConversationHandler = async (rivalPlayerAddress: string) => {
-    console.log('setConversationHandler');
+  const setConversationHandler = async () => {
+    if (!rivalPlayerAddress) {
+      console.error('cant connect: no rival player address');
+      return;
+    }
     setRivalPlayerAddress(rivalPlayerAddress);
     if (!signer) return;
     console.log('before init client');
@@ -336,7 +339,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
 
   useEffect(() => {
     if (!!rivalPlayerAddress) {
-      setConversationHandler(rivalPlayerAddress);
+      // setConversationHandler(rivalPlayerAddress);
     }
   }, [rivalPlayerAddress]);
 
@@ -583,6 +586,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
           isInDispute={isInDispute}
           disputeAppealPlayer={disputeAppealPlayer}
           winner={winner}
+          onConnect={setConversationHandler}
         >
           <ETTicTacToe
             gameState={gameState}

@@ -11,6 +11,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   isInDispute,
   winner,
   disputeAppealPlayer,
+  onConnect,
 }) => {
   const [isShowShade, setShowShade] = useState<boolean>(true);
   const [isWaiting, setIsWaiting] = useState<boolean>(true);
@@ -65,7 +66,19 @@ export const GameField: React.FC<GameFieldPropsI> = ({
       {isShowShade && (
         <div className={styles.shade}>
           {isWaiting && <div className={styles.wait}>{t('shade.wait')}</div>}
-          {isConnecting && <div className={styles.wait}>{t('shade.connecting')}</div>}
+          {isConnecting && (
+            <div className={styles.wait}>
+              {t('shade.connecting')}
+              <div className={styles.connectButton}>
+                <Button
+                  borderless
+                  size="sm"
+                  title={t('buttons.connect')}
+                  onClick={onConnect}
+                />
+              </div>
+            </div>
+          )}
           {isShowReport && (
             <div className={styles.report}>
               <div className={styles.whatToReport}>{t('shade.whatToReport')}</div>

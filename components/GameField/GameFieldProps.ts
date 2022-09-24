@@ -6,4 +6,5 @@ export interface GameFieldPropsI {
   isInDispute?: boolean;
   disputeAppealPlayer: string | null;
   winner: string | null;
+  onConnect: () => Promise<void>;
 }

@@ -13,6 +13,7 @@ const en = {
       tryDemo: 'Try Demo',
       play: 'Let’s play!',
       return: 'Return',
+      connect: 'Press to connect',
     },
     frontpage: {
       introduction: { l1: 'Say goodbye 👋🏼', l2: 'to signing transactions on every game move' },
@@ -92,7 +93,7 @@ const en = {
       createWallet: 'Create wallet',
     },
     shade: {
-      wait: 'Waiting for new player. . .',
+      wait: 'Waiting for a new player. . .',
       connecting: 'Connecting to another player. . .',
       whatToReport: 'What do you want to report?',
       cheating: 'Cheating',

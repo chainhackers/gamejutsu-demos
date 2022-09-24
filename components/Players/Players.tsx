@@ -58,14 +58,6 @@ export const Players: React.FC<PlayersPropsI> = ({
         </div>
 
         <Player {...player2} />
-        <Button
-          size="sm"
-          color="black"
-          borderless
-          title="Start game"
-          disabled={!isConnectionAllowed}
-          onClick={connectPlayer}
-        />
       </div>
     </div>
   );
