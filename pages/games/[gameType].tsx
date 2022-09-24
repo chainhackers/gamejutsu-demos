@@ -96,6 +96,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   const [conversation, setConversation] = useState<Conversation | null>(null);
   const [isInDispute, setIsInDispute] = useState<boolean>(false);
   const [disputeAppealPlayer, sesDisputeAppealPlayer] = useState<string | null>(null);
+  const [isDisputAvailable, setIsDisputeAvailavle] = useState<boolean>(false);
   const [conversationStatus, setConversationStatus] = useState<string | null>('not connected');
   const [rivalPlayerAddress, setRivalPlayerAddress] = useState<string | null>(
     null,
@@ -133,7 +134,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
 
   const sendSignedMoveHandler = async (msg: ISignedGameMove) => {
     const messageText = JSON.stringify(msg);
-    console.log({ messageText });
+    // console.log({ messageText });
 
     if (!conversation) {
       console.warn('no conversation!');
@@ -472,6 +473,16 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     ]);
   }, [rivalPlayerAddress, gameId]);
 
+  useEffect(() => {
+    console.log('newMessage', newMessage?.sender);
+    console.log('isInvalidMove', isInvalidMove);
+    if (newMessage?.sender === rivalPlayerAddress && isInvalidMove) {
+      setIsDisputeAvailavle(true);
+      return;
+    }
+    setIsDisputeAvailavle(false);
+  }, [newMessage, isInvalidMove]);
+
   useInterval(async () => {
     if (rivalPlayerAddress) {
       return;
@@ -562,7 +573,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
           isTimeoutRequested={isTimeoutRequested}
           // isTimeoutRequested={true}
           onRunDisput={runDisputeHandler}
-          isDisputAvailable
+          isDisputAvailable={isDisputAvailable}
           connectPlayer={connectPlayerHandler}
         />
         <GameField
