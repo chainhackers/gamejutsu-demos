@@ -17,6 +17,7 @@ export interface ControlPanelPropsI {
   rivalPlayerConversationStatus: string | null;
   isInDispute: boolean;
   isInvalidMove: boolean;
+  onFinishGame: () => void;
   onDispute: () => void;
   onInitTimeout: () => void;
   onResolveTimeout: () => void;
