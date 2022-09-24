@@ -8,19 +8,24 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   gameId,
   rivalPlayerAddress,
   isConnected,
+  isInDispute,
+  winner,
+  disputeAppealPlayer,
 }) => {
   const [isShowShade, setShowShade] = useState<boolean>(true);
   const [isWaiting, setIsWaiting] = useState<boolean>(true);
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
+  const [isShowReport, setShowReport] = useState<boolean>(false);
+  const [isShowDispute, setShowDispute] = useState<boolean>(false);
+  const [isWinner, setWinner] = useState<string | null>();
   const { t } = useTranslation();
   const appealedPlayer = 'Player 1';
-  const winner = 'Player 1';
+  // const winner = 'Player 1';
   useEffect(() => {
     console.log('isConnected gameField', isConnected);
     if (!rivalPlayerAddress) {
       setShowShade(true);
       setIsWaiting(true);
-      // return;
     }
     if (!!rivalPlayerAddress) {
       setIsWaiting(false);
@@ -35,13 +40,33 @@ export const GameField: React.FC<GameFieldPropsI> = ({
       // return;
     }
   }, [rivalPlayerAddress, isConnected]);
+
+  useEffect(() => {
+    if (isInDispute) {
+      setShowShade(true);
+      setIsWaiting(false);
+      setIsConnecting(false);
+      setWinner(null);
+      setShowDispute(true);
+    }
+  }, [isInDispute]);
+
+  useEffect(() => {
+    if (!!winner) {
+      setShowShade(true);
+      setIsWaiting(false);
+      setIsConnecting(false);
+      setShowDispute(false);
+      setWinner(winner);
+    }
+  }, [winner]);
   return (
     <div className={styles.container}>
       {isShowShade && (
         <div className={styles.shade}>
           {isWaiting && <div className={styles.wait}>{t('shade.wait')}</div>}
           {isConnecting && <div className={styles.wait}>{t('shade.connecting')}</div>}
-          {false && (
+          {isShowReport && (
             <div className={styles.report}>
               <div className={styles.whatToReport}>{t('shade.whatToReport')}</div>
               <div className={styles.buttons}>
@@ -50,15 +75,15 @@ export const GameField: React.FC<GameFieldPropsI> = ({
               </div>
             </div>
           )}
-          {false && (
+          {isShowDispute && (
             <div className={styles.appeal}>
-              <div className={styles.madeAppeal}>{`${appealedPlayer}${t(
+              <div className={styles.madeAppeal}>{`${disputeAppealPlayer} ${t(
                 'shade.madeAppeal',
               )}`}</div>
               <div className={styles.notice}>{t('shade.notice')}</div>
             </div>
           )}
-          {false && <div className={styles.win}>{`${winner}${t('shade.win')}`}</div>}
+          {isWinner && <div className={styles.win}>{`${isWinner} ${t('wins')}`}</div>}
         </div>
       )}
       <div className={styles.header}>

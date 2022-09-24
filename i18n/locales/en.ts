@@ -100,7 +100,7 @@ const en = {
       madeAppeal: 'made an appeal to the Game Master you cheated',
       notice: 'Pending decision from Game Master',
     },
-    wins: 'Wins',
+    wins: 'wins!',
     players: {
       title: 'Players',
     },

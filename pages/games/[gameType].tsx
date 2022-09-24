@@ -95,15 +95,13 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   const [playerIngameId, setPlayerIngameId] = useState<0 | 1>(0); //TODO use in game state creation
   const [conversation, setConversation] = useState<Conversation | null>(null);
   const [isInDispute, setIsInDispute] = useState<boolean>(false);
+  const [disputeAppealPlayer, sesDisputeAppealPlayer] = useState<string | null>(null);
   const [conversationStatus, setConversationStatus] = useState<string | null>('not connected');
   const [rivalPlayerAddress, setRivalPlayerAddress] = useState<string | null>(
     null,
     // '0x3Be65C389F095aaa50D0b0F3801f64Aa0258940b',
   ); //TODO
-  const [newMessage, setNewMessage] = useState<{ content: string; sender: string } | null>(
-    null,
-  );
-  const [winner, setWinner] = useState<0 | 1 | null>(null);
+  const [winner, setWinner] = useState<string | null>(null);
   const [gameId, setGameId] = useState<string | null>(null);
   const [isInvalidMove, setIsInvalidMove] = useState<boolean>(false);
   const [players, setPlayers] = useState<PlayerI[]>([]);
@@ -113,6 +111,9 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   const [isResolveTimeOutAllowed, setIsResolveTimeOutAllowed] = useState<boolean>(false);
   const [isFinishTimeoutAllowed, setIsFinishTimeoutAllowed] = useState<boolean>(false);
   const [isTimeoutRequested, setIsTimeoutRequested] = useState<boolean>(false);
+  const [newMessage, setNewMessage] = useState<{ content: object; sender: string } | null>(
+    null,
+  );
 
   const { client, initClient } = useXmptContext();
   const { signer } = useWalletContext();
@@ -148,13 +149,6 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
         console.log('new state is set after sending the move', gameState);
       });
     });
-  };
-
-  const runDisputeHandler = () => {
-    setIsInDispute(true);
-    // TODO: Add disputing messages
-    console.log('run dispute');
-    console.log('moveToDispute:', newMessage); // LAst Message with invalid move
   };
 
   const createNewGameHandler = async () => {
@@ -307,6 +301,32 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     } catch (error) {
       console.error('finilize Timeout error:', error);
     }
+  };
+
+  const runDisputeHandler = async () => {
+    setIsInDispute(true);
+    const disputingPlayer = players.find((player) => player.address === account.address)!;
+    sesDisputeAppealPlayer(disputingPlayer.playerName);
+    // TODO: Add disputing messages
+    console.log('run dispute');
+    console.log('newMessage', newMessage); // Last Message with invalid move
+
+    if (newMessage) {
+      const signedMove = newMessage.content as ISignedGameMove;
+      // console.log('moveToDispute', signedMove);
+      const disputeMoveResult = await disputeMove(getArbiter(), signedMove);
+      // console.log('Dispute move result', disputeMoveResult);
+      // console.log('winner', disputeMoveResult.winner);
+      // console.log('loser', disputeMoveResult.loser);
+      // console.log('is Draw', disputeMoveResult.isDraw);
+      // console.log('Player', players);
+      const winPlayer = players.find((player) => player.address === disputeMoveResult.winner)!;
+
+      // console.log('current Player', account.address);
+      setWinner(winPlayer.playerName);
+    }
+    setIsInDispute(false);
+    sesDisputeAppealPlayer(null);
   };
 
   const connectPlayerHandler = async () => {
@@ -541,12 +561,17 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
           finishTimeout={finishTimeoutHandler}
           isTimeoutRequested={isTimeoutRequested}
           // isTimeoutRequested={true}
+          onRunDisput={runDisputeHandler}
+          isDisputAvailable
           connectPlayer={connectPlayerHandler}
         />
         <GameField
           gameId={gameId}
           rivalPlayerAddress={rivalPlayerAddress}
           isConnected={!!conversation}
+          isInDispute={isInDispute}
+          disputeAppealPlayer={disputeAppealPlayer}
+          winner={winner}
         >
           <ETTicTacToe
             gameState={gameState}

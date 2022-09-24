@@ -10,4 +10,6 @@ export interface LeftPanelPropsI {
   isFinishTimeOutAllowed: boolean;
   isTimeoutRequested: boolean;
   connectPlayer: () => Promise<void>;
+  isDisputAvailable?: boolean;
+  onRunDisput: () => Promise<void>;
 }
