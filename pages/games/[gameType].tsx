@@ -14,13 +14,25 @@ import styles from 'pages/games/gameType.module.scss';
 import { ETTicTacToe } from '../../components/Games/ET-Tic-Tac-Toe';
 import { TicTacToeState, TTTMove } from '../../components/Games/ET-Tic-Tac-Toe/types';
 import { IChatLog } from '../../types';
-import { _isValidSignedMove, checkIsValidMove, getArbiter, getSigner } from '../../gameApi';
-import { ISignedGameMove } from '../../types/arbiter';
+import {
+  _isValidSignedMove,
+  checkIsValidMove,
+  getArbiter,
+  getSigner,
+  getRulesContract,
+  disputeMove,
+  initTimeout,
+  resolveTimeout,
+  finalizeTimeout,
+} from '../../gameApi';
+// import { ISignedGameMove } from '../../types/arbiter';
 import { PlayerI } from 'types';
 import { GameField, JoinGame, LeftPanel, SelectGame, SelectPrize } from 'components';
 import { useRouter } from 'next/router';
 import { useAccount } from 'wagmi';
 import gameApi from 'gameApi';
+import { ISignedGameMove, SignedGameMove } from '../../types/arbiter';
+import { signMove, signMoveWithAddress } from 'helpers/session_signatures';
 
 interface IGamePageProps {
   gameType?: string;
@@ -95,6 +107,12 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   const [gameId, setGameId] = useState<string | null>(null);
   const [isInvalidMove, setIsInvalidMove] = useState<boolean>(false);
   const [players, setPlayers] = useState<PlayerI[]>([]);
+  const [lastOpponentMove, setLastOpponentMove] = useState<ISignedGameMove | null>(null);
+  const [lastMove, setLastMove] = useState<ISignedGameMove | null>(null);
+  const [isTimeoutInited, setIsTimeoutInited] = useState<boolean>(false);
+  const [isResolveTimeOutAllowed, setIsResolveTimeOutAllowed] = useState<boolean>(false);
+  const [isFinishTimeoutAllowed, setIsFinishTimeoutAllowed] = useState<boolean>(false);
+  const [isTimeoutRequested, setIsTimeoutRequested] = useState<boolean>(false);
 
   const { client, initClient } = useXmptContext();
   const { signer } = useWalletContext();
@@ -125,14 +143,11 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       const nextGameState = gameState.encodedMove(msg.gameMove.move, isValid);
       conversation.send(messageText).then(() => {
         console.log('message sent, setting new state:', nextGameState);
+        setLastMove(msg);
         setGameState(nextGameState);
         console.log('new state is set after sending the move', gameState);
       });
     });
-
-    // const message = new Message(
-    //     `game_${msg.gameMove.gameId}_player_${msg.gameMove.player}_${msg.gameMove.nonce}`,
-    //     messageText,
   };
 
   const runDisputeHandler = () => {
@@ -202,6 +217,98 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     }
   };
 
+  const initTimeoutHandler = async () => {
+    console.log('initTimeout Handler');
+    if (!lastOpponentMove) {
+      console.log('no lastOpponentMove');
+      return;
+    }
+    if (!lastMove) {
+      console.log('no lastMove');
+      return;
+    }
+    setIsTimeoutInited(true);
+    setIsFinishTimeoutAllowed(true);
+    setIsResolveTimeOutAllowed(false);
+    try {
+      let address = await getSigner().getAddress();
+      const signature = await signMoveWithAddress(lastOpponentMove.gameMove, address);
+      const signatures = [...lastOpponentMove.signatures, signature];
+      let lastOpponentMoveSignedByAll = new SignedGameMove(
+        lastOpponentMove.gameMove,
+        signatures,
+      );
+      console.log('lastOpponentMoveSignedByAll', lastOpponentMoveSignedByAll);
+
+      const initTimeoutResult = await initTimeout(getArbiter(), [
+        lastOpponentMoveSignedByAll,
+        lastMove,
+      ]);
+      console.log('initTimeoutResult', initTimeoutResult);
+      if (!!conversation) {
+        const message = { initTimeout: true };
+        const messageText = JSON.stringify(message);
+        conversation.send(messageText).then((message) => {
+          console.log('message InitTimeout', message);
+
+          // console.log('message sent, setting new state:', nextGameState);
+          // setLastMove(msg);
+          // setGameState(nextGameState);
+          // console.log('new state is set after sending the move', gameState);
+        });
+        // console.warn('no conversation!');
+        // return;
+      }
+    } catch (error) {
+      setIsTimeoutInited(false);
+      setIsFinishTimeoutAllowed(false);
+      setIsResolveTimeOutAllowed(false);
+    }
+  };
+
+  const resolveTimeoutHandler = async () => {
+    console.log('resloveTimeout hangler');
+    if (!lastMove) {
+      console.log('no lastMove');
+      return;
+    }
+    try {
+      const resolveTimeoutResult = await resolveTimeout(getArbiter(), lastMove);
+      console.log('resolveTimeoutResult', resolveTimeoutResult);
+      if (!!conversation) {
+        const message = { resolveTimeout: true };
+        const messageText = JSON.stringify(message);
+        conversation.send(messageText).then((message) => {
+          console.log('message resloveTimeout', message);
+        });
+      }
+
+      setIsTimeoutInited(false);
+      setIsResolveTimeOutAllowed(false);
+      setIsFinishTimeoutAllowed(false);
+      setIsTimeoutRequested(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const finishTimeoutHandler = async () => {
+    if (!gameId) {
+      console.log('no gameId');
+      return;
+    }
+    const finalizeTimeoutResult = await finalizeTimeout(getArbiter(), parseInt(gameId));
+    console.log('finalizeTimeoutResult', finalizeTimeoutResult);
+    console.log('finish timeout handler');
+    setIsTimeoutInited(false);
+    setIsFinishTimeoutAllowed(false);
+    setIsTimeoutRequested(false);
+  };
+
+  const connectPlayerHandler = async () => {
+    console.log('conntect timeout handle ');
+  };
+
   useEffect(() => {
     if (!!rivalPlayerAddress) {
       setConversationHandler(rivalPlayerAddress);
@@ -254,8 +361,27 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       stream = await conversation.streamMessages();
       for await (const msg of stream) {
         const messageContent = JSON.parse(msg.content);
+        console.log('stream message contenet', messageContent);
 
         if (msg.senderAddress === rivalPlayerAddress) {
+          console.log('incoming stream message contenet', messageContent);
+          if (messageContent.initTimeout) {
+            console.log('incoming stream timeout message', messageContent.initTimeout);
+            setIsTimeoutInited(messageContent.initTimeout);
+            setIsResolveTimeOutAllowed(messageContent.initTimeout);
+            setIsFinishTimeoutAllowed(!messageContent.initTimeout);
+            setIsTimeoutRequested(messageContent.initTimeout);
+
+            return;
+          }
+          if (messageContent.resolveTimeout) {
+            console.log('incoming stream resolve timeout', messageContent.resolveTimeout);
+            setIsTimeoutInited(!messageContent.resolveTimeout);
+            setIsResolveTimeOutAllowed(!messageContent.resolveTimeout);
+            setIsFinishTimeoutAllowed(!messageContent.resolveTimeout);
+            setIsTimeoutRequested(!messageContent.resolveTimeout);
+            return;
+          }
           setNewMessage({ content: messageContent, sender: msg.senderAddress! });
           const signedMove = JSON.parse(msg.content) as ISignedGameMove;
           console.log('signedMove from stream', signedMove);
@@ -263,8 +389,10 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
 
           _isValidSignedMove(getArbiter(), signedMove).then((isValid) => {
             const nextGameState = gameState.opponentMove(signedMove.gameMove.move, isValid);
+            setLastOpponentMove(signedMove);
             console.log('nextGameState', nextGameState);
             setGameState(nextGameState);
+            setIsInvalidMove(!isValid);
           });
         }
       }
@@ -378,7 +506,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   if (!!gameType && gameType === 'tic-tac-toe') {
     return (
       <div className={styles.container}>
-        <ControlPanel
+        {/* <ControlPanel
           arbiterContractData={{
             abi: arbiterContract.abi,
             address: arbiterContract.address,
@@ -398,8 +526,21 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
           isInDispute={isInDispute}
           onDispute={runDisputeHandler}
           gameId={gameId}
+        /> */}
+        <LeftPanel
+          players={players}
+          isTimeoutAllowed={!!lastOpponentMove && !!lastMove && !isTimeoutInited}
+          // isTimeoutAllowed={!isTimeoutInited}
+          initTimeout={initTimeoutHandler}
+          isResolveTimeoutAllowed={!!lastMove && isResolveTimeOutAllowed}
+          // isResolveTimeoutAllowed={isResolveTimeOutAllowed}
+          resolveTimeout={resolveTimeoutHandler}
+          isFinishTimeOutAllowed={isFinishTimeoutAllowed}
+          finishTimeout={finishTimeoutHandler}
+          isTimeoutRequested={isTimeoutRequested}
+          // isTimeoutRequested={true}
+          connectPlayer={connectPlayerHandler}
         />
-        <LeftPanel players={players} />
         <GameField
           gameId={gameId}
           rivalPlayerAddress={rivalPlayerAddress}

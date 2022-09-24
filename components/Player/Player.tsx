@@ -13,7 +13,7 @@ export const Player: React.FC<PlayerPropsI> = ({
   return (
     <div className={styles.container}>
       <div className={styles.avatar}>
-        <Image src={avatarUrl} alt='avatarß' width="33px" height="33px"></Image>
+        {avatarUrl && <Image src={avatarUrl} alt="avatar" width="33px" height="33px"></Image>}
       </div>
       {address ? (
         <div className={styles.playerData}>

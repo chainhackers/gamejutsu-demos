@@ -10,6 +10,18 @@
   letter-spacing: normal;
   cursor: pointer;
 
+  &.md {
+    padding: 16px 64px;
+    font-size: 16px;
+  }
+
+  &.sm {
+    padding: 8px 48px;
+    font-size: 14px;
+    width: 100%;
+    margin-bottom: 5px;
+  }
+
   &.disabled {
     cursor: not-allowed;
   }
@@ -42,6 +54,23 @@
 
     &.borderless {
       border: solid 1px var(--black);
+    }
+  }
+  &.red {
+    background-color: red;
+    color: var(--white);
+    border: solid 1px var(--white);
+    &.disabled {
+      background-color: var(--gray-darker);
+      color: var(--gray-light);
+      border: solid 1px var(--gray-darker);
+    }
+
+    &.borderless {
+      border: solid 1px red;
+      &.disabled {
+        border: solid 1px var(--gray-darker);
+      }
     }
   }
 }
