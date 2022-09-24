@@ -315,7 +315,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
 
   useEffect(() => {
     if (!!rivalPlayerAddress) {
-      // setConversationHandler(rivalPlayerAddress);
+      setConversationHandler(rivalPlayerAddress);
     }
   }, [rivalPlayerAddress]);
 
