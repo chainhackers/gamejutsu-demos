@@ -32,7 +32,14 @@ import {
 } from '../../gameApi';
 // import { ISignedGameMove } from '../../types/arbiter';
 import { PlayerI } from 'types';
-import { GameField, JoinGame, LeftPanel, SelectGame, SelectPrize } from 'components';
+import {
+  GameField,
+  JoinGame,
+  LeftPanel,
+  RightPanel,
+  SelectGame,
+  SelectPrize,
+} from 'components';
 import { useRouter } from 'next/router';
 import { useAccount } from 'wagmi';
 import gameApi from 'gameApi';
@@ -104,8 +111,8 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   const [isDisputAvailable, setIsDisputeAvailavle] = useState<boolean>(false);
   const [conversationStatus, setConversationStatus] = useState<string | null>('not connected');
   const [rivalPlayerAddress, setRivalPlayerAddress] = useState<string | null>(
-    null,
-    // '0x3Be65C389F095aaa50D0b0F3801f64Aa0258940b',
+    // null,
+    '0xDb0b11d1281da49e950f89bD0F6B47D464d25F91',
   ); //TODO
   const [winner, setWinner] = useState<string | null>(null);
   const [gameId, setGameId] = useState<string | null>(null);
@@ -703,8 +710,9 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
             sendSignedMove={sendSignedMoveHandler}
           />
         </GameField>
-
-        {/* <XMTPChatLog logData={log} isLoading={isLogLoading} /> */}
+        <RightPanel>
+          <XMTPChatLog logData={log} isLoading={isLogLoading} />
+        </RightPanel>
       </div>
     );
   }
