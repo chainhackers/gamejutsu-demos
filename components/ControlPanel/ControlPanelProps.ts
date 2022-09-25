@@ -1,5 +1,6 @@
 import { IContractData } from 'types';
 import React from "react";
+import { ethers } from 'ethers';
 export interface ControlPanelPropsI {
   children?: React.ReactNode;
   onProposeGame: (gameId: string | null) => void;
@@ -8,8 +9,7 @@ export interface ControlPanelPropsI {
   onDisputeMove?: () => void;
   onGetPlayers?: () => void;
   onTransition?: () => void;
-  arbiterContractData: IContractData;
-  gameRulesContractData: IContractData;
+  gameType?: string;
   playersTypes: { [id: number]: string };
   onConnectPlayer: (rivalPlayerAddress: string) => Promise<void>;
   onSetPlayerIngameId: any;

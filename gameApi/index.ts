@@ -9,7 +9,7 @@ import {IGameMove, ISignedGameMove} from "../types/arbiter";
 import { TGameStateContractParams } from 'components/Games/types';
 
 export const getArbiter = () => fromContractData(arbiterContract);
-export const getRulesContract = (gameType: 'tic-tac-toe' | 'checkers') => {
+export const getRulesContract = (gameType: 'tic-tac-toe' | 'checkers'| string | undefined):ethers.Contract => {
   if (gameType == 'checkers') {
     return fromContractData(checkersContract);
   }

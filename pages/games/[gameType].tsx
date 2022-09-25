@@ -21,6 +21,7 @@ import { signMove, signMoveWithAddress } from 'helpers/session_signatures';
 import { ContractMethodNoResultError } from 'wagmi';
 import { Checkers } from 'components/Games/Checkers';
 import { CheckersState } from 'components/Games/Checkers/types';
+import { ethers } from 'ethers';
 
 interface IGamePageProps {
     gameType?: string;
@@ -67,7 +68,7 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
     {    
         [gameState, setGameState] = useState<CheckersState>(initialCheckersState);
     } 
-
+    
     const [playerIngameId, setPlayerIngameId] = useState<0 | 1>(0); //TODO use in game state creation
     const [conversation, setConversation] = useState<Conversation | null>(null);
     const [isInDispute, setIsInDispute] = useState<boolean>(false);
@@ -322,14 +323,7 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
         return (
             <div className={styles.container}>
                 <ControlPanel
-                    arbiterContractData={{
-                        abi: arbiterContract.abi,
-                        address: arbiterContract.address,
-                    }}
-                    gameRulesContractData={{
-                        abi: rulesContract.abi,
-                        address: rulesContract.address,
-                    }}
+                    gameType={gameType}
                     playersTypes={{0: 'X', 1: 'O'}}
                     onConnectPlayer={setConversationHandler}
                     onSetPlayerIngameId={setPlayerIngameId}

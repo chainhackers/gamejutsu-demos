@@ -20,7 +20,7 @@ export const Checkers: React.FC<ICheckersProps> = ({
         const move: CHECKERSMove = CHECKERSMove.fromMove(i, gameState.playerType)
 
         getSignerAddress().then((address) => {
-            return transition(getRulesContract('tic-tac-toe'), 
+            return transition(getRulesContract('checkers'), 
                 gameState.toGameStateContractParams(),
                 gameState.playerId,
                 move.encodedMove
