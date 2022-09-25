@@ -5,4 +5,5 @@ export interface IBoardProps {
     onClick: (i: number) => void;
     isFinished: boolean;
     disputableMoves: Set<number>;
+    selectedCell: number | null;
 }

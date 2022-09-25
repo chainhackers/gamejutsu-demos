@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {Board} from 'components/Games/Checkers';
 import {ICheckersProps} from './ICheckersProps';
 
@@ -12,11 +12,16 @@ export const Checkers: React.FC<ICheckersProps> = ({
                                                            getSignerAddress,
                                                            sendSignedMove
                                                        }) => {
+
+    const [selectedCell, setSelectedCell] = useState<number| null>(null); 
+
     const boardState = gameState?.myGameState || CheckersBoard.empty()
     console.log('boardState', boardState);
 
     const clickHandler = async (i: number) => {
         if (!gameState) return;
+
+        setSelectedCell(i);
 
         //TODO here
         const move: CHECKERSMove = CHECKERSMove.fromMove([i+2, i, false, false], gameState.playerType)
@@ -43,6 +48,7 @@ export const Checkers: React.FC<ICheckersProps> = ({
                     squares={boardState.cells}
                     onClick={clickHandler}
                     isFinished={!gameState || gameState?.isFinished}
+                    selectedCell = {selectedCell}
                     disputableMoves={boardState.disputableMoves}
                 />
             </div>

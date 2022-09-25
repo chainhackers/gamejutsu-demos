@@ -18,6 +18,11 @@
     color: red;
 
   }
+
+  &.selected {
+    background-color: yellow;
+
+  }
 }
 .square:focus {
   outline: none;

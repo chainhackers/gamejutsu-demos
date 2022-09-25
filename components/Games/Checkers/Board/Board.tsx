@@ -2,35 +2,44 @@ import cn from 'classnames';
 import {Square} from 'components/Games/Checkers';
 import {IBoardProps} from './BoardProps';
 import styles from './Board.module.scss';
-import React from "react";
+import React, { useState } from "react";
 
 export const Board: React.FC<IBoardProps> = ({
                                                  squares,
                                                  onClick,
                                                  isFinished,
                                                  disputableMoves,
+                                                 selectedCell
                                              }) => {
+                                               
     const renderSquare = (row: number, i: number) => {
         if (row % 2 == 1) {
             return <><Square
                 value={null}
                 onClick={() => {}}
-                disputable={false}/>
+                disputable={false}
+                selected={false}
+                />
                 <Square
                 value={squares[i]}
-                onClick={() => onClick(i)}
-                disputable={disputableMoves.has(i)}/>
+                onClick={() => {onClick(i)}}
+                disputable={disputableMoves.has(i)}
+                selected={selectedCell == i}
+                />
             </>
         } 
         return <>
                 <Square
                 value={squares[i]}
-                onClick={() => onClick(i)}
-                disputable={disputableMoves.has(i)}/>
+                onClick={() => {onClick(i)}}
+                disputable={disputableMoves.has(i)}
+                selected={selectedCell == i}
+                />
                 <Square
                 value={null}
                 onClick={() => {}}
-                disputable={false}/>
+                disputable={false}
+                selected={false}/>
             </> 
     };
 
