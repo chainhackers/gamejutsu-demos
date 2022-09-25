@@ -19,6 +19,9 @@ import {_isValidSignedMove, checkIsValidMove, getArbiter, getSigner, getRulesCon
 import {ISignedGameMove, SignedGameMove} from "../../types/arbiter";
 import { signMove, signMoveWithAddress } from 'helpers/session_signatures';
 import { ContractMethodNoResultError } from 'wagmi';
+import { Checkers } from 'components/Games/Checkers';
+import { CHECKERSMove, CheckersState } from 'components/Games/Checkers/types';
+import { ethers } from 'ethers';
 
 interface IGamePageProps {
     gameType?: string;
@@ -33,7 +36,7 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
     const [isLogLoading, setIsLogLoading] = useState<boolean>(true);
 
 
-    const initialState = new TicTacToeState(1, 'X')
+    const initialTicTacToeState= new TicTacToeState(1, 'X')
         .makeMove(TTTMove.fromMove(0, 'X'))
         .makeMove(TTTMove.fromMove(1, 'X'))
         .makeMove(TTTMove.fromMove(2, 'X'))
@@ -43,7 +46,27 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
         .makeMove(TTTMove.fromMove(6, 'X'))
         .makeMove(TTTMove.fromMove(7, 'X'))
         .makeMove(TTTMove.fromMove(8, 'X'))
-    const [gameState, setGameState] = useState<TicTacToeState>(initialState);
+
+    let initialCheckersState = new CheckersState(1, 'X');
+    for (let i = 0; i < 12; i++) {
+        initialCheckersState = initialCheckersState.makeMove(CHECKERSMove.fromMove([i, i, false, false], 'X'))
+    }
+
+    for (let i = 0; i < 12; i++) {
+        initialCheckersState = initialCheckersState.makeMove(CHECKERSMove.fromMove([20+i, 20 + i, false, false], 'O'))
+    }
+        
+
+      
+    let gameState: TicTacToeState | CheckersState;
+    let setGameState: ((arg0: TicTacToeState) => void) | ((arg0: CheckersState) => void);
+    if (gameType == 'tic-tac-toe') {    
+        [gameState, setGameState] = useState<TicTacToeState | CheckersState>(initialTicTacToeState);
+    } else 
+    //if (gameType == 'checkers') //to avoid compilation error
+    {    
+        [gameState, setGameState] = useState<TicTacToeState | CheckersState>(initialCheckersState);
+    } 
 
     const [playerIngameId, setPlayerIngameId] = useState<0 | 1>(0); //TODO use in game state creation
     const [conversation, setConversation] = useState<Conversation | null>(null);
@@ -68,12 +91,17 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
         if (!signer) return;
         console.log('before init client');
         initClient(signer);
-        setGameState(new TicTacToeState(Number(gameId!), playerIngameId === 0 ? 'X' : 'O'));
+        //TODO build error if private encode
+        if (gameType='TicTacToeState') {
+            setGameState(new TicTacToeState(Number(gameId!), playerIngameId === 0 ? 'X' : 'O'));
+        } else {
+            setGameState(new CheckersState(Number(gameId!), playerIngameId === 0 ? 'X' : 'O'));
+        }
     };
 
 
-    const sendSignedMoveHandler = async (msg: ISignedGameMove) => {
-        const messageText = JSON.stringify(msg);
+    const sendSignedMoveHandler = async (signedGameMove: ISignedGameMove) => {
+        const messageText = JSON.stringify(signedGameMove);
         console.log({messageText});
 
         if (!conversation) {
@@ -84,15 +112,14 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
         let address = await getSigner().getAddress();
         
 
-        _isValidSignedMove(getArbiter(), msg).then((isValid) => {
+        _isValidSignedMove(getArbiter(), signedGameMove).then((isValid) => {
 
-            const nextGameState = gameState.encodedMove(msg.gameMove.move, isValid);
+            const nextGameState = gameState.encodedSignedMove(signedGameMove, isValid);
             
             conversation.send(messageText).then(() => {
                 console.log('message sent, setting new state:', nextGameState);
-                setLastMove(msg);
+                setLastMove(signedGameMove);
                 setGameState(nextGameState);
-                console.log('new state is set after sending the move', gameState);
             });
 
         })
@@ -222,7 +249,7 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
                     console.log('gameState before move', gameState);
 
                     _isValidSignedMove(getArbiter(), signedMove).then(isValid => {
-                        const nextGameState = gameState.opponentMove(signedMove.gameMove.move, isValid);
+                        const nextGameState = gameState.opponentSignedMove(signedMove, isValid);
                         setLastOpponentMove(signedMove);
                         console.log('nextGameState', nextGameState);
                         setGameState(nextGameState);
@@ -271,19 +298,31 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
             });
     }, [conversation, gameState]);
 
+    let gameComponent = null;
+    if (gameType === 'tic-tac-toe') {
+        gameComponent = <ETTicTacToe
+        gameState={gameState}
+        getSignerAddress={() => {
+            return getSigner().getAddress()
+        }}
+        sendSignedMove={sendSignedMoveHandler}
+    />
+    }
+    if (gameType === 'checkers') {
+        gameComponent = <Checkers
+        gameState={gameState}
+        getSignerAddress={() => {
+            return getSigner().getAddress()
+        }}
+        sendSignedMove={sendSignedMoveHandler}
+        />
+    }
 
-    if (!!gameType && gameType === 'tic-tac-toe') {
+    if (gameComponent) {
         return (
             <div className={styles.container}>
                 <ControlPanel
-                    arbiterContractData={{
-                        abi: arbiterContract.abi,
-                        address: arbiterContract.address,
-                    }}
-                    gameRulesContractData={{
-                        abi: rulesContract.abi,
-                        address: rulesContract.address,
-                    }}
+                    gameType={gameType}
                     playersTypes={{0: 'X', 1: 'O'}}
                     onConnectPlayer={setConversationHandler}
                     onSetPlayerIngameId={setPlayerIngameId}
@@ -299,13 +338,7 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
                     onResolveTimeout={runResolveTimeoutHandler}
                     onFinalizeTimeout={runFinalizeTimeoutHandler}
                 />
-                <ETTicTacToe
-                    gameState={gameState}
-                    getSignerAddress={() => {
-                        return getSigner().getAddress()
-                    }}
-                    sendSignedMove={sendSignedMoveHandler}
-                />
+                {gameComponent}
                 <XMTPChatLog logData={log} isLoading={isLogLoading}/>
             </div>
         );
@@ -323,7 +356,7 @@ export const getStaticProps: GetStaticProps<IGamePageProps, IParams> = (context)
 };
 
 export const getStaticPaths: GetStaticPaths<IParams> = () => {
-    const gamesType = ['tic-tac-toe', 'other'];
+    const gamesType = ['tic-tac-toe', 'checkers', 'other'];
     const paths = gamesType.map((gameType) => ({params: {gameType}}));
     return {
         paths,

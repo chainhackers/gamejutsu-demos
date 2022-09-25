@@ -1,35 +1,49 @@
-import React from 'react';
-import {Board} from 'components/Games/ET-Tic-Tac-Toe';
-import {ITicTacToeProps} from './ITicTacToeProps';
+import React, { useState } from 'react';
+import {Board} from 'components/Games/Checkers';
+import {ICheckersProps} from './ICheckersProps';
 
-import styles from './ET-Tic-Tac-Toe.module.scss';
-import {decodeEncodedBoardState, getWinnerFromEncodedState, TicTacToeBoard, TPlayer, TTTMove} from './types';
+import styles from './Checkers.module.scss';
+import {decodeEncodedBoardState, getWinnerFromEncodedState, CheckersBoard, TPlayer, CHECKERSMove} from './types';
 import { getRulesContract, transition } from 'gameApi';
 import { ContractMethodNoResultError } from 'wagmi';
 
-export const ETTicTacToe: React.FC<ITicTacToeProps> = ({
+export const Checkers: React.FC<ICheckersProps> = ({
                                                            gameState,
                                                            getSignerAddress,
                                                            sendSignedMove
                                                        }) => {
-    const boardState = gameState?.myGameState || TicTacToeBoard.empty()
 
+    const [selectedCell, setSelectedCell] = useState<number| null>(null); 
+
+    const boardState = gameState?.myGameState || CheckersBoard.empty()
+    console.log('boardState', boardState);
+
+
+    //TODO here
     const clickHandler = async (i: number) => {
         if (!gameState) return;
 
-        const move: TTTMove = TTTMove.fromMove(i, gameState.playerType)
+        if (!selectedCell) {
+            setSelectedCell(i);
+            return;
+        }
+
+        setSelectedCell(null);
+
+        //TODO here
+        const move: CHECKERSMove = CHECKERSMove.fromMove([selectedCell, i, false, false], gameState.playerType)
 
         getSignerAddress().then((address) => {
-            return transition(getRulesContract('tic-tac-toe'), 
+            return transition(getRulesContract('checkers'),
                 gameState.toGameStateContractParams(),
                 gameState.playerId,
                 move.encodedMove
             ).then((transitionResult) => {
                 let winner: TPlayer | null = getWinnerFromEncodedState(transitionResult.state);
                 const signedMove = gameState.signMove(move, address, winner)
-                console.log({signedMove, move});
+                console.log({ signedMove, move });
                 return signedMove
-            });            
+            });
         }).then(sendSignedMove)
             .catch(console.error)
     }
@@ -41,6 +55,7 @@ export const ETTicTacToe: React.FC<ITicTacToeProps> = ({
                     squares={boardState.cells}
                     onClick={clickHandler}
                     isFinished={!gameState || gameState?.isFinished}
+                    selectedCell = {selectedCell}
                     disputableMoves={boardState.disputableMoves}
                 />
             </div>

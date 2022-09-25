@@ -76,6 +76,19 @@ export function decodeEncodedBoardState(encodedBoardState:string){
     return defaultAbiCoder.decode(STATE_TYPES, encodedBoardState);
 }
 
+export function getWinnerFromEncodedState(state: string):TPlayer|null {
+    const [_, xWins, oWins] = decodeEncodedBoardState(state);
+    let winner: TPlayer | null = null;
+    if (xWins) {
+        winner = 'X';
+    }
+    else if (oWins) {
+        winner = 'O';
+    }
+    console.log('winner', winner);
+    return winner;
+}
+
 export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
     movesHistory: TGameHistory = [];
     decodedMovesHistory: TTTMove[] = [];
@@ -97,6 +110,19 @@ export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
         this.myGameState = board || TicTacToeBoard.empty();
         this.playerType = playerType;
         this.playerId = playerType === 'X' ? 0 : 1;
+    }
+
+
+    encodedSignedMove(signedMove:ISignedGameMove, valid: boolean = true): TicTacToeState {
+        const winner = getWinnerFromEncodedState(signedMove.gameMove.newState);
+        const move = TTTMove.fromEncoded(signedMove.gameMove.move, this.playerId == 0 ? 'X' : 'O');
+        return this.makeMove(move, valid, winner);
+    }
+
+    opponentSignedMove(signedMove:ISignedGameMove, valid: boolean = true): TicTacToeState {
+        const winner = getWinnerFromEncodedState(signedMove.gameMove.newState);
+        const move = TTTMove.fromEncoded(signedMove.gameMove.move, this.playerId == 0 ? 'O' : 'X'); //TODO reversed, remove hack
+        return this.makeMove(move, valid)
     }
 
     makeMove(move: TTTMove, valid: boolean = true, winner: TPlayer | null = null): TicTacToeState {
@@ -161,7 +187,7 @@ export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
         return { gameId: this.gameId, nonce: this.nonce, state: this.encode()}
     }
 
-    private encode(): string {
+    encode(): string {
         const xWins = this.winner == this.playerId && this.playerType === 'X' ;
         const oWins = this.winner == this.playerId && this.playerType === 'O';
         const cellsToEncode = this.myGameState.cells.map((cell) => {

@@ -36,7 +36,8 @@ export interface IGameState<IMyGameState, IMyGameMove> {
     winner: number | null;
     nonce: number
 
-    makeMove(move: IMyGameMove): IGameState<IMyGameState, IMyGameMove> //TODO make signed move
+    makeMove(move: IMyGameMove): IGameState<IMyGameState, IMyGameMove>
+    //todo makeSignedMove(signedMove: ISignedGameMove): IGameState<IMyGameState, IMyGameMove>
     composeMove(move: IMyGameMove, playerAddress: string): IGameMove
     toGameStateContractParams() : TGameStateContractParams
 }

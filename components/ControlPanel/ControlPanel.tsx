@@ -3,7 +3,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import styles from './ControlPanel.module.scss';
 import { useAccount, useConnect } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
-import gameApi from 'gameApi';
+import gameApi, { getArbiter, getRulesContract } from 'gameApi';
 import { TBoardState } from 'types';
 import React, { useEffect, useRef, useState } from 'react';
 import cn from 'classnames';
@@ -41,8 +41,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
   onDisputeMove,
   onGetPlayers,
   onTransition,
-  arbiterContractData,
-  gameRulesContractData,
+  gameType,
   playersTypes,
   onConnectPlayer,
   onSetPlayerIngameId,
@@ -102,8 +101,8 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
 
     try {
       let { gameId } = await gameApi.proposeGame(
-        gameApi.fromContractData(arbiterContractData),
-        gameRulesContractData.address,
+        getArbiter(),
+        getRulesContract(gameType).address,
       );
       if (!!gameId) {
         gameId = gameId.toString();
@@ -137,7 +136,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
       setError(null);
 
       const { players } = await gameApi.acceptGame(
-        gameApi.fromContractData(arbiterContractData),
+        getArbiter(),
         gameId,
       );
 
@@ -168,7 +167,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
       setError(null);
 
       const { winner, loser } = await gameApi.resign(
-        gameApi.fromContractData(arbiterContractData),
+        getArbiter(),
         gameId,
       );
 
@@ -189,31 +188,12 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
 
   const getPlayersHandler = async (gamdId: string) => {
     const players = (await gameApi.getPlayers(
-      gameApi.fromContractData(arbiterContractData),
+      getArbiter(),
       gamdId,
     )) as string[];
 
     if (!!onGetPlayers) onGetPlayers();
   };
-
-  // const transitionHandler = async (
-  //   gameId: number,
-  //   nonce: number,
-  //   boardState: TBoardState,
-  //   playerIngameId: number,
-  //   move: number,
-  // ) => {
-  //   const transitionResult = await gameApi.transition(
-  //     gameApi.fromContractData(gameRulesContractData),
-  //     gameId,
-  //     nonce,
-  //     boardState,
-  //     playerIngameId,
-  //     move,
-  //   );
-  //   console.log('transitionResult', transitionResult);
-  //   if (!!onTransition) onTransition();
-  // };
 
   const connectPeerPlayerHandler = async () => {
     console.log('connect peer player handler');
@@ -238,7 +218,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     }
     console.log('in poller');
     let players: [string, string] = await gameApi.getPlayers(
-      gameApi.fromContractData(arbiterContractData),
+      getArbiter(),
       gameId,
     );
     let rivalPlayer = players[parseInt(ACCEPTER_INGAME_ID)];
