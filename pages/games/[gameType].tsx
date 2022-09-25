@@ -111,8 +111,8 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   const [isDisputAvailable, setIsDisputeAvailavle] = useState<boolean>(false);
   const [conversationStatus, setConversationStatus] = useState<string | null>('not connected');
   const [rivalPlayerAddress, setRivalPlayerAddress] = useState<string | null>(
-    // null,
-    '0xDb0b11d1281da49e950f89bD0F6B47D464d25F91',
+    null,
+    // '0xDb0b11d1281da49e950f89bD0F6B47D464d25F91',
   ); //TODO
   const [winner, setWinner] = useState<string | null>(null);
   const [gameId, setGameId] = useState<string | null>(null);
