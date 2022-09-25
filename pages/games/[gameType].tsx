@@ -12,7 +12,11 @@ import rulesContract from 'contracts/TicTacToeRules.json';
 
 import styles from 'pages/games/gameType.module.scss';
 import { ETTicTacToe } from '../../components/Games/ET-Tic-Tac-Toe';
-import { TicTacToeState, TTTMove } from '../../components/Games/ET-Tic-Tac-Toe/types';
+import {
+  decodeEncodedBoardState,
+  TicTacToeState,
+  TTTMove,
+} from '../../components/Games/ET-Tic-Tac-Toe/types';
 import { IChatLog } from '../../types';
 import {
   _isValidSignedMove,
@@ -24,6 +28,7 @@ import {
   initTimeout,
   resolveTimeout,
   finalizeTimeout,
+  finishGame,
 } from '../../gameApi';
 // import { ISignedGameMove } from '../../types/arbiter';
 import { PlayerI } from 'types';
@@ -145,12 +150,26 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     }
 
     _isValidSignedMove(getArbiter(), msg).then((isValid) => {
-      const nextGameState = gameState.encodedMove(msg.gameMove.move, isValid);
+      const nextGameState = gameState.encodedSignedMove(msg, isValid);
+      console.log('nextGameState, check Winner', nextGameState);
       conversation.send(messageText).then(() => {
-        console.log('message sent, setting new state:', nextGameState);
+        console.log(
+          'message sent, setting new state + winner:',
+          nextGameState,
+          nextGameState.winner, //0
+        );
         setLastMove(msg);
         setGameState(nextGameState);
         console.log('new state is set after sending the move', gameState);
+
+        if (nextGameState.winner !== null) {
+          if (playerIngameId === nextGameState.winner) {
+            console.log('winner: ', account.address);
+            const playerWhoWon = players.find((player) => player.address === account.address)!;
+
+            setWinner(playerWhoWon.playerName);
+          }
+        }
       });
     });
   };
@@ -337,6 +356,32 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     console.log('conntect timeout handle ');
   };
 
+  const runFinishGameHandler = async () => {
+    if (!lastOpponentMove) {
+      console.log('no lastOpponentMove');
+      return;
+    }
+    if (!lastMove) {
+      console.log('no lastMove');
+      return;
+    }
+    let address = await getSigner().getAddress();
+    const signature = await signMoveWithAddress(lastOpponentMove.gameMove, address);
+    const signatures = [...lastOpponentMove.signatures, signature];
+    let lastOpponentMoveSignedByAll = new SignedGameMove(
+      lastOpponentMove.gameMove,
+      signatures,
+    );
+
+    console.log('lastOpponentMoveSignedByAll', lastOpponentMoveSignedByAll);
+
+    const finishGameResult = await finishGame(getArbiter(), [
+      lastOpponentMoveSignedByAll,
+      lastMove,
+    ]);
+    console.log('finishGameResult', finishGameResult);
+  };
+
   useEffect(() => {
     if (!!rivalPlayerAddress) {
       // setConversationHandler(rivalPlayerAddress);
@@ -413,11 +458,48 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
             console.log('gameState before move', gameState);
 
             _isValidSignedMove(getArbiter(), signedMove).then((isValid) => {
-              const nextGameState = gameState.opponentMove(signedMove.gameMove.move, isValid);
+              const nextGameState = gameState.opponentSignedMove(signedMove, isValid);
+              console.log('signedMove', decodeEncodedBoardState(signedMove.gameMove.newState)); //check winner
               setLastOpponentMove(signedMove);
-              console.log('nextGameState', nextGameState);
+
+              console.log('nextGameState + winner', nextGameState, nextGameState.winner);
               setGameState(nextGameState);
               setIsInvalidMove(!isValid);
+              const decodedSignedMove = decodeEncodedBoardState(signedMove.gameMove.newState);
+              if (decodedSignedMove[1]) {
+                console.log('Winneer Propposer');
+                if (playerIngameId === PROPOSER_INGAME_ID) {
+                  console.log('current player is proposer and wis');
+                  const winPlayer = players.find(
+                    (player) => player.address === account.address,
+                  )!;
+                  setWinner(winPlayer.playerName);
+                } else {
+                  console.log('current player is accepter and wis');
+                  const winPlayer = players.find(
+                    (player) => player.address === rivalPlayerAddress,
+                  )!;
+                  setWinner(winPlayer.playerName);
+                }
+                runFinishGameHandler();
+              }
+              if (decodedSignedMove[2]) {
+                console.log('winner acceptor');
+                if (playerIngameId === PROPOSER_INGAME_ID) {
+                  console.log('current player 2 is proposer and wis');
+                  const winPlayer = players.find(
+                    (player) => player.address === rivalPlayerAddress,
+                  )!;
+                  setWinner(winPlayer.playerName);
+                } else {
+                  console.log('current player 2 is accepter and wis');
+                  const winPlayer = players.find(
+                    (player) => player.address === account.address,
+                  )!;
+                  setWinner(winPlayer.playerName);
+                }
+                runFinishGameHandler();
+              }
             });
           }
         }
@@ -577,7 +659,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
           // isTimeoutRequested={true}
           onRunDisput={runDisputeHandler}
           isDisputAvailable={isDisputAvailable}
-          connectPlayer={connectPlayerHandler}
+          // connectPlayer={connectPlayerHandler}
         />
         <GameField
           gameId={gameId}

@@ -9,7 +9,7 @@ export interface LeftPanelPropsI {
   finishTimeout: () => Promise<void>;
   isFinishTimeOutAllowed: boolean;
   isTimeoutRequested: boolean;
-  connectPlayer: () => Promise<void>;
+  // connectPlayer: () => Promise<void>;
   isDisputAvailable?: boolean;
   onRunDisput: () => Promise<void>;
 }

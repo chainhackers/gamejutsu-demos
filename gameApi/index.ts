@@ -4,12 +4,19 @@ import { ethers } from 'ethers';
 import { getSessionWallet, signMove } from 'helpers/session_signatures';
 import arbiterContract from 'contracts/Arbiter.json';
 import tictacRulesContract from 'contracts/TicTacToeRules.json';
+import checkersContract from 'contracts/CheckersRules.json';
 import { IGameMove, ISignedGameMove } from '../types/arbiter';
 import { TGameStateContractParams } from 'components/Games/types';
 
 export const getArbiter = () => fromContractData(arbiterContract);
-export const getRulesContract = (gameType: string | undefined) => {
-  return fromContractData(tictacRulesContract);
+export const getRulesContract = (gameType: 'tic-tac-toe' | 'checkers') => {
+  if (gameType == 'checkers') {
+    return fromContractData(checkersContract);
+  }
+  if (gameType == 'tic-tac-toe') {
+    return fromContractData(tictacRulesContract);
+  }
+  throw 'Unknown gameType: ' + gameType;
 };
 
 export function getSigner(): ethers.Signer {
@@ -34,6 +41,31 @@ export function newContract(
   const contract = new ethers.Contract(addressOrName, contractInterface, signerOrProvider);
   return contract;
 }
+
+// mark the winning move as such - in case of tic-tac-toe, set the respective flag to True
+
+// struct Board {
+//     uint8[9] cells;
+//     bool crossesWin;
+//     bool naughtsWin;
+// }
+//function finishGame(SignedGameMove[2] calldata signedMoves) external returns (address winner);
+//emit GameFinished(gameId, winner, cheater, false);
+export const finishGame = async (
+  contract: ethers.Contract,
+  signedGameMoves: [ISignedGameMove, ISignedGameMove],
+) => {
+  console.log('signedGameMoves', signedGameMoves);
+  const gasEstimated = await contract.estimateGas.finishGame(signedGameMoves);
+  const tx = await contract.finishGame(signedGameMoves, { gasLimit: gasEstimated.mul(2) });
+  console.log('tx', tx);
+  const rc = await tx.wait();
+  console.log('rc', rc);
+  const gameFinishedEvent = rc.events.find(
+    (event: { event: string }) => event.event === 'GameFinished',
+  );
+  return gameFinishedEvent.args;
+};
 
 //   @notice both moves must be in sequence
 //   @notice first move must be signed by both players
@@ -136,6 +168,19 @@ export const checkIsValidMove = async (
   return response;
 };
 
+//function transition(GameState calldata state, uint8 playerId, bytes calldata move) external pure returns (GameState memory);
+export const transition = async (
+  contract: ethers.Contract,
+  gameState: TGameStateContractParams,
+  playerIngameId: number,
+  encodedMove: string,
+) => {
+  console.log('transition', { gameState, playerIngameId, encodedMove });
+  const response = await contract.transition(gameState, playerIngameId, encodedMove);
+  console.log('response', response);
+  return response;
+};
+
 export const isValidGameMove = async (contract: ethers.Contract, gameMove: IGameMove) => {
   console.log('isValidGameMove', { contract, gameMove });
   const response = contract.isValidGameMove(gameMove);
@@ -229,24 +274,6 @@ export const resign = async (
 
 export const getPlayers = async (contract: ethers.Contract, gamdId: string) => {
   const response = contract.getPlayers(gamdId);
-  return response;
-};
-
-export const transition = async (
-  contract: ethers.Contract,
-  gameId: number,
-  nonce: number,
-  boardState: TBoardState,
-  playerIngameId: number,
-  move: number,
-) => {
-  const encodedBoardState = defaultAbiCoder.encode(['uint8[9]', 'bool', 'bool'], boardState);
-
-  const gameState = [gameId, nonce, encodedBoardState];
-
-  const encodedMove = defaultAbiCoder.encode(['uint8'], [move]);
-
-  const response = await contract.transition(gameState, playerIngameId, encodedMove);
   return response;
 };
 

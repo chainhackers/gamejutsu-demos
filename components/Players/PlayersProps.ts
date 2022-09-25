@@ -10,5 +10,5 @@ export interface PlayersPropsI {
   isFinishTimeOutAllowed: boolean;
   finishTimeout: () => Promise<void>;
   isTimeoutRequested: boolean;
-  connectPlayer: () => Promise<void>;
+  // connectPlayer: () => Promise<void>;
 }

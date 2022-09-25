@@ -3,8 +3,15 @@ import { Board } from 'components/Games/ET-Tic-Tac-Toe';
 import { ITicTacToeProps } from './ITicTacToeProps';
 
 import styles from './ET-Tic-Tac-Toe.module.scss';
-import { TicTacToeBoard, TTTMove } from './types';
-import { GameField, NewGameBoard } from 'components';
+import {
+  decodeEncodedBoardState,
+  getWinnerFromEncodedState,
+  TicTacToeBoard,
+  TPlayer,
+  TTTMove,
+} from './types';
+import { getRulesContract, transition } from 'gameApi';
+import { ContractMethodNoResultError } from 'wagmi';
 
 export const ETTicTacToe: React.FC<ITicTacToeProps> = ({
   gameState,
@@ -20,9 +27,17 @@ export const ETTicTacToe: React.FC<ITicTacToeProps> = ({
 
     getSignerAddress()
       .then((address) => {
-        const signedMove = gameState.signMove(move, address);
-        console.log({ signedMove, move });
-        return signedMove;
+        return transition(
+          getRulesContract('tic-tac-toe'),
+          gameState.toGameStateContractParams(),
+          gameState.playerId,
+          move.encodedMove,
+        ).then((transitionResult) => {
+          let winner: TPlayer | null = getWinnerFromEncodedState(transitionResult.state);
+          const signedMove = gameState.signMove(move, address, winner);
+          console.log({ signedMove, move });
+          return signedMove;
+        });
       })
       .then(sendSignedMove)
       .catch(console.error);
@@ -30,12 +45,14 @@ export const ETTicTacToe: React.FC<ITicTacToeProps> = ({
 
   return (
     <div className={styles.container}>
-      <Board
-        squares={boardState.cells}
-        onClick={clickHandler}
-        isFinished={!gameState || gameState?.isFinished}
-        disputableMoves={boardState.disputableMoves}
-      />
+      <div className={styles.boardPanel}>
+        <Board
+          squares={boardState.cells}
+          onClick={clickHandler}
+          isFinished={!gameState || gameState?.isFinished}
+          disputableMoves={boardState.disputableMoves}
+        />
+      </div>
     </div>
   );
 };
