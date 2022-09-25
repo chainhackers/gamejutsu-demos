@@ -47,13 +47,9 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
         .makeMove(TTTMove.fromMove(7, 'X'))
         .makeMove(TTTMove.fromMove(8, 'X'))
 
-    let initialCheckersState = new CheckersState(1, 'X');
-    for (let i = 0; i < 12; i++) {
-        initialCheckersState = initialCheckersState.makeMove(CHECKERSMove.fromMove([i, i, false, false], 'X'))
-    }
-
-    for (let i = 0; i < 12; i++) {
-        initialCheckersState = initialCheckersState.makeMove(CHECKERSMove.fromMove([20+i, 20 + i, false, false], 'O'))
+    const GetInitialState = (gameId:number) => {
+        let initialCheckersState = new CheckersState(gameId, 'X');
+        return initialCheckersState;
     }
         
 
@@ -65,7 +61,7 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
     } else 
     //if (gameType == 'checkers') //to avoid compilation error
     {    
-        [gameState, setGameState] = useState<TicTacToeState | CheckersState>(initialCheckersState);
+        [gameState, setGameState] = useState<TicTacToeState | CheckersState>(GetInitialState(1));
     } 
 
     const [playerIngameId, setPlayerIngameId] = useState<0 | 1>(0); //TODO use in game state creation
@@ -95,7 +91,7 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
         if (gameType == 'tic-tac-toe') {
             setGameState(new TicTacToeState(Number(gameId!), playerIngameId === 0 ? 'X' : 'O'));
         } else {
-            //dont clear
+            setGameState(GetInitialState(Number(gameId)));
         }
     };
 

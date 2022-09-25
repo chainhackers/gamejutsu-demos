@@ -82,10 +82,10 @@ export class CheckersBoard implements IMyGameState<CHECKERSMove> {
 
     private constructor(history: CHECKERSMove[] = [], disputableMoveNonces: Set<number> = new Set()) {
         this.cells = [
-            null, null, null, null, null, null, null, null,
-            null, null, null, null, null, null, null, null,
-            null, null, null, null, null, null, null, null,
-            null, null, null, null, null, null, null, null,
+            'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X',
+            'X', 'X', 'X', 'X', null, null, null, null,
+            null, null, null, null, 'O', 'O', 'O', 'O',
+            'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O',
         ];
 
         history.forEach((move) => {
@@ -106,7 +106,8 @@ export class CheckersBoard implements IMyGameState<CHECKERSMove> {
     }
 
     static empty(): CheckersBoard {
-        return Object.seal(new CheckersBoard());
+        let emtpyCheckersBoard = new CheckersBoard();
+        return Object.seal(emtpyCheckersBoard) 
     }
 }
 

@@ -31,6 +31,7 @@ export const Checkers: React.FC<ICheckersProps> = ({
         setSelectedCell(null);
 
         //TODO here
+        console.log('move', [selectedCell, i, false, false]);
         const move: CHECKERSMove = CHECKERSMove.fromMove([selectedCell, i, false, false], gameState.playerType)
 
         getSignerAddress().then((address) => {
