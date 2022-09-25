@@ -19,6 +19,8 @@ import {_isValidSignedMove, checkIsValidMove, getArbiter, getSigner, getRulesCon
 import {ISignedGameMove, SignedGameMove} from "../../types/arbiter";
 import { signMove, signMoveWithAddress } from 'helpers/session_signatures';
 import { ContractMethodNoResultError } from 'wagmi';
+import { Checkers } from 'components/Games/Checkers';
+import { CheckersState } from 'components/Games/Checkers/types';
 
 interface IGamePageProps {
     gameType?: string;
@@ -33,7 +35,7 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
     const [isLogLoading, setIsLogLoading] = useState<boolean>(true);
 
 
-    const initialState = new TicTacToeState(1, 'X')
+    const initialTicTacToeState= new TicTacToeState(1, 'X')
         .makeMove(TTTMove.fromMove(0, 'X'))
         .makeMove(TTTMove.fromMove(1, 'X'))
         .makeMove(TTTMove.fromMove(2, 'X'))
@@ -43,7 +45,28 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
         .makeMove(TTTMove.fromMove(6, 'X'))
         .makeMove(TTTMove.fromMove(7, 'X'))
         .makeMove(TTTMove.fromMove(8, 'X'))
-    const [gameState, setGameState] = useState<TicTacToeState>(initialState);
+
+    const initialCheckersState= new CheckersState(1, 'X')
+        .makeMove(TTTMove.fromMove(0, 'X'))
+        .makeMove(TTTMove.fromMove(1, 'X'))
+        .makeMove(TTTMove.fromMove(2, 'X'))
+        .makeMove(TTTMove.fromMove(3, 'X'))
+        .makeMove(TTTMove.fromMove(4, 'O'))
+        .makeMove(TTTMove.fromMove(5, 'X'))
+        .makeMove(TTTMove.fromMove(6, 'X'))
+        .makeMove(TTTMove.fromMove(7, 'X'))
+        .makeMove(TTTMove.fromMove(8, 'X'))    
+
+      
+    let gameState: TicTacToeState | CheckersState;
+    let setGameState: ((arg0: TicTacToeState) => void) | ((arg0: CheckersState) => void);
+    if (gameType == 'tic-tac-toe') {    
+        [gameState, setGameState] = useState<TicTacToeState>(initialTicTacToeState);
+    } else 
+    //if (gameType == 'checkers') //to avoid compilation error
+    {    
+        [gameState, setGameState] = useState<CheckersState>(initialCheckersState);
+    } 
 
     const [playerIngameId, setPlayerIngameId] = useState<0 | 1>(0); //TODO use in game state creation
     const [conversation, setConversation] = useState<Conversation | null>(null);
@@ -68,7 +91,12 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
         if (!signer) return;
         console.log('before init client');
         initClient(signer);
-        setGameState(new TicTacToeState(Number(gameId!), playerIngameId === 0 ? 'X' : 'O'));
+        //TODO build error if private encode
+        if (gameType='TicTacToeState') {
+            setGameState(new TicTacToeState(Number(gameId!), playerIngameId === 0 ? 'X' : 'O'));
+        } else {
+            setGameState(new CheckersState(Number(gameId!), playerIngameId === 0 ? 'X' : 'O'));
+        }
     };
 
 
@@ -270,8 +298,27 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
             });
     }, [conversation, gameState]);
 
+    let gameComponent = null;
+    if (gameType === 'tic-tac-toe') {
+        gameComponent = <ETTicTacToe
+        gameState={gameState}
+        getSignerAddress={() => {
+            return getSigner().getAddress()
+        }}
+        sendSignedMove={sendSignedMoveHandler}
+    />
+    }
+    if (gameType === 'checkers') {
+        gameComponent = <Checkers
+        gameState={gameState}
+        getSignerAddress={() => {
+            return getSigner().getAddress()
+        }}
+        sendSignedMove={sendSignedMoveHandler}
+        />
+    }
 
-    if (!!gameType && gameType === 'tic-tac-toe') {
+    if (gameComponent) {
         return (
             <div className={styles.container}>
                 <ControlPanel
@@ -298,13 +345,7 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
                     onResolveTimeout={runResolveTimeoutHandler}
                     onFinalizeTimeout={runFinalizeTimeoutHandler}
                 />
-                <ETTicTacToe
-                    gameState={gameState}
-                    getSignerAddress={() => {
-                        return getSigner().getAddress()
-                    }}
-                    sendSignedMove={sendSignedMoveHandler}
-                />
+                {gameComponent}
                 <XMTPChatLog logData={log} isLoading={isLogLoading}/>
             </div>
         );
@@ -322,7 +363,7 @@ export const getStaticProps: GetStaticProps<IGamePageProps, IParams> = (context)
 };
 
 export const getStaticPaths: GetStaticPaths<IParams> = () => {
-    const gamesType = ['tic-tac-toe', 'other'];
+    const gamesType = ['tic-tac-toe', 'checkers', 'other'];
     const paths = gamesType.map((gameType) => ({params: {gameType}}));
     return {
         paths,

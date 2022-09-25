@@ -22,7 +22,7 @@ export type TCells = [
     TCellData,
 ];
 
-export class TTTMove implements IMyGameMove {
+export class CHECKERSMove implements IMyGameMove {
     encodedMove: string;
     move: number;
     player: TPlayer
@@ -34,28 +34,28 @@ export class TTTMove implements IMyGameMove {
         this.player = player;
     }
 
-    static fromEncoded(encodedMove: string, player: TPlayer): TTTMove {
-        return Object.seal(new TTTMove(encodedMove, player));
+    static fromEncoded(encodedMove: string, player: TPlayer): CHECKERSMove {
+        return Object.seal(new CHECKERSMove(encodedMove, player));
     }
 
-    static fromMove(move: number, player: TPlayer): TTTMove {
+    static fromMove(move: number, player: TPlayer): CHECKERSMove {
         const encodedMove = defaultAbiCoder.encode(MOVE_TYPES, [move]);
-        return Object.seal(new TTTMove(encodedMove, player));
+        return Object.seal(new CHECKERSMove(encodedMove, player));
     }
 }
 
-export class TicTacToeBoard implements IMyGameState<TTTMove> {
+export class CheckersBoard implements IMyGameState<CHECKERSMove> {
     cells: TCells;
     disputableMoves: Set<number>;
 
-    private constructor(history: TTTMove[] = [], disputableMoveNonces: Set<number> = new Set()) {
+    private constructor(history: CHECKERSMove[] = [], disputableMoveNonces: Set<number> = new Set()) {
         this.cells = [null, null, null, null, null, null, null, null, null];
 
         history.forEach((move) => {
             this.cells[move.move] = move.player;
         });
 
-        this.disputableMoves = history.reduce<Set<number>>((acc: Set<number>, move: TTTMove, i) => {
+        this.disputableMoves = history.reduce<Set<number>>((acc: Set<number>, move: CHECKERSMove, i) => {
             if (disputableMoveNonces.has(i)) {
                 return acc.add(move.move);
             }
@@ -63,12 +63,12 @@ export class TicTacToeBoard implements IMyGameState<TTTMove> {
         }, new Set())
     }
 
-    static fromHistory(history: TTTMove[], disputableMoveNonces: Set<number>): TicTacToeBoard {
-        return Object.seal(new TicTacToeBoard(history, disputableMoveNonces));
+    static fromHistory(history: CHECKERSMove[], disputableMoveNonces: Set<number>): CheckersBoard {
+        return Object.seal(new CheckersBoard(history, disputableMoveNonces));
     }
 
-    static empty(): TicTacToeBoard {
-        return Object.seal(new TicTacToeBoard());
+    static empty(): CheckersBoard {
+        return Object.seal(new CheckersBoard());
     }
 }
 
@@ -89,9 +89,9 @@ export function getWinnerFromEncodedState(state: string):TPlayer|null {
     return winner;
 }
 
-export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
+export class CheckersState implements IGameState<CheckersBoard, CHECKERSMove> {
     movesHistory: TGameHistory = [];
-    decodedMovesHistory: TTTMove[] = [];
+    decodedMovesHistory: CHECKERSMove[] = [];
     disputableMoveNumbers: Set<number> = new Set();
     lastMove: ISignedGameMove | null = null;
     lastOpponentMove: ISignedGameMove | null = null;
@@ -99,35 +99,35 @@ export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
     winner: number | null = null;
     gameId: number;
     isMyTurn: boolean;
-    myGameState: TicTacToeBoard;
+    myGameState: CheckersBoard;
     playerType: TPlayer;
     playerId: number;
     nonce: number = 0;
 
-    constructor(gameId: number, playerType: TPlayer, board: TicTacToeBoard | null = null) {
+    constructor(gameId: number, playerType: TPlayer, board: CheckersBoard | null = null) {
         this.gameId = gameId;
         this.isMyTurn = playerType === 'X';
-        this.myGameState = board || TicTacToeBoard.empty();
+        this.myGameState = board || CheckersBoard.empty();
         this.playerType = playerType;
         this.playerId = playerType === 'X' ? 0 : 1;
     }
 
 
-    encodedSignedMove(signedMove:ISignedGameMove, valid: boolean = true): TicTacToeState {
+    encodedSignedMove(signedMove:ISignedGameMove, valid: boolean = true): CheckersState {
         const winner = getWinnerFromEncodedState(signedMove.gameMove.newState);
-        const move = TTTMove.fromEncoded(signedMove.gameMove.move, this.playerId == 0 ? 'X' : 'O');
+        const move = CHECKERSMove.fromEncoded(signedMove.gameMove.move, this.playerId == 0 ? 'X' : 'O');
         return this.makeMove(move, valid, winner);
     }
 
-    opponentSignedMove(signedMove:ISignedGameMove, valid: boolean = true): TicTacToeState {
+    opponentSignedMove(signedMove:ISignedGameMove, valid: boolean = true): CheckersState {
         const winner = getWinnerFromEncodedState(signedMove.gameMove.newState);
-        const move = TTTMove.fromEncoded(signedMove.gameMove.move, this.playerId == 0 ? 'O' : 'X'); //TODO reversed, remove hack
+        const move = CHECKERSMove.fromEncoded(signedMove.gameMove.move, this.playerId == 0 ? 'O' : 'X'); //TODO reversed, remove hack
         return this.makeMove(move, valid)
     }
 
-    makeMove(move: TTTMove, valid: boolean = true, winner: TPlayer | null = null): TicTacToeState {
+    makeMove(move: CHECKERSMove, valid: boolean = true, winner: TPlayer | null = null): CheckersState {
         //TODO it should be copy constructor, at least for lastMove and lastOpponentMove
-        const nextState = new TicTacToeState(this.gameId, this.playerType);
+        const nextState = new CheckersState(this.gameId, this.playerType);
         if (winner) {
             if (winner == this.playerType) {
                 nextState.winner = this.playerId;
@@ -144,22 +144,22 @@ export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
         }
 
         nextState.disputableMoveNumbers = nextDisputableMoveNonces;
-        nextState.myGameState = TicTacToeBoard.fromHistory(nextState.decodedMovesHistory, nextState.disputableMoveNumbers);
+        nextState.myGameState = CheckersBoard.fromHistory(nextState.decodedMovesHistory, nextState.disputableMoveNumbers);
         return Object.seal(nextState);
     }
 
-    encodedMove(encodedMove: string, valid: boolean = true): TicTacToeState {
-        const move = TTTMove.fromEncoded(encodedMove, this.playerId == 0 ? 'X' : 'O');
+    encodedMove(encodedMove: string, valid: boolean = true): CheckersState {
+        const move = CHECKERSMove.fromEncoded(encodedMove, this.playerId == 0 ? 'X' : 'O');
         return this.makeMove(move, valid)
     }
 
-    opponentMove(encodedMove: string, valid: boolean = true): TicTacToeState {
-        const move = TTTMove.fromEncoded(encodedMove, this.playerId == 0 ? 'O' : 'X'); //TODO reversed, remove hack
+    opponentMove(encodedMove: string, valid: boolean = true): CheckersState {
+        const move = CHECKERSMove.fromEncoded(encodedMove, this.playerId == 0 ? 'O' : 'X'); //TODO reversed, remove hack
         return this.makeMove(move, valid)
     }
 
     //TODO deduplicate
-    composeMove(move: TTTMove, playerAddress: string): IGameMove {
+    composeMove(move: CHECKERSMove, playerAddress: string): IGameMove {
         return new GameMove(
             this.gameId,
             this.nonce,
@@ -170,7 +170,7 @@ export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
         )
     }
 
-    async signMove(move: TTTMove, playerAddress: string, winner: TPlayer | null): Promise<ISignedGameMove> {
+    async signMove(move: CHECKERSMove, playerAddress: string, winner: TPlayer | null): Promise<ISignedGameMove> {
         const gameMove = new GameMove(
             this.gameId,
             this.nonce,
