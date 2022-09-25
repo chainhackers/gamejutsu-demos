@@ -14,7 +14,7 @@ export const Players: React.FC<PlayersPropsI> = ({
   isFinishTimeOutAllowed,
   finishTimeout,
   isTimeoutRequested,
-  connectPlayer,
+  // connectPlayer,
 }) => {
   const [isTimeoutInit, setIsTimeoutInit] = useState<boolean>(false);
   const [isConnectionAllowed, setIsConnectionAllower] = useState<boolean>(false);
