@@ -4,12 +4,19 @@ import { ethers } from 'ethers';
 import { getSessionWallet, signMove } from 'helpers/session_signatures';
 import arbiterContract from 'contracts/Arbiter.json';
 import tictacRulesContract from 'contracts/TicTacToeRules.json';
+import checkersContract from 'contracts/CheckersRules.json';
 import {IGameMove, ISignedGameMove} from "../types/arbiter";
 import { TGameStateContractParams } from 'components/Games/types';
 
 export const getArbiter = () => fromContractData(arbiterContract);
-export const getRulesContract = (gameType: string | undefined) => {
-  return fromContractData(tictacRulesContract);
+export const getRulesContract = (gameType: 'tic-tac-toe' | 'checkers') => {
+  if (gameType == 'checkers') {
+    return fromContractData(checkersContract);
+  }
+  if (gameType == 'tic-tac-toe') {
+    return fromContractData(tictacRulesContract);
+  }
+  throw "Unknown gameType: " + gameType; 
 } 
 
 export function getSigner(): ethers.Signer {
@@ -155,9 +162,6 @@ export const transition = async (
   playerIngameId: number,
   encodedMove: string,
 ) => {
-  // const encodedBoardState = defaultAbiCoder.encode(['uint8[9]', 'bool', 'bool'], boardState);
-  // const gameState = [gameId, nonce, encodedBoardState];
-  // const encodedMove = defaultAbiCoder.encode(['uint8'], [move]);
   console.log('transition', {gameState, playerIngameId, encodedMove});
   const response = await contract.transition(gameState, playerIngameId, encodedMove);
   console.log('response', response);

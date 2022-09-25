@@ -72,8 +72,8 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
     };
 
 
-    const sendSignedMoveHandler = async (msg: ISignedGameMove) => {
-        const messageText = JSON.stringify(msg);
+    const sendSignedMoveHandler = async (signedGameMove: ISignedGameMove) => {
+        const messageText = JSON.stringify(signedGameMove);
         console.log({messageText});
 
         if (!conversation) {
@@ -84,15 +84,14 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
         let address = await getSigner().getAddress();
         
 
-        _isValidSignedMove(getArbiter(), msg).then((isValid) => {
+        _isValidSignedMove(getArbiter(), signedGameMove).then((isValid) => {
 
-            const nextGameState = gameState.encodedMove(msg.gameMove.move, isValid);
+            const nextGameState = gameState.encodedSignedMove(signedGameMove, isValid);
             
             conversation.send(messageText).then(() => {
                 console.log('message sent, setting new state:', nextGameState);
-                setLastMove(msg);
+                setLastMove(signedGameMove);
                 setGameState(nextGameState);
-                console.log('new state is set after sending the move', gameState);
             });
 
         })
@@ -222,7 +221,7 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
                     console.log('gameState before move', gameState);
 
                     _isValidSignedMove(getArbiter(), signedMove).then(isValid => {
-                        const nextGameState = gameState.opponentMove(signedMove.gameMove.move, isValid);
+                        const nextGameState = gameState.opponentSignedMove(signedMove, isValid);
                         setLastOpponentMove(signedMove);
                         console.log('nextGameState', nextGameState);
                         setGameState(nextGameState);

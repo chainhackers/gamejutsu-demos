@@ -3,7 +3,7 @@ import {Board} from 'components/Games/ET-Tic-Tac-Toe';
 import {ITicTacToeProps} from './ITicTacToeProps';
 
 import styles from './ET-Tic-Tac-Toe.module.scss';
-import {decodeEncodedBoardState, TicTacToeBoard, TPlayer, TTTMove} from './types';
+import {decodeEncodedBoardState, getWinnerFromEncodedState, TicTacToeBoard, TPlayer, TTTMove} from './types';
 import { getRulesContract, transition } from 'gameApi';
 import { ContractMethodNoResultError } from 'wagmi';
 
@@ -25,15 +25,7 @@ export const ETTicTacToe: React.FC<ITicTacToeProps> = ({
                 gameState.playerId,
                 move.encodedMove
             ).then((transitionResult) => {
-                const  [_, xWins, oWins] = decodeEncodedBoardState(transitionResult.state);
-                let winner:TPlayer | null = null;
-                if (xWins) {
-                    winner = 'X'
-                } else
-                if (oWins) {
-                    winner = 'O'
-                }
-                console.log('winner', winner);
+                let winner: TPlayer | null = getWinnerFromEncodedState(transitionResult.state);
                 const signedMove = gameState.signMove(move, address, winner)
                 console.log({signedMove, move});
                 return signedMove
@@ -55,3 +47,5 @@ export const ETTicTacToe: React.FC<ITicTacToeProps> = ({
         </div>
     );
 };
+
+
