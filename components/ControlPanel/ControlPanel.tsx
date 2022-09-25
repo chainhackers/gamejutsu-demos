@@ -132,14 +132,14 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
       setGameStatus('Accepting...');
       setError(null);
 
-      const { players } = await gameApi.acceptGame(
-        gameApi.fromContractData(arbiterContractData),
-        gameId,
-      );
+      // const { players } = await gameApi.acceptGame(
+      //   gameApi.fromContractData(arbiterContractData),
+      //   gameId,
+      // );
 
-      let rivalPlayer = players[parseInt(PROPOSER_INGAME_ID)];
+      // let rivalPlayer = players[parseInt(PROPOSER_INGAME_ID)];
 
-      setRivalPlayerAddress(rivalPlayer);
+      // setRivalPlayerAddress(rivalPlayer);
       setPlayerIngameId(ACCEPTER_INGAME_ID);
       setPlayerType(playersTypes[ACCEPTER_INGAME_ID]);
       setGameStatus('Accepted');
