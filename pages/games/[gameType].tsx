@@ -164,6 +164,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
 
         if (nextGameState.winner !== null) {
           if (playerIngameId === nextGameState.winner) {
+            runFinishGameHandler(msg);
             console.log('winner: ', account.address);
             const playerWhoWon = players.find((player) => player.address === account.address)!;
 
@@ -356,15 +357,16 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     console.log('conntect timeout handle ');
   };
 
-  const runFinishGameHandler = async () => {
+  const runFinishGameHandler = async (msg?: ISignedGameMove) => {
     if (!lastOpponentMove) {
       console.log('no lastOpponentMove');
       return;
     }
-    if (!lastMove) {
+    if (!lastMove && !msg) {
       console.log('no lastMove');
       return;
     }
+
     let address = await getSigner().getAddress();
     const signature = await signMoveWithAddress(lastOpponentMove.gameMove, address);
     const signatures = [...lastOpponentMove.signatures, signature];
@@ -375,11 +377,22 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
 
     console.log('lastOpponentMoveSignedByAll', lastOpponentMoveSignedByAll);
 
-    const finishGameResult = await finishGame(getArbiter(), [
-      lastOpponentMoveSignedByAll,
-      lastMove,
-    ]);
-    console.log('finishGameResult', finishGameResult);
+    if (!!msg) {
+      const finishGameResult = await finishGame(getArbiter(), [
+        lastOpponentMoveSignedByAll,
+        msg,
+      ]);
+      console.log('finishGameResult', finishGameResult);
+      return;
+    }
+
+    if (!!lastMove) {
+      const finishGameResult = await finishGame(getArbiter(), [
+        lastOpponentMoveSignedByAll,
+        lastMove,
+      ]);
+      console.log('finishGameResult', finishGameResult);
+    }
   };
 
   useEffect(() => {
@@ -481,7 +494,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
                   )!;
                   setWinner(winPlayer.playerName);
                 }
-                runFinishGameHandler();
+                // runFinishGameHandler();
               }
               if (decodedSignedMove[2]) {
                 console.log('winner acceptor');
@@ -498,7 +511,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
                   )!;
                   setWinner(winPlayer.playerName);
                 }
-                runFinishGameHandler();
+                // runFinishGameHandler();
               }
             });
           }
