@@ -18,25 +18,32 @@ export const Checkers: React.FC<ICheckersProps> = ({
     const boardState = gameState?.myGameState || CheckersBoard.empty()
     console.log('boardState', boardState);
 
+
+    //TODO here
     const clickHandler = async (i: number) => {
         if (!gameState) return;
 
-        setSelectedCell(i);
+        if (!selectedCell) {
+            setSelectedCell(i);
+            return;
+        }
+
+        setSelectedCell(null);
 
         //TODO here
-        const move: CHECKERSMove = CHECKERSMove.fromMove([i+2, i, false, false], gameState.playerType)
+        const move: CHECKERSMove = CHECKERSMove.fromMove([selectedCell, i, false, false], gameState.playerType)
 
         getSignerAddress().then((address) => {
-            return transition(getRulesContract('checkers'), 
+            return transition(getRulesContract('checkers'),
                 gameState.toGameStateContractParams(),
                 gameState.playerId,
                 move.encodedMove
             ).then((transitionResult) => {
                 let winner: TPlayer | null = getWinnerFromEncodedState(transitionResult.state);
                 const signedMove = gameState.signMove(move, address, winner)
-                console.log({signedMove, move});
+                console.log({ signedMove, move });
                 return signedMove
-            });            
+            });
         }).then(sendSignedMove)
             .catch(console.error)
     }
