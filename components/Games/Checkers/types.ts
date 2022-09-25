@@ -37,6 +37,7 @@ const MOVE_TYPES = ["uint8", "uint8", "bool", "bool"]
 
 export type TPlayer = 'X' | 'O';
 export type TCellData = null | TPlayer;
+//32
 export type TCells = [
     TCellData, TCellData, TCellData, TCellData,
     TCellData, TCellData, TCellData, TCellData,

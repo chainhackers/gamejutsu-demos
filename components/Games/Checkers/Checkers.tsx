@@ -13,11 +13,13 @@ export const Checkers: React.FC<ICheckersProps> = ({
                                                            sendSignedMove
                                                        }) => {
     const boardState = gameState?.myGameState || CheckersBoard.empty()
+    console.log('boardState', boardState);
 
     const clickHandler = async (i: number) => {
         if (!gameState) return;
 
-        const move: CHECKERSMove = CHECKERSMove.fromMove(i, gameState.playerType)
+        //TODO here
+        const move: CHECKERSMove = CHECKERSMove.fromMove([i+2, i, false, false], gameState.playerType)
 
         getSignerAddress().then((address) => {
             return transition(getRulesContract('checkers'), 

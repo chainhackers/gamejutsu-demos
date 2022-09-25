@@ -20,7 +20,7 @@ import {ISignedGameMove, SignedGameMove} from "../../types/arbiter";
 import { signMove, signMoveWithAddress } from 'helpers/session_signatures';
 import { ContractMethodNoResultError } from 'wagmi';
 import { Checkers } from 'components/Games/Checkers';
-import { CheckersState } from 'components/Games/Checkers/types';
+import { CHECKERSMove, CheckersState } from 'components/Games/Checkers/types';
 import { ethers } from 'ethers';
 
 interface IGamePageProps {
@@ -47,28 +47,27 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
         .makeMove(TTTMove.fromMove(7, 'X'))
         .makeMove(TTTMove.fromMove(8, 'X'))
 
-    const initialCheckersState= new CheckersState(1, 'X')
-        .makeMove(TTTMove.fromMove(0, 'X'))
-        .makeMove(TTTMove.fromMove(1, 'X'))
-        .makeMove(TTTMove.fromMove(2, 'X'))
-        .makeMove(TTTMove.fromMove(3, 'X'))
-        .makeMove(TTTMove.fromMove(4, 'O'))
-        .makeMove(TTTMove.fromMove(5, 'X'))
-        .makeMove(TTTMove.fromMove(6, 'X'))
-        .makeMove(TTTMove.fromMove(7, 'X'))
-        .makeMove(TTTMove.fromMove(8, 'X'))    
+    let initialCheckersState = new CheckersState(1, 'X');
+    for (let i = 0; i < 12; i++) {
+        initialCheckersState = initialCheckersState.makeMove(CHECKERSMove.fromMove([i, i, false, false], 'X'))
+    }
+
+    for (let i = 0; i < 12; i++) {
+        initialCheckersState = initialCheckersState.makeMove(CHECKERSMove.fromMove([20+i, 20 + i, false, false], 'O'))
+    }
+        
 
       
     let gameState: TicTacToeState | CheckersState;
     let setGameState: ((arg0: TicTacToeState) => void) | ((arg0: CheckersState) => void);
     if (gameType == 'tic-tac-toe') {    
-        [gameState, setGameState] = useState<TicTacToeState>(initialTicTacToeState);
+        [gameState, setGameState] = useState<TicTacToeState | CheckersState>(initialTicTacToeState);
     } else 
     //if (gameType == 'checkers') //to avoid compilation error
     {    
-        [gameState, setGameState] = useState<CheckersState>(initialCheckersState);
+        [gameState, setGameState] = useState<TicTacToeState | CheckersState>(initialCheckersState);
     } 
-    
+
     const [playerIngameId, setPlayerIngameId] = useState<0 | 1>(0); //TODO use in game state creation
     const [conversation, setConversation] = useState<Conversation | null>(null);
     const [isInDispute, setIsInDispute] = useState<boolean>(false);

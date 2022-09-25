@@ -1,1 +1,1 @@
-export * from './CBoard';
+export * from './Board';
