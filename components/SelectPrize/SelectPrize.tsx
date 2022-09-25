@@ -21,14 +21,16 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({ createNewGameHandler 
 
   const selectPrizeHandler = (prize: 'free' | 'stake' | null) => {
     setSelected(prize);
-    setStakeValue('0.00');
+    setStakeValue('0.01');
   };
 
   const playButtonClickHandler = () => {
     setCreatingNewGame(true);
     setCreatingGameError(null);
 
-    createNewGameHandler()
+    console.log('selected', selected);
+    selected === 'stake';
+    createNewGameHandler(selected === 'stake')
       .then(() => {
         router.push(`/games/${query.gameType}`);
       })
@@ -59,19 +61,19 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({ createNewGameHandler 
               <span>{stakeValue}</span>{' '}
               <span className={styles.currency}>{t('selectPrize.prize.stake')}</span>
             </div>
-            <div className={styles.stakes}>
+            {/* <div className={styles.stakes}>
               <div onClick={() => setStakeValue('5.00')} className={styles.stakeButton}>
                 5.00
               </div>
               <div onClick={() => setStakeValue('10.00')} className={styles.stakeButton}>
                 10.00
               </div>
-            </div>
+            </div> */}
             <div className={styles.notification}>{`${t(
               'selectPrize.notification.p1',
-            )} 5.00 ${t('selectPrize.prize.stake')}, ${t(
+            )} 0.01 ${t('selectPrize.prize.stake')}, ${t(
               'selectPrize.notification.p2',
-            )} 10.00 ${t('selectPrize.prize.stake')}`}</div>
+            )} 0.02 ${t('selectPrize.prize.stake')}`}</div>
           </div>
         )}
       </div>

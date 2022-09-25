@@ -10,6 +10,9 @@ export const ActualGamesList: React.FC<ActualGamesListPropsI> = ({ gamesList, on
         gameId={t('gamesList.header.id')}
         winner={t('gamesList.header.winner')}
         loser={t('gamesList.header.loser')}
+        stake="stake"
+        proposer="proposer"
+        rules="game rules"
         header
       />
       {gamesList

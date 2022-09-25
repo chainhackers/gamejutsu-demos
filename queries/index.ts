@@ -5,8 +5,16 @@ export const gameEntitiesQuery = gql`
     gameEntities {
       id
       gameId
+      rules
+      stake
+      proposer
       winner
       loser
+      cheater
+      isDraw
+      started
+      resigned
+      finished
     }
   }
 `;

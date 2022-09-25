@@ -23,14 +23,29 @@
     width: 50px;
     text-align: center;
   }
+  .stake {
+    display: inline-block;
+    width: 50px;
+    text-align: center;
+  }
+  .proposer {
+    display: inline-block;
+    width: 430px;
+    text-align: center;
+  }
+  .rules {
+    display: inline-block;
+    width: 430px;
+    text-align: center;
+  }
   .winner {
     display: inline-block;
-    width: 450px;
+    // width: 450px;
     text-align: center;
   }
   .loser {
     display: inline-block;
-    width: 450px;
+    // width: 450px;
     text-align: center;
   }
 }

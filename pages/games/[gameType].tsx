@@ -186,14 +186,16 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     });
   };
 
-  const createNewGameHandler = async () => {
+  const createNewGameHandler = async (isPaid: boolean = false) => {
     // setCreatingNewGame(true);
     // setCreatingGameError(null);
+    console.log('isPaid asfsadsafadsfa', isPaid);
 
     try {
       let { gameId } = await gameApi.proposeGame(
         gameApi.fromContractData(arbiterContractData),
         gameRulesContractData.address,
+        isPaid,
       );
       // console.log(gameId);
       if (!!gameId) {
@@ -215,7 +217,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     }
   };
 
-  const acceptGameHandler = async (gameId: string): Promise<void> => {
+  const acceptGameHandler = async (gameId: string, stake: string): Promise<void> => {
     // event.preventDefault();
 
     // @ts-ignore TODO: to solve once it make sense
@@ -231,6 +233,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       const { players } = await gameApi.acceptGame(
         gameApi.fromContractData(arbiterContractData),
         gameId,
+        stake,
       );
       let rivalPlayer = players[PROPOSER_INGAME_ID];
       setRivalPlayerAddress(rivalPlayer);

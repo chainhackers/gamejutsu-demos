@@ -6,6 +6,7 @@ import { JoinGamePropsI } from './JoinGameProps';
 import styles from './JoinGame.module.scss';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { connectorsForWallets } from '@rainbow-me/rainbowkit';
 export const JoinGame: React.FC<JoinGamePropsI> = ({ acceptGameHandler }) => {
   const { data, error, loading } = useQuery(gameEntitiesQuery);
   const { t } = useTranslation();
@@ -14,11 +15,19 @@ export const JoinGame: React.FC<JoinGamePropsI> = ({ acceptGameHandler }) => {
   const [acceptingError, setAcceptingError] = useState<string | null>(null);
   console.log('Graph fetched data', data);
 
-  const clickHandler = async (gameId: string) => {
+  const gameEntities = data?.gameEntities as { started: boolean | null }[];
+
+  console.log('gameEntities', gameEntities);
+  const dataToShow = !!gameEntities
+    ? gameEntities.filter((entity) => entity.started === null)
+    : [];
+  console.log(dataToShow);
+
+  const clickHandler = async (gameId: string, stake: string) => {
     // router.push(`/games/${router.query.gameType}?acceptGameId=${gameId}&prize=true`);
     setAcceptingError(null);
     setAccepting(true);
-    acceptGameHandler(gameId)
+    acceptGameHandler(gameId, stake)
       .then(() => {
         router.push(`/games/${router.query.gameType}`);
       })
@@ -30,6 +39,7 @@ export const JoinGame: React.FC<JoinGamePropsI> = ({ acceptGameHandler }) => {
         setAccepting(false);
       });
   };
+
   return (
     <div className={styles.container}>
       <div className={styles.title}>{t('joinGame.title')}</div>
@@ -43,7 +53,7 @@ export const JoinGame: React.FC<JoinGamePropsI> = ({ acceptGameHandler }) => {
       {loading && <div className={styles.loading}>Loading games list...</div>}
       {error && <div className={styles.error}>Games list loading failes</div>}
       {data && data.gameEntities && (
-        <ActualGamesList gamesList={data.gameEntities} onClick={clickHandler} />
+        <ActualGamesList gamesList={dataToShow} onClick={clickHandler} />
       )}
     </div>
   );

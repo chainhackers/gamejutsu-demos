@@ -4,5 +4,8 @@ export interface ActualGamePropsI {
   winner: string;
   loser: string;
   header?: boolean;
-  onClick?: (id: string) => void;
+  onClick?: (id: string, stake: string) => void;
+  stake: string;
+  proposer: string;
+  rules: string;
 }

@@ -226,12 +226,16 @@ export async function registerSessionAddress(
 export const proposeGame = async (
   contract: ethers.Contract,
   rulesContractAddress: string,
+  isPaid?: boolean,
 ): Promise<{ gameId: string; proposer: string; stake: string }> => {
   console.log('proposeGame', { contract, rulesContractAddress });
+  const value = ethers.BigNumber.from(10).pow(16);
   let wallet = await getSessionWallet(await getSigner().getAddress());
   const gasEstimated = await contract.estimateGas.proposeGame(rulesContractAddress, []);
+
   const tx = await contract.proposeGame(rulesContractAddress, [wallet.address], {
     gasLimit: gasEstimated.mul(2),
+    value: isPaid ? value : null,
   });
   console.log('tx', tx);
   const rc = await tx.wait();
@@ -244,11 +248,15 @@ export const proposeGame = async (
 export const acceptGame = async (
   contract: ethers.Contract,
   gamdIdToAccept: string,
+  stake1: string,
 ): Promise<{ gameId: string; players: [string, string]; stake: string }> => {
+  // console.log('stake1', stake1);
+  // const value = ethers.BigNumber.from(10).pow(16);
   const gasEstimated = await contract.estimateGas.acceptGame(gamdIdToAccept, []);
   let wallet = await getSessionWallet(await getSigner().getAddress());
   const tx = await contract.acceptGame(gamdIdToAccept, [wallet.address], {
     gasLimit: gasEstimated.mul(2),
+    // value,
   });
   console.log('tx', tx);
   const rc = await tx.wait();
