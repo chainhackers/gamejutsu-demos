@@ -18,7 +18,7 @@ const Home: NextPage<IHomePageProps> = ({ partners }) => {
 
   const router = useRouter();
 
-  return (
+return (
     <div className={styles.container}>
       <Head>
         <title>RainbowKit App</title>

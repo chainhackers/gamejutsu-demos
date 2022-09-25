@@ -22,12 +22,12 @@ export const Header: React.FC<HeaderPropsI> = () => {
           <a>
             <Logo image="/logo/gj-logo.png" />
           </a>
-        </Link>
-        <Link href="/">
+      </Link>
+        {/* <Link href="/">
           <a>
             <div className={styles.title}>{t('header.title')}</div>
           </a>
-        </Link>
+        </Link> */}
       </div>
       <div className={styles.right}>
         {currentPath?.split('?')[0] !== 'connect' && <Navigation active={currentPath} />}

@@ -21,7 +21,7 @@ export const Navigation: React.FC<NavigationPropsI> = ({ active }) => {
             </a>
           </li>
           <li className={cn(active && (active === 'team' ? styles.active : styles.inactive))}>
-            <a href="https://github.com/chainHackers" target="_blank">
+            <a href="/team" target="_blank">
               {t('navigation.team')}
             </a>
           </li>
