@@ -92,10 +92,10 @@ const Game: NextPage<IGamePageProps> = ({gameType}) => {
         console.log('before init client');
         initClient(signer);
         //TODO build error if private encode
-        if (gameType='TicTacToeState') {
+        if (gameType == 'tic-tac-toe') {
             setGameState(new TicTacToeState(Number(gameId!), playerIngameId === 0 ? 'X' : 'O'));
         } else {
-            setGameState(new CheckersState(Number(gameId!), playerIngameId === 0 ? 'X' : 'O'));
+            //dont clear
         }
     };
 
