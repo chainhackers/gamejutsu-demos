@@ -4,33 +4,64 @@ import {defaultAbiCoder} from 'ethers/lib/utils';
 import {signMoveWithAddress} from "../../../helpers/session_signatures";
 import { ChannelListener } from "diagnostics_channel";
 
+const STATE_TYPES = ["uint8[32]", "bool", "uint8"]
+const MOVE_TYPES = ["uint8", "uint8", "bool", "bool"]
 
-const STATE_TYPES = ['uint8[9]', 'bool', 'bool'] as const;
-const MOVE_TYPES = ['uint8'] as const;
+// @custom cells 32-byte array of uint8s representing the board
+// @custom redMoves says whether it is red's turn to move
+// @custom winner is 0 for no winner, 1 for white, 2 for red
+// @dev cells[i] values:
+// @dev 0x01 is White
+// @dev 0x02 is Red
+// @dev 0xA1 is White King
+// @dev 0xA2 is Red King
+
+// struct State {
+//     uint8[32] cells;
+//     bool redMoves;
+//     uint8 winner;
+// }
+
+
+// @custom from 1-based index of the cell to move from
+//     @custom to 1-based index of the cell to move to
+//     @custom isJump declares if the move is a jump
+//     @custom passMoveToOpponent declares explicitly if the next move is to be done by the opponent
+
+// struct Move {
+//     uint8 from;
+//     uint8 to;
+//     bool isJump;
+//     bool passMoveToOpponent;
+// }
 
 export type TPlayer = 'X' | 'O';
 export type TCellData = null | TPlayer;
 export type TCells = [
-    TCellData,
-    TCellData,
-    TCellData,
-    TCellData,
-    TCellData,
-    TCellData,
-    TCellData,
-    TCellData,
-    TCellData,
+    TCellData, TCellData, TCellData, TCellData,
+    TCellData, TCellData, TCellData, TCellData,
+    TCellData, TCellData, TCellData, TCellData,
+    TCellData, TCellData, TCellData, TCellData,
+    TCellData, TCellData, TCellData, TCellData,
+    TCellData, TCellData, TCellData, TCellData,
+    TCellData, TCellData, TCellData, TCellData,
+    TCellData, TCellData, TCellData, TCellData,
 ];
+
+export type TCheckersContractMove = [number, number, boolean, boolean];
+export type TCheckersContractStateAkaBoard = [number[], boolean, number];
 
 export class CHECKERSMove implements IMyGameMove {
     encodedMove: string;
-    move: number;
+    from: number;
+    to: number;
+    isJump: boolean;
+    passMoveToOpponent: boolean
     player: TPlayer
 
     private constructor(encodedMove: string, player: TPlayer) {
         this.encodedMove = encodedMove;
-        const m = defaultAbiCoder.decode(MOVE_TYPES, encodedMove) as [number];
-        this.move = m[0];
+        [this.from, this.to, this.isJump, this.passMoveToOpponent] = defaultAbiCoder.decode(MOVE_TYPES, encodedMove);
         this.player = player;
     }
 
@@ -38,26 +69,32 @@ export class CHECKERSMove implements IMyGameMove {
         return Object.seal(new CHECKERSMove(encodedMove, player));
     }
 
-    static fromMove(move: number, player: TPlayer): CHECKERSMove {
-        const encodedMove = defaultAbiCoder.encode(MOVE_TYPES, [move]);
+    static fromMove([from, to, isJump, passMoveToOpponent]: TCheckersContractMove, player: TPlayer): CHECKERSMove {
+        const encodedMove = defaultAbiCoder.encode(MOVE_TYPES, [from, to, isJump, passMoveToOpponent]);
         return Object.seal(new CHECKERSMove(encodedMove, player));
     }
 }
 
 export class CheckersBoard implements IMyGameState<CHECKERSMove> {
     cells: TCells;
-    disputableMoves: Set<number>;
+    disputableMoves: Set<TCheckersContractMove>;
 
     private constructor(history: CHECKERSMove[] = [], disputableMoveNonces: Set<number> = new Set()) {
-        this.cells = [null, null, null, null, null, null, null, null, null];
+        this.cells = [
+            null, null, null, null, null, null, null, null,
+            null, null, null, null, null, null, null, null,
+            null, null, null, null, null, null, null, null,
+            null, null, null, null, null, null, null, null,
+        ];
 
         history.forEach((move) => {
-            this.cells[move.move] = move.player;
+            this.cells[move.from] = null;
+            this.cells[move.to] = move.player;
         });
 
-        this.disputableMoves = history.reduce<Set<number>>((acc: Set<number>, move: CHECKERSMove, i) => {
+        this.disputableMoves = history.reduce<Set<TCheckersContractMove>>((acc: Set<TCheckersContractMove>, move: CHECKERSMove, i) => {
             if (disputableMoveNonces.has(i)) {
-                return acc.add(move.move);
+                return acc.add([move.from, move.to, move.isJump, move.passMoveToOpponent]);
             }
             return acc;
         }, new Set())
