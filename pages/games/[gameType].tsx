@@ -171,6 +171,10 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
             setWinner(playerWhoWon.playerName);
           }
         }
+        if (nextGameState.nonce === 9 && !nextGameState.winner) {
+          runFinishGameHandler(msg);
+          setWinner('Draw!');
+        }
       });
     });
   };
@@ -512,6 +516,14 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
                   setWinner(winPlayer.playerName);
                 }
                 // runFinishGameHandler();
+              }
+              if (
+                nextGameState.nonce === 9 &&
+                !decodedSignedMove[1] &&
+                !decodedSignedMove[2]
+              ) {
+                console.log('nonce 9, Draw!');
+                setWinner('Draw!');
               }
             });
           }

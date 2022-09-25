@@ -96,7 +96,11 @@ export const GameField: React.FC<GameFieldPropsI> = ({
               <div className={styles.notice}>{t('shade.notice')}</div>
             </div>
           )}
-          {isWinner && <div className={styles.win}>{`${isWinner} ${t('wins')}`}</div>}
+          {isWinner && (
+            <div className={styles.win}>
+              {isWinner === 'Draw!' ? isWinner : `${isWinner} ${t('wins')}`}
+            </div>
+          )}
         </div>
       )}
       <div className={styles.header}>
