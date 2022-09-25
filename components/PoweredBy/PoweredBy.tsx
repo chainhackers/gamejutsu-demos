@@ -4,6 +4,7 @@ import { PoweredByPropsI } from './PoweredByProps';
 import styles from './PoweredBy.module.scss';
 export const PoweredBy: React.FC<PoweredByPropsI> = ({ poweredByList }) => {
   const { t } = useTranslation();
+  console.log(poweredByList);
   return (
     <div className={styles.container}>
       <div className={styles.title}>{t('poweredBy.title')}</div>

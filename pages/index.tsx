@@ -1,6 +1,6 @@
 import type { GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
-
+import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
 import styles from '../styles/Home.module.scss';
 // import 'i18n/index';
@@ -41,7 +41,15 @@ const Home: NextPage<IHomePageProps> = ({ partners }) => {
           </div>
         </div>
         <div className={styles.sponsorBlock}>
-          <div className={styles.logo}>Image</div>
+          <div className={styles.logo}>
+            <Image
+              src="/logo/front-ninja.png"
+              alt="GameJutsu Logo"
+              width="600px"
+              height="400px"
+              // layout="fill"
+            />
+          </div>
           <PoweredBy poweredByList={partners} />
         </div>
       </main>

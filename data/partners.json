@@ -1,22 +1,22 @@
 [
   {
-    "name": "company1company1asdf",
-    "image": "asdf/asdf",
-    "href": "asdfasf/asdfdsf"
+    "name": "XMTP",
+    "image": "/logo/xmtp-logo.png",
+    "href": "https://xmtp.org/"
   },
   {
-    "name": "company1",
-    "image": "asdf/asdf",
-    "href": "asdfasf/asdfdsf"
+    "name": "The Graph",
+    "image": "/logo/graph-logo.webp",
+    "href": "https://thegraph.com/"
   },
   {
-    "name": "company",
-    "image": "asdf/asdf",
-    "href": "asdfasf/asdfdsf"
+    "name": "Polygon",
+    "image": "/logo/polygon-matic-logo.png",
+    "href": "https://polygon.technology/"
   },
   {
-    "name": "company",
-    "image": "asdf/asdf",
-    "href": "asdfasf/asdfdsf"
+    "name": "Sismo",
+    "image": "/logo/sismo-logo.png",
+    "href": "https://www.sismo.io/"
   }
 ]

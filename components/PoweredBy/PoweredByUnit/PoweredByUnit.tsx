@@ -6,7 +6,7 @@ export const PoweredByUnit: React.FC<PoweredByUnitPropsI> = ({ name, image, href
   return (
     <div className={styles.container}>
       <a href={href} target="_blank">
-        <Logo />
+        <Logo image={image} />
         <div className={styles.name}>{name}</div>
       </a>
     </div>

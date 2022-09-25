@@ -32,14 +32,16 @@
     text-align: -webkit-right;
 
     .logo {
-      width: 250px;
-      height: 250px;
+      position: relative;
+      top: -70px;
+      width: 500px;
+      height: 330px;
       border-radius: 8.7px;
-      background-color: var(--gray-lightest);
+      // background-color: var(--gray-lightest);
       overflow: hidden;
-      margin-bottom: 40px;
+      margin-bottom: -25px;
       text-align: center;
-      padding-top: 115px;
+      // padding-top: 115px;
       margin-right: 30px;
     }
   }
