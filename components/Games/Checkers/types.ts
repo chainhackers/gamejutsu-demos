@@ -114,13 +114,19 @@ export function decodeEncodedBoardState(encodedBoardState:string){
     return defaultAbiCoder.decode(STATE_TYPES, encodedBoardState);
 }
 
+// struct State {
+//     uint8[32] cells;
+//     bool redMoves;
+//     uint8 winner;
+// }
+
 export function getWinnerFromEncodedState(state: string):TPlayer|null {
-    const [_, xWins, oWins] = decodeEncodedBoardState(state);
+    const [_, redMoves, contractWinner] = decodeEncodedBoardState(state);
     let winner: TPlayer | null = null;
-    if (xWins) {
+    if (contractWinner == 1) {
         winner = 'X';
     }
-    else if (oWins) {
+    else if (contractWinner == 2) {
         winner = 'O';
     }
     console.log('winner', winner);
@@ -226,8 +232,6 @@ export class CheckersState implements IGameState<CheckersBoard, CHECKERSMove> {
     }
 
     encode(): string {
-        const xWins = this.winner == this.playerId && this.playerType === 'X' ;
-        const oWins = this.winner == this.playerId && this.playerType === 'O';
         const cellsToEncode = this.myGameState.cells.map((cell) => {
             if (cell === null) {
                 return 0;
@@ -237,6 +241,10 @@ export class CheckersState implements IGameState<CheckersBoard, CHECKERSMove> {
                 return 2;
             }
         });
-        return defaultAbiCoder.encode(STATE_TYPES, [cellsToEncode, xWins, oWins]);
+        let contractWinner = 0;
+        if (this.winner) {
+            contractWinner = this.winner + 1;
+        }
+        return defaultAbiCoder.encode(STATE_TYPES, [cellsToEncode, this.playerId == 1, contractWinner]);
     }
 }
