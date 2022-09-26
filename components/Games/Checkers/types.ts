@@ -7,6 +7,10 @@ import { ChannelListener } from "diagnostics_channel";
 const STATE_TYPES = ["uint8[32]", "bool", "uint8"]
 const MOVE_TYPES = ["uint8", "uint8", "bool", "bool"]
 
+export function decodeEncodedBoardState(encodedBoardState:string){
+    return defaultAbiCoder.decode(STATE_TYPES, encodedBoardState);
+}
+
 // @custom cells 32-byte array of uint8s representing the board
 // @custom redMoves says whether it is red's turn to move
 // @custom winner is 0 for no winner, 1 for white, 2 for red
@@ -61,7 +65,10 @@ export class CHECKERSMove implements IMyGameMove {
 
     private constructor(encodedMove: string, player: TPlayer) {
         this.encodedMove = encodedMove;
-        [this.from, this.to, this.isJump, this.passMoveToOpponent] = defaultAbiCoder.decode(MOVE_TYPES, encodedMove);
+        let from, to;
+        [from, to, this.isJump, this.passMoveToOpponent] = defaultAbiCoder.decode(MOVE_TYPES, encodedMove);
+        this.from = from - 1;
+        this.to = to - 1;
         this.player = player;
     }
 
@@ -70,7 +77,7 @@ export class CHECKERSMove implements IMyGameMove {
     }
 
     static fromMove([from, to, isJump, passMoveToOpponent]: TCheckersContractMove, player: TPlayer): CHECKERSMove {
-        const encodedMove = defaultAbiCoder.encode(MOVE_TYPES, [from, to, isJump, passMoveToOpponent]);
+        const encodedMove = defaultAbiCoder.encode(MOVE_TYPES, [from + 1, to + 1, isJump, passMoveToOpponent]);
         return Object.seal(new CHECKERSMove(encodedMove, player));
     }
 }
@@ -161,12 +168,14 @@ export class CheckersState implements IGameState<CheckersBoard, CHECKERSMove> {
 
     encodedSignedMove(signedMove:ISignedGameMove, valid: boolean = true): IGameState<CheckersBoard, CHECKERSMove> {
         const winner = CheckersBoard.fromEncoded(signedMove.gameMove.newState).winner;
+        console.log('encodedSignedMove this.playerId', this.playerId);
         const move = CHECKERSMove.fromEncoded(signedMove.gameMove.move, this.playerId == 0 ? 'X' : 'O');
         return this.makeMove(move, valid, winner);
     }
 
     opponentSignedMove(signedMove:ISignedGameMove, valid: boolean = true): IGameState<CheckersBoard, CHECKERSMove> {
         const winner = CheckersBoard.fromEncoded(signedMove.gameMove.newState).winner;
+        console.log('opponentSignedMove this.playerId', this.playerId);
         const move = CHECKERSMove.fromEncoded(signedMove.gameMove.move, this.playerId == 0 ? 'O' : 'X'); //TODO reversed, remove hack
         return this.makeMove(move, valid, winner);
     }
@@ -183,6 +192,7 @@ export class CheckersState implements IGameState<CheckersBoard, CHECKERSMove> {
         }
         nextState.nonce = this.nonce + 1;
         nextState.decodedMovesHistory = [...this.decodedMovesHistory, move];
+
         const nextDisputableMoveNonces = new Set(this.disputableMoveNumbers);
 
         if (!valid) {
@@ -191,6 +201,7 @@ export class CheckersState implements IGameState<CheckersBoard, CHECKERSMove> {
 
         nextState.disputableMoveNumbers = nextDisputableMoveNonces;
         nextState.myGameState = CheckersBoard.fromHistory(nextState.decodedMovesHistory, nextState.disputableMoveNumbers);
+        console.log('nextState', CheckersBoard.fromEncoded(nextState.encode()));
         return Object.seal(nextState);
     }
 

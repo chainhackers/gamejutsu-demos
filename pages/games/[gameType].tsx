@@ -89,8 +89,8 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
         .makeMove(TTTMove.fromMove(7, 'X'))
         .makeMove(TTTMove.fromMove(8, 'X'));
 
-    const GetInitialState = (gameId: number) => {
-        let initialCheckersState = new CheckersState(gameId, 'X');
+    const GetInitialState = (gameId: number, playerType: TPlayer) => {
+        let initialCheckersState = new CheckersState(gameId, playerType);
         return initialCheckersState;
     }
 
@@ -137,7 +137,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     } else
     //if (gameType == 'checkers') //to avoid compilation error
     {
-        [gameState, setGameState] = useState<IGameState<any, any>>(GetInitialState(1));
+        [gameState, setGameState] = useState<IGameState<any, any>>(GetInitialState(1, 'X'));
     }
 
     const setConversationHandler = async (rivalPlayerAddress: string) => {
@@ -153,21 +153,28 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
         if (gameType == 'tic-tac-toe') {
             setGameState(new TicTacToeState(Number(gameId!), playerIngameId === 0 ? 'X' : 'O'));
         } else {
-            setGameState(GetInitialState(Number(gameId)));
+            setGameState(GetInitialState(Number(gameId), playerIngameId === 0 ? 'X' : 'O'));
         }
     };
 
-    const sendSignedMoveHandler = async (signedGameMove: ISignedGameMove) => {
-        const messageText = JSON.stringify(signedGameMove);
-        console.log({messageText});
+    const sendSignedMoveHandler = async (signedMove: ISignedGameMove) => {
+        const messageText = JSON.stringify(signedMove);
 
         if (!conversation) {
           console.warn('no conversation!');
           return;
         }
+
+        if(gameType == 'tic-tac-toe'){
+          console.log('oldState.fromEncoded', TicTacToeBoard.fromEncoded(signedMove.gameMove.oldState));
+          console.log('newState.fromEncoded', TicTacToeBoard.fromEncoded(signedMove.gameMove.newState));
+        } else if(gameType == 'checkers'){
+          console.log('oldState.fromEncoded', CheckersBoard.fromEncoded(signedMove.gameMove.oldState));
+          console.log('newState.fromEncoded', CheckersBoard.fromEncoded(signedMove.gameMove.newState));
+        }
     
-        _isValidSignedMove(getArbiter(), signedGameMove).then((isValid) => {
-          const nextGameState = gameState.encodedSignedMove(signedGameMove, isValid);
+        _isValidSignedMove(getArbiter(), signedMove).then((isValid) => {
+          const nextGameState = gameState.encodedSignedMove(signedMove, isValid);
           console.log('nextGameState, check Winner', nextGameState);
           conversation.send(messageText).then(() => {
             console.log(
@@ -175,13 +182,13 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
               nextGameState,
               nextGameState.winner, //0
             );
-            setLastMove(signedGameMove);
+            setLastMove(signedMove);
             setGameState(nextGameState);
             console.log('new state is set after sending the move', gameState);
     
             if (nextGameState.winner !== null) {
               if (playerIngameId === nextGameState.winner) {
-                runFinishGameHandler(signedGameMove);
+                runFinishGameHandler(signedMove);
                 console.log('winner: ', account.address);
                 const playerWhoWon = players.find((player) => player.address === account.address)!;
     
@@ -190,7 +197,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
             }
             //TODO here
             if (nextGameState.nonce === 9 && !nextGameState.winner) {
-              runFinishGameHandler(signedGameMove);
+              runFinishGameHandler(signedMove);
               setWinner('Draw!');
             }
           });

@@ -16,8 +16,6 @@ export const Checkers: React.FC<ICheckersProps> = ({
     const [selectedCell, setSelectedCell] = useState<number| null>(null); 
 
     const boardState = gameState?.myGameState || CheckersBoard.empty()
-    console.log('boardState', boardState);
-
 
     //TODO here
     const clickHandler = async (i: number) => {
@@ -30,9 +28,9 @@ export const Checkers: React.FC<ICheckersProps> = ({
 
         setSelectedCell(null);
 
-        //TODO here
-        console.log('move', [selectedCell, i, false, false]);
-        const move: CHECKERSMove = CHECKERSMove.fromMove([selectedCell, i, false, false], gameState.playerType)
+        //TODO here !!!it's only log setting in next line
+        console.log('move', [selectedCell + 1, i + 1, false, true]);
+        const move: CHECKERSMove = CHECKERSMove.fromMove([selectedCell, i, false, true], gameState.playerType)
 
         getSignerAddress().then((address) => {
             return transition(getRulesContract('checkers'),
