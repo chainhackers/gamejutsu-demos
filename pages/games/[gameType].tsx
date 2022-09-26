@@ -692,7 +692,18 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
 
   console.log('gameId12341234', gameId);
   console.log('conversation', conversation, !!conversation);
-  if (gameComponent) {
+  if (gameComponent && gameType === 'checkers') {
+    return (
+      <div className={styles.container}>      
+        {gameComponent}
+        
+        <RightPanel>
+          <XMTPChatLog logData={log} isLoading={isLogLoading} />
+        </RightPanel>
+      </div>
+    );
+  } else 
+  if (gameComponent){
     return (
       <div className={styles.container}>
         <LeftPanel
