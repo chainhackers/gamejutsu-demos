@@ -1,4 +1,3 @@
-import { defaultAbiCoder } from 'ethers/lib/utils';
 import { IContractData, TBoardState } from 'types';
 import { ethers } from 'ethers';
 import { getSessionWallet, signMove } from 'helpers/session_signatures';

@@ -8,6 +8,7 @@ import gameApi from 'gameApi';
 import { TBoardState } from 'types';
 import React, { useEffect, useRef, useState } from 'react';
 import cn from 'classnames';
+import { CHECKERSMove, CheckersState } from 'components/Games/Checkers/types';
 
 const PROPOSER_INGAME_ID = '0';
 const ACCEPTER_INGAME_ID = '1';
@@ -89,6 +90,19 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
   const connect = useConnect({
     connector: new InjectedConnector(),
   });
+
+  
+  const onClickValidateMove = async () => {
+    let state = new CheckersState(49, 'O');
+    console.log('state', state)
+    let gameStateContractParams = state.toGameStateContractParams();
+    console.log('contractParams', gameStateContractParams);
+    let move = CHECKERSMove.fromMove([23, 19, false, true], 'O');
+    console.log('encodedMove', move.encodedMove)
+    await gameApi.checkIsValidMove(
+      getRulesContract('checkers'),
+        gameStateContractParams, 1, move.encodedMove);   
+  }
 
   const proposeGameHandler = async (curentPlayerId: string) => {
     setGameStatus('Proposing...');
@@ -316,6 +330,12 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
         <div className={styles.block}>
           <div className={styles.blockTitle}>Propose new game</div>
           <div>
+            <button
+                className={styles.button}
+                onClick={() => onClickValidateMove()}
+            >
+              VALIDATE MOVE
+            </button>
             <button
               className={styles.button}
               onClick={() => proposeGameHandler(account.address!)}
