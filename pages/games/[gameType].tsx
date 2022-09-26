@@ -89,7 +89,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
         .makeMove(TTTMove.fromMove(7, 'X'))
         .makeMove(TTTMove.fromMove(8, 'X'));
 
-    const GetInitialState = (gameId: number, playerType: TPlayer) => {
+    const getInitialState = (gameId: number, playerType: TPlayer) => {
         let initialCheckersState = new CheckersState(gameId, playerType);
         return initialCheckersState;
     }
@@ -137,7 +137,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     } else
     //if (gameType == 'checkers') //to avoid compilation error
     {
-        [gameState, setGameState] = useState<IGameState<any, any>>(GetInitialState(1, 'X'));
+        [gameState, setGameState] = useState<IGameState<any, any>>(getInitialState(1, 'X'));
     }
 
     const setConversationHandler = async (rivalPlayerAddress: string) => {
@@ -149,11 +149,10 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
         if (!signer) return;
         console.log('before init client');
         initClient(signer);
-        //TODO build error if private encode
         if (gameType == 'tic-tac-toe') {
             setGameState(new TicTacToeState(Number(gameId!), playerIngameId === 0 ? 'X' : 'O'));
         } else {
-            setGameState(GetInitialState(Number(gameId), playerIngameId === 0 ? 'X' : 'O'));
+            setGameState(getInitialState(Number(gameId), playerIngameId === 0 ? 'X' : 'O'));
         }
     };
 
@@ -371,7 +370,6 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       let rivalPlayer = players[PROPOSER_INGAME_ID];
       setRivalPlayerAddress(rivalPlayer);
       setPlayerIngameId(ACCEPTER_INGAME_ID);
-      // setPlayerType(playersTypes[ACCEPTER_INGAME_ID]);
       // setGameStatus('Accepted');
       setGameId(gameId);
       // onAcceptGame(gameId);

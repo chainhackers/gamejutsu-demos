@@ -70,7 +70,6 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     'Fetching rival address...' | 'Failed to get rival address' | null
   >(null);
   const [playerIngameId, setPlayerIngameId] = useState<string | null>(null);
-  const [playerType, setPlayerType] = useState<string | null>(null);
   const [gameStatus, setGameStatus] = useState<
     | 'Proposed'
     | 'Proposing...'
@@ -97,7 +96,6 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     setRivalAddressStatus(null);
     setGameId(null);
     setError(null);
-    setPlayerType(null);
     setPlayerIngameId(null);
 
     try {
@@ -110,7 +108,6 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
         console.log('gameId', gameId);
         setGameId(gameId);
         setPlayerIngameId(PROPOSER_INGAME_ID);
-        setPlayerType(playersTypes[PROPOSER_INGAME_ID]);
         setGameStatus('Proposed');
         onProposeGame(gameId);
       }
@@ -141,11 +138,10 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
         gameId,
       );
 
-      // let rivalPlayer = players[parseInt(PROPOSER_INGAME_ID)];
+      let rivalPlayer = players[parseInt(PROPOSER_INGAME_ID)];
 
-      // setRivalPlayerAddress(rivalPlayer);
+      setRivalPlayerAddress(rivalPlayer);
       setPlayerIngameId(ACCEPTER_INGAME_ID);
-      setPlayerType(playersTypes[ACCEPTER_INGAME_ID]);
       setGameStatus('Accepted');
       setGameId(gameId);
       onAcceptGame(gameId);
@@ -303,7 +299,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
           </div>
           <div className={styles.blockData}>
             <span>Player Type:</span>
-            <span>{playerType ? playerType : 'No Type: propose or accept new game'}</span>
+            <span>{playerIngameId ? playersTypes[Number(playerIngameId)] : 'No Type: propose or accept new game'}</span>
           </div>
         </div>
         <div className={styles.block}>
