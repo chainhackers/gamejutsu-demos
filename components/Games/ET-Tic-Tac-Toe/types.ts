@@ -173,7 +173,7 @@ export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
   isFinished: boolean = false;
   winner: number | null = null;
   gameId: number;
-  isMyTurn: boolean;
+  redMoves: boolean;
   myGameState: TicTacToeBoard;
   playerType: TPlayer;
   playerId: number;
@@ -181,7 +181,7 @@ export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
 
   constructor(gameId: number, playerType: TPlayer, board: TicTacToeBoard | null = null) {
     this.gameId = gameId;
-    this.isMyTurn = playerType === 'X';
+    this.redMoves = playerType === 'X';
     this.myGameState = board || TicTacToeBoard.empty();
     this.playerType = playerType;
     this.playerId = playerType === 'X' ? 0 : 1;
@@ -240,13 +240,13 @@ export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
   }
 
   //TODO deduplicate
-  composeMove(move: TTTMove, playerAddress: string): IGameMove {
+  composeMove(move: TTTMove, playerAddress: string, winner: TPlayer | null): IGameMove {
     return new GameMove(
       this.gameId,
       this.nonce,
       playerAddress,
       this.encode(),
-      this.makeMove(move).encode(),
+      this.makeMove(move, undefined, winner).encode(),
       move.encodedMove,
     );
   }
@@ -256,14 +256,7 @@ export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
     playerAddress: string,
     winner: TPlayer | null,
   ): Promise<ISignedGameMove> {
-    const gameMove = new GameMove(
-      this.gameId,
-      this.nonce,
-      playerAddress,
-      this.encode(),
-      this.makeMove(move, undefined, winner).encode(),
-      move.encodedMove,
-    );
+    const gameMove = this.composeMove(move, playerAddress, winner);
     const signature = await signMoveWithAddress(gameMove, playerAddress);
     return new SignedGameMove(gameMove, [signature]);
   }

@@ -85,6 +85,7 @@ export class CHECKERSMove implements IMyGameMove {
 export class CheckersBoard implements IMyGameState<CHECKERSMove> {
     cells: TCells;
     winner: TPlayer | null = null;
+    redMoves: boolean = true;
     disputableMoves: Set<number>;
 
     getWinner(): TPlayer | null {
@@ -116,6 +117,7 @@ export class CheckersBoard implements IMyGameState<CHECKERSMove> {
         const [cells, redMoves, winner] = defaultAbiCoder.decode(STATE_TYPES, encodedBoardState);
         const board = new CheckersBoard();
         board.cells = cells;
+        board.redMoves = redMoves;
         if (winner == 1) {
             board.winner = 'X';
         } else if (winner == 2) {
@@ -151,7 +153,7 @@ export class CheckersState implements IGameState<CheckersBoard, CHECKERSMove> {
     isFinished: boolean = false;
     winner: number | null = null;
     gameId: number;
-    isMyTurn: boolean;
+    redMoves: boolean; //aka redMoves
     myGameState: CheckersBoard;
     playerType: TPlayer;
     playerId: number;
@@ -159,7 +161,7 @@ export class CheckersState implements IGameState<CheckersBoard, CHECKERSMove> {
 
     constructor(gameId: number, playerType: TPlayer, board: CheckersBoard | null = null) {
         this.gameId = gameId;
-        this.isMyTurn = playerType === 'X';
+        this.redMoves = playerType === 'O';
         this.myGameState = board || CheckersBoard.empty();
         this.playerType = playerType;
         this.playerId = playerType === 'X' ? 0 : 1;
@@ -190,6 +192,9 @@ export class CheckersState implements IGameState<CheckersBoard, CHECKERSMove> {
                 nextState.winner = 1 - this.playerId;
             }
         }
+        if (move.passMoveToOpponent) {
+            nextState.redMoves = !nextState.redMoves;
+        }
         nextState.nonce = this.nonce + 1;
         nextState.decodedMovesHistory = [...this.decodedMovesHistory, move];
 
@@ -215,19 +220,7 @@ export class CheckersState implements IGameState<CheckersBoard, CHECKERSMove> {
         return this.makeMove(move, valid)
     }
 
-    //TODO deduplicate
-    composeMove(move: CHECKERSMove, playerAddress: string): IGameMove {
-        return new GameMove(
-            this.gameId,
-            this.nonce,
-            playerAddress,
-            this.encode(),
-            this.makeMove(move).encode(),
-            move.encodedMove,
-        )
-    }
-
-    async signMove(move: CHECKERSMove, playerAddress: string, winner: TPlayer | null): Promise<ISignedGameMove> {
+    composeMove(move: CHECKERSMove, playerAddress: string, winner: TPlayer | null): IGameMove {
         const gameMove = new GameMove(
             this.gameId,
             this.nonce,
@@ -236,6 +229,11 @@ export class CheckersState implements IGameState<CheckersBoard, CHECKERSMove> {
             this.makeMove(move, undefined, winner).encode(),
             move.encodedMove,
         )
+        return gameMove;
+    }
+
+    async signMove(move: CHECKERSMove, playerAddress: string, winner: TPlayer | null): Promise<ISignedGameMove> {
+        const gameMove = this.composeMove(move, playerAddress, winner);
         const signature = await signMoveWithAddress(gameMove, playerAddress);
         return new SignedGameMove(gameMove, [signature]);
     }
@@ -258,6 +256,6 @@ export class CheckersState implements IGameState<CheckersBoard, CHECKERSMove> {
         if (this.winner) {
             contractWinner = this.winner + 1;
         }
-        return defaultAbiCoder.encode(STATE_TYPES, [cellsToEncode, this.playerId == 1, contractWinner]);
+        return defaultAbiCoder.encode(STATE_TYPES, [cellsToEncode, this.redMoves, contractWinner]);
     }
 }

@@ -8,7 +8,7 @@ import gameApi from 'gameApi';
 import { TBoardState } from 'types';
 import React, { useEffect, useRef, useState } from 'react';
 import cn from 'classnames';
-import { CHECKERSMove, CheckersState } from 'components/Games/Checkers/types';
+import { CheckersBoard, CHECKERSMove, CheckersState } from 'components/Games/Checkers/types';
 
 const PROPOSER_INGAME_ID = '0';
 const ACCEPTER_INGAME_ID = '1';
@@ -93,15 +93,32 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
 
   
   const onClickValidateMove = async () => {
-    let state = new CheckersState(49, 'O');
-    console.log('state', state)
-    let gameStateContractParams = state.toGameStateContractParams();
-    console.log('contractParams', gameStateContractParams);
+    let checkersState = new CheckersState(49, 'O');
+    console.log('checkersState', checkersState);
+    let contractParams = checkersState.toGameStateContractParams();
+    console.log('contractParams', contractParams);
+    console.log('decoded state', CheckersBoard.fromEncoded(contractParams.state));
     let move = CHECKERSMove.fromMove([23, 19, false, true], 'O');
-    console.log('encodedMove', move.encodedMove)
-    await gameApi.checkIsValidMove(
+    //let move = CHECKERSMove.fromMove([18, 15, false, true], 'O');
+    console.log('encodedMove', move.encodedMove);
+    let response = await gameApi.checkIsValidMove(
       getRulesContract('checkers'),
-        gameStateContractParams, 1, move.encodedMove);   
+      contractParams, 1, move.encodedMove);
+    console.log('response' , response); 
+    let gameMove = checkersState.composeMove(move, "0x37423721aC069f09d6Cc1274aEd00b205b771678", null);
+    console.assert(gameMove.oldState == contractParams.state, 'mismatched states d equal to contractParams.state', gameMove.oldState);
+    console.assert(gameMove.move == move.encodedMove, 'mismatched moves', gameMove.move);
+    console.log('gameMove.newState', CheckersBoard.fromEncoded(gameMove.newState));
+    let response2 = await gameApi.isValidGameMove(getArbiter(), gameMove);
+    console.log('response2' , response2);
+    let response3 = await gameApi.transition(
+      getRulesContract('checkers'),
+      contractParams, 1, move.encodedMove);
+    console.log('response3', response3);
+    console.assert(response3[2] == gameMove.newState);
+    console.log('fromContract', CheckersBoard.fromEncoded(response3[2]));
+    console.log('fromTs', CheckersBoard.fromEncoded(gameMove.newState));
+    
   }
 
   const proposeGameHandler = async (curentPlayerId: string) => {

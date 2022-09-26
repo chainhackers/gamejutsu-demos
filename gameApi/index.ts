@@ -281,4 +281,5 @@ export default {
   disputeMove,
   checkIsValidMove,
   transition,
+  isValidGameMove
 };
