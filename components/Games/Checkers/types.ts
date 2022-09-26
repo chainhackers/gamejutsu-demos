@@ -161,7 +161,7 @@ export class CheckersState implements IGameState<CheckersBoard, CHECKERSMove> {
 
     constructor(gameId: number, playerType: TPlayer, board: CheckersBoard | null = null) {
         this.gameId = gameId;
-        this.redMoves = playerType === 'O';
+        this.redMoves = true; //playerType === 'O';
         this.myGameState = board || CheckersBoard.empty();
         this.playerType = playerType;
         this.playerId = playerType === 'X' ? 0 : 1;
