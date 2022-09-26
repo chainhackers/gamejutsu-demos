@@ -237,15 +237,15 @@ export const proposeGame = async (
 export const acceptGame = async (
   contract: ethers.Contract,
   gamdIdToAccept: string,
-  stake1: string | null = null,
+  value: string | null = null,
 ): Promise<{ gameId: string; players: [string, string]; stake: string }> => {
-  // console.log('stake1', stake1);
-  // const value = ethers.BigNumber.from(10).pow(16);
-  const gasEstimated = await contract.estimateGas.acceptGame(gamdIdToAccept, []);
+  console.log('stake1', value);
+  const gasEstimated = await contract.estimateGas.acceptGame(gamdIdToAccept, [],
+    {value});
   let wallet = await getSessionWallet(await getSigner().getAddress());
   const tx = await contract.acceptGame(gamdIdToAccept, [wallet.address], {
     gasLimit: gasEstimated.mul(2),
-    // value,
+    value,
   });
   console.log('tx', tx);
   const rc = await tx.wait();
