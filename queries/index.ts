@@ -29,3 +29,19 @@ export const inRowCounterEntitiesQuery = gql`
     }
   }
 `;
+
+export const badgesQuery = gql`
+  query MyQuery($id: String) {
+    inRowCounterEntities(where: { id: $id }) {
+      cheaterMaxValue
+      drawCount
+      cheaterCount
+      drawMaxValue
+      id
+      loserCount
+      loserMaxValue
+      winnerCount
+      winnerMaxValue
+    }
+  }
+`;
