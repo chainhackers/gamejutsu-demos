@@ -1,0 +1,48 @@
+.container {
+  padding: 0 10px;
+}
+
+.main {
+  background-color: var(--white);
+  padding: 100px 5px;
+
+  max-width: 1250px;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+
+  .introductionBlock {
+    .intro {
+      font-size: 50px;
+      font-weight: bold;
+      max-width: 604px;
+    }
+
+    .description {
+      font-size: 26px;
+      max-width: 650px;
+      padding: 10px 0;
+    }
+    .tryButton {
+      margin-top: 50px;
+    }
+  }
+
+  .sponsorBlock {
+    text-align: -webkit-right;
+
+    .logo {
+      position: relative;
+      top: -70px;
+      width: 500px;
+      height: 330px;
+      border-radius: 8.7px;
+      // background-color: var(--gray-lightest);
+      overflow: hidden;
+      margin-bottom: -25px;
+      text-align: center;
+      // padding-top: 115px;
+      margin-right: 30px;
+    }
+  }
+}

@@ -40,6 +40,8 @@ export interface IGameState<IMyGameState, IMyGameMove> {
     //todo makeSignedMove(signedMove: ISignedGameMove): IGameState<IMyGameState, IMyGameMove>
     composeMove(move: IMyGameMove, playerAddress: string): IGameMove
     toGameStateContractParams() : TGameStateContractParams
+    encodedSignedMove(signedMove:ISignedGameMove, valid: boolean): IGameState<IMyGameState, IMyGameMove>
+    opponentSignedMove(signedMove:ISignedGameMove, valid: boolean): IGameState<IMyGameState, IMyGameMove>
 }
 
 // export interface IGameProps {

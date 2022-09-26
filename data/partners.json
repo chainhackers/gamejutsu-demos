@@ -1,0 +1,22 @@
+[
+  {
+    "name": "XMTP",
+    "image": "/logo/xmtp-logo.png",
+    "href": "https://xmtp.org/"
+  },
+  {
+    "name": "The Graph",
+    "image": "/logo/graph-logo.webp",
+    "href": "https://thegraph.com/"
+  },
+  {
+    "name": "Polygon",
+    "image": "/logo/polygon-matic-logo.png",
+    "href": "https://polygon.technology/"
+  },
+  {
+    "name": "Sismo",
+    "image": "/logo/sismo-logo.png",
+    "href": "https://www.sismo.io/"
+  }
+]

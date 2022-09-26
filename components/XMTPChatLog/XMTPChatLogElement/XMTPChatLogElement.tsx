@@ -4,8 +4,11 @@ export const XMTPChatLogElement: React.FC<XMTPChatLogElementPropsI> = ({
   id,
   sender,
   recepient,
-  content,
   timestamp,
+  signatures,
+  move,
+  oldState,
+  newState,
 }) => {
   const date = new Date(timestamp);
 
@@ -28,8 +31,20 @@ export const XMTPChatLogElement: React.FC<XMTPChatLogElementPropsI> = ({
         <div className={styles.data}>{date.toISOString()}</div>
       </div>
       <div className={styles.row}>
-        <div className={styles.title}>Content:</div>
-        <div className={styles.data}>{content}</div>
+        <div className={styles.title}>Move:</div>
+        <div className={styles.data}>{move}</div>
+      </div>
+      <div className={styles.row}>
+        <div className={styles.title}>Old state:</div>
+        <div className={styles.data}>{oldState}</div>
+      </div>
+      <div className={styles.row}>
+        <div className={styles.title}>New state:</div>
+        <div className={styles.data}>{newState}</div>
+      </div>
+      <div className={styles.row}>
+        <div className={styles.title}>Signatures:</div>
+        <div className={styles.data}>{signatures}</div>
       </div>
     </div>
   );

@@ -1,0 +1,23 @@
+.container {
+  // background-color: aqua;
+  
+  margin: 40px;
+
+  .image {
+    width: 181px;
+    height: 181px;
+
+    // margin: 0 0 20px;
+    padding: 78px 59px 77px 58px;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: var(--gray-lightest);
+  }
+
+  .name {
+    font-size: 26px;
+    font-weight: bold;
+    padding: 20px 0;
+
+  }
+}

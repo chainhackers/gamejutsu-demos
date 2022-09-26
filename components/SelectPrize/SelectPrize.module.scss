@@ -1,0 +1,179 @@
+.container {
+  background-color: aqua;
+  background-color: var(--white);
+  max-width: 1250px;
+  margin: auto;
+  padding: 53px 15px 33px;
+  text-align: center;
+  > .title {
+    font-size: 42px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+  .play,
+  .return {
+    margin: 20px;
+  }
+
+  .play {
+    position: relative;
+    padding-top: 50px;
+
+    .creating {
+      position: absolute;
+      right: 0;
+      left: 0;
+      top: 0;
+      font-size: 32px;
+    }
+    .error {
+      position: absolute;
+      right: 0;
+      left: 0;
+      top: 0;
+      font-size: 32px;
+      color: red;
+    }
+  }
+
+  > .selected {
+    height: 200px;
+    background-color: var(--white);
+    // background-color: rgb(141, 187, 224);
+    .free {
+      .freeDescription {
+        font-size: 26px;
+        font-weight: normal;
+        padding-bottom: 20px;
+      }
+
+      .freePrize {
+        font-size: 64px;
+        font-weight: normal;
+      }
+    }
+    .stake {
+      .stakeValue {
+        font-size: 26px;
+        font-weight: normal;
+        margin-bottom: 20px;
+
+        .currency {
+          font-weight: bold;
+        }
+      }
+      .stakes {
+        display: flex;
+        justify-content: center;
+
+        .stakeButton {
+          width: 130px;
+          margin: 8px;
+          // height: 53px;
+          background-color: var(--gray-lightest);
+          border-radius: 30px;
+          padding: 11px 29px;
+          font-size: 26px;
+          font-weight: bold;
+          margin-bottom: 20px;
+          cursor: pointer;
+        }
+      }
+      .notification {
+        font-size: 16px;
+        font-weight: normal;
+      }
+    }
+  }
+
+  .selection {
+    display: flex;
+    justify-content: center;
+
+    .free,
+    .stake {
+      // background-color: aquamarine;
+      // padding: 20px;
+      width: 250px;
+      cursor: pointer;
+      // border: 2px solid black;
+      text-align: center;
+      margin: auto 25px;
+      .title {
+        font-size: 16px;
+        font-weight: bold;
+      }
+      .description {
+        font-size: 16px;
+        font-weight: normal;
+      }
+      .image {
+        width: 181px;
+        height: 181px;
+        flex-grow: 0;
+        // margin: 20px 17.5px 0;
+        // padding: 27px 27.5px 27px 26.5px;
+        border-radius: 10px;
+        background-color: var(--gray-lightest);
+        margin: 20px auto;
+        border: 2px solid var(--gray-lightest);
+      }
+
+      &:hover {
+        .image {
+          border: 2px dotted var(--gray-dark);
+          svg {
+            stroke: var(--gray-dark);
+          }
+        }
+      }
+    }
+    .free {
+      .image {
+        padding: 37px 27px 35.1px 27px;
+      }
+      svg {
+        stroke: var(--gray);
+      }
+
+      &.disabled {
+        cursor: not-allowed;
+        svg {
+          stroke: var(--gray-lighter);
+        }
+      }
+      &.selected {
+        .image {
+          border: 2px solid var(--gray-dark);
+          svg {
+            stroke: var(--gray-dark);
+          }
+        }
+      }
+    }
+
+    .stake {
+      .image {
+        padding: 27px 27.5px 27px 26.5px;
+      }
+      svg {
+        stroke: var(--gray);
+      }
+      &.disabled {
+        cursor: not-allowed;
+        svg {
+          stroke: var(--gray-lighter);
+        }
+      }
+      &.selected {
+        .image {
+          border: 2px solid var(--gray-dark);
+          svg {
+            stroke: var(--gray-dark);
+          }
+        }
+      }
+    }
+  }
+}

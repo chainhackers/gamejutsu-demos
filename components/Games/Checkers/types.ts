@@ -78,7 +78,7 @@ export class CHECKERSMove implements IMyGameMove {
 
 export class CheckersBoard implements IMyGameState<CHECKERSMove> {
     cells: TCells;
-    disputableMoves: Set<TCheckersContractMove>;
+    disputableMoves: Set<number>;
 
     private constructor(history: CHECKERSMove[] = [], disputableMoveNonces: Set<number> = new Set()) {
         this.cells = [
@@ -93,9 +93,9 @@ export class CheckersBoard implements IMyGameState<CHECKERSMove> {
             this.cells[move.to] = move.player;
         });
 
-        this.disputableMoves = history.reduce<Set<TCheckersContractMove>>((acc: Set<TCheckersContractMove>, move: CHECKERSMove, i) => {
+        this.disputableMoves = history.reduce<Set<number>>((acc: Set<number>, move: CHECKERSMove, i) => {
             if (disputableMoveNonces.has(i)) {
-                return acc.add([move.from, move.to, move.isJump, move.passMoveToOpponent]);
+                return acc.add(move.to);
             }
             return acc;
         }, new Set())
@@ -158,13 +158,13 @@ export class CheckersState implements IGameState<CheckersBoard, CHECKERSMove> {
     }
 
 
-    encodedSignedMove(signedMove:ISignedGameMove, valid: boolean = true): CheckersState {
+    encodedSignedMove(signedMove:ISignedGameMove, valid: boolean = true): IGameState<CheckersBoard, CHECKERSMove> {
         const winner = getWinnerFromEncodedState(signedMove.gameMove.newState);
         const move = CHECKERSMove.fromEncoded(signedMove.gameMove.move, this.playerId == 0 ? 'X' : 'O');
         return this.makeMove(move, valid, winner);
     }
 
-    opponentSignedMove(signedMove:ISignedGameMove, valid: boolean = true): CheckersState {
+    opponentSignedMove(signedMove:ISignedGameMove, valid: boolean = true): IGameState<CheckersBoard, CHECKERSMove> {
         const winner = getWinnerFromEncodedState(signedMove.gameMove.newState);
         const move = CHECKERSMove.fromEncoded(signedMove.gameMove.move, this.playerId == 0 ? 'O' : 'X'); //TODO reversed, remove hack
         return this.makeMove(move, valid)

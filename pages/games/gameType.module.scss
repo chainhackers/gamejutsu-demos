@@ -1,6 +1,10 @@
 .container {
-  background-color: #759aab;
+  // background-color: #759aab;
+  background-color: var(--gray-lightest);
+  background-color: var(--white);
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-top: 90px;
+  
 }

@@ -1,0 +1,29 @@
+.container {
+  background-color: var(--white);
+  max-width: 1250px;
+  margin: auto;
+  padding: 53px 15px 33px;
+  text-align: center;
+
+  > .title {
+    font-size: 42px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+  > .description {
+    font-size: 26px;
+    font-weight: normal;
+    margin-bottom: 42px;
+  }
+
+  .wallets {
+    font-size: 61.5px;
+    font-weight: bold;
+  }
+  .connectButton {
+    display: flex;
+    justify-content: center;
+    padding: 40px;
+  }
+}

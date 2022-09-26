@@ -10,8 +10,7 @@ export const Board: React.FC<IBoardProps> = ({
                                                  isFinished,
                                                  disputableMoves,
                                                  selectedCell
-                                             }) => {
-                                               
+                                             }) => {        
     const renderSquare = (row: number, i: number) => {
         if (row % 2 == 1) {
             return <><Square

@@ -1,0 +1,73 @@
+.container {
+  // background-color: aqua;
+  background-color: var(--white);
+  max-width: 1250px;
+  margin: auto;
+  padding: 53px 15px 33px;
+  text-align: center;
+
+  > .title {
+    font-size: 42px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+  > .description {
+    font-size: 26px;
+    font-weight: normal;
+    margin-bottom: 42px;
+  }
+
+  .avatar {
+    margin-bottom: 10px;
+  }
+
+  .userName {
+    font-size: 26px;
+    font-weight: normal;
+  }
+
+  .selection {
+    // background-color: aquamarine;
+    display: flex;
+    justify-content: center;
+
+    .new,
+    .join {
+      text-align: center;
+      font-size: 16px;
+      font-weight: normal;
+      margin: 40px;
+      .title {
+        font-size: 16px;
+        font-weight: bold;
+      }
+      .description {
+        font-size: 16px;
+        font-weight: normal;
+      }
+      .button {
+        width: 181px;
+        height: 181px;
+        flex-grow: 0;
+        margin: 20px 0.5px 0;
+        padding: 78px 30px 77px 31px;
+        border-radius: 10px;
+        background-color: var(--gray-lightest);
+        font-size: 26px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .newGameLoader {
+    font-size: 42px;
+    font-weight: bold;
+    margin-top: 60px;
+  }
+  .error {
+    color: red;
+    font-size: 24px;
+  }
+}
