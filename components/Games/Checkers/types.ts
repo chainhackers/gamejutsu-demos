@@ -193,7 +193,7 @@ export class CheckersState implements IGameState<CheckersBoard, CHECKERSMove> {
             }
         }
         if (move.passMoveToOpponent) {
-            nextState.redMoves = !nextState.redMoves;
+            nextState.redMoves = !this.redMoves;
         }
         nextState.nonce = this.nonce + 1;
         nextState.decodedMovesHistory = [...this.decodedMovesHistory, move];
