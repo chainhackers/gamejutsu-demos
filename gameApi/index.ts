@@ -23,9 +23,7 @@ export function getSigner(): ethers.Signer {
   const provider = new ethers.providers.Web3Provider(
     window.ethereum as ethers.providers.ExternalProvider,
   );
-  console.log('provider', provider);
   const signer = provider.getSigner();
-  console.log('signer', signer);
   return signer;
 }
 

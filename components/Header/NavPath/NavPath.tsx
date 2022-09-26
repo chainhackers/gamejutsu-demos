@@ -9,7 +9,6 @@ export const NavPath: React.FC<NavPathPropsI> = ({ path }) => {
     'tic-tac-toe': 'Tic-Tac-Toe game',
   };
   const constructPath = (path: string) => {
-    console.log('path split', path.split('?')[0]);
     return path
       .split('?')[0]
       .split('/')

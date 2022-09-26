@@ -17,17 +17,6 @@ export const XMTPChatLog: React.FC<XMTPChatLogPropsI> = ({ logData, isLoading })
     let newState = decodeEncodedBoardState(_newState);
     const id = message.id.slice(0, 17) + '...' + message.id.slice(-17);
 
-    console.log('message', message);
-    console.log('id:', message.id);
-    console.log('sender: ', message.sender);
-    console.log('recepient', message.recepient);
-    console.log('timestamp', message.timestamp);
-    console.log('signatures', signedGameMove.signatures);
-    console.log(gameMove.move)
-    console.log('gameMove', defaultAbiCoder.decode(['uint8'], gameMove.move));
-    console.log('oldState', oldState);
-    console.log('newState', newState);
-
     return {
       id: message.id.slice(0, 17) + '...' + message.id.slice(-17),
       sender: message.sender,

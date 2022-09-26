@@ -695,8 +695,6 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
         </div>
     }
 
-  console.log('gameId12341234', gameId);
-  console.log('conversation', conversation, !!conversation);
   if (gameComponent && gameType === 'checkers') {
     return (
       <div className={styles.container}>      
