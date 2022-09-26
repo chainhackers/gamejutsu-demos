@@ -1,7 +1,7 @@
 import {IGameMove, ISignedGameMove} from '../../types/arbiter';
 import {TTTMove} from "./ET-Tic-Tac-Toe/types";
 
-
+export type TPlayer = 'X' | 'O';
 export type TGameHistory = ISignedGameMove[]
 
 export interface IMyGameMove {
@@ -9,6 +9,7 @@ export interface IMyGameMove {
 }
 
 export interface IMyGameState<IMyGameMove> {
+    getWinner(): TPlayer | null;
 }
 
 /**

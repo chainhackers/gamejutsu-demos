@@ -1,4 +1,4 @@
-import {IGameState, IMyGameMove, IMyGameState, TGameHistory, TGameStateContractParams} from "../types";
+import {IGameState, IMyGameMove, IMyGameState, TGameHistory, TGameStateContractParams, TPlayer} from "../types";
 import {GameMove, IGameMove, ISignedGameMove, SignedGameMove} from "../../../types/arbiter";
 import {defaultAbiCoder} from 'ethers/lib/utils';
 import {signMoveWithAddress} from "../../../helpers/session_signatures";
@@ -35,7 +35,6 @@ const MOVE_TYPES = ["uint8", "uint8", "bool", "bool"]
 //     bool passMoveToOpponent;
 // }
 
-export type TPlayer = 'X' | 'O';
 export type TCellData = null | TPlayer;
 //32
 export type TCells = [
@@ -78,7 +77,12 @@ export class CHECKERSMove implements IMyGameMove {
 
 export class CheckersBoard implements IMyGameState<CHECKERSMove> {
     cells: TCells;
+    winner: TPlayer | null = null;
     disputableMoves: Set<number>;
+
+    getWinner(): TPlayer | null {
+        return this.winner;
+    }
 
     private constructor(history: CHECKERSMove[] = [], disputableMoveNonces: Set<number> = new Set()) {
         this.cells = [
@@ -101,19 +105,28 @@ export class CheckersBoard implements IMyGameState<CHECKERSMove> {
         }, new Set())
     }
 
+    static fromEncoded(encodedBoardState: string): CheckersBoard {
+        const [cells, redMoves, winner] = defaultAbiCoder.decode(STATE_TYPES, encodedBoardState);
+        const board = new CheckersBoard();
+        board.cells = cells;
+        if (winner == 1) {
+            board.winner = 'X';
+        } else if (winner == 2) {
+            board.winner = 'O';
+        }
+        return Object.seal(board);
+    }
+
     static fromHistory(history: CHECKERSMove[], disputableMoveNonces: Set<number>): CheckersBoard {
         return Object.seal(new CheckersBoard(history, disputableMoveNonces));
     }
 
     static empty(): CheckersBoard {
         let emtpyCheckersBoard = new CheckersBoard();
-        return Object.seal(emtpyCheckersBoard) 
+        return Object.seal(emtpyCheckersBoard)
     }
 }
 
-export function decodeEncodedBoardState(encodedBoardState:string){
-    return defaultAbiCoder.decode(STATE_TYPES, encodedBoardState);
-}
 
 // struct State {
 //     uint8[32] cells;
@@ -121,18 +134,6 @@ export function decodeEncodedBoardState(encodedBoardState:string){
 //     uint8 winner;
 // }
 
-export function getWinnerFromEncodedState(state: string):TPlayer|null {
-    const [_, redMoves, contractWinner] = decodeEncodedBoardState(state);
-    let winner: TPlayer | null = null;
-    if (contractWinner == 1) {
-        winner = 'X';
-    }
-    else if (contractWinner == 2) {
-        winner = 'O';
-    }
-    console.log('winner', winner);
-    return winner;
-}
 
 export class CheckersState implements IGameState<CheckersBoard, CHECKERSMove> {
     movesHistory: TGameHistory = [];
@@ -159,15 +160,15 @@ export class CheckersState implements IGameState<CheckersBoard, CHECKERSMove> {
 
 
     encodedSignedMove(signedMove:ISignedGameMove, valid: boolean = true): IGameState<CheckersBoard, CHECKERSMove> {
-        const winner = getWinnerFromEncodedState(signedMove.gameMove.newState);
+        const winner = CheckersBoard.fromEncoded(signedMove.gameMove.newState).winner;
         const move = CHECKERSMove.fromEncoded(signedMove.gameMove.move, this.playerId == 0 ? 'X' : 'O');
         return this.makeMove(move, valid, winner);
     }
 
     opponentSignedMove(signedMove:ISignedGameMove, valid: boolean = true): IGameState<CheckersBoard, CHECKERSMove> {
-        const winner = getWinnerFromEncodedState(signedMove.gameMove.newState);
+        const winner = CheckersBoard.fromEncoded(signedMove.gameMove.newState).winner;
         const move = CHECKERSMove.fromEncoded(signedMove.gameMove.move, this.playerId == 0 ? 'O' : 'X'); //TODO reversed, remove hack
-        return this.makeMove(move, valid)
+        return this.makeMove(move, valid, winner);
     }
 
     makeMove(move: CHECKERSMove, valid: boolean = true, winner: TPlayer | null = null): CheckersState {

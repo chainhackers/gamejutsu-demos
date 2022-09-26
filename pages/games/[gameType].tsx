@@ -27,10 +27,10 @@ import {ISignedGameMove, SignedGameMove} from "../../types/arbiter";
 import { signMove, signMoveWithAddress } from 'helpers/session_signatures';
 import { ContractMethodNoResultError, useAccount } from 'wagmi';
 import { Checkers } from 'components/Games/Checkers';
-import { CHECKERSMove, CheckersState } from 'components/Games/Checkers/types';
+import {CheckersBoard, CHECKERSMove, CheckersState} from 'components/Games/Checkers/types';
 import { ethers } from 'ethers';
 import { useRouter } from 'next/router';
-import { IGameState } from 'components/Games/types';
+import {IGameState, IMyGameState, TPlayer} from 'components/Games/types';
 
 interface IGamePageProps {
   gameType?: string;
@@ -485,15 +485,22 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
 
             _isValidSignedMove(getArbiter(), signedMove).then((isValid) => {
               const nextGameState = gameState.opponentSignedMove(signedMove, isValid);
-              console.log('signedMove', decodeEncodedBoardState(signedMove.gameMove.newState)); //check winner
+              let decodedState: IMyGameState<any> | null = null;
+              let winner: TPlayer | null = null;
+              if(gameType == 'tic-tac-toe'){
+                  winner = TicTacToeBoard.fromEncoded(signedMove.gameMove.newState).getWinner();
+              } else if(gameType == 'checkers'){
+                  winner = CheckersBoard.fromEncoded(signedMove.gameMove.newState).getWinner();
+              }
+              console.log('signedMove new state:', decodedState); //check winner
               setLastOpponentMove(signedMove);
 
               console.log('nextGameState + winner', nextGameState, nextGameState.winner);
               setGameState(nextGameState);
               setIsInvalidMove(!isValid);
-              const decodedSignedMove = decodeEncodedBoardState(signedMove.gameMove.newState);
-              if (decodedSignedMove[1]) {
-                console.log('Winneer Propposer');
+
+              if (winner === 'X') {
+                console.log('Winner Proposer');
                 if (playerIngameId === PROPOSER_INGAME_ID) {
                   console.log('current player is proposer and wis');
                   const winPlayer = players.find(
@@ -509,7 +516,9 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
                 }
                 // runFinishGameHandler();
               }
-              if (decodedSignedMove[2]) {
+
+
+              if (winner === 'O') {
                 console.log('winner acceptor');
                 if (playerIngameId === PROPOSER_INGAME_ID) {
                   console.log('current player 2 is proposer and wis');
@@ -526,11 +535,8 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
                 }
                 // runFinishGameHandler();
               }
-              if (
-                nextGameState.nonce === 9 &&
-                !decodedSignedMove[1] &&
-                !decodedSignedMove[2]
-              ) {
+
+              if (nextGameState.nonce === 9 && !winner) {
                 console.log('nonce 9, Draw!');
                 setWinner('Draw!');
               }

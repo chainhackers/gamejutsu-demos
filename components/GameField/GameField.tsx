@@ -74,7 +74,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
                   borderless
                   size="sm"
                   title={t('buttons.connect')}
-                  onClick={onConnect}
+                  onClick={() => {onConnect(rivalPlayerAddress!)}}
                 />
               </div>
             </div>

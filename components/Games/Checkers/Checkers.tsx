@@ -3,9 +3,9 @@ import {Board} from 'components/Games/Checkers';
 import {ICheckersProps} from './ICheckersProps';
 
 import styles from './Checkers.module.scss';
-import {decodeEncodedBoardState, getWinnerFromEncodedState, CheckersBoard, TPlayer, CHECKERSMove} from './types';
+import {CheckersBoard, CHECKERSMove} from './types';
 import { getRulesContract, transition } from 'gameApi';
-import { ContractMethodNoResultError } from 'wagmi';
+import {TPlayer} from "../types";
 
 export const Checkers: React.FC<ICheckersProps> = ({
                                                            gameState,
@@ -40,7 +40,7 @@ export const Checkers: React.FC<ICheckersProps> = ({
                 gameState.playerId,
                 move.encodedMove
             ).then((transitionResult) => {
-                let winner: TPlayer | null = getWinnerFromEncodedState(transitionResult.state);
+                let winner: TPlayer | null = CheckersBoard.fromEncoded(transitionResult.state).getWinner();
                 const signedMove = gameState.signMove(move, address, winner)
                 console.log({ signedMove, move });
                 return signedMove
