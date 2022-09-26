@@ -71,7 +71,55 @@
       text-align: center;
       opacity: 1;
       // margin: auto;
-      top: 45%;
+      top: 15%;
+    }
+    .link {
+    // background-color: aqua
+      position: relative;
+      font-size: 16px;
+      font-weight: bold;
+      color: var(--white);
+      text-align: center;
+      opacity: 1;
+
+      // margin: auto;
+      top: 20%;
+      .badges {
+        .text {
+          color: var(--black); // height: 200px;
+          font-size: 20px;
+          padding: 20px 0;
+        }
+        background-color: var(--white);
+        padding: 10px;
+        margin: auto;
+        // background-color: var(--white);
+        width: 420px;
+        border-radius: 20px;
+
+        .row {
+          .badge {
+            margin: 10px;
+            display: inline-block;
+            // background-color: aqua;
+            width: 70px;
+            height: 70px;
+            cursor: not-allowed;
+
+            img {
+              opacity: 0.5;
+            }
+            &.available {
+              img {
+                opacity: 1;
+                cursor: pointer;
+              }
+            }
+
+            // border: 1px solid red;
+          }
+        }
+      }
     }
   }
   .header {
