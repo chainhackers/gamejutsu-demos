@@ -147,23 +147,6 @@ export class TicTacToeBoard implements IMyGameState<TTTMove> {
 
 }
 
-export function decodeEncodedBoardState(encodedBoardState:string){
-    return defaultAbiCoder.decode(STATE_TYPES, encodedBoardState);
-}
-
-export function getWinnerFromEncodedState(state: string):TPlayer|null {
-    const [_, xWins, oWins] = decodeEncodedBoardState(state);
-    let winner: TPlayer | null = null;
-    if (xWins) {
-        winner = 'X';
-    }
-    else if (oWins) {
-        winner = 'O';
-    }
-    console.log('winner', winner);
-    return winner;
-}
-
 export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
   movesHistory: TGameHistory = [];
   decodedMovesHistory: TTTMove[] = [];
@@ -188,13 +171,12 @@ export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
   }
 
   encodedSignedMove(signedMove: ISignedGameMove, valid: boolean = true): TicTacToeState {
-    const winner = getWinnerFromEncodedState(signedMove.gameMove.newState);
+    const winner = TicTacToeBoard.fromEncoded(signedMove.gameMove.newState).getWinner();
     const move = TTTMove.fromEncoded(signedMove.gameMove.move, this.playerId == 0 ? 'X' : 'O');
     return this.makeMove(move, valid, winner);
   }
 
   opponentSignedMove(signedMove: ISignedGameMove, valid: boolean = true): TicTacToeState {
-    const winner = getWinnerFromEncodedState(signedMove.gameMove.newState);
     const move = TTTMove.fromEncoded(signedMove.gameMove.move, this.playerId == 0 ? 'O' : 'X'); //TODO reversed, remove hack
     return this.makeMove(move, valid);
   }

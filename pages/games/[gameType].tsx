@@ -694,54 +694,57 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
         />
         </div>
     }
+    if(gameComponent) {
+        if (gameType === 'checkers') {
+            return (
+                <div className={styles.container}>
+                    {gameComponent}
 
-  if (gameComponent && gameType === 'checkers') {
-    return (
-      <div className={styles.container}>      
-        {gameComponent}
-        
-        <RightPanel>
-          <XMTPChatLog logData={log} isLoading={isLogLoading} />
-        </RightPanel>
-      </div>
-    );
-  } else 
-  if (gameComponent){
-    return (
-      <div className={styles.container}>
-        <LeftPanel
-          players={players}
-          isTimeoutAllowed={!!lastOpponentMove && !!lastMove && !isTimeoutInited}
-          // isTimeoutAllowed={!isTimeoutInited}
-          initTimeout={initTimeoutHandler}
-          isResolveTimeoutAllowed={!!lastMove && isResolveTimeOutAllowed}
-          // isResolveTimeoutAllowed={isResolveTimeOutAllowed}
-          resolveTimeout={resolveTimeoutHandler}
-          isFinishTimeOutAllowed={isFinishTimeoutAllowed}
-          finishTimeout={finishTimeoutHandler}
-          isTimeoutRequested={isTimeoutRequested}
-          // isTimeoutRequested={true}
-          onRunDisput={runDisputeHandler}
-          isDisputAvailable={isDisputAvailable}
-          // connectPlayer={connectPlayerHandler}
-        />
-        <GameField
-          gameId={gameId}
-          rivalPlayerAddress={rivalPlayerAddress}
-          isConnected={!!conversation}
-          isInDispute={isInDispute}
-          disputeAppealPlayer={disputeAppealPlayer}
-          winner={winner}
-          onConnect={setConversationHandler}
-        >
-          {gameComponent}
-        </GameField>
-        <RightPanel>
-          <XMTPChatLog logData={log} isLoading={isLogLoading} />
-        </RightPanel>
-      </div>
-    );
-  }
+                    <RightPanel>
+                        <XMTPChatLog
+                            gameType={gameType}
+                            logData={log}
+                            isLoading={isLogLoading}/>
+                    </RightPanel>
+                </div>
+            );
+        } else if (gameType === 'checkers') {
+            return (
+                <div className={styles.container}>
+                    <LeftPanel
+                        players={players}
+                        isTimeoutAllowed={!!lastOpponentMove && !!lastMove && !isTimeoutInited}
+                        // isTimeoutAllowed={!isTimeoutInited}
+                        initTimeout={initTimeoutHandler}
+                        isResolveTimeoutAllowed={!!lastMove && isResolveTimeOutAllowed}
+                        // isResolveTimeoutAllowed={isResolveTimeOutAllowed}
+                        resolveTimeout={resolveTimeoutHandler}
+                        isFinishTimeOutAllowed={isFinishTimeoutAllowed}
+                        finishTimeout={finishTimeoutHandler}
+                        isTimeoutRequested={isTimeoutRequested}
+                        // isTimeoutRequested={true}
+                        onRunDisput={runDisputeHandler}
+                        isDisputAvailable={isDisputAvailable}
+                        // connectPlayer={connectPlayerHandler}
+                    />
+                    <GameField
+                        gameId={gameId}
+                        rivalPlayerAddress={rivalPlayerAddress}
+                        isConnected={!!conversation}
+                        isInDispute={isInDispute}
+                        disputeAppealPlayer={disputeAppealPlayer}
+                        winner={winner}
+                        onConnect={setConversationHandler}
+                    >
+                        {gameComponent}
+                    </GameField>
+                    <RightPanel>
+                        <XMTPChatLog gameType={gameType} logData={log} isLoading={isLogLoading}/>
+                    </RightPanel>
+                </div>
+            );
+        }
+    }
   return <div>No Games Available</div>;
 };
 

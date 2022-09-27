@@ -1,6 +1,9 @@
-import { IChatLog } from 'types';
+import {IChatLog} from 'types';
+import React from "react";
+
 export interface XMTPChatLogPropsI {
-  children?: React.ReactNode;
-  logData: IChatLog[];
-  isLoading?: boolean;
+    gameType: string;
+    children?: React.ReactNode;
+    logData: IChatLog[];
+    isLoading?: boolean;
 }
