@@ -104,14 +104,17 @@ export class TicTacToeBoard implements IMyGameState<TTTMove> {
 
   static fromEncoded(encodedState: string): TicTacToeBoard {
     const [cellsToDecode, crossesWin, naughtsWin] = defaultAbiCoder.decode(TIC_TAC_TOE_STATE_TYPES, encodedState) as [
-      number[],
+      [number, number, number, number, number, number, number, number, number],
       boolean,
       boolean,
     ];
     const cells = cellsToDecode.map((cell) => {
-        if (cell === 0) {return null} else if (cell === 1) {return 'X'} else if (cell === 2) {return 'O'}
-    });
-    return Object.seal(new TicTacToeBoard([], crossesWin, naughtsWin));
+        if (cell === 1) {return 'X'} else if (cell === 2) {return 'O'}
+        return null;
+    }) as TCells;
+    const board = new TicTacToeBoard([], crossesWin, naughtsWin);
+    board.cells = cells;
+    return Object.seal(board);
   }
 
   static cellsFromHistory(history: TTTMove[]): TCells {
