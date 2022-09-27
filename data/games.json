@@ -1,4 +1,4 @@
 [
-  { "name": "checkers", "image": "imgaePath", "url": "checkers" },
-  { "name": "ticTacToe", "image": "imgaePath", "url": "tic-tac-toe" }
+  { "name": "checkers", "image": "/images/checkers.png", "url": "checkers" },
+  { "name": "ticTacToe", "image": "/images/tictaktoe.png", "url": "tic-tac-toe" }
 ]
