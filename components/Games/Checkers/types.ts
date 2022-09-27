@@ -4,11 +4,11 @@ import {defaultAbiCoder} from 'ethers/lib/utils';
 import {signMoveWithAddress} from "../../../helpers/session_signatures";
 import { ChannelListener } from "diagnostics_channel";
 
-const STATE_TYPES = ["uint8[32]", "bool", "uint8"]
-const MOVE_TYPES = ["uint8", "uint8", "bool", "bool"]
+export const CHECKERS_STATE_TYPES = ["uint8[32]", "bool", "uint8"]
+export const CHECKERS_MOVE_TYPES = ["uint8", "uint8", "bool", "bool"]
 
 export function decodeEncodedBoardState(encodedBoardState:string){
-    return defaultAbiCoder.decode(STATE_TYPES, encodedBoardState);
+    return defaultAbiCoder.decode(CHECKERS_STATE_TYPES, encodedBoardState);
 }
 
 // @custom cells 32-byte array of uint8s representing the board
@@ -66,7 +66,7 @@ export class CHECKERSMove implements IMyGameMove {
     private constructor(encodedMove: string, player: TPlayer) {
         this.encodedMove = encodedMove;
         let from, to;
-        [from, to, this.isJump, this.passMoveToOpponent] = defaultAbiCoder.decode(MOVE_TYPES, encodedMove);
+        [from, to, this.isJump, this.passMoveToOpponent] = defaultAbiCoder.decode(CHECKERS_MOVE_TYPES, encodedMove);
         this.from = from - 1;
         this.to = to - 1;
         this.player = player;
@@ -77,7 +77,7 @@ export class CHECKERSMove implements IMyGameMove {
     }
 
     static fromMove([from, to, isJump, passMoveToOpponent]: TCheckersContractMove, player: TPlayer): CHECKERSMove {
-        const encodedMove = defaultAbiCoder.encode(MOVE_TYPES, [from + 1, to + 1, isJump, passMoveToOpponent]);
+        const encodedMove = defaultAbiCoder.encode(CHECKERS_MOVE_TYPES, [from + 1, to + 1, isJump, passMoveToOpponent]);
         return Object.seal(new CHECKERSMove(encodedMove, player));
     }
 }
@@ -114,7 +114,7 @@ export class CheckersBoard implements IMyGameState<CHECKERSMove> {
     }
 
     static fromEncoded(encodedBoardState: string): CheckersBoard {
-        const [cells, redMoves, winner] = defaultAbiCoder.decode(STATE_TYPES, encodedBoardState);
+        const [cells, redMoves, winner] = defaultAbiCoder.decode(CHECKERS_STATE_TYPES, encodedBoardState);
         const board = new CheckersBoard();
         board.cells = cells;
         board.redMoves = redMoves;
@@ -256,6 +256,6 @@ export class CheckersState implements IGameState<CheckersBoard, CHECKERSMove> {
         if (this.winner) {
             contractWinner = this.winner + 1;
         }
-        return defaultAbiCoder.encode(STATE_TYPES, [cellsToEncode, this.redMoves, contractWinner]);
+        return defaultAbiCoder.encode(CHECKERS_STATE_TYPES, [cellsToEncode, this.redMoves, contractWinner]);
     }
 }

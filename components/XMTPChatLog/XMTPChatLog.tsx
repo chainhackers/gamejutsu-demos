@@ -2,9 +2,9 @@ import {XMTPChatLogElement} from 'components/XMTPChatLog/XMTPChatLogElement';
 import {XMTPChatLogPropsI} from './XMTPChatLogProps';
 import {defaultAbiCoder} from 'ethers/lib/utils';
 import styles from './XMTPChatLog.module.scss';
-import {TicTacToeBoard, TTTMove} from "../Games/ET-Tic-Tac-Toe/types";
-import {IMyGameState} from "../Games/types";
-import {CheckersBoard, CHECKERSMove} from "../Games/Checkers/types";
+import {TIC_TAC_TOE_MOVE_TYPES, TicTacToeBoard, TTTMove} from "../Games/ET-Tic-Tac-Toe/types";
+import {IMyGameMove, IMyGameState} from "../Games/types";
+import {CHECKERS_MOVE_TYPES, CheckersBoard, CHECKERSMove} from "../Games/Checkers/types";
 import React from "react";
 
 export const XMTPChatLog: React.FC<XMTPChatLogPropsI> = ({gameType, logData, isLoading}) => {
@@ -19,13 +19,20 @@ export const XMTPChatLog: React.FC<XMTPChatLogPropsI> = ({gameType, logData, isL
         }
         let oldState: IMyGameState<TTTMove | CHECKERSMove> | null = null;
         let newState: IMyGameState<TTTMove | CHECKERSMove> | null = null;
+        let move: string | null;
 
         if (gameType == 'tic-tac-toe') {
             oldState = TicTacToeBoard.fromEncoded(_oldState);
             newState = TicTacToeBoard.fromEncoded(_newState);
+            move = JSON.stringify(
+                defaultAbiCoder.decode(TIC_TAC_TOE_MOVE_TYPES, gameMove.move)
+            );
         } else {
             oldState = CheckersBoard.fromEncoded(_oldState);
             newState = CheckersBoard.fromEncoded(_newState);
+            move = JSON.stringify(
+                defaultAbiCoder.decode(CHECKERS_MOVE_TYPES, gameMove.move)
+            );
         }
         const id = message.id.slice(0, 17) + '...' + message.id.slice(-17);
 

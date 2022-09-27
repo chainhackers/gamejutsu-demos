@@ -9,8 +9,8 @@ import { GameMove, IGameMove, ISignedGameMove, SignedGameMove } from '../../../t
 import { defaultAbiCoder } from 'ethers/lib/utils';
 import { signMoveWithAddress } from '../../../helpers/session_signatures';
 
-const STATE_TYPES = ['uint8[9]', 'bool', 'bool'] as const;
-const MOVE_TYPES = ['uint8'] as const;
+export const TIC_TAC_TOE_STATE_TYPES = ['uint8[9]', 'bool', 'bool'] as const;
+export const TIC_TAC_TOE_MOVE_TYPES = ['uint8'] as const;
 
 export type TCellData = null | TPlayer;
 export type TCells = [
@@ -32,7 +32,7 @@ export class TTTMove implements IMyGameMove {
 
   private constructor(encodedMove: string, player: TPlayer) {
     this.encodedMove = encodedMove;
-    const m = defaultAbiCoder.decode(MOVE_TYPES, encodedMove) as [number];
+    const m = defaultAbiCoder.decode(TIC_TAC_TOE_MOVE_TYPES, encodedMove) as [number];
     this.move = m[0];
     this.player = player;
   }
@@ -42,7 +42,7 @@ export class TTTMove implements IMyGameMove {
   }
 
   static fromMove(move: number, player: TPlayer): TTTMove {
-    const encodedMove = defaultAbiCoder.encode(MOVE_TYPES, [move]);
+    const encodedMove = defaultAbiCoder.encode(TIC_TAC_TOE_MOVE_TYPES, [move]);
     return Object.seal(new TTTMove(encodedMove, player));
   }
 }
@@ -99,11 +99,11 @@ export class TicTacToeBoard implements IMyGameState<TTTMove> {
       const cellsToEncode = this.cells.map((cell) => {
           if (cell === null) {return 0} else if (cell === 'X') {return 1} else if (cell === 'O') {return 2}
       });
-    return defaultAbiCoder.encode(STATE_TYPES, [cellsToEncode, this.crossesWin, this.naughtsWin])
+    return defaultAbiCoder.encode(TIC_TAC_TOE_STATE_TYPES, [cellsToEncode, this.crossesWin, this.naughtsWin])
   }
 
   static fromEncoded(encodedState: string): TicTacToeBoard {
-    const [cellsToDecode, crossesWin, naughtsWin] = defaultAbiCoder.decode(STATE_TYPES, encodedState) as [
+    const [cellsToDecode, crossesWin, naughtsWin] = defaultAbiCoder.decode(TIC_TAC_TOE_STATE_TYPES, encodedState) as [
       number[],
       boolean,
       boolean,
