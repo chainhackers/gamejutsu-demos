@@ -157,7 +157,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     };
 
     const sendSignedMoveHandler = async (signedMove: ISignedGameMove) => {
-        const messageText = JSON.stringify(signedMove);
+        const messageText = JSON.stringify({...signedMove, gameType});
 
         if (!conversation) {
           console.warn('no conversation!');
@@ -540,7 +540,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
                 }
                 // runFinishGameHandler();
               }
-
+              //TODO here
               if (nextGameState.nonce === 9 && !winner) {
                 console.log('nonce 9, Draw!');
                 setWinner('Draw!');
@@ -563,7 +563,13 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
         // console.warn('no conversation');
         return [];
       }
-      const msgs = await conversation.messages();
+      //TODO Add fetch with offset or filter out old games
+      //deduplicate with chat component
+      const opts = {
+        startTime: new Date(new Date().setDate(new Date().getDate() - 1)),
+        endTime: new Date(),
+      }
+      const msgs = await conversation.messages(opts);
       const sortedMessages = msgs
         .sort((msg1, msg2) => msg2.sent!.getTime() - msg1.sent!.getTime())
         .map(({ id, senderAddress, recipientAddress, sent, content }) => ({
