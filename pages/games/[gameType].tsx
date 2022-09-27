@@ -171,7 +171,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
           console.log('oldState.fromEncoded', CheckersBoard.fromEncoded(signedMove.gameMove.oldState));
           console.log('newState.fromEncoded', CheckersBoard.fromEncoded(signedMove.gameMove.newState));
         }
-    
+
         _isValidSignedMove(getArbiter(), signedMove).then((isValid) => {
           const nextGameState = gameState.encodedSignedMove(signedMove, isValid);
           console.log('nextGameState, check Winner', nextGameState);
@@ -184,13 +184,13 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
             setLastMove(signedMove);
             setGameState(nextGameState);
             console.log('new state is set after sending the move', gameState);
-    
+
             if (nextGameState.winner !== null) {
               if (playerIngameId === nextGameState.winner) {
                 runFinishGameHandler(signedMove);
                 console.log('winner: ', account.address);
                 const playerWhoWon = players.find((player) => player.address === account.address)!;
-    
+
                 setWinner(playerWhoWon.playerName);
               }
             }
@@ -306,7 +306,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
               console.log('message resloveTimeout', message);
             });
           }
-    
+
           setIsTimeoutInited(false);
           setIsResolveTimeOutAllowed(false);
           setIsFinishTimeoutAllowed(false);
@@ -316,7 +316,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
         }
       };
 
-    
+
 
   const createNewGameHandler = async (isPaid: boolean = false) => {
     // setCreatingNewGame(true);
@@ -380,9 +380,9 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     }
   };
 
-  
 
-  
+
+
 
   const finishTimeoutHandler = async () => {
     if (!gameId) {
@@ -708,7 +708,6 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
 
                     <RightPanel>
                         <XMTPChatLog
-                            gameType={gameType}
                             logData={log}
                             isLoading={isLogLoading}/>
                     </RightPanel>
@@ -745,7 +744,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
                         {gameComponent}
                     </GameField>
                     <RightPanel>
-                        <XMTPChatLog gameType={gameType} logData={log} isLoading={isLogLoading}/>
+                        <XMTPChatLog logData={log} isLoading={isLogLoading}/>
                     </RightPanel>
                 </div>
             );
