@@ -552,8 +552,8 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       //TODO Add fetch with offset or filter out old games
       //deduplicate with chat component
       const opts = {
-        startTime: new Date(new Date().setDate(new Date().getDate() - 1)),
-        endTime: new Date(),
+        // startTime: new Date(new Date().setDate(new Date().getDate() - 1)),
+        // endTime: new Date(),
       }
       const msgs = await conversation.messages(opts);
       const sortedMessages = msgs

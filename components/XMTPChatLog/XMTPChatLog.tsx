@@ -3,12 +3,10 @@ import { XMTPChatLogPropsI } from './XMTPChatLogProps';
 import { defaultAbiCoder } from 'ethers/lib/utils';
 import styles from './XMTPChatLog.module.scss';
 import { TIC_TAC_TOE_MOVE_TYPES, TicTacToeBoard, TTTMove } from "../Games/ET-Tic-Tac-Toe/types";
-import { IMyGameMove, IMyGameState } from "../Games/types";
+import { IMyGameState } from "../Games/types";
 import { CHECKERS_MOVE_TYPES, CheckersBoard, CHECKERSMove } from "../Games/Checkers/types";
 import React from "react";
 import { ISignedGameMove } from 'types/arbiter';
-import { IChatLog } from 'types/xmtp';
-import { isNumber } from 'util';
 
 export interface ISignedGameMoveInMessage extends ISignedGameMove {
   gameType: string;
@@ -34,8 +32,6 @@ export const XMTPChatLog: React.FC<XMTPChatLogPropsI> = ({ logData, isLoading })
     if (!signedGameMove) {
       return message;
     }
-
-    console.log("==================================");
 
     let oldState: IMyGameState<TTTMove | CHECKERSMove> | null = null;
     let newState: IMyGameState<TTTMove | CHECKERSMove> | null = null;
