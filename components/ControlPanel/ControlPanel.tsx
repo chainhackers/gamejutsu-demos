@@ -94,6 +94,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
   
   const onClickValidateMove = async () => {
     let checkersState = new CheckersState(49, 'O');
+    let opponentState = new CheckersState(49, 'X');
     console.log('checkersState', checkersState);
     let contractParams = checkersState.toGameStateContractParams();
     console.log('contractParams', contractParams);
@@ -106,6 +107,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
       contractParams, 1, move.encodedMove);
     console.log('response' , response); 
     let gameMove = checkersState.composeMove(move, "0x37423721aC069f09d6Cc1274aEd00b205b771678", null);
+    let nextOpponentState = opponentState.makeMove(move, true, null);
     console.assert(gameMove.oldState == contractParams.state, 'mismatched states d equal to contractParams.state', gameMove.oldState);
     console.assert(gameMove.move == move.encodedMove, 'mismatched moves', gameMove.move);
     console.log('gameMove.newState', CheckersBoard.fromEncoded(gameMove.newState));
@@ -118,6 +120,19 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     console.assert(response3[2] == gameMove.newState);
     console.log('fromContract', CheckersBoard.fromEncoded(response3[2]));
     console.log('fromTs', CheckersBoard.fromEncoded(gameMove.newState));
+
+    let secondMove = CHECKERSMove.fromMove([11, 15, false, true], 'X');
+    let response4 = await gameApi.checkIsValidMove(
+      getRulesContract('checkers'),
+      nextOpponentState.toGameStateContractParams(), 0, secondMove.encodedMove);
+    console.log('response4' , response4);
+    let opponentGameMove = nextOpponentState.composeMove(secondMove, "0x3Be65C389F095aaa50D0b0F3801f64Aa0258940b", null);
+    console.assert(opponentGameMove.oldState ==  nextOpponentState.toGameStateContractParams().state, 'mismatched states d equal to contractParams.state', gameMove.oldState);
+    console.assert(opponentGameMove.move == secondMove.encodedMove, 'mismatched moves', opponentGameMove);
+    console.log('opponentGameMove.oldState', CheckersBoard.fromEncoded(opponentGameMove.oldState));
+    console.log('opponentGameMove.newState', CheckersBoard.fromEncoded(opponentGameMove.newState));
+    let response5 = await gameApi.isValidGameMove(getArbiter(), opponentGameMove);
+    console.log('response5' , response5);
     
   }
 
