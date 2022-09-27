@@ -42,7 +42,7 @@ export const XMTPChatLog: React.FC<XMTPChatLogPropsI> = ({gameType, logData, isL
             recepient: message.recepient,
             timestamp: message.timestamp,
             signatures: signedGameMove.signatures,
-            move: String(defaultAbiCoder.decode(['uint8'], gameMove.move)),
+            move: move,
             oldState: JSON.stringify(oldState),
             newState: JSON.stringify(newState),
             content: message.content,
