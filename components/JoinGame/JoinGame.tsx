@@ -13,15 +13,24 @@ export const JoinGame: React.FC<JoinGamePropsI> = ({ acceptGameHandler }) => {
   const router = useRouter();
   const [isAccepting, setAccepting] = useState<boolean>(false);
   const [acceptingError, setAcceptingError] = useState<string | null>(null);
-  console.log('Graph fetched data', data);
+  // console.log('Graph fetched data', data);
+  const gamesRulesMap: { [id: string]: string } = {
+    '0xc6f81d6610a0b1bcb8cc11d50602d490b7624a96': 'tic-tac-toe',
+    '0x6ede6f6f1aca5e7a3bdc403ea0ca9889e2095486': 'checkers',
+  };
 
-  const gameEntities = data?.gameEntities as { started: boolean | null }[];
+  const gameEntities = data?.gameEntities as { started: boolean | null; rules: string }[];
 
-  console.log('gameEntities', gameEntities);
+  // console.log('gameEntities', gameEntities);
   const dataToShow = !!gameEntities
-    ? gameEntities.filter((entity) => entity.started === null)
+    ? gameEntities.filter(
+        (entity) =>
+          entity.started === null &&
+          gamesRulesMap[entity.rules.toLowerCase()] === router.query.gameType,
+      )
     : [];
-  console.log(dataToShow);
+  // console.log('adfasfads', dataToShow);
+  // console.log(router.query.gameType);
 
   const clickHandler = async (gameId: string, stake: string) => {
     // router.push(`/games/${router.query.gameType}?acceptGameId=${gameId}&prize=true`);
