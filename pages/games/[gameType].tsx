@@ -699,7 +699,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
                     </RightPanel>
                 </div>
             );
-        } else if (gameType === 'checkers') {
+        } else if (gameType === 'tic-tac-toe') {
             return (
                 <div className={styles.container}>
                     <LeftPanel
