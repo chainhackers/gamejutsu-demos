@@ -43,7 +43,7 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({ createNewGameHandler 
       });
   };
   const returnButtonClickHandler = () => {
-    router.push(`/games/${query.gameType}?join=true`);
+    router.push(`/games/${query.gameType}?select=true`);
   };
   return (
     <div className={styles.container}>
