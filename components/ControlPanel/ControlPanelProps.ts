@@ -1,6 +1,4 @@
-import { IContractData } from 'types';
 import React from "react";
-import { ethers } from 'ethers';
 export interface ControlPanelPropsI {
   children?: React.ReactNode;
   onProposeGame: (gameId: string | null) => void;
@@ -13,7 +11,7 @@ export interface ControlPanelPropsI {
   playersTypes: { [id: number]: string };
   onConnectPlayer: (rivalPlayerAddress: string) => Promise<void>;
   onSetPlayerIngameId: any;
-  winner: number | null;
+  winner: string | null;
   rivalPlayerConversationStatus: string | null;
   isInDispute: boolean;
   isInvalidMove: boolean;
@@ -22,4 +20,5 @@ export interface ControlPanelPropsI {
   onInitTimeout: () => void;
   onResolveTimeout: () => void;
   onFinalizeTimeout: () => void;
+  gameId: string | null;
 }

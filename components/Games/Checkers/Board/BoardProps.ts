@@ -1,4 +1,4 @@
-import {TCellData} from "../types";
+import {TCellData, TCheckersContractMove} from "../types";
 
 export interface IBoardProps {
     squares: TCellData[];

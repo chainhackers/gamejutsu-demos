@@ -1,0 +1,27 @@
+.container {
+  padding: 0 10px;
+
+  .navigation {
+    ul {
+      list-style-type: none;
+
+      > li {
+        display: inline-block;
+        padding: 0 25px;
+
+        &.active {
+          font-weight: bold;
+          color: var(--gray-darkest);
+        }
+
+        &.inactive {
+          color: var(--gray);
+        }
+        &:hover {
+          font-weight: bold;
+          color: var(--black);
+        }
+      }
+    }
+  }
+}

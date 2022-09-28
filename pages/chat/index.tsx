@@ -74,7 +74,11 @@ const ChatPage = () => {
         console.warn('no conversation');
         return;
       }
-      const msgs = await conversation.messages();
+      const opts = {
+        // startTime: new Date(new Date().setDate(new Date().getDate() - 1)), //TODO filtering breaks things, research some more
+        // endTime: new Date(),
+      }
+      const msgs = await conversation.messages(opts);
       setMessages(msgs.sort((msg1, msg2) => msg2.sent!.getTime() - msg1.sent!.getTime()));
     };
 

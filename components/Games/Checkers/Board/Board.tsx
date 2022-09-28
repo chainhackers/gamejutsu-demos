@@ -10,36 +10,37 @@ export const Board: React.FC<IBoardProps> = ({
                                                  isFinished,
                                                  disputableMoves,
                                                  selectedCell
-                                             }) => {
-                                               
+                                             }) => {        
     const renderSquare = (row: number, i: number) => {
         if (row % 2 == 1) {
-            return <><Square
+            return <>
+                <Square
+                value={squares[i]}
+                onClick={() => {onClick(i)}}
+                disputable={disputableMoves.has(i)}
+                selected={selectedCell == i}
+                />
+                <Square
                 value={null}
                 onClick={() => {}}
                 disputable={false}
                 selected={false}
                 />
-                <Square
-                value={squares[i]}
-                onClick={() => {onClick(i)}}
-                disputable={disputableMoves.has(i)}
-                selected={selectedCell == i}
-                />
+                
             </>
         } 
         return <>
-                <Square
-                value={squares[i]}
-                onClick={() => {onClick(i)}}
-                disputable={disputableMoves.has(i)}
-                selected={selectedCell == i}
-                />
                 <Square
                 value={null}
                 onClick={() => {}}
                 disputable={false}
                 selected={false}/>
+                <Square
+                value={squares[i]}
+                onClick={() => {onClick(i)}}
+                disputable={disputableMoves.has(i)}
+                selected={selectedCell == i}
+                />
             </> 
     };
 

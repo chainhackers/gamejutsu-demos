@@ -1,4 +1,3 @@
-import { defaultAbiCoder } from 'ethers/lib/utils';
 import { IContractData, TBoardState } from 'types';
 import { ethers } from 'ethers';
 import { getSessionWallet, signMove } from 'helpers/session_signatures';
@@ -20,10 +19,10 @@ export const getRulesContract = (gameType: 'tic-tac-toe' | 'checkers'| string | 
 } 
 
 export function getSigner(): ethers.Signer {
-  const provider = new ethers.providers.Web3Provider(window.ethereum as ethers.providers.ExternalProvider);
-  console.log('provider', provider);
+  const provider = new ethers.providers.Web3Provider(
+    window.ethereum as ethers.providers.ExternalProvider,
+  );
   const signer = provider.getSigner();
-  console.log('signer', signer);
   return signer;
 }
 
@@ -34,7 +33,7 @@ export function fromContractData(data: IContractData): ethers.Contract {
 export function newContract(
   addressOrName: string,
   contractInterface: ethers.ContractInterface,
-  signerOrProvider?: ethers.Signer | ethers.providers.Provider
+  signerOrProvider?: ethers.Signer | ethers.providers.Provider,
 ): ethers.Contract {
   const contract = new ethers.Contract(addressOrName, contractInterface, signerOrProvider);
   return contract;
@@ -83,9 +82,9 @@ export const initTimeout = async (
   const rc = await tx.wait();
   console.log('rc', rc);
   const event = rc.events.find((event: { event: string }) => event.event === 'TimeoutStarted');
-  return {...event.args};
-};        
-    
+  return { ...event.args };
+};
+
 // /**
 //     @notice a single valid signed move is enough to resolve the timout
 //     @notice the move must be signed by the player whos turn it is
@@ -149,7 +148,7 @@ export const checkIsValidMove = async (
   playerIngameId: number,
   encodedMove: string,
 ) => {
-  console.log('checkIsValidMove', {gameState, playerIngameId, encodedMove});
+  console.log('checkIsValidMove', { gameState, playerIngameId, encodedMove });
   const response = contract.isValidMove(gameState, playerIngameId, encodedMove);
   console.log('response', response);
   return response;
@@ -168,36 +167,31 @@ export const transition = async (
   return response;
 };
 
-
-export const isValidGameMove = async (
-  contract: ethers.Contract,
-  gameMove: IGameMove,
-) => {
-  console.log('isValidGameMove', {contract, gameMove});
+export const isValidGameMove = async (contract: ethers.Contract, gameMove: IGameMove) => {
+  console.log('isValidGameMove', { contract, gameMove });
   const response = contract.isValidGameMove(gameMove);
-  console.log({response});
+  console.log({ response });
   return response;
 };
-
 
 export const isValidSignedMove = async (
   contract: ethers.Contract,
   gameMove: IGameMove,
-  signatures: string[] = []
+  signatures: string[] = [],
 ) => {
   let wallet = await getSessionWallet(await getSigner().getAddress());
-  let signature:string  = await signMove(gameMove, wallet);
+  let signature: string = await signMove(gameMove, wallet);
   signatures.push(signature);
-  return _isValidSignedMove(contract, {gameMove, signatures});
+  return _isValidSignedMove(contract, { gameMove, signatures });
 };
 
 export const _isValidSignedMove = async (
   contract: ethers.Contract,
   signedgameMove: ISignedGameMove,
 ) => {
-  console.log('isValidSignedMove', {contract, signedgameMove});
+  console.log('isValidSignedMove', { contract, signedgameMove });
   const response = contract.isValidSignedMove(signedgameMove);
-  console.log({response});
+  console.log({ response });
   return response;
 };
 
@@ -215,18 +209,20 @@ export async function registerSessionAddress(
   });
 }
 
-
 export const proposeGame = async (
   contract: ethers.Contract,
   rulesContractAddress: string,
+  isPaid?: boolean,
 ): Promise<{ gameId: string; proposer: string; stake: string }> => {
-  console.log('proposeGame', {contract, rulesContractAddress});
+  console.log('proposeGame', { contract, rulesContractAddress });
+  const value = ethers.BigNumber.from(10).pow(16);
   let wallet = await getSessionWallet(await getSigner().getAddress());
   const gasEstimated = await contract.estimateGas.proposeGame(rulesContractAddress, []);
-  const tx = await contract.proposeGame(
-    rulesContractAddress,
-    [wallet.address],
-    { gasLimit: gasEstimated.mul(2) });
+
+  const tx = await contract.proposeGame(rulesContractAddress, [wallet.address], {
+    gasLimit: gasEstimated.mul(2),
+    value: isPaid ? value : null,
+  });
   console.log('tx', tx);
   const rc = await tx.wait();
   console.log('rc', rc);
@@ -238,12 +234,16 @@ export const proposeGame = async (
 export const acceptGame = async (
   contract: ethers.Contract,
   gamdIdToAccept: string,
+  value: string | null = null,
 ): Promise<{ gameId: string; players: [string, string]; stake: string }> => {
-  const gasEstimated = await contract.estimateGas.acceptGame(gamdIdToAccept, []);
+  console.log('stake1', value);
+  const gasEstimated = await contract.estimateGas.acceptGame(gamdIdToAccept, [],
+    {value});
   let wallet = await getSessionWallet(await getSigner().getAddress());
-  const tx = await contract.acceptGame(gamdIdToAccept,
-      [wallet.address],
-      { gasLimit: gasEstimated.mul(2) });
+  const tx = await contract.acceptGame(gamdIdToAccept, [wallet.address], {
+    gasLimit: gasEstimated.mul(2),
+    value,
+  });
   console.log('tx', tx);
   const rc = await tx.wait();
   console.log('rc', rc);
@@ -271,10 +271,6 @@ export const getPlayers = async (contract: ethers.Contract, gamdId: string) => {
   return response;
 };
 
-
-
-
-
 export default {
   fromContractData,
   newContract,
@@ -285,4 +281,5 @@ export default {
   disputeMove,
   checkIsValidMove,
   transition,
+  isValidGameMove
 };

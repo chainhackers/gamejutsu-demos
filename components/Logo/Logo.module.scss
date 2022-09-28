@@ -1,5 +1,8 @@
 .container {
-  background-color: var(--color-grey-light);
   width: 77px;
   height: 77px;
+  // padding: 29px 19px;
+  border-radius: 10px;
+  overflow: hidden;
+  // background-color: var(--gray-lightest);
 }

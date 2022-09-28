@@ -3,20 +3,21 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import styles from './ControlPanel.module.scss';
 import { useAccount, useConnect } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
-import gameApi, { getArbiter, getRulesContract } from 'gameApi';
+import { getArbiter, getRulesContract } from 'gameApi';
+import gameApi from 'gameApi';
 import { TBoardState } from 'types';
 import React, { useEffect, useRef, useState } from 'react';
 import cn from 'classnames';
+import { CheckersBoard, CHECKERSMove, CheckersState } from 'components/Games/Checkers/types';
 
 const PROPOSER_INGAME_ID = '0';
 const ACCEPTER_INGAME_ID = '1';
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 const FETCH_RIVAL_ADDRESS_TIMEOUT = 5000;
 
-
 //mb this better https://pgarciacamou.medium.com/react-simple-polling-custom-hook-usepollingeffect-1e9b6b8c9c71
 export function useInterval(callback: () => any, delay: number | undefined) {
-  const savedCallback = useRef<() => any>(()=>{});
+  const savedCallback = useRef<() => any>(() => {});
   // Remember the latest callback.
   useEffect(() => {
     savedCallback.current = callback;
@@ -54,6 +55,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
   onInitTimeout,
   onResolveTimeout,
   onFinalizeTimeout,
+  gameId: gameID,
 }) => {
   const [delay, setDelay] = useState(FETCH_RIVAL_ADDRESS_TIMEOUT);
   const [currentPlayerAddress, setCurrentPlayerAddress] = useState<string | null>(null);
@@ -69,20 +71,19 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     'Fetching rival address...' | 'Failed to get rival address' | null
   >(null);
   const [playerIngameId, setPlayerIngameId] = useState<string | null>(null);
-  const [playerType, setPlayerType] = useState<string | null>(null);
   const [gameStatus, setGameStatus] = useState<
     | 'Proposed'
     | 'Proposing...'
     | 'Accepted'
     | 'Accepting...'
-    | 'Resigned'
+  | 'Resigned'
     | 'Resigning...'
     | 'Propose failed, check console'
     | 'Accepting failed, check console'
     | 'Resigne failed, check console'
     | null
   >(null);
-  const [gameId, setGameId] = useState<string | null>(null);
+  const [gameId, setGameId] = useState<string | null>(gameID);
   const [error, setError] = useState<string | null>(null);
 
   const account = useAccount();
@@ -90,13 +91,57 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     connector: new InjectedConnector(),
   });
 
+  
+  const onClickValidateMove = async () => {
+    let checkersState = new CheckersState(49, 'O');
+    let opponentState = new CheckersState(49, 'X');
+    console.log('checkersState', checkersState);
+    let contractParams = checkersState.toGameStateContractParams();
+    console.log('contractParams', contractParams);
+    console.log('decoded state', CheckersBoard.fromEncoded(contractParams.state));
+    let move = CHECKERSMove.fromMove([23, 19, false, true], 'O');
+    //let move = CHECKERSMove.fromMove([18, 15, false, true], 'O');
+    console.log('encodedMove', move.encodedMove);
+    let response = await gameApi.checkIsValidMove(
+      getRulesContract('checkers'),
+      contractParams, 1, move.encodedMove);
+    console.log('response' , response); 
+    let gameMove = checkersState.composeMove(move, "0x37423721aC069f09d6Cc1274aEd00b205b771678", null);
+    let nextOpponentState = opponentState.makeMove(move, true, null);
+    console.assert(gameMove.oldState == contractParams.state, 'mismatched states d equal to contractParams.state', gameMove.oldState);
+    console.assert(gameMove.move == move.encodedMove, 'mismatched moves', gameMove.move);
+    console.log('gameMove.newState', CheckersBoard.fromEncoded(gameMove.newState));
+    let response2 = await gameApi.isValidGameMove(getArbiter(), gameMove);
+    console.log('response2' , response2);
+    let response3 = await gameApi.transition(
+      getRulesContract('checkers'),
+      contractParams, 1, move.encodedMove);
+    console.log('response3', response3);
+    console.assert(response3[2] == gameMove.newState);
+    console.log('fromContract', CheckersBoard.fromEncoded(response3[2]));
+    console.log('fromTs', CheckersBoard.fromEncoded(gameMove.newState));
+
+    let secondMove = CHECKERSMove.fromMove([11, 15, false, true], 'X');
+    let response4 = await gameApi.checkIsValidMove(
+      getRulesContract('checkers'),
+      nextOpponentState.toGameStateContractParams(), 0, secondMove.encodedMove);
+    console.log('response4' , response4);
+    let opponentGameMove = nextOpponentState.composeMove(secondMove, "0x3Be65C389F095aaa50D0b0F3801f64Aa0258940b", null);
+    console.assert(opponentGameMove.oldState ==  nextOpponentState.toGameStateContractParams().state, 'mismatched states d equal to contractParams.state', gameMove.oldState);
+    console.assert(opponentGameMove.move == secondMove.encodedMove, 'mismatched moves', opponentGameMove);
+    console.log('opponentGameMove.oldState', CheckersBoard.fromEncoded(opponentGameMove.oldState));
+    console.log('opponentGameMove.newState', CheckersBoard.fromEncoded(opponentGameMove.newState));
+    let response5 = await gameApi.isValidGameMove(getArbiter(), opponentGameMove);
+    console.log('response5' , response5);
+    
+  }
+
   const proposeGameHandler = async (curentPlayerId: string) => {
     setGameStatus('Proposing...');
     setRivalPlayerAddress(null);
     setRivalAddressStatus(null);
     setGameId(null);
     setError(null);
-    setPlayerType(null);
     setPlayerIngameId(null);
 
     try {
@@ -109,7 +154,6 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
         console.log('gameId', gameId);
         setGameId(gameId);
         setPlayerIngameId(PROPOSER_INGAME_ID);
-        setPlayerType(playersTypes[PROPOSER_INGAME_ID]);
         setGameStatus('Proposed');
         onProposeGame(gameId);
       }
@@ -144,7 +188,6 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
 
       setRivalPlayerAddress(rivalPlayer);
       setPlayerIngameId(ACCEPTER_INGAME_ID);
-      setPlayerType(playersTypes[ACCEPTER_INGAME_ID]);
       setGameStatus('Accepted');
       setGameId(gameId);
       onAcceptGame(gameId);
@@ -198,10 +241,10 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
   const connectPeerPlayerHandler = async () => {
     console.log('connect peer player handler');
     // onConnectPlayer(rivalPlayerAddress);
-    if (rivalPlayerAddress){
-        await onConnectPlayer(rivalPlayerAddress);
+    if (rivalPlayerAddress) {
+      await onConnectPlayer(rivalPlayerAddress);
     } else {
-        console.log('no rival player address');
+      console.log('no rival player address');
     }
   };
 
@@ -209,11 +252,11 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     setCurrentPlayerAddress(account.address ? account.address : null);
   }, [account]);
 
-  useInterval(async ()=> {
+  useInterval(async () => {
     if (rivalPlayerAddress) {
       return;
     }
-    if(!gameId) {
+    if (!gameId) {
       return;
     }
     console.log('in poller');
@@ -302,7 +345,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
           </div>
           <div className={styles.blockData}>
             <span>Player Type:</span>
-            <span>{playerType ? playerType : 'No Type: propose or accept new game'}</span>
+            <span>{playerIngameId ? playersTypes[Number(playerIngameId)] : 'No Type: propose or accept new game'}</span>
           </div>
         </div>
         <div className={styles.block}>
@@ -319,6 +362,12 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
         <div className={styles.block}>
           <div className={styles.blockTitle}>Propose new game</div>
           <div>
+            <button
+                className={styles.button}
+                onClick={() => onClickValidateMove()}
+            >
+              VALIDATE MOVE
+            </button>
             <button
               className={styles.button}
               onClick={() => proposeGameHandler(account.address!)}

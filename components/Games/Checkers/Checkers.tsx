@@ -3,9 +3,9 @@ import {Board} from 'components/Games/Checkers';
 import {ICheckersProps} from './ICheckersProps';
 
 import styles from './Checkers.module.scss';
-import {decodeEncodedBoardState, getWinnerFromEncodedState, CheckersBoard, TPlayer, CHECKERSMove} from './types';
+import {CheckersBoard, CHECKERSMove} from './types';
 import { getRulesContract, transition } from 'gameApi';
-import { ContractMethodNoResultError } from 'wagmi';
+import {TPlayer} from "../types";
 
 export const Checkers: React.FC<ICheckersProps> = ({
                                                            gameState,
@@ -16,8 +16,6 @@ export const Checkers: React.FC<ICheckersProps> = ({
     const [selectedCell, setSelectedCell] = useState<number| null>(null); 
 
     const boardState = gameState?.myGameState || CheckersBoard.empty()
-    console.log('boardState', boardState);
-
 
     //TODO here
     const clickHandler = async (i: number) => {
@@ -30,8 +28,9 @@ export const Checkers: React.FC<ICheckersProps> = ({
 
         setSelectedCell(null);
 
-        //TODO here
-        const move: CHECKERSMove = CHECKERSMove.fromMove([selectedCell, i, false, false], gameState.playerType)
+        //TODO here !!!it's only log setting in next line
+        console.log('move', [selectedCell + 1, i + 1, false, true]);
+        const move: CHECKERSMove = CHECKERSMove.fromMove([selectedCell, i, false, true], gameState.playerType)
 
         getSignerAddress().then((address) => {
             return transition(getRulesContract('checkers'),
@@ -39,7 +38,7 @@ export const Checkers: React.FC<ICheckersProps> = ({
                 gameState.playerId,
                 move.encodedMove
             ).then((transitionResult) => {
-                let winner: TPlayer | null = getWinnerFromEncodedState(transitionResult.state);
+                let winner: TPlayer | null = CheckersBoard.fromEncoded(transitionResult.state).getWinner();
                 const signedMove = gameState.signMove(move, address, winner)
                 console.log({ signedMove, move });
                 return signedMove
