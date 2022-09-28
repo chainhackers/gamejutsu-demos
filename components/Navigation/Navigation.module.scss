@@ -11,10 +11,15 @@
 
         &.active {
           font-weight: bold;
+          color: var(--gray-darkest);
         }
 
         &.inactive {
           color: var(--gray);
+        }
+        &:hover {
+          font-weight: bold;
+          color: var(--black);
         }
       }
     }

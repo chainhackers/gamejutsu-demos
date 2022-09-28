@@ -7,6 +7,7 @@ const en = {
       gameDemo: 'Game Demo',
       team: 'Meet the Team',
       gitHub: 'GitHub',
+      documents: 'Documents',
     },
     buttons: {
       connectWAllet: 'Connect Wallet',
