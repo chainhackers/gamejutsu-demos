@@ -1,0 +1,36 @@
+.container {
+    display: flex;
+    width: 680px;
+    margin: auto;
+    margin-bottom: 30px;
+    .avatar {
+        width: 155px;
+        height: 155px;
+        background: #0c0f1e;
+        border-radius: 10px;
+        margin-right: 50px;
+        overflow: hidden;
+    }
+
+    .information {
+        text-align: start;
+
+        .name {
+            position: relative;
+            padding-top: 10px;
+            font-weight: 700;
+            font-size: 26px;
+        }
+        .possition {
+            padding-top: 5px;
+            font-weight: 700;
+            font-size: 16px;
+        }
+        .description {
+            padding-top: 5px;
+            font-weight: 400;
+            font-size: 16px;
+            max-width: 480px;
+        }
+    }
+}

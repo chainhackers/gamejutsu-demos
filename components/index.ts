@@ -18,3 +18,4 @@ export * from 'components/NewSquare';
 export * from 'components/LeftPanel';
 export * from 'components/RightPanel';
 export * from 'components/Players';
+export * from 'components/TeamMember';
