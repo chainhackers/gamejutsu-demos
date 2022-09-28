@@ -1,12 +1,11 @@
 import { useTranslation } from 'react-i18next';
 import { ActualGamesList } from 'components';
 import { useQuery } from '@apollo/client';
-import { gameEntitiesQuery, inRowCounterEntitiesQuery } from 'queries';
+import { gameEntitiesQuery } from 'queries';
 import { JoinGamePropsI } from './JoinGameProps';
 import styles from './JoinGame.module.scss';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
-import { connectorsForWallets } from '@rainbow-me/rainbowkit';
+import React, { useState } from 'react';
 export const JoinGame: React.FC<JoinGamePropsI> = ({ acceptGameHandler }) => {
   const { data, error, loading } = useQuery(gameEntitiesQuery);
   const { t } = useTranslation();
@@ -21,7 +20,7 @@ export const JoinGame: React.FC<JoinGamePropsI> = ({ acceptGameHandler }) => {
 
   const gameEntities = data?.gameEntities as { started: boolean | null; rules: string }[];
 
-  // console.log('gameEntities', gameEntities);
+  console.log('gameEntities', gameEntities);
   const dataToShow = !!gameEntities
     ? gameEntities.filter(
         (entity) =>
@@ -29,8 +28,6 @@ export const JoinGame: React.FC<JoinGamePropsI> = ({ acceptGameHandler }) => {
           gamesRulesMap[entity.rules.toLowerCase()] === router.query.gameType,
       )
     : [];
-  // console.log('adfasfads', dataToShow);
-  // console.log(router.query.gameType);
 
   const clickHandler = async (gameId: string, stake: string) => {
     // router.push(`/games/${router.query.gameType}?acceptGameId=${gameId}&prize=true`);
