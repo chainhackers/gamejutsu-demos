@@ -10,24 +10,28 @@
         "name": "Viktor Larson",
         "image": "/images/vl.png",
         "role": "Fullstack Developer, DevOps",
-        "description": ""
+        "description": "",
+        "link": null
     },
     {
         "name": "Roman Poludnev",
         "image": "/images/pr.png",
         "role": "Frontend Developer",
-        "description": ""
+        "description": "",
+        "link": null
     },
     {
         "name": "Sinlin Yeo",
         "image": "/images/sl.png",
         "role": "UX Designer",
-        "description": "Sinlin has over 4 years of experience in Web UIUX Design. She shipped multiple B2B and B2C products. An individual who is constantly up for the next challenge in Web3, participating in ETH Boston 2019, ETH NewYork 2022, ETHZurich 2022 and more."
+        "description": "Sinlin has over 4 years of experience in Web UIUX Design. She shipped multiple B2B and B2C products. An individual who is constantly up for the next challenge in Web3, participating in ETH Boston 2019, ETH NewYork 2022, ETHZurich 2022 and more.",
+        "link": null
     },
     {
         "name": "Anastasia Busygina",
         "image": "/images/ab.png",
         "role": "Project Manager",
-        "description": ""
+        "description": "",
+        "link": null
     }
 ]
