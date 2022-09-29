@@ -1,0 +1,32 @@
+[
+    {
+        "name": "Evgenii Tsvigun",
+        "image": "/images/et.png",
+        "possition": "Blockchain Architect",
+        "description": "A back-end developer with over 20 years of experience, specializing in blockchain based solutions and big data/fast data processing."
+    },
+    {
+        "name": "Viktor Larson",
+        "image": "/images/vl.png",
+        "possition": "Fullstack Developer, DevOps",
+        "description": ""
+    },
+    {
+        "name": "Roman Poludnev",
+        "image": "/images/pr.png",
+        "possition": "Frontend Developer",
+        "description": ""
+    },
+    {
+        "name": "Sinlin Yeo",
+        "image": "/images/sl.png",
+        "possition": "UX Designer",
+        "description": ""
+    },
+    {
+        "name": "Anastasia Busygina",
+        "image": "/images/ab.png",
+        "possition": "Project Manager",
+        "description": ""
+    }
+]
