@@ -2,31 +2,32 @@
     {
         "name": "Evgenii Tsvigun",
         "image": "/images/et.png",
-        "possition": "Blockchain Architect",
-        "description": "A back-end developer with over 20 years of experience, specializing in blockchain based solutions and big data/fast data processing."
+        "role": "Architect, Backend Engineer",
+        "description": "Evgenii is a back-end developer with over 20 years of experience, specializing in blockchain based solutions and big data/fast data processing.",
+        "link": "https://t.me/utgardaloki"
     },
     {
         "name": "Viktor Larson",
         "image": "/images/vl.png",
-        "possition": "Fullstack Developer, DevOps",
+        "role": "Fullstack Developer, DevOps",
         "description": ""
     },
     {
         "name": "Roman Poludnev",
         "image": "/images/pr.png",
-        "possition": "Frontend Developer",
+        "role": "Frontend Developer",
         "description": ""
     },
     {
         "name": "Sinlin Yeo",
         "image": "/images/sl.png",
-        "possition": "UX Designer",
-        "description": ""
+        "role": "UX Designer",
+        "description": "Sinlin has over 4 years of experience in Web UIUX Design. She shipped multiple B2B and B2C products. An individual who is constantly up for the next challenge in Web3, participating in ETH Boston 2019, ETH NewYork 2022, ETHZurich 2022 and more."
     },
     {
         "name": "Anastasia Busygina",
         "image": "/images/ab.png",
-        "possition": "Project Manager",
+        "role": "Project Manager",
         "description": ""
     }
 ]
