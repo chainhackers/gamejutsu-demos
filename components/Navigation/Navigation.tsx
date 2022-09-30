@@ -14,6 +14,15 @@ export const Navigation: React.FC<NavigationPropsI> = ({ active }) => {
             <Link href="/games">{t('navigation.gameDemo')}</Link>
           </li>
           <li
+            className={cn(
+              active && (active === 'documents' ? styles.active : styles.inactive),
+            )}
+          >
+            <a href="https://github.com/ChainHackers/GameJutsu#readme" target="_blank">
+              {t('navigation.documents')}
+            </a>
+          </li>
+          <li
             className={cn(active && (active === 'github' ? styles.active : styles.inactive))}
           >
             <a href="https://github.com/chainHackers" target="_blank">
@@ -21,9 +30,7 @@ export const Navigation: React.FC<NavigationPropsI> = ({ active }) => {
             </a>
           </li>
           <li className={cn(active && (active === 'team' ? styles.active : styles.inactive))}>
-            <a href="/team" target="_blank">
-              {t('navigation.team')}
-            </a>
+            <Link href="/team">{t('navigation.team')}</Link>
           </li>
         </ul>
       </nav>
