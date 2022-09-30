@@ -16,7 +16,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   rivalPlayerAddress,
   isConnected,
   isInDispute,
-  winner,
+  finishedGameState,
   disputeAppealPlayer,
   onConnect,
 }) => {
@@ -26,7 +26,6 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   const [isShowReport, setShowReport] = useState<boolean>(false);
   const [isShowDispute, setShowDispute] = useState<boolean>(false);
   const [isBadge, setIsBadge] = useState<boolean>(true);
-  const [isWinner, setWinner] = useState<string | null>();
   const [availableBadges, setAvailableBadges] = useState<{
     winner: number[];
     loser: number[];
@@ -85,26 +84,24 @@ export const GameField: React.FC<GameFieldPropsI> = ({
       setShowShade(true);
       setIsWaiting(false);
       setIsConnecting(false);
-      setWinner(null);
       setShowDispute(true);
     }
   }, [isInDispute]);
 
   useEffect(() => {
-    if (!!winner) {
+    if (!!finishedGameState) {
       setShowShade(true);
       setIsWaiting(false);
       setIsConnecting(false);
       setShowDispute(false);
-      setWinner(winner);
     }
-  }, [winner]);
+  }, [finishedGameState]);
 
   useEffect(() => {
-    console.log('badges', isWinner, data);
+    console.log('badges', finishedGameState, data);
     // if (isWinner) {
 
-    if (isWinner) {
+    if (finishedGameState) {
       console.log('badges data', data);
       if (!!data && !!data.inRowCounterEntities[0]) {
         console.log('badges', data);
@@ -147,7 +144,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
         setAvailableBadges(availableBadges);
       }
     }
-  }, [data, isWinner, winner]);
+  }, [data, finishedGameState]);
   return (
     <div className={styles.container}>
       {isShowShade && (
@@ -185,12 +182,12 @@ export const GameField: React.FC<GameFieldPropsI> = ({
               <div className={styles.notice}>{t('shade.notice')}</div>
             </div>
           )}
-          {isWinner && (
+          {finishedGameState && (
             <div className={styles.win}>
-              {isWinner === 'Draw!' ? isWinner : `${isWinner} ${t('wins')}`}
+              {JSON.stringify(finishedGameState)}
             </div>
           )}
-          {isWinner && availableBadges && (
+          {finishedGameState && availableBadges && (
             <>
               <div className={styles.link}>
                 <div className={styles.badges}>

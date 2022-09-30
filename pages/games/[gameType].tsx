@@ -20,7 +20,7 @@ import styles from 'pages/games/gameType.module.scss';
 import {ETTicTacToe} from "components/Games/ET-Tic-Tac-Toe";
 import {TicTacToeBoard, TicTacToeState, TTTMove} from "components/Games/ET-Tic-Tac-Toe/types";
 import {IChatLog, PlayerI} from "../../types";
-import gameApi, {_isValidSignedMove, getArbiter, getSigner, getRulesContract, finishGame, disputeMove, initTimeout, resolveTimeout, finalizeTimeout} from "../../gameApi";
+import gameApi, {_isValidSignedMove, getArbiter, getSigner, getRulesContract, finishGame, disputeMove, initTimeout, resolveTimeout, finalizeTimeout, FinishedGameState} from "../../gameApi";
 import {ISignedGameMove, SignedGameMove} from "../../types/arbiter";
 import { signMoveWithAddress } from 'helpers/session_signatures';
 import { useAccount } from 'wagmi';
@@ -89,7 +89,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     const [newMessage, setNewMessage] = useState<{ content: object; sender: string } | null>(null);
     const [lastMove, setLastMove] = useState<ISignedGameMove | null>(null);
     const [lastOpponentMove, setLastOpponentMove] = useState<ISignedGameMove | null>(null);
-    const [winner, setWinner] = useState<string | null>(null);
+    const [finishedGameState, setFinishedGameState] = useState<FinishedGameState | null>(null);
     const [gameId, setGameId] = useState<string | null>(null);
 
 
@@ -174,16 +174,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
             if (nextGameState.winner !== null) {
               if (playerIngameId === nextGameState.winner) {
                 runFinishGameHandler(signedMove);
-                console.log('winner: ', account.address);
-                const playerWhoWon = players.find((player) => player.address === account.address)!;
-
-                setWinner(playerWhoWon.playerName);
               }
-            }
-            //TODO here
-            if (nextGameState.nonce === 9 && !nextGameState.winner) {
-              runFinishGameHandler(signedMove);
-              setWinner('Draw!');
             }
           });
         });
@@ -194,6 +185,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
             console.log('no lastOpponentMove');
             return;
         }
+
         if (!lastMove && !signedGameMove) {
             console.log('no lastMove');
             return;
@@ -216,8 +208,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
             ]);
             console.log('finishGameResult', finishGameResult);
             return;
-        }
-
+        } else
         if (!!lastMove) {
             const finishGameResult = await finishGame(getArbiter(), [
                 lastOpponentMoveSignedByAll,
@@ -398,16 +389,8 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     if (newMessage) {
       const signedMove = newMessage.content as ISignedGameMove;
       // console.log('moveToDispute', signedMove);
-      const disputeMoveResult = await disputeMove(getArbiter(), signedMove);
-      // console.log('Dispute move result', disputeMoveResult);
-      // console.log('winner', disputeMoveResult.winner);
-      // console.log('loser', disputeMoveResult.loser);
-      // console.log('is Draw', disputeMoveResult.isDraw);
-      // console.log('Player', players);
-      const winPlayer = players.find((player) => player.address === disputeMoveResult.winner)!;
-
-      // console.log('current Player', account.address);
-      setWinner(winPlayer.playerName);
+      const finishedGameResult = await disputeMove(getArbiter(), signedMove);
+      setFinishedGameState(finishedGameResult);
     }
     setIsInDispute(false);
     sesDisputeAppealPlayer(null);
@@ -453,7 +436,12 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
         const messageContent = JSON.parse(msg.content);
         console.log('stream message contenet', messageContent);
 
+        //all events 
+
         if (msg.senderAddress === rivalPlayerAddress) {
+
+          //incoming events
+
           console.log('incoming stream message contenet', messageContent);
           if (messageContent.initTimeout) {
             console.log('incoming stream timeout message', messageContent.initTimeout);
@@ -490,47 +478,6 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
               setGameState(nextGameState);
               setIsInvalidMove(!isValid);
 
-              if (winner === 'X') {
-                console.log('Winner Proposer');
-                if (playerIngameId === PROPOSER_INGAME_ID) {
-                  console.log('current player is proposer and wis');
-                  const winPlayer = players.find(
-                    (player) => player.address === account.address,
-                  )!;
-                  setWinner(winPlayer.playerName);
-                } else {
-                  console.log('current player is accepter and wis');
-                  const winPlayer = players.find(
-                    (player) => player.address === rivalPlayerAddress,
-                  )!;
-                  setWinner(winPlayer.playerName);
-                }
-                // runFinishGameHandler();
-              }
-
-
-              if (winner === 'O') {
-                console.log('winner acceptor');
-                if (playerIngameId === PROPOSER_INGAME_ID) {
-                  console.log('current player 2 is proposer and wis');
-                  const winPlayer = players.find(
-                    (player) => player.address === rivalPlayerAddress,
-                  )!;
-                  setWinner(winPlayer.playerName);
-                } else {
-                  console.log('current player 2 is accepter and wis');
-                  const winPlayer = players.find(
-                    (player) => player.address === account.address,
-                  )!;
-                  setWinner(winPlayer.playerName);
-                }
-                // runFinishGameHandler();
-              }
-              //TODO here
-              if (nextGameState.nonce === 9 && !winner) {
-                console.log('nonce 9, Draw!');
-                setWinner('Draw!');
-              }
             });
           }
         }
@@ -665,7 +612,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
             playersTypes={{0: 'X', 1: 'O'}}
             onConnectPlayer={setConversationHandler}
             onSetPlayerIngameId={setPlayerIngameId}
-            winner={winner}
+            finishedGameState={finishedGameState}
             rivalPlayerConversationStatus={conversationStatus}
             onProposeGame={setGameId}
             onAcceptGame={setGameId}
@@ -724,7 +671,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
                         isConnected={!!conversation}
                         isInDispute={isInDispute}
                         disputeAppealPlayer={disputeAppealPlayer}
-                        winner={winner}
+                        finishedGameState={finishedGameState}
                         onConnect={setConversationHandler}
                     >
                         {gameComponent}

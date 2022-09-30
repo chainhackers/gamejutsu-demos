@@ -5,7 +5,6 @@ import { useAccount, useConnect } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import { getArbiter, getRulesContract } from 'gameApi';
 import gameApi from 'gameApi';
-import { TBoardState } from 'types';
 import React, { useEffect, useRef, useState } from 'react';
 import cn from 'classnames';
 import { CheckersBoard, CHECKERSMove, CheckersState } from 'components/Games/Checkers/types';
@@ -47,7 +46,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
   onConnectPlayer,
   onSetPlayerIngameId,
   rivalPlayerConversationStatus,
-  winner,
+  finishedGameState,
   isInDispute,
   isInvalidMove,
   onFinishGame,
@@ -311,15 +310,13 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
       <div>
         <div className={styles.headTitle}>
           Game controls
-          {winner !== null && (
+          {finishedGameState !== null && (
             <div
               className={cn(
-                styles.winner,
-                playerIngameId === String(winner) ? styles.win : styles.lose,
+                styles.winner
               )}
             >
-              You {playerIngameId === String(winner) ? 'win!' : 'lose!'}
-              {/* {playersTypes[winner]} player wins! */}
+              {JSON.stringify(finishedGameState)}
             </div>
           )}
         </div>
@@ -490,43 +487,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
           </div>
         </div>
 
-        {/* <div>
-          <button onClick={() => proposeGameHandler(account.address!)}>PROPOSE GAME</button>
-        </div>
-        <div>
-          <button onClick={() => acceptGameHandler(account.address!, gameId)}>
-            ACCEPT GAME
-          </button>
-        </div>
-        <div>
-          <button
-            onClick={() =>
-              disputeMoveHandler(
-                5,
-                1,
-                rivalPlayer.id,
-                [[0, 0, 1, 0, 0, 0, 0, 0, 0], false, false],
-                [[0, 0, 1, 0, 2, 0, 0, 0, 0], false, false],
-                2,
-                [],
-              )
-            }
-          >
-            DISPUTE MOVE
-          </button>
-        </div>
-        <div>
-          <button onClick={() => getPlayersHandler(5)}>GET PLAYERS HANDLER</button>
-        </div>
-        <div>
-          <button
-            onClick={() =>
-              transitionHandler(5, 1, [[0, 0, 1, 0, 0, 0, 0, 0, 0], false, false], 0, 2)
-            }
-          >
-            TRANSITION
-          </button>
-        </div> */}
+        
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+import { FinishedGameState } from "gameApi";
 import React from "react";
 export interface ControlPanelPropsI {
   children?: React.ReactNode;
@@ -11,7 +12,7 @@ export interface ControlPanelPropsI {
   playersTypes: { [id: number]: string };
   onConnectPlayer: (rivalPlayerAddress: string) => Promise<void>;
   onSetPlayerIngameId: any;
-  winner: string | null;
+  finishedGameState:FinishedGameState | null;
   rivalPlayerConversationStatus: string | null;
   isInDispute: boolean;
   isInvalidMove: boolean;

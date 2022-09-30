@@ -1,3 +1,5 @@
+import { FinishedGameState } from "gameApi";
+
 export interface GameFieldPropsI {
   children?: React.ReactNode;
   gameId: string | null;
@@ -5,6 +7,6 @@ export interface GameFieldPropsI {
   isConnected: boolean;
   isInDispute?: boolean;
   disputeAppealPlayer: string | null;
-  winner: string | null;
+  finishedGameState: FinishedGameState | null;
   onConnect: (opponent: string) => Promise<void>;
 }
