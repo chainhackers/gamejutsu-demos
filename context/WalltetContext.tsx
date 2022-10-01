@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { ethers, Signer } from 'ethers';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
-import detectEthereumProvider from '@metamask/detect-provider';
 import { getSigner } from 'gameApi';
 interface WalletContextProps {
   signer: Signer | undefined;
