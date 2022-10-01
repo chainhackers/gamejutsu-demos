@@ -70,21 +70,8 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     'Fetching rival address...' | 'Failed to get rival address' | null
   >(null);
   const [playerIngameId, setPlayerIngameId] = useState<string | null>(null);
-  const [gameStatus, setGameStatus] = useState<
-    | 'Proposed'
-    | 'Proposing...'
-    | 'Accepted'
-    | 'Accepting...'
-  | 'Resigned'
-    | 'Resigning...'
-    | 'Propose failed, check console'
-    | 'Accepting failed, check console'
-    | 'Resigne failed, check console'
-    | null
-  >(null);
+  const [gameStatus, setGameStatus] = useState<string | null>(null);
   const [gameId, setGameId] = useState<string | null>(gameID);
-  const [error, setError] = useState<string | null>(null);
-
   const account = useAccount();
   const connect = useConnect({
     connector: new InjectedConnector(),
@@ -136,12 +123,11 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
   }
 
   const proposeGameHandler = async (curentPlayerId: string) => {
-    setGameStatus('Proposing...');
     setRivalPlayerAddress(null);
     setRivalAddressStatus(null);
     setGameId(null);
-    setError(null);
     setPlayerIngameId(null);
+    setGameStatus('Proposing...');
 
     try {
       let { gameId } = await gameApi.proposeGame(
@@ -158,9 +144,11 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
       }
     } catch (error) {
       console.error('Propose game failed', error);
-      setGameStatus('Propose failed, check console');
-      setError('Proposing failed');
+      setGameStatus(null);
+      throw 'Propose failed';
     }
+
+    
   };
 
   const submitAcceptGameHandler: React.FormEventHandler<HTMLFormElement> = async (event) => {
@@ -176,7 +164,6 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
       setRivalAddressStatus(null);
       setGameId(null);
       setGameStatus('Accepting...');
-      setError(null);
 
       const { players } = await gameApi.acceptGame(
         getArbiter(),
@@ -191,7 +178,6 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
       setGameId(gameId);
       onAcceptGame(gameId);
     } catch (error) {
-      setError('Error! Check console!');
       console.error('Error: ', error);
     }
   };
@@ -206,7 +192,6 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
         throw new Error(`No currentPlayerAddress: ${currentPlayerAddress}`);
       if (!gameId || gameId.length === 0) throw new Error(`Empty game id`);
       setGameStatus('Resigning...');
-      setError(null);
 
       const { winner, loser } = await gameApi.resign(
         getArbiter(),
@@ -216,8 +201,8 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
       setGameId(gameId);
       setGameStatus('Resigned');
     } catch (error) {
-      setError('Error! Check console!');
       console.error('Error: ', error);
+      throw error;
     }
   };
 

@@ -183,12 +183,12 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     const runFinishGameHandler = async (signedGameMove?: ISignedGameMove) => {
         if (!lastOpponentMove) {
             console.log('no lastOpponentMove');
-            return;
+            throw 'no lastOpponentMove';
         }
 
         if (!lastMove && !signedGameMove) {
             console.log('no lastMove');
-            return;
+            throw 'no lastMove'
         }
 
         let address = await getSigner().getAddress();
@@ -247,23 +247,17 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
             ]);
             console.log('initTimeoutResult', initTimeoutResult);
             if (!!conversation) {
-                const message = { initTimeout: true };
-                const messageText = JSON.stringify(message);
-                conversation.send(messageText).then((message) => {
-                    console.log('message InitTimeout', message);
-
-                    // console.log('message sent, setting new state:', nextGameState);
-                    // setLastMove(msg);
-                    // setGameState(nextGameState);
-                    // console.log('new state is set after sending the move', gameState);
-                });
-                // console.warn('no conversation!');
-                // return;
+              const message = { initTimeout: true };
+              const messageText = JSON.stringify(message);
+              conversation.send(messageText).then((message) => {
+                console.log('message InitTimeout', message);
+              });
             }
         } catch (error) {
             setIsTimeoutInited(false);
             setIsFinishTimeoutAllowed(false);
             setIsResolveTimeOutAllowed(false);
+            throw error;
         }
     };
 
@@ -290,15 +284,14 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
           setIsTimeoutRequested(false);
         } catch (error) {
           console.error(error);
+          throw error;
         }
       };
 
 
 
   const createNewGameHandler = async (isPaid: boolean = false) => {
-    // setCreatingNewGame(true);
-    // setCreatingGameError(null);
-    console.log('isPaid asfsadsafadsfa', isPaid);
+    console.log('isPaid', isPaid);
 
     try {
       let { gameId } = await gameApi.proposeGame(
@@ -306,21 +299,18 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
         getRulesContract(gameType).address,
         isPaid,
       );
-      // console.log(gameId);
+    
       if (!!gameId) {
         gameId = gameId.toString();
-        // console.log('gameId', gameId);
+      
         setGameId(gameId);
         setPlayerIngameId(PROPOSER_INGAME_ID);
-        // setPlayerType(playersTypes[PROPOSER_INGAME_ID]);
-        // setGameStatus('Proposed');
-        // onProposeGame(gameId);
-        // router.push('/games/' + gameType + '?prize=true');
+        
       }
     } catch (error) {
       // setCreatingGameError('Failed to create new game');
       console.error(error);
-      throw new Error('creating ');
+      throw error;
     } finally {
       // setTimeout(() => setCreatingNewGame(false), 3000);
     }
@@ -353,7 +343,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     } catch (error) {
       // setError('Error! Check console!');
       console.error('Error: ', error);
-      throw new Error('test error ');
+      throw error;
     }
   };
 
@@ -375,6 +365,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       setIsTimeoutRequested(false);
     } catch (error) {
       console.error('finilize Timeout error:', error);
+      throw error;
     }
   };
 
@@ -389,8 +380,8 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     if (newMessage) {
       const signedMove = newMessage.content as ISignedGameMove;
       // console.log('moveToDispute', signedMove);
-      const finishedGameResult = await disputeMove(getArbiter(), signedMove);
-      setFinishedGameState(finishedGameResult);
+      const finishGameResult = await disputeMove(getArbiter(), signedMove);
+      setFinishedGameState(finishGameResult);
     }
     setIsInDispute(false);
     sesDisputeAppealPlayer(null);
