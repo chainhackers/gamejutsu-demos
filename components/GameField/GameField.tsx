@@ -17,7 +17,6 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   isConnected,
   isInDispute,
   finishedGameState,
-  disputeAppealPlayer,
   onConnect,
 }) => {
   const [isShowShade, setShowShade] = useState<boolean>(true);
@@ -25,7 +24,6 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [isShowReport, setShowReport] = useState<boolean>(false);
   const [isShowDispute, setShowDispute] = useState<boolean>(false);
-  const [isBadge, setIsBadge] = useState<boolean>(true);
   const [availableBadges, setAvailableBadges] = useState<{
     winner: number[];
     loser: number[];
@@ -176,7 +174,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
           )}
           {isShowDispute && (
             <div className={styles.appeal}>
-              <div className={styles.madeAppeal}>{`${disputeAppealPlayer} ${t(
+              <div className={styles.madeAppeal}>{`\${disputeAppealPlayer} ${t(
                 'shade.madeAppeal',
               )}`}</div>
               <div className={styles.notice}>{t('shade.notice')}</div>

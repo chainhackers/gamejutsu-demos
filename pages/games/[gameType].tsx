@@ -92,8 +92,6 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     const [finishedGameState, setFinishedGameState] = useState<FinishedGameState | null>(null);
     const [gameId, setGameId] = useState<string | null>(null);
 
-
-    const [disputeAppealPlayer, sesDisputeAppealPlayer] = useState<string | null>(null);
     const [isDisputAvailable, setIsDisputeAvailavle] = useState<boolean>(false);
 
     const [rivalPlayerAddress, setRivalPlayerAddress] = useState<string | null>(null,);
@@ -371,9 +369,6 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
 
   const runDisputeHandler = async () => {
     setIsInDispute(true);
-    const disputingPlayer = players.find((player) => player.address === account.address)!;
-    sesDisputeAppealPlayer(disputingPlayer.playerName);
-    // TODO: Add disputing messages
     console.log('run dispute');
     console.log('newMessage', newMessage); // Last Message with invalid move
 
@@ -384,7 +379,6 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       setFinishedGameState(finishGameResult);
     }
     setIsInDispute(false);
-    sesDisputeAppealPlayer(null);
   };
 
   const connectPlayerHandler = async () => {
@@ -661,7 +655,6 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
                         rivalPlayerAddress={rivalPlayerAddress}
                         isConnected={!!conversation}
                         isInDispute={isInDispute}
-                        disputeAppealPlayer={disputeAppealPlayer}
                         finishedGameState={finishedGameState}
                         onConnect={setConversationHandler}
                     >
