@@ -290,8 +290,6 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
   return (
     <div className={styles.container}>
       <ConnectButton />
-      {error && <div className={styles.error}>{error}</div>}
-
       <div>
         <div className={styles.headTitle}>
           Game controls
