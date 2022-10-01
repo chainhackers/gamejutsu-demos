@@ -9,7 +9,6 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import cn from 'classnames';
-import { compileString } from 'sass';
 export const GameField: React.FC<GameFieldPropsI> = ({
   children,
   gameId,
@@ -24,39 +23,19 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [isShowReport, setShowReport] = useState<boolean>(false);
   const [isShowDispute, setShowDispute] = useState<boolean>(false);
-  const [availableBadges, setAvailableBadges] = useState<{
-    winner: number[];
-    loser: number[];
-    cheater: number[];
-    draw: number[];
-  } | null>(null);
+
+  type TMedal = 'bronze' | 'silver' | 'gold';
+  type TBelt = 'white' | 'green' | 'black';
+  type TAchievement = 'winner' | 'loser' | 'draw' | 'cheater';
+
   const { t } = useTranslation();
-  const appealedPlayer = 'Player 1';
   const account = useAccount();
-  console.log('quer', account.address);
 
   const { data, error, loading } = useQuery(badgesQuery, {
     variables: { id: account.address?.toLowerCase() },
   });
+  console.log('queryResponse', data);
 
-  const generateLink = (belt: number, type: 'winner' | 'loser' | 'draw' | 'cheater') => {
-    const belts: { [id: number]: string } = {
-      1: 'bronze',
-      5: 'silver',
-      10: 'gold',
-    };
-
-    const types = {
-      winner: 'winner',
-      loser: 'loser',
-      cheater: 'cheater',
-      draw: 'draw',
-    };
-    return `https://playground.sismo.io/gamejutsu-${belts[belt]}-${types[type]}`;
-  };
-
-  console.log('query', data);
-  // const winner = 'Player 1';
   useEffect(() => {
     console.log('isConnected gameField', isConnected);
     if (!rivalPlayerAddress) {
@@ -95,54 +74,62 @@ export const GameField: React.FC<GameFieldPropsI> = ({
     }
   }, [finishedGameState]);
 
-  useEffect(() => {
-    console.log('badges', finishedGameState, data);
-    // if (isWinner) {
-
-    if (finishedGameState) {
-      console.log('badges data', data);
-      if (!!data && !!data.inRowCounterEntities[0]) {
-        console.log('badges', data);
-
-        const winner = data.inRowCounterEntities[0].winnerMaxValue;
-        const loser = data.inRowCounterEntities[0].loserMaxValue;
-        const cheater = data.inRowCounterEntities[0].cheaterMaxValue;
-        const draw = data.inRowCounterEntities[0].drawMaxValue;
-
-        console.log('test test data data data', winner, loser, cheater, draw);
-
-        const getAvailableBadges = (quantity: number) => {
-          console.log('test test data data data', quantity);
-          let result: number[] = [];
-          switch (true) {
-            case quantity >= 10:
-              result = [1, 5, 10];
-              break;
-
-            case quantity >= 5:
-              result = [1, 5];
-              break;
-            case quantity >= 1:
-              result = [1];
-              break;
-            default:
-              break;
-            // throw new Error('getting abailable badges failed');
-          }
-
-          return result;
-        };
-
-        const availableBadges = {
-          winner: getAvailableBadges(winner),
-          loser: getAvailableBadges(loser),
-          cheater: getAvailableBadges(cheater),
-          draw: getAvailableBadges(draw),
-        };
-        setAvailableBadges(availableBadges);
-      }
+  const isBadgeAvailable = (data: any, medal: TMedal, achievement: TAchievement): boolean => {
+    let entity = data && data.inRowCounterEntities[0];
+    if (!entity) {
+      return false;
     }
-  }, [data, finishedGameState]);
+    let maxValue = entity[`${achievement}MaxValue`];
+    if (medal == 'bronze') return maxValue >= 1;
+    if (medal == 'silver') return maxValue >= 5;
+    if (medal == 'gold') return maxValue >= 10;
+    return false;
+  }
+
+  const makeBadge = (medal: TMedal, achievement: TAchievement) => {
+    const generateLink = (medal: TMedal, achievement: TAchievement) => {
+      return `https://playground.sismo.io/gamejutsu-${medal}-${achievement}`;
+    };
+    const getBeltFromMedal = (medal: TMedal): TBelt | undefined => {
+      if (medal = 'bronze') return 'white';
+      if (medal = 'silver') return 'green';
+      if (medal = 'gold') return 'black';
+    };
+    const generateFilename = (medal: TMedal, achievement: TAchievement) => {
+      return `/badges/gamejutsu_${achievement}_${getBeltFromMedal(medal)}.svg`;
+    };
+
+    return <Link target="_blank" href={generateLink(medal, achievement)}>
+      <a>
+        <div
+          className={cn(
+            styles.badge,
+            isBadgeAvailable(data, medal, achievement) ? styles.available : null,
+          )}
+        >
+          <Image
+            src={generateFilename(medal, achievement)}
+            width="70px"
+            height="70px"
+          ></Image>
+        </div>
+      </a>
+    </Link>
+  }
+  const makeBadges = () => {
+    let badges = [];
+    for (let achievment of ['winner', 'loser', 'draw', 'cheater'] as TAchievement[]) {
+      let rowBadges = [];
+      for (let medal of ['bronze', 'silver', 'gold'] as TMedal[]) {
+        rowBadges.push(makeBadge(medal, achievment));
+      }
+      badges.push(<div className={styles.row}>
+        {rowBadges}
+      </div>)
+    }
+    return badges;
+  }
+
   return (
     <div className={styles.container}>
       {isShowShade && (
@@ -185,329 +172,12 @@ export const GameField: React.FC<GameFieldPropsI> = ({
               {JSON.stringify(finishedGameState)}
             </div>
           )}
-          {finishedGameState && availableBadges && (
+          {finishedGameState && (
             <>
               <div className={styles.link}>
                 <div className={styles.badges}>
                   <div className={styles.text}>You can issue your ZK Badge:</div>
-                  <div className={styles.row}>
-                    {availableBadges.winner.includes(1) ? (
-                      <Link target="_blank" href={generateLink(1, 'winner')}>
-                        <a>
-                          <div
-                            className={cn(
-                              styles.badge,
-                              availableBadges.winner.includes(1) ? styles.available : null,
-                            )}
-                          >
-                            <Image
-                              src="/badges/gamejutsu_winner_white.svg"
-                              width="70px"
-                              height="70px"
-                            ></Image>
-                          </div>
-                        </a>
-                      </Link>
-                    ) : (
-                      <div className={cn(styles.badge)}>
-                        <Image
-                          src="/badges/gamejutsu_winner_white.svg"
-                          width="70px"
-                          height="70px"
-                        ></Image>
-                      </div>
-                    )}
-                    {availableBadges.loser.includes(1) ? (
-                      <Link target="_blank" href={generateLink(1, 'loser')}>
-                        <a>
-                          <div
-                            className={cn(
-                              styles.badge,
-                              availableBadges.loser.includes(1) ? styles.available : null,
-                            )}
-                          >
-                            <Image
-                              src="/badges/gamejutsu_loser_white.svg"
-                              width="70px"
-                              height="70px"
-                            ></Image>
-                          </div>
-                        </a>
-                      </Link>
-                    ) : (
-                      <div className={cn(styles.badge)}>
-                        <Image
-                          src="/badges/gamejutsu_loser_white.svg"
-                          width="70px"
-                          height="70px"
-                        ></Image>
-                      </div>
-                    )}
-                    {availableBadges.cheater.includes(1) ? (
-                      <Link target="_blank" href={generateLink(1, 'cheater')}>
-                        <a>
-                          <div
-                            className={cn(
-                              styles.badge,
-                              availableBadges.cheater.includes(1) ? styles.available : null,
-                            )}
-                          >
-                            <Image
-                              src="/badges/gamejutsu_cheater_white.svg"
-                              width="70px"
-                              height="70px"
-                            ></Image>
-                          </div>
-                        </a>
-                      </Link>
-                    ) : (
-                      <div className={cn(styles.badge)}>
-                        <Image
-                          src="/badges/gamejutsu_cheater_white.svg"
-                          width="70px"
-                          height="70px"
-                        ></Image>
-                      </div>
-                    )}
-                    {availableBadges.draw.includes(1) ? (
-                      <Link target="_blank" href={generateLink(1, 'draw')}>
-                        <a>
-                          <div
-                            className={cn(
-                              styles.badge,
-                              availableBadges.draw.includes(1) ? styles.available : null,
-                            )}
-                          >
-                            <Image
-                              src="/badges/gamejutsu_draw_white.svg"
-                              width="70px"
-                              height="70px"
-                            ></Image>
-                          </div>
-                        </a>
-                      </Link>
-                    ) : (
-                      <div className={cn(styles.badge)}>
-                        <Image
-                          src="/badges/gamejutsu_draw_white.svg"
-                          width="70px"
-                          height="70px"
-                        ></Image>
-                      </div>
-                    )}
-                  </div>
-                  <div className={styles.row}>
-                    {availableBadges.winner.includes(5) ? (
-                      <Link target="_blank" href={generateLink(5, 'winner')}>
-                        <a>
-                          <div
-                            className={cn(
-                              styles.badge,
-                              availableBadges.winner.includes(5) ? styles.available : null,
-                            )}
-                          >
-                            <Image
-                              src="/badges/gamejutsu_winner_green.svg"
-                              width="70px"
-                              height="70px"
-                            ></Image>
-                          </div>
-                        </a>
-                      </Link>
-                    ) : (
-                      <div className={cn(styles.badge)}>
-                        <Image
-                          src="/badges/gamejutsu_winner_green.svg"
-                          width="70px"
-                          height="70px"
-                        ></Image>
-                      </div>
-                    )}
-                    {availableBadges.loser.includes(5) ? (
-                      <Link target="_blank" href={generateLink(5, 'loser')}>
-                        <a>
-                          <div
-                            className={cn(
-                              styles.badge,
-                              availableBadges.loser.includes(5) ? styles.available : null,
-                            )}
-                          >
-                            <Image
-                              src="/badges/gamejutsu_loser_green.svg"
-                              width="70px"
-                              height="70px"
-                            ></Image>
-                          </div>
-                        </a>
-                      </Link>
-                    ) : (
-                      <div className={cn(styles.badge)}>
-                        <Image
-                          src="/badges/gamejutsu_loser_green.svg"
-                          width="70px"
-                          height="70px"
-                        ></Image>
-                      </div>
-                    )}
-                    {availableBadges.cheater.includes(5) ? (
-                      <Link target="_blank" href={generateLink(5, 'cheater')}>
-                        <a>
-                          <div
-                            className={cn(
-                              styles.badge,
-                              availableBadges.cheater.includes(5) ? styles.available : null,
-                            )}
-                          >
-                            <Image
-                              src="/badges/gamejutsu_cheater_green.svg"
-                              width="70px"
-                              height="70px"
-                            ></Image>
-                          </div>
-                        </a>
-                      </Link>
-                    ) : (
-                      <div className={cn(styles.badge)}>
-                        <Image
-                          src="/badges/gamejutsu_cheater_green.svg"
-                          width="70px"
-                          height="70px"
-                        ></Image>
-                      </div>
-                    )}
-                    {availableBadges.draw.includes(5) ? (
-                      <Link target="_blank" href={generateLink(5, 'draw')}>
-                        <a>
-                          <div
-                            className={cn(
-                              styles.badge,
-                              availableBadges.draw.includes(5) ? styles.available : null,
-                            )}
-                          >
-                            <Image
-                              src="/badges/gamejutsu_draw_green.svg"
-                              width="70px"
-                              height="70px"
-                            ></Image>
-                          </div>
-                        </a>
-                      </Link>
-                    ) : (
-                      <div className={cn(styles.badge)}>
-                        <Image
-                          src="/badges/gamejutsu_draw_green.svg"
-                          width="70px"
-                          height="70px"
-                        ></Image>
-                      </div>
-                    )}
-                  </div>
-                  <div className={styles.row}>
-                    {availableBadges.winner.includes(10) ? (
-                      <Link target="_blank" href={generateLink(10, 'winner')}>
-                        <a>
-                          <div
-                            className={cn(
-                              styles.badge,
-                              availableBadges.winner.includes(10) ? styles.available : null,
-                            )}
-                          >
-                            <Image
-                              src="/badges/gamejutsu_winner_black.svg"
-                              width="70px"
-                              height="70px"
-                            ></Image>
-                          </div>
-                        </a>
-                      </Link>
-                    ) : (
-                      <div className={cn(styles.badge)}>
-                        <Image
-                          src="/badges/gamejutsu_winner_black.svg"
-                          width="70px"
-                          height="70px"
-                        ></Image>
-                      </div>
-                    )}
-                    {availableBadges.loser.includes(10) ? (
-                      <Link target="_blank" href={generateLink(10, 'loser')}>
-                        <a>
-                          <div
-                            className={cn(
-                              styles.badge,
-                              availableBadges.loser.includes(10) ? styles.available : null,
-                            )}
-                          >
-                            <Image
-                              src="/badges/gamejutsu_loser_black.svg"
-                              width="70px"
-                              height="70px"
-                            ></Image>
-                          </div>
-                        </a>
-                      </Link>
-                    ) : (
-                      <div className={cn(styles.badge)}>
-                        <Image
-                          src="/badges/gamejutsu_loser_black.svg"
-                          width="70px"
-                          height="70px"
-                        ></Image>
-                      </div>
-                    )}
-                    {availableBadges.cheater.includes(10) ? (
-                      <Link target="_blank" href={generateLink(10, 'cheater')}>
-                        <a>
-                          <div
-                            className={cn(
-                              styles.badge,
-                              availableBadges.cheater.includes(10) ? styles.available : null,
-                            )}
-                          >
-                            <Image
-                              src="/badges/gamejutsu_cheater_black.svg"
-                              width="70px"
-                              height="70px"
-                            ></Image>
-                          </div>
-                        </a>
-                      </Link>
-                    ) : (
-                      <div className={cn(styles.badge)}>
-                        <Image
-                          src="/badges/gamejutsu_cheater_black.svg"
-                          width="70px"
-                          height="70px"
-                        ></Image>
-                      </div>
-                    )}
-                    {availableBadges.draw.includes(10) ? (
-                      <Link target="_blank" href={generateLink(10, 'draw')}>
-                        <a>
-                          <div
-                            className={cn(
-                              styles.badge,
-                              availableBadges.draw.includes(10) ? styles.available : null,
-                            )}
-                          >
-                            <Image
-                              src="/badges/gamejutsu_draw_black.svg"
-                              width="70px"
-                              height="70px"
-                            ></Image>
-                          </div>
-                        </a>
-                      </Link>
-                    ) : (
-                      <div className={cn(styles.badge)}>
-                        <Image
-                          src="/badges/gamejutsu_draw_black.svg"
-                          width="70px"
-                          height="70px"
-                        ></Image>
-                      </div>
-                    )}
-                  </div>
+                  {makeBadges()}
                 </div>
               </div>
             </>
@@ -517,7 +187,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
       <div className={styles.header}>
         <div className={styles.room}>Game Id: {gameId ? gameId : 'n/a'}</div>
         <div className={styles.message}>
-        
+
         </div>
         <div className={styles.prize}></div>
       </div>
