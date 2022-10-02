@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import cn from 'classnames';
+import { FinishedGameState } from 'gameApi';
 export const GameField: React.FC<GameFieldPropsI> = ({
   children,
   gameId,
@@ -32,9 +33,46 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   const account = useAccount();
 
   const { data, error, loading } = useQuery(badgesQuery, {
-    variables: { id:  account.address?.toLowerCase()},
+    variables: { id: account.address?.toLowerCase() },
   });
   console.log('queryResponse', data);
+
+  function isOpponentAddress(address: string): boolean {
+    return address === rivalPlayerAddress;
+  }
+
+  function makeFinishedGameReasonDescription(finishedGameState: FinishedGameState): string | undefined {
+    if (finishedGameState.disqualified) {
+      if (isOpponentAddress(finishedGameState.disqualified)) {
+        return 'your opponent cheats'
+      } else {
+        return 'you cheat'
+      }
+    }
+    if (finishedGameState.resigned) {
+      if (isOpponentAddress(finishedGameState.resigned)) {
+        return 'your opponent resigns'
+      } else {
+        return 'you resign'
+      }
+    }
+  }
+
+  function makeFinishedGameDescription(finishedGameState: FinishedGameState): string | undefined {
+    if (finishedGameState.isDraw) {
+      return 'Game end in a Draw'
+    }
+    if (finishedGameState.winner) {
+      if (isOpponentAddress(finishedGameState.winner)) {
+        return 'Your opponent Wins'
+      }
+      else {
+        return 'You Wins'
+      }
+    }
+
+
+  }
 
   useEffect(() => {
     console.log('isConnected gameField', isConnected);
@@ -173,12 +211,12 @@ export const GameField: React.FC<GameFieldPropsI> = ({
             </div>
           )}
           {finishedGameState && (
-              <div className={styles.link}>
-                <div className={styles.badges}>
-                  <div className={styles.text}>You can issue your ZK Badge:</div>
-                  {makeBadges()}
-                </div>
+            <div className={styles.link}>
+              <div className={styles.badges}>
+                <div className={styles.text}>You can issue your ZK Badge:</div>
+                {makeBadges()}
               </div>
+            </div>
           )}
         </div>
       )}

@@ -39,6 +39,18 @@ const TestsPage: NextPage = () => {
     player: currentAddress,
   })
 
+  const youCheated = FinishedGameState.fromGameFinishedArgs(
+    {
+      winner: opponentAddress,
+      loser: currentAddress,
+      isDraw: false,
+      gameId: 158
+    }
+  ).addPlayerDisqualified({
+    gameId: 158,
+    player: currentAddress,
+  })
+
   const makeProps = (finishedGameState: FinishedGameState): GameFieldPropsI => {
     return {
       gameId: '158',
@@ -70,6 +82,13 @@ const TestsPage: NextPage = () => {
         <h2>You resigned props</h2>
         <GameField
           {...makeProps(youResigned)}
+        >
+        </GameField>
+      </div>
+      <div className={styles.padding}>
+        <h2>You resigned props</h2>
+        <GameField
+          {...makeProps(youCheated)}
         >
         </GameField>
       </div>
