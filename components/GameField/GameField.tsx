@@ -135,7 +135,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
       return `/badges/gamejutsu_${achievement}_${getBeltFromMedal(medal)}.svg`;
     };
 
-    return <Link target="_blank" href={generateLink(medal, achievement)}>
+    return <Link key={`${achievement}-${medal}`} target="_blank" href={generateLink(medal, achievement)}>
       <a>
         <div
           className={cn(
@@ -154,12 +154,12 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   }
   const makeBadges = () => {
     let badges = [];
-    for (let achievment of ['winner', 'loser', 'draw', 'cheater'] as TAchievement[]) {
+    for (let achievement of ['winner', 'loser', 'draw', 'cheater'] as TAchievement[]) {
       let rowBadges = [];
       for (let medal of ['bronze', 'silver', 'gold'] as TMedal[]) {
-        rowBadges.push(makeBadge(medal, achievment));
+        rowBadges.push(makeBadge(medal, achievement));
       }
-      badges.push(<div key={achievment} className={styles.row}>
+      badges.push(<div key={achievement} className={styles.row}>
         {rowBadges}
       </div>)
     }

@@ -27,15 +27,9 @@ const TestsPage: NextPage = () => {
     }
   );
 
-  const draw1 = FinishedGameState.fromGameFinishedArgs(
-    {
-      winner: currentAddress,
-      loser: opponentAddress,
-      isDraw: true,
-      gameId: 158
-    }
-  )
-  const draw2 = FinishedGameState.fromGameFinishedArgs(
+  const gameInProgress = null;
+
+  const draw = FinishedGameState.fromGameFinishedArgs(
     {
       winner: currentAddress,
       loser: opponentAddress,
@@ -81,7 +75,7 @@ const TestsPage: NextPage = () => {
 
   function makeGameFields() {
     return Object.entries({
-      draw1, draw2,
+      gameInProgress, draw,
       youWins, youLose,
       opponentResigned, youResigned,
       opponentCheated, youCheated
