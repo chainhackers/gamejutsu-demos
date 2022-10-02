@@ -9,46 +9,63 @@ const TestsPage: NextPage = () => {
   const currentAddress = '0xYourAddress';
   const opponentAddress = '0xOpponentAddress';
 
-  const youWins = FinishedGameState.fromGameFinishedArgs(
+  const makeWinner = () => FinishedGameState.fromGameFinishedArgs(
     {
       winner: currentAddress,
       loser: opponentAddress,
       isDraw: false,
       gameId: 158
     }
-  )
+  );
 
-  const youLose = FinishedGameState.fromGameFinishedArgs(
+  const makeLoser = () => FinishedGameState.fromGameFinishedArgs(
     {
       winner: opponentAddress,
       loser: currentAddress,
       isDraw: false,
       gameId: 158
     }
-  )
+  );
 
-  const youResigned = FinishedGameState.fromGameFinishedArgs(
+  const draw1 = FinishedGameState.fromGameFinishedArgs(
     {
-      winner: opponentAddress,
-      loser: currentAddress,
-      isDraw: false,
+      winner: currentAddress,
+      loser: opponentAddress,
+      isDraw: true,
       gameId: 158
     }
-  ).addPlayerResigned({
+  )
+  const draw2 = FinishedGameState.fromGameFinishedArgs(
+    {
+      winner: currentAddress,
+      loser: opponentAddress,
+      isDraw: true,
+      gameId: 158
+    }
+  )
+
+  const youWins = makeWinner();
+
+  const youLose = makeLoser();
+
+  const youResigned = makeLoser().addPlayerResigned({
     gameId: 158,
     player: currentAddress,
   })
 
-  const youCheated = FinishedGameState.fromGameFinishedArgs(
-    {
-      winner: opponentAddress,
-      loser: currentAddress,
-      isDraw: false,
-      gameId: 158
-    }
-  ).addPlayerDisqualified({
+  const opponentResigned = makeWinner().addPlayerResigned({
+    gameId: 158,
+    player: opponentAddress,
+  })
+
+  const youCheated = makeLoser().addPlayerDisqualified({
     gameId: 158,
     player: currentAddress,
+  })
+
+  const opponentCheated = makeWinner().addPlayerDisqualified({
+    gameId: 158,
+    player: opponentAddress,
   })
 
   const makeProps = (finishedGameState: FinishedGameState): GameFieldPropsI => {
@@ -62,36 +79,26 @@ const TestsPage: NextPage = () => {
     }
   }
 
+  function makeGameFields() {
+    return Object.entries({
+      draw1, draw2,
+      youWins, youLose,
+      opponentResigned, youResigned,
+      opponentCheated, youCheated
+    }).map(([key, props])=> {
+      return <div key={key} className={styles.padding}>
+        <h2>{key} props</h2>
+        <GameField
+          {...makeProps(props)}
+        >
+        </GameField>
+      </div>
+    });
+  }
+
   return (
     <div className={styles.row}>
-      <div className={styles.padding}>
-        <h2>You win props</h2>
-        <GameField
-          {...makeProps(youWins)}
-        >
-        </GameField>
-      </div>
-      <div className={styles.padding}>
-        <h2>Opponent wins props</h2>
-        <GameField
-          {...makeProps(youLose)}
-        >
-        </GameField>
-      </div>
-      <div className={styles.padding}>
-        <h2>You resigned props</h2>
-        <GameField
-          {...makeProps(youResigned)}
-        >
-        </GameField>
-      </div>
-      <div className={styles.padding}>
-        <h2>You cheated props</h2>
-        <GameField
-          {...makeProps(youCheated)}
-        >
-        </GameField>
-      </div>
+      { makeGameFields() }
     </div>
   );
 };

@@ -44,16 +44,16 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   function makeFinishedGameReasonDescription(finishedGameState: FinishedGameState): string | undefined {
     if (finishedGameState.disqualified) {
       if (isOpponentAddress(finishedGameState.disqualified)) {
-        return 'your opponent cheats'
+        return 'and opponent disqualified'
       } else {
-        return 'you cheat'
+        return 'because you disqualified'
       }
     }
     if (finishedGameState.resigned) {
       if (isOpponentAddress(finishedGameState.resigned)) {
-        return 'your opponent resigns'
+        return 'by resignation'
       } else {
-        return 'you resign'
+        return 'by resignation'
       }
     }
   }
@@ -159,7 +159,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
       for (let medal of ['bronze', 'silver', 'gold'] as TMedal[]) {
         rowBadges.push(makeBadge(medal, achievment));
       }
-      badges.push(<div className={styles.row}>
+      badges.push(<div key={achievment} className={styles.row}>
         {rowBadges}
       </div>)
     }
