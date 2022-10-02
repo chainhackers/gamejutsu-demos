@@ -60,18 +60,16 @@ export const GameField: React.FC<GameFieldPropsI> = ({
 
   function makeFinishedGameDescription(finishedGameState: FinishedGameState): string | undefined {
     if (finishedGameState.isDraw) {
-      return 'Game end in a Draw'
+      return 'Game end in a draw'
     }
     if (finishedGameState.winner) {
       if (isOpponentAddress(finishedGameState.winner)) {
-        return 'Your opponent Wins'
+        return 'Your opponent wins'
       }
       else {
-        return 'You Wins'
+        return 'You win'
       }
     }
-
-
   }
 
   useEffect(() => {
@@ -206,9 +204,14 @@ export const GameField: React.FC<GameFieldPropsI> = ({
             </div>
           )}
           {finishedGameState && (
-            <div className={styles.win}>
-              {JSON.stringify(finishedGameState)}
-            </div>
+            <>
+              <div className={styles.win}>
+                {makeFinishedGameDescription(finishedGameState)}
+              </div>
+              <div className={styles.win}>
+                {makeFinishedGameReasonDescription(finishedGameState)}
+              </div>
+            </>
           )}
           {finishedGameState && (
             <div className={styles.link}>

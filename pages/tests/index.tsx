@@ -86,7 +86,7 @@ const TestsPage: NextPage = () => {
         </GameField>
       </div>
       <div className={styles.padding}>
-        <h2>You resigned props</h2>
+        <h2>You cheated props</h2>
         <GameField
           {...makeProps(youCheated)}
         >
