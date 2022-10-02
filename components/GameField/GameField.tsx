@@ -32,7 +32,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   const account = useAccount();
 
   const { data, error, loading } = useQuery(badgesQuery, {
-    variables: { id: account.address?.toLowerCase() },
+    variables: { id:  account.address?.toLowerCase()},
   });
   console.log('queryResponse', data);
 
@@ -173,14 +173,12 @@ export const GameField: React.FC<GameFieldPropsI> = ({
             </div>
           )}
           {finishedGameState && (
-            <>
               <div className={styles.link}>
                 <div className={styles.badges}>
                   <div className={styles.text}>You can issue your ZK Badge:</div>
                   {makeBadges()}
                 </div>
               </div>
-            </>
           )}
         </div>
       )}

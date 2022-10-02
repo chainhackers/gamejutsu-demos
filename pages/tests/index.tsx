@@ -1,43 +1,80 @@
-import { GetStaticProps, NextPage } from 'next';
-import { useTranslation } from 'react-i18next';
-import { GameField, GameThumbnail } from 'components';
-import { useAccount } from 'wagmi';
+import { NextPage } from 'next';
+import { GameField } from 'components';
 import { GameFieldPropsI } from 'components/GameField/GameFieldProps';
 import { FinishedGameState } from 'gameApi';
+import styles from './test.module.scss';
 
 const TestsPage: NextPage = () => {
 
-  let finishedGameState = new FinishedGameState(
-    158,
-    '0xWinnerAddress',
-    '0xLoserAddress',
-    false,
-    '0xResignedAddress',
-    '0XDisqualifiedAddres'
+  const currentAddress = '0xYourAddress';
+  const opponentAddress = '0xOpponentAddress';
+
+  const youWins = FinishedGameState.fromGameFinishedArgs(
+    {
+      winner: currentAddress,
+      loser: opponentAddress,
+      isDraw: false,
+      gameId: 158
+    }
   )
 
-  let props:GameFieldPropsI = {
-    gameId: '158',
-    rivalPlayerAddress: '0xOpponentAddress',
-    isConnected: false,
-    isInDispute: false,
-    finishedGameState,
-    onConnect: async (opponent) => {}
+  const youLose = FinishedGameState.fromGameFinishedArgs(
+    {
+      winner: opponentAddress,
+      loser: currentAddress,
+      isDraw: false,
+      gameId: 158
+    }
+  )
+
+  const youResigned = FinishedGameState.fromGameFinishedArgs(
+    {
+      winner: opponentAddress,
+      loser: currentAddress,
+      isDraw: false,
+      gameId: 158
+    }
+  ).addPlayerResigned({
+    gameId: 158,
+    player: currentAddress,
+  })
+
+  const makeProps = (finishedGameState: FinishedGameState): GameFieldPropsI => {
+    return {
+      gameId: '158',
+      rivalPlayerAddress: opponentAddress,
+      isConnected: true,
+      isInDispute: false,
+      finishedGameState,
+      onConnect: async (opponent) => { }
+    }
   }
 
   return (
-      <GameField
-        {...props}
-      >
-      </GameField>
+    <div className={styles.row}>
+      <div className={styles.padding}>
+        <h2>You win props</h2>
+        <GameField
+          {...makeProps(youWins)}
+        >
+        </GameField>
+      </div>
+      <div className={styles.padding}>
+        <h2>Opponent wins props</h2>
+        <GameField
+          {...makeProps(youLose)}
+        >
+        </GameField>
+      </div>
+      <div className={styles.padding}>
+        <h2>You resigned props</h2>
+        <GameField
+          {...makeProps(youResigned)}
+        >
+        </GameField>
+      </div>
+    </div>
   );
 };
 
 export default TestsPage;
-
-export const getStaticProps: GetStaticProps = () => {
-  return {
-    props: {
-    },
-  };
-};
