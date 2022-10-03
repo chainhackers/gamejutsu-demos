@@ -180,11 +180,9 @@ export const GameField: React.FC<GameFieldPropsI> = ({
             isJustObtainedBadge(data, medal, achievement) ? styles.obtained : null,
           )}
         >
-          <Image
+          <img
             src={generateFilename(medal, achievement)}
-            width="80%"
-            height="80%"
-          ></Image>
+          ></img>
         </div>
       </a>
     </Link>

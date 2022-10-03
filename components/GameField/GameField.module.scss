@@ -99,30 +99,30 @@
 
         .row {
           .badge {
-            margin: 10px;
             display: inline-block;
             // background-color: aqua;
             cursor: pointer;
-            
+           
 
             img {
+              margin: 10px;
+              width: 90px;
+              height: 90px;
               opacity: 0.5;
+              filter: sepia(1); 
             }
             &.available {
-              width: 100px;
-              height: 100px;
               img {
-                
                 opacity: 1;
                 cursor: pointer;
+                filter: unset;
               }
             }
-
             &.obtained {
-              width: 100px;
-              height: 100px;
               img {
-                filter:         drop-shadow(0px 0px 2px rgb(236, 25, 25)); 
+                width: 100px;
+                height: 100px;
+                filter: drop-shadow(0px 0px 5px darkviolet); 
                 opacity: 1;
                 cursor: pointer;
               }
