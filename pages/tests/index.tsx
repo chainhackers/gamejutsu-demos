@@ -62,7 +62,7 @@ const TestsPage: NextPage = () => {
     player: opponentAddress,
   })
 
-  const makeProps = (finishedGameState: FinishedGameState): GameFieldPropsI => {
+  const makeProps = (finishedGameState: FinishedGameState | null): GameFieldPropsI => {
     return {
       gameId: '158',
       rivalPlayerAddress: opponentAddress,
