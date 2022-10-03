@@ -84,7 +84,7 @@
 
       // margin: auto;
       top: 20%;
-      .badges {
+      .badges {        
         .text {
           color: var(--black); // height: 200px;
           font-size: 20px;
@@ -94,7 +94,7 @@
         padding: 10px;
         margin: auto;
         // background-color: var(--white);
-        width: 420px;
+        width: 80%;
         border-radius: 20px;
 
         .row {
@@ -102,8 +102,19 @@
             display: inline-block;
             // background-color: aqua;
             cursor: pointer;
-           
 
+            @keyframes slide {
+              0% {
+                width: 100px;
+                width: 100px;
+                margin: 0px 0px 10px 0px;
+              }
+              100% {
+                width: 90px;
+                height: 90px;
+              }
+            }
+           
             img {
               margin: 10px;
               width: 90px;
@@ -119,8 +130,13 @@
             }
             &.obtained {
               img {
-                width: 100px;
-                height: 100px;
+                animation-duration: 1s;
+                animation-name: slide;
+                animation-iteration-count: 3;
+                animation-direction: normal;
+                animation-fill-mode: none;
+                width: 90px;
+                height: 90px;
                 filter: drop-shadow(0px 0px 5px darkviolet); 
                 opacity: 1;
                 cursor: pointer;

@@ -190,15 +190,13 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   const makeBadges = () => {
     let badges = [];
     for (let achievement of ['winner', 'loser', 'draw', 'cheater'] as TAchievement[]) {
-      let rowBadges = [];
       for (let medal of ['bronze', 'silver', 'gold'] as TMedal[]) {
-        rowBadges.push(makeBadge(medal, achievement));
+        badges.push(makeBadge(medal, achievement));
       }
-      badges.push(<div key={achievement} className={styles.row}>
-        {rowBadges}
-      </div>)
     }
-    return badges;
+    return (<div className={styles.row}>
+             {badges}
+       </div>);
   }
 
   return (
