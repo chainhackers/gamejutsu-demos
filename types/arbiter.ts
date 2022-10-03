@@ -1,8 +1,5 @@
 export const TIC_TAC_TOE_STATE_TYPES = ['uint8[9]', 'bool', 'bool']
 
-export type TGameMoveContractParams = [number, number, string, string, string, string];
-export type TSignedGameMoveContractParams = [[number, number, string, string, string, string], string[]];
-
 // https://github.com/ChainHackers/gamejutsu-contracts/blob/main/interfaces/IGameJutsuArbiter.sol#L33
 //    struct GameMove {
 //         uint256 gameId;
@@ -15,12 +12,10 @@ export type TSignedGameMoveContractParams = [[number, number, string, string, st
 export interface IGameMove {
     gameId: number;
     nonce: number;
-    player: string;
-    oldState: string;
-    newState: string;
-    move: string;
-
-    toContractParams(): TGameMoveContractParams;
+    playerAddress: string;
+    oldEncodedGameBoard: string;
+    newEncodedGameBoard: string;
+    encodedMove: string;
 }
 
 export interface ISignedGameMove {
@@ -31,24 +26,18 @@ export interface ISignedGameMove {
 export class GameMove implements IGameMove {
     gameId: number;
     nonce: number;
-    player: string;
-    oldState: string;
-    newState: string;
-    move: string;
+    playerAddress: string;
+    oldEncodedGameBoard: string;
+    newEncodedGameBoard: string;
+    encodedMove: string;
 
-    constructor(gameId: number, nonce: number, player: string, oldState: string, newState: string, move: string) {
+    constructor(gameId: number, nonce: number, playerAddress: string, oldEncodedGameBoard: string, newEncodedGameBoard: string, encodedMove: string) {
         this.gameId = gameId;
         this.nonce = nonce;
-        this.player = player; //address
-        this.oldState = oldState;
-        this.newState = newState;
-        this.move = move;
-    }
-
-    toContractParams(): TGameMoveContractParams {
-        return [
-            this.gameId, this.nonce, this.player, this.oldState, this.newState, this.move
-        ];
+        this.playerAddress = playerAddress; //address
+        this.oldEncodedGameBoard = oldEncodedGameBoard;
+        this.newEncodedGameBoard = newEncodedGameBoard;
+        this.encodedMove = encodedMove;
     }
 }
 
@@ -65,12 +54,5 @@ export class SignedGameMove implements ISignedGameMove {
     constructor(gameMove: IGameMove, signatures: string[]) {
         this.gameMove = gameMove;
         this.signatures = signatures;
-    }
-
-    toContractParams(): TSignedGameMoveContractParams {
-        return [
-            this.gameMove.toContractParams(),
-            this.signatures
-        ];
     }
 }

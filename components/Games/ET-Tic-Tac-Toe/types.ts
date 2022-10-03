@@ -174,13 +174,13 @@ export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
   }
 
   encodedSignedMove(signedMove: ISignedGameMove, valid: boolean = true): TicTacToeState {
-    const winner = TicTacToeBoard.fromEncoded(signedMove.gameMove.newState).getWinner();
-    const move = TTTMove.fromEncoded(signedMove.gameMove.move, this.playerId == 0 ? 'X' : 'O');
+    const winner = TicTacToeBoard.fromEncoded(signedMove.gameMove.newEncodedGameBoard).getWinner();
+    const move = TTTMove.fromEncoded(signedMove.gameMove.encodedMove, this.playerId == 0 ? 'X' : 'O');
     return this.makeMove(move, valid, winner);
   }
 
   opponentSignedMove(signedMove: ISignedGameMove, valid: boolean = true): TicTacToeState {
-    const move = TTTMove.fromEncoded(signedMove.gameMove.move, this.playerId == 0 ? 'O' : 'X'); //TODO reversed, remove hack
+    const move = TTTMove.fromEncoded(signedMove.gameMove.encodedMove, this.playerId == 0 ? 'O' : 'X'); //TODO reversed, remove hack
     return this.makeMove(move, valid);
   }
 
