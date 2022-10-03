@@ -41,6 +41,10 @@ export const GameField: React.FC<GameFieldPropsI> = ({
     return address === rivalPlayerAddress;
   }
 
+  function isCurrentPlayerAddress(address: string | null): boolean {
+    return !!address && !isOpponentAddress(address);
+  }
+
   function makeFinishedGameReasonDescription(finishedGameState: FinishedGameState): string | undefined {
     if (finishedGameState.disqualified) {
       if (isOpponentAddress(finishedGameState.disqualified)) {
@@ -120,6 +124,42 @@ export const GameField: React.FC<GameFieldPropsI> = ({
     if (medal == 'silver') return maxValue >= 5;
     if (medal == 'gold') return maxValue >= 10;
     return false;
+  }
+
+  function countToMedal(count: number): TMedal | undefined {
+    if (count == 10) return 'gold';
+    if (count == 5) return 'silver';
+    if (count == 1) return 'bronze';
+  }
+
+  function makeJustObtainedBadge(count: number, achievement: TAchievement): JSX.Element | undefined {
+    let medal = countToMedal(count);
+    return medal && makeBadge(medal, achievement);
+  }
+
+  const makeJustObtainedBadges = () => {
+    let entity = data && data.inRowCounterEntities[0];
+    if (!entity || !finishedGameState) {
+      return;
+    }
+    if (finishedGameState.isDraw) {
+      let badge = makeJustObtainedBadge(entity.drawCount + 1, 'draw');
+      return badge &&[badge];
+    }
+    if (isCurrentPlayerAddress(finishedGameState.winner)) {
+      let badge = makeJustObtainedBadge(entity.winnerCount + 1, 'winner');
+      return badge &&[badge];
+    }
+    let badges = []
+    if (isCurrentPlayerAddress(finishedGameState.loser)) {
+      let badge = makeJustObtainedBadge(entity.loserCount + 1, 'loser');
+      badge && badges.push(badge);
+    }
+    if (isCurrentPlayerAddress(finishedGameState.disqualified)) {
+      let badge = makeJustObtainedBadge(entity.cheaterCount + 1, 'cheater');
+      badge && badges.push(badge);
+    }
+    return badges;
   }
 
   const makeBadge = (medal: TMedal, achievement: TAchievement) => {
@@ -217,6 +257,10 @@ export const GameField: React.FC<GameFieldPropsI> = ({
             <div className={styles.link}>
               <div className={styles.badges}>
                 <div className={styles.text}>You can issue your ZK Badge:</div>
+                <>
+                dat new
+                {makeJustObtainedBadges()}
+                </>
                 {makeBadges()}
               </div>
             </div>
