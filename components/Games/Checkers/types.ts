@@ -169,18 +169,22 @@ export class CheckersState implements IGameState<CheckersBoard, CHECKERSMove> {
 
 
     encodedSignedMove(signedMove:ISignedGameMove, valid: boolean = true): IGameState<CheckersBoard, CHECKERSMove> {
-        const winner = CheckersBoard.fromEncoded(signedMove.gameMove.newState).winner;
+        const winner = CheckersBoard.fromEncoded(signedMove.gameMove.newEncodedGameBoard).winner;
         console.log('encodedSignedMove this.playerId', this.playerId);
-        const move = CHECKERSMove.fromEncoded(signedMove.gameMove.move, this.playerId == 0 ? 'X' : 'O');
+        const move = CHECKERSMove.fromEncoded(signedMove.gameMove.encodedMove, this.playerId == 0 ? 'X' : 'O');
         return this.makeMove(move, valid, winner);
     }
 
     opponentSignedMove(signedMove:ISignedGameMove, valid: boolean = true): IGameState<CheckersBoard, CHECKERSMove> {
-        const winner = CheckersBoard.fromEncoded(signedMove.gameMove.newState).winner;
+        const winner = CheckersBoard.fromEncoded(signedMove.gameMove.newEncodedGameBoard).winner;
         console.log('opponentSignedMove this.playerId', this.playerId);
-        const move = CHECKERSMove.fromEncoded(signedMove.gameMove.move, this.playerId == 0 ? 'O' : 'X'); //TODO reversed, remove hack
+        const move = CHECKERSMove.fromEncoded(signedMove.gameMove.encodedMove, this.playerId == 0 ? 'O' : 'X'); //TODO reversed, remove hack
         return this.makeMove(move, valid, winner);
     }
+
+    // _makeMove(move: CHECKERSMove, valid: boolean = true, winner: TPlayer | null = null): CheckersState {
+        
+    // }
 
     makeMove(move: CHECKERSMove, valid: boolean = true, winner: TPlayer | null = null): CheckersState {
         //TODO it should be copy constructor, at least for lastMove and lastOpponentMove

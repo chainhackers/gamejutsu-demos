@@ -94,18 +94,18 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     console.log('response' , response); 
     let gameMove = checkersState.composeMove(move, "0x37423721aC069f09d6Cc1274aEd00b205b771678", null);
     let nextOpponentState = opponentState.makeMove(move, true, null);
-    console.assert(gameMove.oldState == contractParams.state, 'mismatched states d equal to contractParams.state', gameMove.oldState);
-    console.assert(gameMove.move == move.encodedMove, 'mismatched moves', gameMove.move);
-    console.log('gameMove.newState', CheckersBoard.fromEncoded(gameMove.newState));
+    console.assert(gameMove.oldEncodedGameBoard == contractParams.state, 'mismatched states d equal to contractParams.state', gameMove.oldEncodedGameBoard);
+    console.assert(gameMove.encodedMove == move.encodedMove, 'mismatched moves', gameMove.encodedMove);
+    console.log('gameMove.newState', CheckersBoard.fromEncoded(gameMove.newEncodedGameBoard));
     let response2 = await gameApi.isValidGameMove(getArbiter(), gameMove);
     console.log('response2' , response2);
     let response3 = await gameApi.transition(
       getRulesContract('checkers'),
       contractParams, 1, move.encodedMove);
     console.log('response3', response3);
-    console.assert(response3[2] == gameMove.newState);
+    console.assert(response3[2] == gameMove.newEncodedGameBoard);
     console.log('fromContract', CheckersBoard.fromEncoded(response3[2]));
-    console.log('fromTs', CheckersBoard.fromEncoded(gameMove.newState));
+    console.log('fromTs', CheckersBoard.fromEncoded(gameMove.newEncodedGameBoard));
 
     let secondMove = CHECKERSMove.fromMove([11, 15, false, true], 'X');
     let response4 = await gameApi.checkIsValidMove(
@@ -113,10 +113,10 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
       nextOpponentState.toGameStateContractParams(), 0, secondMove.encodedMove);
     console.log('response4' , response4);
     let opponentGameMove = nextOpponentState.composeMove(secondMove, "0x3Be65C389F095aaa50D0b0F3801f64Aa0258940b", null);
-    console.assert(opponentGameMove.oldState ==  nextOpponentState.toGameStateContractParams().state, 'mismatched states d equal to contractParams.state', gameMove.oldState);
-    console.assert(opponentGameMove.move == secondMove.encodedMove, 'mismatched moves', opponentGameMove);
-    console.log('opponentGameMove.oldState', CheckersBoard.fromEncoded(opponentGameMove.oldState));
-    console.log('opponentGameMove.newState', CheckersBoard.fromEncoded(opponentGameMove.newState));
+    console.assert(opponentGameMove.oldEncodedGameBoard ==  nextOpponentState.toGameStateContractParams().state, 'mismatched states d equal to contractParams.state', gameMove.oldEncodedGameBoard);
+    console.assert(opponentGameMove.encodedMove == secondMove.encodedMove, 'mismatched moves', opponentGameMove);
+    console.log('opponentGameMove.oldState', CheckersBoard.fromEncoded(opponentGameMove.oldEncodedGameBoard));
+    console.log('opponentGameMove.newState', CheckersBoard.fromEncoded(opponentGameMove.newEncodedGameBoard));
     let response5 = await gameApi.isValidGameMove(getArbiter(), opponentGameMove);
     console.log('response5' , response5);
     
