@@ -105,13 +105,23 @@
 
             @keyframes slide {
               0% {
+                width: 90px;
+                height: 90px;
+                filter: sepia(1); 
+              }
+              50% {      
                 width: 100px;
-                width: 100px;
-                margin: 0px 0px 10px 0px;
+                height: 100px;
+                margin-top: -10px;
+                margin-left: 5px;
+                margin-right: 5px;
+                margin-bottom: 20px;
+                filter: sepia(1); 
               }
               100% {
                 width: 90px;
                 height: 90px;
+                filter: sepia(1); 
               }
             }
            
@@ -130,14 +140,14 @@
             }
             &.obtained {
               img {
-                animation-duration: 1s;
+                animation-duration: 2s;
                 animation-name: slide;
                 animation-iteration-count: 3;
                 animation-direction: normal;
                 animation-fill-mode: none;
                 width: 90px;
                 height: 90px;
-                filter: drop-shadow(0px 0px 5px darkviolet); 
+                filter: drop-shadow(0px 0px 5px yellow); 
                 opacity: 1;
                 cursor: pointer;
               }
