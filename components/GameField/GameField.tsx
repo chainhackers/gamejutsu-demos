@@ -182,8 +182,8 @@ export const GameField: React.FC<GameFieldPropsI> = ({
         >
           <Image
             src={generateFilename(medal, achievement)}
-            width="100%"
-            height="100%"
+            width="80%"
+            height="80%"
           ></Image>
         </div>
       </a>
