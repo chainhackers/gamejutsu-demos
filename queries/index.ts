@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export const gameEntitiesQuery = gql`
-  {
-    gameEntities {
+  query ProposedGames($rules: String) {
+    gameEntities(where: {rules: $rules started: false}) {
       id
       gameId
       rules
