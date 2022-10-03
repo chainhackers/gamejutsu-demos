@@ -48,9 +48,9 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   function makeFinishedGameReasonDescription(finishedGameState: FinishedGameState): string | undefined {
     if (finishedGameState.disqualified) {
       if (isOpponentAddress(finishedGameState.disqualified)) {
-        return 'and opponent disqualified'
+        return 'and opponent was disqualified'
       } else {
-        return 'because you disqualified'
+        return 'because you were disqualified'
       }
     }
     if (finishedGameState.resigned) {
@@ -195,8 +195,8 @@ export const GameField: React.FC<GameFieldPropsI> = ({
       }
     }
     return (<div className={styles.row}>
-             {badges}
-       </div>);
+      {badges}
+    </div>);
   }
 
   return (
@@ -240,16 +240,16 @@ export const GameField: React.FC<GameFieldPropsI> = ({
             <>
               <div className={styles.win}>
                 {makeFinishedGameDescription(finishedGameState)}
-              </div>
-              <div className={styles.win}>
-                {makeFinishedGameReasonDescription(finishedGameState)}
+                <div className={styles.small}>
+                  {makeFinishedGameReasonDescription(finishedGameState)}
+                </div>
               </div>
             </>
           )}
           {finishedGameState && (
             <div className={styles.link}>
               <div className={styles.badges}>
-                <div className={styles.text}>You can issue your ZK Badge:</div>
+                <div className={styles.text}>Issue your ZK Badge</div>
                 {makeBadges()}
               </div>
             </div>

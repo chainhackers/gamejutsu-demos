@@ -72,6 +72,9 @@
       opacity: 1;
       // margin: auto;
       top: 15%;
+      .small {
+        font-size: 16px;
+      }
     }
     .link {
     // background-color: aqua
@@ -88,7 +91,7 @@
         .text {
           color: var(--black); // height: 200px;
           font-size: 20px;
-          padding: 20px 0;
+          padding: 20px 0 10px;
         }
         background-color: var(--white);
         padding: 10px;
