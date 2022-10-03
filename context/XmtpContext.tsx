@@ -9,7 +9,6 @@ import React, {
 import { Client, Message } from '@xmtp/xmtp-js';
 import { Conversation } from '@xmtp/xmtp-js';
 import { Signer } from 'ethers';
-import { getEnv } from '../helpers';
 
 const xmtpContextDefault = {
   client: undefined,
@@ -42,7 +41,7 @@ export const XmtpContextProvider: React.FC<{ children: React.ReactNode }> = ({ c
     if (wallet) {
       try {
         //buildDirectMessageTopic;
-        let _client = await Client.create(wallet, { env: getEnv() });
+        let _client = await Client.create(wallet, { env: 'production' });
         _client.init //streamConversationMessages
         setClient(_client);
       } catch (e) {
