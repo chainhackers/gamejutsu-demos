@@ -102,14 +102,25 @@
             margin: 10px;
             display: inline-block;
             // background-color: aqua;
+            cursor: pointer;
             width: 70px;
             height: 70px;
-            cursor: not-allowed;
 
             img {
               opacity: 0.5;
             }
             &.available {
+              img {
+                
+                opacity: 1;
+                cursor: pointer;
+              }
+            }
+
+            &.obtained {
+              width: 100px;
+              height: 100px;
+              background-color: chartreuse;
               img {
                 opacity: 1;
                 cursor: pointer;

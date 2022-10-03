@@ -126,40 +126,36 @@ export const GameField: React.FC<GameFieldPropsI> = ({
     return false;
   }
 
-  function countToMedal(count: number): TMedal | undefined {
-    if (count == 10) return 'gold';
-    if (count == 5) return 'silver';
-    if (count == 1) return 'bronze';
+  function countToMedal(count: number, maxValue: number): TMedal | undefined {
+    //TODO need guarantee that graph is old. The same for other badges
+    if ((count == 9) && (maxValue == 9)) return 'gold';
+    if ((count == 4) && (maxValue == 4)) return 'silver';
+    if ((count == 0) && (maxValue == 0)) return 'bronze';
   }
 
-  function makeJustObtainedBadge(count: number, achievement: TAchievement): JSX.Element | undefined {
-    let medal = countToMedal(count);
-    return medal && makeBadge(medal, achievement);
-  }
-
-  const makeJustObtainedBadges = () => {
+  const isJustObtainedBadge = (data: any, medal: TMedal, achievement: TAchievement): boolean => {
     let entity = data && data.inRowCounterEntities[0];
     if (!entity || !finishedGameState) {
-      return;
+      return false;
     }
-    if (finishedGameState.isDraw) {
-      let badge = makeJustObtainedBadge(entity.drawCount + 1, 'draw');
-      return badge &&[badge];
+    let maxValue = entity[`${achievement}MaxValue`];
+    let count = entity[`${achievement}Count`];
+    if (countToMedal(count, maxValue) !== medal) {
+      return false;
+    }
+    if (achievement == 'draw') {
+      return finishedGameState.isDraw;
     }
     if (isCurrentPlayerAddress(finishedGameState.winner)) {
-      let badge = makeJustObtainedBadge(entity.winnerCount + 1, 'winner');
-      return badge &&[badge];
+      return achievement == 'winner'
     }
-    let badges = []
     if (isCurrentPlayerAddress(finishedGameState.loser)) {
-      let badge = makeJustObtainedBadge(entity.loserCount + 1, 'loser');
-      badge && badges.push(badge);
+      return achievement == 'loser'
     }
     if (isCurrentPlayerAddress(finishedGameState.disqualified)) {
-      let badge = makeJustObtainedBadge(entity.cheaterCount + 1, 'cheater');
-      badge && badges.push(badge);
+      return achievement == 'cheater'
     }
-    return badges;
+    return false;
   }
 
   const makeBadge = (medal: TMedal, achievement: TAchievement) => {
@@ -181,12 +177,13 @@ export const GameField: React.FC<GameFieldPropsI> = ({
           className={cn(
             styles.badge,
             isBadgeAvailable(data, medal, achievement) ? styles.available : null,
+            isJustObtainedBadge(data, medal, achievement) ? styles.obtained : null,
           )}
         >
           <Image
             src={generateFilename(medal, achievement)}
-            width="70px"
-            height="70px"
+            width="100%"
+            height="100%"
           ></Image>
         </div>
       </a>
@@ -257,10 +254,6 @@ export const GameField: React.FC<GameFieldPropsI> = ({
             <div className={styles.link}>
               <div className={styles.badges}>
                 <div className={styles.text}>You can issue your ZK Badge:</div>
-                <>
-                dat new
-                {makeJustObtainedBadges()}
-                </>
                 {makeBadges()}
               </div>
             </div>
