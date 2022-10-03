@@ -163,9 +163,9 @@ export const GameField: React.FC<GameFieldPropsI> = ({
       return `https://playground.sismo.io/gamejutsu-${medal}-${achievement}`;
     };
     const getBeltFromMedal = (medal: TMedal): TBelt | undefined => {
-      if (medal = 'bronze') return 'white';
-      if (medal = 'silver') return 'green';
-      if (medal = 'gold') return 'black';
+      if (medal == 'bronze') return 'white';
+      if (medal == 'silver') return 'green';
+      if (medal == 'gold') return 'black';
     };
     const generateFilename = (medal: TMedal, achievement: TAchievement) => {
       return `/badges/gamejutsu_${achievement}_${getBeltFromMedal(medal)}.svg`;
