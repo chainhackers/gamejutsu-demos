@@ -13,6 +13,7 @@ import 'i18n/index';
 
 import '@rainbow-me/rainbowkit/styles.css';
 import 'styles/globals.css';
+import XmtpProvider from "../context/XmtpProvider";
 
 const { chains, provider, webSocketProvider } = configureChains(
   [
@@ -56,12 +57,14 @@ function MyApp({ Component, pageProps }: AppProps) {
         <WalletContextProvider>
           <XmtpContextProvider>
             <RainbowKitProvider chains={chains}>
+              <XmtpProvider>
               <Layout>
                 <Head>
                   <meta name="viewport" content="width=device-width, initial-scale=1" />
                 </Head>
                 <Component {...pageProps} />
               </Layout>
+              </XmtpProvider>
             </RainbowKitProvider>
           </XmtpContextProvider>
         </WalletContextProvider>
