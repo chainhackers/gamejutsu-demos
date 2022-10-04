@@ -115,7 +115,16 @@ export class CheckersBoard implements IMyGameBoard<CHECKERSMove> {
     static fromEncoded(encodedBoardState: string): CheckersBoard {
         const [cells, redMoves, winner] = defaultAbiCoder.decode(CHECKERS_STATE_TYPES, encodedBoardState);
         const board = new CheckersBoard();
-        board.cells = cells;
+        board.cells = cells.map((cell: number) => {
+            if (cell == 0) {
+                return null;
+            } else if (cell == 1) {
+                return 'X';
+            } else if (cell == 2) {
+                return 'O';
+            }
+            return cell;
+        });
         board.redMoves = redMoves;
         if (winner == 1) {
             board.winner = 'X';
