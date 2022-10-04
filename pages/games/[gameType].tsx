@@ -68,7 +68,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     const initialTicTacToeState = new TicTacToeState({ gameId: 1, playerType: 'X' });
 
     const getInitialState = (gameId: number, playerType: TPlayer) => {
-        let initialCheckersState = new CheckersState(gameId, playerType);
+        let initialCheckersState = new CheckersState({ gameId, playerType });
         return initialCheckersState;
     }
 
@@ -140,11 +140,11 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
         }
 
         if(gameType == 'tic-tac-toe'){
-          console.log('oldState.fromEncoded', TicTacToeBoard.fromEncoded(signedMove.gameMove.oldEncodedGameBoard));
-          console.log('newState.fromEncoded', TicTacToeBoard.fromEncoded(signedMove.gameMove.newEncodedGameBoard));
+          console.log('oldState.fromEncoded', TicTacToeBoard.fromEncoded(signedMove.gameMove.oldState));
+          console.log('newState.fromEncoded', TicTacToeBoard.fromEncoded(signedMove.gameMove.newState));
         } else if(gameType == 'checkers'){
-          console.log('oldState.fromEncoded', CheckersBoard.fromEncoded(signedMove.gameMove.oldEncodedGameBoard));
-          console.log('newState.fromEncoded', CheckersBoard.fromEncoded(signedMove.gameMove.newEncodedGameBoard));
+          console.log('oldState.fromEncoded', CheckersBoard.fromEncoded(signedMove.gameMove.oldState));
+          console.log('newState.fromEncoded', CheckersBoard.fromEncoded(signedMove.gameMove.newState));
         }
 
         _isValidSignedMove(getArbiter(), signedMove).then((isValid) => {
@@ -443,9 +443,9 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
               let decodedState: IMyGameBoard<any> | null = null;
               let winner: TPlayer | null = null;
               if(gameType == 'tic-tac-toe'){
-                  winner = TicTacToeBoard.fromEncoded(signedMove.gameMove.newEncodedGameBoard).getWinner();
+                  winner = TicTacToeBoard.fromEncoded(signedMove.gameMove.newState).getWinner();
               } else if(gameType == 'checkers'){
-                  winner = CheckersBoard.fromEncoded(signedMove.gameMove.newEncodedGameBoard).getWinner();
+                  winner = CheckersBoard.fromEncoded(signedMove.gameMove.newState).getWinner();
               }
               console.log('signedMove new state:', decodedState); //check winner
               setLastOpponentMove(signedMove);
