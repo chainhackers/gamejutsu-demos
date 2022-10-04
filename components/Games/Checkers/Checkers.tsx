@@ -15,7 +15,7 @@ export const Checkers: React.FC<ICheckersProps> = ({
 
     const [selectedCell, setSelectedCell] = useState<number| null>(null); 
 
-    const boardState = gameState?.myGameState || CheckersBoard.empty()
+    const boardState = gameState?.currentBoard || CheckersBoard.empty()
 
     //TODO here
     const clickHandler = async (i: number) => {
@@ -39,7 +39,7 @@ export const Checkers: React.FC<ICheckersProps> = ({
                 move.encodedMove
             ).then((transitionResult) => {
                 let winner: TPlayer | null = CheckersBoard.fromEncoded(transitionResult.state).getWinner();
-                const signedMove = gameState.signMove(move, address, winner)
+                const signedMove = gameState.signMove(transitionResult.state, move, true, winner, address);
                 console.log({ signedMove, move });
                 return signedMove
             });

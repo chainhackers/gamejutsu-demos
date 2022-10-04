@@ -3,7 +3,7 @@ import { XMTPChatLogPropsI } from './XMTPChatLogProps';
 import { defaultAbiCoder } from 'ethers/lib/utils';
 import styles from './XMTPChatLog.module.scss';
 import { TIC_TAC_TOE_MOVE_TYPES, TicTacToeBoard, TTTMove } from "../Games/ET-Tic-Tac-Toe/types";
-import { IMyGameState } from "../Games/types";
+import { IMyGameBoard } from "../Games/types";
 import { CHECKERS_MOVE_TYPES, CheckersBoard, CHECKERSMove } from "../Games/Checkers/types";
 import React from "react";
 import { ISignedGameMove } from 'types/arbiter';
@@ -41,8 +41,8 @@ export const XMTPChatLog: React.FC<XMTPChatLogPropsI> = ({ logData, isLoading })
       return message;
     }
 
-    let oldState: IMyGameState<TTTMove | CHECKERSMove> | null = null;
-    let newState: IMyGameState<TTTMove | CHECKERSMove> | null = null;
+    let oldState: IMyGameBoard<TTTMove | CHECKERSMove> | null = null;
+    let newState: IMyGameBoard<TTTMove | CHECKERSMove> | null = null;
     let move: string | null;
 
     if (signedGameMove.gameType == 'tic-tac-toe') {

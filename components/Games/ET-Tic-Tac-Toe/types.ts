@@ -1,9 +1,9 @@
 import {
   IGameState,
   IMyGameMove,
-  IMyGameState,
+  IMyGameBoard,
   TGameHistory,
-  TGameStateContractParams, TPlayer,
+  TContractGameState as TContractGameState, TPlayer,
 } from '../types';
 import { GameMove, IGameMove, ISignedGameMove, SignedGameMove } from '../../../types/arbiter';
 import { defaultAbiCoder } from 'ethers/lib/utils';
@@ -47,7 +47,7 @@ export class TTTMove implements IMyGameMove {
   }
 }
 
-export class TicTacToeBoard implements IMyGameState<TTTMove> {
+export class TicTacToeBoard implements IMyGameBoard<TTTMove> {
   cells: TCells;
   crossesWin: boolean;
   naughtsWin: boolean;
@@ -146,51 +146,64 @@ export class TicTacToeBoard implements IMyGameState<TTTMove> {
       return condition.every((cell) => cells[cell] === player);
     });
   }
-
-
 }
 
 export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
   movesHistory: TGameHistory = [];
   decodedMovesHistory: TTTMove[] = [];
-  disputableMoveNumbers: Set<number> = new Set();
+  disputableMoveNonces: Set<number> = new Set();
   lastMove: ISignedGameMove | null = null;
   lastOpponentMove: ISignedGameMove | null = null;
   isFinished: boolean = false;
   winner: number | null = null;
   gameId: number;
   redMoves: boolean;
-  myGameState: TicTacToeBoard;
+  currentBoard: TicTacToeBoard;
   playerType: TPlayer;
   playerId: number;
   nonce: number = 0;
 
-  constructor(gameId: number, playerType: TPlayer, board: TicTacToeBoard | null = null) {
+  constructor({ gameId, playerType, board = null }: { gameId: number; playerType: TPlayer; board?: TicTacToeBoard | null; }) {
     this.gameId = gameId;
     this.redMoves = playerType === 'X';
-    this.myGameState = board || TicTacToeBoard.empty();
+    this.currentBoard = board || TicTacToeBoard.empty();
     this.playerType = playerType;
     this.playerId = playerType === 'X' ? 0 : 1;
   }
 
-  encodedSignedMove(signedMove: ISignedGameMove, valid: boolean = true): TicTacToeState {
+  makeNewGameStateFromSignedMove(signedMove: ISignedGameMove, valid: boolean = true): TicTacToeState {
     const winner = TicTacToeBoard.fromEncoded(signedMove.gameMove.newEncodedGameBoard).getWinner();
     const move = TTTMove.fromEncoded(signedMove.gameMove.encodedMove, this.playerId == 0 ? 'X' : 'O');
-    return this.makeMove(move, valid, winner);
+    return this.makeNewGameState({
+      gameId:signedMove.gameMove.gameId,
+      nonce:signedMove.gameMove.nonce,
+      state:signedMove.gameMove.newEncodedGameBoard, 
+    }, move, valid, winner);
   }
 
-  opponentSignedMove(signedMove: ISignedGameMove, valid: boolean = true): TicTacToeState {
-    const move = TTTMove.fromEncoded(signedMove.gameMove.encodedMove, this.playerId == 0 ? 'O' : 'X'); //TODO reversed, remove hack
-    return this.makeMove(move, valid);
+  makeNewGameStateFromOpponentsSignedMove(signedMove: ISignedGameMove, valid: boolean = true): TicTacToeState {
+    const winner = TicTacToeBoard.fromEncoded(signedMove.gameMove.newEncodedGameBoard).getWinner();
+    const move = TTTMove.fromEncoded(signedMove.gameMove.encodedMove, this.playerId == 0 ? 'O' : 'X');
+    return this.makeNewGameState({
+      gameId:signedMove.gameMove.gameId,
+      nonce:signedMove.gameMove.nonce,
+      state:signedMove.gameMove.newEncodedGameBoard, 
+    }, move, valid, winner);
   }
 
-  makeMove(
+  makeNewGameState(
+    contractGameState: TContractGameState,
     move: TTTMove,
     valid: boolean = true,
     winner: TPlayer | null = null,
   ): TicTacToeState {
-    //TODO it should be copy constructor, at least for lastMove and lastOpponentMove
-    const nextState = new TicTacToeState(this.gameId, this.playerType);
+    const nextState = {...this};
+    
+    nextState.gameId = contractGameState.gameId;
+    nextState.nonce = contractGameState.nonce;
+    nextState.currentBoard = TicTacToeBoard.fromEncoded(contractGameState.state);
+
+    //above enough
     if (winner) {
       if (winner == this.playerType) {
         nextState.winner = this.playerId;
@@ -198,61 +211,49 @@ export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
         nextState.winner = 1 - this.playerId;
       }
     }
-    nextState.nonce = this.nonce + 1;
-    nextState.decodedMovesHistory = [...this.decodedMovesHistory, move];
-    const nextDisputableMoveNonces = new Set(this.disputableMoveNumbers);
 
+    nextState.decodedMovesHistory = [...this.decodedMovesHistory, move];
+    const nextDisputableMoveNonces = new Set(this.disputableMoveNonces);
     if (!valid) {
       nextDisputableMoveNonces.add(this.nonce);
     }
-
-    nextState.disputableMoveNumbers = nextDisputableMoveNonces;
-    nextState.myGameState = TicTacToeBoard.fromHistory(
-      nextState.decodedMovesHistory,
-      nextState.disputableMoveNumbers,
-    );
-    return Object.seal(nextState);
+    nextState.disputableMoveNonces = nextDisputableMoveNonces;
+    
+    return Object.freeze(nextState);
   }
-
-  encodedMove(encodedMove: string, valid: boolean = true): TicTacToeState {
-    const move = TTTMove.fromEncoded(encodedMove, this.playerId == 0 ? 'X' : 'O');
-    return this.makeMove(move, valid);
-  }
-
-  opponentMove(encodedMove: string, valid: boolean = true): TicTacToeState {
-    const move = TTTMove.fromEncoded(encodedMove, this.playerId == 0 ? 'O' : 'X'); //TODO reversed, remove hack
-    return this.makeMove(move, valid);
-  }
-
-  //TODO deduplicate
-  composeMove(move: TTTMove, playerAddress: string, winner: TPlayer | null): IGameMove {
+  
+  composeMove(contractGameState: TContractGameState,
+    move: TTTMove,
+    valid: boolean = true,
+    winner: TPlayer | null = null, playerAddress: string): IGameMove {
     return new GameMove(
       this.gameId,
       this.nonce,
       playerAddress,
       this.encode(),
-      this.makeMove(move, undefined, winner).encode(),
+      this.makeNewGameState(contractGameState, move, valid, winner).encode(),
       move.encodedMove,
     );
   }
 
   async signMove(
+    contractGameState: TContractGameState,
     move: TTTMove,
-    playerAddress: string,
-    winner: TPlayer | null,
+    valid: boolean = true,
+    winner: TPlayer | null = null, playerAddress: string,
   ): Promise<ISignedGameMove> {
-    const gameMove = this.composeMove(move, playerAddress, winner);
+    const gameMove = this.composeMove(contractGameState, move, valid, winner, playerAddress);
     const signature = await signMoveWithAddress(gameMove, playerAddress);
     return new SignedGameMove(gameMove, [signature]);
   }
 
-  toGameStateContractParams(): TGameStateContractParams {
+  toGameStateContractParams(): TContractGameState {
     return { gameId: this.gameId, nonce: this.nonce, state: this.encode() };
   }
 
   encode(): string {
-    this.myGameState.naughtsWin = this.winner === 1;
-    this.myGameState.crossesWin = this.winner === 0;
-    return this.myGameState.encode();
+    this.currentBoard.naughtsWin = this.winner === 1;
+    this.currentBoard.crossesWin = this.winner === 0;
+    return this.currentBoard.encode();
   }
 }
