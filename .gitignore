@@ -1,4 +1,5 @@
 .next
 node_modules
-
+.generated
+eth-sdk/abis
 .idea
