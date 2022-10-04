@@ -12,17 +12,22 @@
                 "image": "/images/tg-logo.png"
             },
             {
-                "type": "rainbow profile",
+                "type": "ENS profile",
                 "ref": "https://utgarda.eth.xyz/",
                 "image": "/images/link-logo.png"
-            }
+            },
+            {
+                "type": "linkedIn",
+                "ref": "https://www.linkedin.com/in/evgeny-tsvigun",
+                "image": "/images/lnkdin-logo.png"
+            }                 
         ]
     },
     {
-        "name": "Viktor Larson",
+        "name": "Victor Larson",
         "image": "/images/vl.png",
         "role": "Fullstack Developer, DevOps",
-        "description": "Viktor delivers - that's his thing, and does whatever it takes to get the product from a mere \"under construction\" web page to a working solution. DevOps engineer, frontender, first-time Solidity developer - you name it, Vic is whatever the team needs most at each particular moment, seamlessly switching mental gear from shell scripting to web development or from chitchat to game theory crunching. Viktor's summary experience consists of 7 years as DevOps, 7 years as a QA engineer, 7 years as fullstack developer, Web3 since 2021 and 2 years of community management for a cloud gaming platform.",
+        "description": "Victor delivers - that's his thing, and does whatever it takes to get the product from a mere \"under construction\" web page to a working solution. DevOps engineer, frontender, first-time Solidity developer - you name it, Vic is whatever the team needs most at each particular moment, seamlessly switching his mental gear from shell scripting to web development or from chitchat to game theory crunching. Victor's summary experience consists of 10 years as DevOps, 9 years as a QA engineer, 9 years as fullstack developer, Web3 since 2021 and 4 years of community management for a cloud gaming platform.",
         "link": null,
         "contacts": [
             {
