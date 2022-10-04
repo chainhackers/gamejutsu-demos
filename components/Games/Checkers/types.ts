@@ -202,12 +202,12 @@ export class CheckersState implements IGameState<CheckersBoard, CHECKERSMove> {
         }, move, valid, winner);
     }
 
-    makeNewGameState(contractGameState: TContractGameState, move: CHECKERSMove, valid: boolean, winner: TPlayer | null): CheckersState {
-        const nextState = { ...this };
+    makeNewGameState(nextGameStateProvideByContractTODO_think_of_better_name: TContractGameState, move: CHECKERSMove, valid: boolean, winner: TPlayer | null): CheckersState {
+        const nextState = CheckersState.fromCheckersState(this);
 
-        nextState.gameId = contractGameState.gameId;
-        nextState.nonce = contractGameState.nonce;
-        nextState.currentBoard = CheckersBoard.fromEncoded(contractGameState.state);
+        nextState.gameId = nextGameStateProvideByContractTODO_think_of_better_name.gameId;
+        nextState.nonce = nextGameStateProvideByContractTODO_think_of_better_name.nonce;
+        nextState.currentBoard = CheckersBoard.fromEncoded(nextGameStateProvideByContractTODO_think_of_better_name.state);
 
         //TODO just make getter if need
         //this line only in checkers implementation
