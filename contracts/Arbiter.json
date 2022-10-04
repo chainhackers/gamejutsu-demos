@@ -1,19 +1,32 @@
 {
-  "address": "0x1f0b6DB015198028d57Eb89785Fc81637f1e72F5",
   "abi": [
-    { "inputs": [], "stateMutability": "nonpayable", "type": "constructor" },
-    {
-      "inputs": [],
-      "stateMutability": "nonpayable",
-      "type": "constructor"
-    },
     {
       "anonymous": false,
       "inputs": [
-        { "indexed": false, "internalType": "uint256", "name": "gameId", "type": "uint256" },
-        { "indexed": false, "internalType": "address", "name": "winner", "type": "address" },
-        { "indexed": false, "internalType": "address", "name": "loser", "type": "address" },
-        { "indexed": false, "internalType": "bool", "name": "isDraw", "type": "bool" }
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "gameId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "winner",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "loser",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "isDraw",
+          "type": "bool"
+        }
       ],
       "name": "GameFinished",
       "type": "event"
@@ -83,8 +96,18 @@
     {
       "anonymous": false,
       "inputs": [
-        { "indexed": false, "internalType": "uint256", "name": "gameId", "type": "uint256" },
-        { "indexed": false, "internalType": "address", "name": "player", "type": "address" }
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "gameId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "player",
+          "type": "address"
+        }
       ],
       "name": "PlayerDisqualified",
       "type": "event"
@@ -92,8 +115,18 @@
     {
       "anonymous": false,
       "inputs": [
-        { "indexed": false, "internalType": "uint256", "name": "gameId", "type": "uint256" },
-        { "indexed": false, "internalType": "address", "name": "player", "type": "address" }
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "gameId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "player",
+          "type": "address"
+        }
       ],
       "name": "PlayerResigned",
       "type": "event"
@@ -101,8 +134,18 @@
     {
       "anonymous": false,
       "inputs": [
-        { "indexed": false, "internalType": "uint256", "name": "gameId", "type": "uint256" },
-        { "indexed": false, "internalType": "address", "name": "player", "type": "address" },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "gameId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "player",
+          "type": "address"
+        },
         {
           "indexed": false,
           "internalType": "address",
@@ -116,9 +159,24 @@
     {
       "anonymous": false,
       "inputs": [
-        { "indexed": false, "internalType": "uint256", "name": "gameId", "type": "uint256" },
-        { "indexed": false, "internalType": "address", "name": "player", "type": "address" },
-        { "indexed": false, "internalType": "uint256", "name": "nonce", "type": "uint256" }
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "gameId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "player",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "nonce",
+          "type": "uint256"
+        }
       ],
       "name": "TimeoutResolved",
       "type": "event"
@@ -126,109 +184,46 @@
     {
       "anonymous": false,
       "inputs": [
-        { "indexed": false, "internalType": "uint256", "name": "gameId", "type": "uint256" },
-        { "indexed": false, "internalType": "address", "name": "player", "type": "address" },
-        { "indexed": false, "internalType": "uint256", "name": "nonce", "type": "uint256" },
-        { "indexed": false, "internalType": "uint256", "name": "timeout", "type": "uint256" }
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "gameId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "player",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "nonce",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "timeout",
+          "type": "uint256"
+        }
       ],
       "name": "TimeoutStarted",
       "type": "event"
     },
     {
-      "inputs": [],
-      "name": "DEFAULT_TIMEOUT",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "DEFAULT_TIMEOUT_STAKE",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "DOMAIN_SEPARATOR",
-      "outputs": [
-        {
-          "internalType": "bytes32",
-          "name": "",
-          "type": "bytes32"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "DOMAIN_TYPEHASH",
-      "outputs": [
-        {
-          "internalType": "bytes32",
-          "name": "",
-          "type": "bytes32"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "GAME_MOVE_TYPEHASH",
-      "outputs": [
-        {
-          "internalType": "bytes32",
-          "name": "",
-          "type": "bytes32"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "NUM_PLAYERS",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "TIMEOUT",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
       "inputs": [
-        { "internalType": "uint256", "name": "gameId", "type": "uint256" },
-        { "internalType": "address[]", "name": "sessionAddresses", "type": "address[]" }
+        {
+          "internalType": "uint256",
+          "name": "gameId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address[]",
+          "name": "sessionAddresses",
+          "type": "address[]"
+        }
       ],
       "name": "acceptGame",
       "outputs": [],
@@ -241,18 +236,46 @@
           "components": [
             {
               "components": [
-                { "internalType": "uint256", "name": "gameId", "type": "uint256" },
-                { "internalType": "uint256", "name": "nonce", "type": "uint256" },
-                { "internalType": "address", "name": "player", "type": "address" },
-                { "internalType": "bytes", "name": "oldState", "type": "bytes" },
-                { "internalType": "bytes", "name": "newState", "type": "bytes" },
-                { "internalType": "bytes", "name": "move", "type": "bytes" }
+                {
+                  "internalType": "uint256",
+                  "name": "gameId",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "nonce",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "address",
+                  "name": "player",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "oldState",
+                  "type": "bytes"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "newState",
+                  "type": "bytes"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "move",
+                  "type": "bytes"
+                }
               ],
               "internalType": "struct IGameJutsuArbiter.GameMove",
               "name": "gameMove",
               "type": "tuple"
             },
-            { "internalType": "bytes[]", "name": "signatures", "type": "bytes[]" }
+            {
+              "internalType": "bytes[]",
+              "name": "signatures",
+              "type": "bytes[]"
+            }
           ],
           "internalType": "struct IGameJutsuArbiter.SignedGameMove",
           "name": "signedMove",
@@ -270,18 +293,46 @@
           "components": [
             {
               "components": [
-                { "internalType": "uint256", "name": "gameId", "type": "uint256" },
-                { "internalType": "uint256", "name": "nonce", "type": "uint256" },
-                { "internalType": "address", "name": "player", "type": "address" },
-                { "internalType": "bytes", "name": "oldState", "type": "bytes" },
-                { "internalType": "bytes", "name": "newState", "type": "bytes" },
-                { "internalType": "bytes", "name": "move", "type": "bytes" }
+                {
+                  "internalType": "uint256",
+                  "name": "gameId",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "nonce",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "address",
+                  "name": "player",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "oldState",
+                  "type": "bytes"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "newState",
+                  "type": "bytes"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "move",
+                  "type": "bytes"
+                }
               ],
               "internalType": "struct IGameJutsuArbiter.GameMove",
               "name": "gameMove",
               "type": "tuple"
             },
-            { "internalType": "bytes[]", "name": "signatures", "type": "bytes[]" }
+            {
+              "internalType": "bytes[]",
+              "name": "signatures",
+              "type": "bytes[]"
+            }
           ],
           "internalType": "struct IGameJutsuArbiter.SignedGameMove[2]",
           "name": "signedMoves",
@@ -294,7 +345,13 @@
       "type": "function"
     },
     {
-      "inputs": [{ "internalType": "uint256", "name": "gameId", "type": "uint256" }],
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "gameId",
+          "type": "uint256"
+        }
+      ],
       "name": "finalizeTimeout",
       "outputs": [],
       "stateMutability": "nonpayable",
@@ -306,18 +363,46 @@
           "components": [
             {
               "components": [
-                { "internalType": "uint256", "name": "gameId", "type": "uint256" },
-                { "internalType": "uint256", "name": "nonce", "type": "uint256" },
-                { "internalType": "address", "name": "player", "type": "address" },
-                { "internalType": "bytes", "name": "oldState", "type": "bytes" },
-                { "internalType": "bytes", "name": "newState", "type": "bytes" },
-                { "internalType": "bytes", "name": "move", "type": "bytes" }
+                {
+                  "internalType": "uint256",
+                  "name": "gameId",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "nonce",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "address",
+                  "name": "player",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "oldState",
+                  "type": "bytes"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "newState",
+                  "type": "bytes"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "move",
+                  "type": "bytes"
+                }
               ],
               "internalType": "struct IGameJutsuArbiter.GameMove",
               "name": "gameMove",
               "type": "tuple"
             },
-            { "internalType": "bytes[]", "name": "signatures", "type": "bytes[]" }
+            {
+              "internalType": "bytes[]",
+              "name": "signatures",
+              "type": "bytes[]"
+            }
           ],
           "internalType": "struct IGameJutsuArbiter.SignedGameMove[2]",
           "name": "signedMoves",
@@ -325,7 +410,13 @@
         }
       ],
       "name": "finishGame",
-      "outputs": [{ "internalType": "address", "name": "winner", "type": "address" }],
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "winner",
+          "type": "address"
+        }
+      ],
       "stateMutability": "nonpayable",
       "type": "function"
     },
@@ -333,24 +424,52 @@
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "",
+          "name": "gameId",
           "type": "uint256"
         }
       ],
       "name": "games",
       "outputs": [
-        { "internalType": "contract IGameJutsuRules", "name": "rules", "type": "address" },
-        { "internalType": "uint256", "name": "stake", "type": "uint256" },
-        { "internalType": "bool", "name": "started", "type": "bool" },
-        { "internalType": "bool", "name": "finished", "type": "bool" }
+        {
+          "internalType": "contract IGameJutsuRules",
+          "name": "rules",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "stake",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "started",
+          "type": "bool"
+        },
+        {
+          "internalType": "bool",
+          "name": "finished",
+          "type": "bool"
+        }
       ],
       "stateMutability": "view",
       "type": "function"
     },
     {
-      "inputs": [{ "internalType": "uint256", "name": "gameId", "type": "uint256" }],
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "gameId",
+          "type": "uint256"
+        }
+      ],
       "name": "getPlayers",
-      "outputs": [{ "internalType": "address[2]", "name": "", "type": "address[2]" }],
+      "outputs": [
+        {
+          "internalType": "address[2]",
+          "name": "",
+          "type": "address[2]"
+        }
+      ],
       "stateMutability": "view",
       "type": "function"
     },
@@ -360,21 +479,49 @@
           "components": [
             {
               "components": [
-                { "internalType": "uint256", "name": "gameId", "type": "uint256" },
-                { "internalType": "uint256", "name": "nonce", "type": "uint256" },
-                { "internalType": "address", "name": "player", "type": "address" },
-                { "internalType": "bytes", "name": "oldState", "type": "bytes" },
-                { "internalType": "bytes", "name": "newState", "type": "bytes" },
-                { "internalType": "bytes", "name": "move", "type": "bytes" }
+                {
+                  "internalType": "uint256",
+                  "name": "gameId",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "nonce",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "address",
+                  "name": "player",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "oldState",
+                  "type": "bytes"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "newState",
+                  "type": "bytes"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "move",
+                  "type": "bytes"
+                }
               ],
               "internalType": "struct IGameJutsuArbiter.GameMove",
               "name": "gameMove",
               "type": "tuple"
             },
-            { "internalType": "bytes[]", "name": "signatures", "type": "bytes[]" }
+            {
+              "internalType": "bytes[]",
+              "name": "signatures",
+              "type": "bytes[]"
+            }
           ],
           "internalType": "struct IGameJutsuArbiter.SignedGameMove[2]",
-          "name": "moves",
+          "name": "signedMoves",
           "type": "tuple[2]"
         }
       ],
@@ -385,145 +532,6 @@
     },
     {
       "inputs": [
-        {
-          "components": [
-            { "internalType": "uint256", "name": "gameId", "type": "uint256" },
-            { "internalType": "uint256", "name": "nonce", "type": "uint256" },
-            { "internalType": "address", "name": "player", "type": "address" },
-            { "internalType": "bytes", "name": "oldState", "type": "bytes" },
-            { "internalType": "bytes", "name": "newState", "type": "bytes" },
-            { "internalType": "bytes", "name": "move", "type": "bytes" }
-          ],
-          "internalType": "struct IGameJutsuArbiter.GameMove",
-          "name": "gameMove",
-          "type": "tuple"
-        }
-      ],
-      "name": "isValidGameMove",
-      "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "components": [
-            {
-              "components": [
-                { "internalType": "uint256", "name": "gameId", "type": "uint256" },
-                { "internalType": "uint256", "name": "nonce", "type": "uint256" },
-                { "internalType": "address", "name": "player", "type": "address" },
-                { "internalType": "bytes", "name": "oldState", "type": "bytes" },
-                { "internalType": "bytes", "name": "newState", "type": "bytes" },
-                { "internalType": "bytes", "name": "move", "type": "bytes" }
-              ],
-              "internalType": "struct IGameJutsuArbiter.GameMove",
-              "name": "gameMove",
-              "type": "tuple"
-            },
-            { "internalType": "bytes[]", "name": "signatures", "type": "bytes[]" }
-          ],
-          "internalType": "struct IGameJutsuArbiter.SignedGameMove",
-          "name": "signedMove",
-          "type": "tuple"
-        }
-      ],
-      "name": "isValidSignedMove",
-      "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "nextGameId",
-      "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "nextGameId",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        { "internalType": "contract IGameJutsuRules", "name": "rules", "type": "address" },
-        { "internalType": "address[]", "name": "sessionAddresses", "type": "address[]" }
-      ],
-      "name": "proposeGame",
-      "outputs": [{ "internalType": "uint256", "name": "gameId", "type": "uint256" }],
-      "stateMutability": "payable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        { "internalType": "uint256", "name": "gameId", "type": "uint256" },
-        { "internalType": "address", "name": "sessionAddress", "type": "address" }
-      ],
-      "name": "registerSessionAddress",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [{ "internalType": "uint256", "name": "gameId", "type": "uint256" }],
-      "name": "resign",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "components": [
-            {
-              "components": [
-                { "internalType": "uint256", "name": "gameId", "type": "uint256" },
-                { "internalType": "uint256", "name": "nonce", "type": "uint256" },
-                { "internalType": "address", "name": "player", "type": "address" },
-                { "internalType": "bytes", "name": "oldState", "type": "bytes" },
-                { "internalType": "bytes", "name": "newState", "type": "bytes" },
-                { "internalType": "bytes", "name": "move", "type": "bytes" }
-              ],
-              "internalType": "struct IGameJutsuArbiter.GameMove",
-              "name": "gameMove",
-              "type": "tuple"
-            },
-            { "internalType": "bytes[]", "name": "signatures", "type": "bytes[]" }
-          ],
-          "internalType": "struct IGameJutsuArbiter.SignedGameMove",
-          "name": "signedMove",
-          "type": "tuple"
-        }
-      ],
-      "name": "resolveTimeout",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "name": "timeouts",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "startTime",
-          "type": "uint256"
-        },
         {
           "components": [
             {
@@ -560,15 +568,2965 @@
           "internalType": "struct IGameJutsuArbiter.GameMove",
           "name": "gameMove",
           "type": "tuple"
-        },
+        }
+      ],
+      "name": "isValidGameMove",
+      "outputs": [
         {
-          "internalType": "uint256",
-          "name": "stake",
-          "type": "uint256"
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
         }
       ],
       "stateMutability": "view",
       "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "gameId",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "nonce",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "address",
+                  "name": "player",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "oldState",
+                  "type": "bytes"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "newState",
+                  "type": "bytes"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "move",
+                  "type": "bytes"
+                }
+              ],
+              "internalType": "struct IGameJutsuArbiter.GameMove",
+              "name": "gameMove",
+              "type": "tuple"
+            },
+            {
+              "internalType": "bytes[]",
+              "name": "signatures",
+              "type": "bytes[]"
+            }
+          ],
+          "internalType": "struct IGameJutsuArbiter.SignedGameMove",
+          "name": "signedMove",
+          "type": "tuple"
+        }
+      ],
+      "name": "isValidSignedMove",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract IGameJutsuRules",
+          "name": "rules",
+          "type": "address"
+        },
+        {
+          "internalType": "address[]",
+          "name": "sessionAddresses",
+          "type": "address[]"
+        }
+      ],
+      "name": "proposeGame",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "gameId",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "gameId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "sessionAddress",
+          "type": "address"
+        }
+      ],
+      "name": "registerSessionAddress",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "gameId",
+          "type": "uint256"
+        }
+      ],
+      "name": "resign",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "gameId",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "nonce",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "address",
+                  "name": "player",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "oldState",
+                  "type": "bytes"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "newState",
+                  "type": "bytes"
+                },
+                {
+                  "internalType": "bytes",
+                  "name": "move",
+                  "type": "bytes"
+                }
+              ],
+              "internalType": "struct IGameJutsuArbiter.GameMove",
+              "name": "gameMove",
+              "type": "tuple"
+            },
+            {
+              "internalType": "bytes[]",
+              "name": "signatures",
+              "type": "bytes[]"
+            }
+          ],
+          "internalType": "struct IGameJutsuArbiter.SignedGameMove",
+          "name": "signedMove",
+          "type": "tuple"
+        }
+      ],
+      "name": "resolveTimeout",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
     }
-  ]
+  ],
+  "ast": {
+    "absolutePath": "interfaces/IGameJutsuArbiter.sol",
+    "exportedSymbols": {
+      "IGameJutsuArbiter": [
+        225
+      ],
+      "IGameJutsuRules": [
+        284
+      ]
+    },
+    "id": 226,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1,
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "443:23:0"
+      },
+      {
+        "absolutePath": "interfaces/IGameJutsuRules.sol",
+        "file": "./IGameJutsuRules.sol",
+        "id": 2,
+        "nameLocation": "-1:-1:-1",
+        "nodeType": "ImportDirective",
+        "scope": 226,
+        "sourceUnit": 285,
+        "src": "468:31:0",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "IGameJutsuArbiter",
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": {
+          "id": 3,
+          "nodeType": "StructuredDocumentation",
+          "src": "501:316:0",
+          "text": "@title GameJutsu Arbiter\n@notice gets cheaters bang to rights\n@notice ETHOnline2022 submission by ChainHackers\n@notice 2 players only for now to make it doable during the hackathon\n@author Gene A. Tsvigun\n@dev https://codesandbox.io/s/gamejutsu-moves-eip712-mvrh8v?file=/src/index.js"
+        },
+        "fullyImplemented": false,
+        "id": 225,
+        "linearizedBaseContracts": [
+          225
+        ],
+        "name": "IGameJutsuArbiter",
+        "nameLocation": "828:17:0",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "canonicalName": "IGameJutsuArbiter.Game",
+            "id": 21,
+            "members": [
+              {
+                "constant": false,
+                "id": 6,
+                "mutability": "mutable",
+                "name": "rules",
+                "nameLocation": "1337:5:0",
+                "nodeType": "VariableDeclaration",
+                "scope": 21,
+                "src": "1321:21:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_contract$_IGameJutsuRules_$284",
+                  "typeString": "contract IGameJutsuRules"
+                },
+                "typeName": {
+                  "id": 5,
+                  "nodeType": "UserDefinedTypeName",
+                  "pathNode": {
+                    "id": 4,
+                    "name": "IGameJutsuRules",
+                    "nameLocations": [
+                      "1321:15:0"
+                    ],
+                    "nodeType": "IdentifierPath",
+                    "referencedDeclaration": 284,
+                    "src": "1321:15:0"
+                  },
+                  "referencedDeclaration": 284,
+                  "src": "1321:15:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_IGameJutsuRules_$284",
+                    "typeString": "contract IGameJutsuRules"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 8,
+                "mutability": "mutable",
+                "name": "stake",
+                "nameLocation": "1360:5:0",
+                "nodeType": "VariableDeclaration",
+                "scope": 21,
+                "src": "1352:13:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 7,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1352:7:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 10,
+                "mutability": "mutable",
+                "name": "started",
+                "nameLocation": "1380:7:0",
+                "nodeType": "VariableDeclaration",
+                "scope": 21,
+                "src": "1375:12:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                },
+                "typeName": {
+                  "id": 9,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1375:4:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 12,
+                "mutability": "mutable",
+                "name": "finished",
+                "nameLocation": "1402:8:0",
+                "nodeType": "VariableDeclaration",
+                "scope": 21,
+                "src": "1397:13:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bool",
+                  "typeString": "bool"
+                },
+                "typeName": {
+                  "id": 11,
+                  "name": "bool",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "1397:4:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 16,
+                "mutability": "mutable",
+                "name": "players",
+                "nameLocation": "1446:7:0",
+                "nodeType": "VariableDeclaration",
+                "scope": 21,
+                "src": "1420:33:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_mapping$_t_address_$_t_uint8_$",
+                  "typeString": "mapping(address => uint8)"
+                },
+                "typeName": {
+                  "id": 15,
+                  "keyType": {
+                    "id": 13,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1428:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "nodeType": "Mapping",
+                  "src": "1420:25:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_mapping$_t_address_$_t_uint8_$",
+                    "typeString": "mapping(address => uint8)"
+                  },
+                  "valueType": {
+                    "id": 14,
+                    "name": "uint8",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1439:5:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint8",
+                      "typeString": "uint8"
+                    }
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 20,
+                "mutability": "mutable",
+                "name": "playersArray",
+                "nameLocation": "1474:12:0",
+                "nodeType": "VariableDeclaration",
+                "scope": 21,
+                "src": "1463:23:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_array$_t_address_$2_storage_ptr",
+                  "typeString": "address[2]"
+                },
+                "typeName": {
+                  "baseType": {
+                    "id": 17,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "1463:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "id": 19,
+                  "length": {
+                    "hexValue": "32",
+                    "id": 18,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": true,
+                    "kind": "number",
+                    "lValueRequested": false,
+                    "nodeType": "Literal",
+                    "src": "1471:1:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_rational_2_by_1",
+                      "typeString": "int_const 2"
+                    },
+                    "value": "2"
+                  },
+                  "nodeType": "ArrayTypeName",
+                  "src": "1463:10:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_address_$2_storage_ptr",
+                    "typeString": "address[2]"
+                  }
+                },
+                "visibility": "internal"
+              }
+            ],
+            "name": "Game",
+            "nameLocation": "1306:4:0",
+            "nodeType": "StructDefinition",
+            "scope": 225,
+            "src": "1299:194:0",
+            "visibility": "public"
+          },
+          {
+            "canonicalName": "IGameJutsuArbiter.GameMove",
+            "id": 34,
+            "members": [
+              {
+                "constant": false,
+                "id": 23,
+                "mutability": "mutable",
+                "name": "gameId",
+                "nameLocation": "2137:6:0",
+                "nodeType": "VariableDeclaration",
+                "scope": 34,
+                "src": "2129:14:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 22,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2129:7:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 25,
+                "mutability": "mutable",
+                "name": "nonce",
+                "nameLocation": "2161:5:0",
+                "nodeType": "VariableDeclaration",
+                "scope": 34,
+                "src": "2153:13:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 24,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2153:7:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 27,
+                "mutability": "mutable",
+                "name": "player",
+                "nameLocation": "2184:6:0",
+                "nodeType": "VariableDeclaration",
+                "scope": 34,
+                "src": "2176:14:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                },
+                "typeName": {
+                  "id": 26,
+                  "name": "address",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2176:7:0",
+                  "stateMutability": "nonpayable",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 29,
+                "mutability": "mutable",
+                "name": "oldState",
+                "nameLocation": "2206:8:0",
+                "nodeType": "VariableDeclaration",
+                "scope": 34,
+                "src": "2200:14:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bytes_storage_ptr",
+                  "typeString": "bytes"
+                },
+                "typeName": {
+                  "id": 28,
+                  "name": "bytes",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2200:5:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_storage_ptr",
+                    "typeString": "bytes"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 31,
+                "mutability": "mutable",
+                "name": "newState",
+                "nameLocation": "2230:8:0",
+                "nodeType": "VariableDeclaration",
+                "scope": 34,
+                "src": "2224:14:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bytes_storage_ptr",
+                  "typeString": "bytes"
+                },
+                "typeName": {
+                  "id": 30,
+                  "name": "bytes",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2224:5:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_storage_ptr",
+                    "typeString": "bytes"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 33,
+                "mutability": "mutable",
+                "name": "move",
+                "nameLocation": "2254:4:0",
+                "nodeType": "VariableDeclaration",
+                "scope": 34,
+                "src": "2248:10:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_bytes_storage_ptr",
+                  "typeString": "bytes"
+                },
+                "typeName": {
+                  "id": 32,
+                  "name": "bytes",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "2248:5:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_storage_ptr",
+                    "typeString": "bytes"
+                  }
+                },
+                "visibility": "internal"
+              }
+            ],
+            "name": "GameMove",
+            "nameLocation": "2110:8:0",
+            "nodeType": "StructDefinition",
+            "scope": 225,
+            "src": "2103:162:0",
+            "visibility": "public"
+          },
+          {
+            "canonicalName": "IGameJutsuArbiter.SignedGameMove",
+            "id": 41,
+            "members": [
+              {
+                "constant": false,
+                "id": 37,
+                "mutability": "mutable",
+                "name": "gameMove",
+                "nameLocation": "2517:8:0",
+                "nodeType": "VariableDeclaration",
+                "scope": 41,
+                "src": "2508:17:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_struct$_GameMove_$34_storage_ptr",
+                  "typeString": "struct IGameJutsuArbiter.GameMove"
+                },
+                "typeName": {
+                  "id": 36,
+                  "nodeType": "UserDefinedTypeName",
+                  "pathNode": {
+                    "id": 35,
+                    "name": "GameMove",
+                    "nameLocations": [
+                      "2508:8:0"
+                    ],
+                    "nodeType": "IdentifierPath",
+                    "referencedDeclaration": 34,
+                    "src": "2508:8:0"
+                  },
+                  "referencedDeclaration": 34,
+                  "src": "2508:8:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_GameMove_$34_storage_ptr",
+                    "typeString": "struct IGameJutsuArbiter.GameMove"
+                  }
+                },
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 40,
+                "mutability": "mutable",
+                "name": "signatures",
+                "nameLocation": "2543:10:0",
+                "nodeType": "VariableDeclaration",
+                "scope": 41,
+                "src": "2535:18:0",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_array$_t_bytes_storage_$dyn_storage_ptr",
+                  "typeString": "bytes[]"
+                },
+                "typeName": {
+                  "baseType": {
+                    "id": 38,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2535:5:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "id": 39,
+                  "nodeType": "ArrayTypeName",
+                  "src": "2535:7:0",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_bytes_storage_$dyn_storage_ptr",
+                    "typeString": "bytes[]"
+                  }
+                },
+                "visibility": "internal"
+              }
+            ],
+            "name": "SignedGameMove",
+            "nameLocation": "2483:14:0",
+            "nodeType": "StructDefinition",
+            "scope": 225,
+            "src": "2476:84:0",
+            "visibility": "public"
+          },
+          {
+            "anonymous": false,
+            "eventSelector": "1a63caf0cabc903de6002c21fc1ff04563da60abf183d799216de43f6d801953",
+            "id": 51,
+            "name": "GameProposed",
+            "nameLocation": "2572:12:0",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 50,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 43,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "rules",
+                  "nameLocation": "2601:5:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 51,
+                  "src": "2585:21:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 42,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2585:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 45,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "gameId",
+                  "nameLocation": "2616:6:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 51,
+                  "src": "2608:14:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 44,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2608:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 47,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "stake",
+                  "nameLocation": "2632:5:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 51,
+                  "src": "2624:13:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 46,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2624:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 49,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "proposer",
+                  "nameLocation": "2655:8:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 51,
+                  "src": "2639:24:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 48,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2639:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2584:80:0"
+            },
+            "src": "2566:99:0"
+          },
+          {
+            "anonymous": false,
+            "eventSelector": "4b6e317335f7d40259dac49b610dffbf1a9dfbb1f3b71a166c41e942a864be07",
+            "id": 63,
+            "name": "GameStarted",
+            "nameLocation": "2676:11:0",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 62,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 53,
+                  "indexed": true,
+                  "mutability": "mutable",
+                  "name": "rules",
+                  "nameLocation": "2704:5:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 63,
+                  "src": "2688:21:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 52,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2688:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 55,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "gameId",
+                  "nameLocation": "2719:6:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 63,
+                  "src": "2711:14:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 54,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2711:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 57,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "stake",
+                  "nameLocation": "2735:5:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 63,
+                  "src": "2727:13:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 56,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2727:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 61,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "players",
+                  "nameLocation": "2753:7:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 63,
+                  "src": "2742:18:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_address_$2_memory_ptr",
+                    "typeString": "address[2]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 58,
+                      "name": "address",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "2742:7:0",
+                      "stateMutability": "nonpayable",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "id": 60,
+                    "length": {
+                      "hexValue": "32",
+                      "id": 59,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "kind": "number",
+                      "lValueRequested": false,
+                      "nodeType": "Literal",
+                      "src": "2750:1:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_rational_2_by_1",
+                        "typeString": "int_const 2"
+                      },
+                      "value": "2"
+                    },
+                    "nodeType": "ArrayTypeName",
+                    "src": "2742:10:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_address_$2_storage_ptr",
+                      "typeString": "address[2]"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2687:74:0"
+            },
+            "src": "2670:92:0"
+          },
+          {
+            "anonymous": false,
+            "eventSelector": "705a40d86da29e8665f1e99fbdfad678c2a87a93ac9bcd3d8b8a288c917b64b1",
+            "id": 73,
+            "name": "GameFinished",
+            "nameLocation": "2773:12:0",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 72,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 65,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "gameId",
+                  "nameLocation": "2794:6:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 73,
+                  "src": "2786:14:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 64,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2786:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 67,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "winner",
+                  "nameLocation": "2810:6:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 73,
+                  "src": "2802:14:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 66,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2802:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 69,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "loser",
+                  "nameLocation": "2826:5:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 73,
+                  "src": "2818:13:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 68,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2818:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 71,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "isDraw",
+                  "nameLocation": "2838:6:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 73,
+                  "src": "2833:11:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 70,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2833:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2785:60:0"
+            },
+            "src": "2767:79:0"
+          },
+          {
+            "anonymous": false,
+            "eventSelector": "1a20a0a2a8786b3ad0a4ed3356f778ef3e6f7bf69278789365e31908c9a8624f",
+            "id": 79,
+            "name": "PlayerDisqualified",
+            "nameLocation": "2857:18:0",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 78,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 75,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "gameId",
+                  "nameLocation": "2884:6:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 79,
+                  "src": "2876:14:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 74,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2876:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 77,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "player",
+                  "nameLocation": "2900:6:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 79,
+                  "src": "2892:14:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 76,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2892:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2875:32:0"
+            },
+            "src": "2851:57:0"
+          },
+          {
+            "anonymous": false,
+            "eventSelector": "b860a8ab60fdee481f6e946171d564017ec514b426ed0d98bc47d0933e1bc077",
+            "id": 85,
+            "name": "PlayerResigned",
+            "nameLocation": "2919:14:0",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 84,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 81,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "gameId",
+                  "nameLocation": "2942:6:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 85,
+                  "src": "2934:14:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 80,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2934:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 83,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "player",
+                  "nameLocation": "2958:6:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 85,
+                  "src": "2950:14:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 82,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "2950:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "2933:32:0"
+            },
+            "src": "2913:53:0"
+          },
+          {
+            "anonymous": false,
+            "eventSelector": "c48d22e12b4624c01e502f6e810ef77045a7e18a19e5bedc5b2596ab954c4fc3",
+            "id": 93,
+            "name": "SessionAddressRegistered",
+            "nameLocation": "2977:24:0",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 92,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 87,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "gameId",
+                  "nameLocation": "3010:6:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 93,
+                  "src": "3002:14:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 86,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3002:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 89,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "player",
+                  "nameLocation": "3026:6:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 93,
+                  "src": "3018:14:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 88,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3018:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 91,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "sessionAddress",
+                  "nameLocation": "3042:14:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 93,
+                  "src": "3034:22:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 90,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3034:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3001:56:0"
+            },
+            "src": "2971:87:0"
+          },
+          {
+            "anonymous": false,
+            "eventSelector": "ea06eff9bbbe6c84c47ff3b3321f12cf30ad7d0edecace33e0d2fc03dea591a0",
+            "id": 103,
+            "name": "TimeoutStarted",
+            "nameLocation": "3069:14:0",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 102,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 95,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "gameId",
+                  "nameLocation": "3092:6:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 103,
+                  "src": "3084:14:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 94,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3084:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 97,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "player",
+                  "nameLocation": "3108:6:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 103,
+                  "src": "3100:14:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 96,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3100:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 99,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "nonce",
+                  "nameLocation": "3124:5:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 103,
+                  "src": "3116:13:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 98,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3116:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 101,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "timeout",
+                  "nameLocation": "3139:7:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 103,
+                  "src": "3131:15:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 100,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3131:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3083:64:0"
+            },
+            "src": "3063:85:0"
+          },
+          {
+            "anonymous": false,
+            "eventSelector": "1dc1f2ab5c28534adb685bb0da6306078d506027824b2b08c1f29b01bc2d3dfc",
+            "id": 111,
+            "name": "TimeoutResolved",
+            "nameLocation": "3159:15:0",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 110,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 105,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "gameId",
+                  "nameLocation": "3183:6:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 111,
+                  "src": "3175:14:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 104,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3175:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 107,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "player",
+                  "nameLocation": "3199:6:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 111,
+                  "src": "3191:14:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 106,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3191:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 109,
+                  "indexed": false,
+                  "mutability": "mutable",
+                  "name": "nonce",
+                  "nameLocation": "3215:5:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 111,
+                  "src": "3207:13:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 108,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3207:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3174:47:0"
+            },
+            "src": "3153:69:0"
+          },
+          {
+            "functionSelector": "66421e97",
+            "id": 122,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "proposeGame",
+            "nameLocation": "3237:11:0",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 118,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 114,
+                  "mutability": "mutable",
+                  "name": "rules",
+                  "nameLocation": "3265:5:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 122,
+                  "src": "3249:21:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_IGameJutsuRules_$284",
+                    "typeString": "contract IGameJutsuRules"
+                  },
+                  "typeName": {
+                    "id": 113,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 112,
+                      "name": "IGameJutsuRules",
+                      "nameLocations": [
+                        "3249:15:0"
+                      ],
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 284,
+                      "src": "3249:15:0"
+                    },
+                    "referencedDeclaration": 284,
+                    "src": "3249:15:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_IGameJutsuRules_$284",
+                      "typeString": "contract IGameJutsuRules"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 117,
+                  "mutability": "mutable",
+                  "name": "sessionAddresses",
+                  "nameLocation": "3291:16:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 122,
+                  "src": "3272:35:0",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_address_$dyn_calldata_ptr",
+                    "typeString": "address[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 115,
+                      "name": "address",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "3272:7:0",
+                      "stateMutability": "nonpayable",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "id": 116,
+                    "nodeType": "ArrayTypeName",
+                    "src": "3272:9:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
+                      "typeString": "address[]"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3248:60:0"
+            },
+            "returnParameters": {
+              "id": 121,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 120,
+                  "mutability": "mutable",
+                  "name": "gameId",
+                  "nameLocation": "3343:6:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 122,
+                  "src": "3335:14:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 119,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3335:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3334:16:0"
+            },
+            "scope": 225,
+            "src": "3228:123:0",
+            "stateMutability": "payable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "functionSelector": "4ca8a654",
+            "id": 130,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "acceptGame",
+            "nameLocation": "3366:10:0",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 128,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 124,
+                  "mutability": "mutable",
+                  "name": "gameId",
+                  "nameLocation": "3385:6:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 130,
+                  "src": "3377:14:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 123,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3377:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 127,
+                  "mutability": "mutable",
+                  "name": "sessionAddresses",
+                  "nameLocation": "3412:16:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 130,
+                  "src": "3393:35:0",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_address_$dyn_calldata_ptr",
+                    "typeString": "address[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 125,
+                      "name": "address",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "3393:7:0",
+                      "stateMutability": "nonpayable",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "id": 126,
+                    "nodeType": "ArrayTypeName",
+                    "src": "3393:9:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
+                      "typeString": "address[]"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3376:53:0"
+            },
+            "returnParameters": {
+              "id": 129,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "3446:0:0"
+            },
+            "scope": 225,
+            "src": "3357:90:0",
+            "stateMutability": "payable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "functionSelector": "16e66757",
+            "id": 137,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "registerSessionAddress",
+            "nameLocation": "3462:22:0",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 135,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 132,
+                  "mutability": "mutable",
+                  "name": "gameId",
+                  "nameLocation": "3493:6:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 137,
+                  "src": "3485:14:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 131,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3485:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 134,
+                  "mutability": "mutable",
+                  "name": "sessionAddress",
+                  "nameLocation": "3509:14:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 137,
+                  "src": "3501:22:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 133,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3501:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3484:40:0"
+            },
+            "returnParameters": {
+              "id": 136,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "3533:0:0"
+            },
+            "scope": 225,
+            "src": "3453:81:0",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "functionSelector": "dc326e48",
+            "id": 143,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "disputeMove",
+            "nameLocation": "3549:11:0",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 141,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 140,
+                  "mutability": "mutable",
+                  "name": "signedMove",
+                  "nameLocation": "3585:10:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 143,
+                  "src": "3561:34:0",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_SignedGameMove_$41_calldata_ptr",
+                    "typeString": "struct IGameJutsuArbiter.SignedGameMove"
+                  },
+                  "typeName": {
+                    "id": 139,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 138,
+                      "name": "SignedGameMove",
+                      "nameLocations": [
+                        "3561:14:0"
+                      ],
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 41,
+                      "src": "3561:14:0"
+                    },
+                    "referencedDeclaration": 41,
+                    "src": "3561:14:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_SignedGameMove_$41_storage_ptr",
+                      "typeString": "struct IGameJutsuArbiter.SignedGameMove"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3560:36:0"
+            },
+            "returnParameters": {
+              "id": 142,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "3605:0:0"
+            },
+            "scope": 225,
+            "src": "3540:66:0",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "functionSelector": "6701bb67",
+            "id": 151,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "disputeMoveWithHistory",
+            "nameLocation": "3660:22:0",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 149,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 148,
+                  "mutability": "mutable",
+                  "name": "signedMoves",
+                  "nameLocation": "3710:11:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 151,
+                  "src": "3683:38:0",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_struct$_SignedGameMove_$41_calldata_ptr_$2_calldata_ptr",
+                    "typeString": "struct IGameJutsuArbiter.SignedGameMove[2]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 145,
+                      "nodeType": "UserDefinedTypeName",
+                      "pathNode": {
+                        "id": 144,
+                        "name": "SignedGameMove",
+                        "nameLocations": [
+                          "3683:14:0"
+                        ],
+                        "nodeType": "IdentifierPath",
+                        "referencedDeclaration": 41,
+                        "src": "3683:14:0"
+                      },
+                      "referencedDeclaration": 41,
+                      "src": "3683:14:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_SignedGameMove_$41_storage_ptr",
+                        "typeString": "struct IGameJutsuArbiter.SignedGameMove"
+                      }
+                    },
+                    "id": 147,
+                    "length": {
+                      "hexValue": "32",
+                      "id": 146,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "kind": "number",
+                      "lValueRequested": false,
+                      "nodeType": "Literal",
+                      "src": "3698:1:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_rational_2_by_1",
+                        "typeString": "int_const 2"
+                      },
+                      "value": "2"
+                    },
+                    "nodeType": "ArrayTypeName",
+                    "src": "3683:17:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_struct$_SignedGameMove_$41_storage_$2_storage_ptr",
+                      "typeString": "struct IGameJutsuArbiter.SignedGameMove[2]"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3682:40:0"
+            },
+            "returnParameters": {
+              "id": 150,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "3731:0:0"
+            },
+            "scope": 225,
+            "src": "3651:81:0",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "functionSelector": "ce0fe40f",
+            "id": 161,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "finishGame",
+            "nameLocation": "3747:10:0",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 157,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 156,
+                  "mutability": "mutable",
+                  "name": "signedMoves",
+                  "nameLocation": "3785:11:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 161,
+                  "src": "3758:38:0",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_struct$_SignedGameMove_$41_calldata_ptr_$2_calldata_ptr",
+                    "typeString": "struct IGameJutsuArbiter.SignedGameMove[2]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 153,
+                      "nodeType": "UserDefinedTypeName",
+                      "pathNode": {
+                        "id": 152,
+                        "name": "SignedGameMove",
+                        "nameLocations": [
+                          "3758:14:0"
+                        ],
+                        "nodeType": "IdentifierPath",
+                        "referencedDeclaration": 41,
+                        "src": "3758:14:0"
+                      },
+                      "referencedDeclaration": 41,
+                      "src": "3758:14:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_SignedGameMove_$41_storage_ptr",
+                        "typeString": "struct IGameJutsuArbiter.SignedGameMove"
+                      }
+                    },
+                    "id": 155,
+                    "length": {
+                      "hexValue": "32",
+                      "id": 154,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "kind": "number",
+                      "lValueRequested": false,
+                      "nodeType": "Literal",
+                      "src": "3773:1:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_rational_2_by_1",
+                        "typeString": "int_const 2"
+                      },
+                      "value": "2"
+                    },
+                    "nodeType": "ArrayTypeName",
+                    "src": "3758:17:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_struct$_SignedGameMove_$41_storage_$2_storage_ptr",
+                      "typeString": "struct IGameJutsuArbiter.SignedGameMove[2]"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3757:40:0"
+            },
+            "returnParameters": {
+              "id": 160,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 159,
+                  "mutability": "mutable",
+                  "name": "winner",
+                  "nameLocation": "3824:6:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 161,
+                  "src": "3816:14:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 158,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3816:7:0",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3815:16:0"
+            },
+            "scope": 225,
+            "src": "3738:94:0",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "functionSelector": "08d9801c",
+            "id": 166,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "resign",
+            "nameLocation": "3847:6:0",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 164,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 163,
+                  "mutability": "mutable",
+                  "name": "gameId",
+                  "nameLocation": "3862:6:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 166,
+                  "src": "3854:14:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 162,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "3854:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3853:16:0"
+            },
+            "returnParameters": {
+              "id": 165,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "3878:0:0"
+            },
+            "scope": 225,
+            "src": "3838:41:0",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "functionSelector": "4edb6ff4",
+            "id": 174,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "initTimeout",
+            "nameLocation": "3894:11:0",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 172,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 171,
+                  "mutability": "mutable",
+                  "name": "signedMoves",
+                  "nameLocation": "3933:11:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 174,
+                  "src": "3906:38:0",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_struct$_SignedGameMove_$41_calldata_ptr_$2_calldata_ptr",
+                    "typeString": "struct IGameJutsuArbiter.SignedGameMove[2]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 168,
+                      "nodeType": "UserDefinedTypeName",
+                      "pathNode": {
+                        "id": 167,
+                        "name": "SignedGameMove",
+                        "nameLocations": [
+                          "3906:14:0"
+                        ],
+                        "nodeType": "IdentifierPath",
+                        "referencedDeclaration": 41,
+                        "src": "3906:14:0"
+                      },
+                      "referencedDeclaration": 41,
+                      "src": "3906:14:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_struct$_SignedGameMove_$41_storage_ptr",
+                        "typeString": "struct IGameJutsuArbiter.SignedGameMove"
+                      }
+                    },
+                    "id": 170,
+                    "length": {
+                      "hexValue": "32",
+                      "id": 169,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "kind": "number",
+                      "lValueRequested": false,
+                      "nodeType": "Literal",
+                      "src": "3921:1:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_rational_2_by_1",
+                        "typeString": "int_const 2"
+                      },
+                      "value": "2"
+                    },
+                    "nodeType": "ArrayTypeName",
+                    "src": "3906:17:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_struct$_SignedGameMove_$41_storage_$2_storage_ptr",
+                      "typeString": "struct IGameJutsuArbiter.SignedGameMove[2]"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3905:40:0"
+            },
+            "returnParameters": {
+              "id": 173,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "3962:0:0"
+            },
+            "scope": 225,
+            "src": "3885:78:0",
+            "stateMutability": "payable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "functionSelector": "43eb466c",
+            "id": 180,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "resolveTimeout",
+            "nameLocation": "3978:14:0",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 178,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 177,
+                  "mutability": "mutable",
+                  "name": "signedMove",
+                  "nameLocation": "4017:10:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 180,
+                  "src": "3993:34:0",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_SignedGameMove_$41_calldata_ptr",
+                    "typeString": "struct IGameJutsuArbiter.SignedGameMove"
+                  },
+                  "typeName": {
+                    "id": 176,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 175,
+                      "name": "SignedGameMove",
+                      "nameLocations": [
+                        "3993:14:0"
+                      ],
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 41,
+                      "src": "3993:14:0"
+                    },
+                    "referencedDeclaration": 41,
+                    "src": "3993:14:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_SignedGameMove_$41_storage_ptr",
+                      "typeString": "struct IGameJutsuArbiter.SignedGameMove"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "3992:36:0"
+            },
+            "returnParameters": {
+              "id": 179,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "4037:0:0"
+            },
+            "scope": 225,
+            "src": "3969:69:0",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "functionSelector": "46d21e01",
+            "id": 185,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "finalizeTimeout",
+            "nameLocation": "4053:15:0",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 183,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 182,
+                  "mutability": "mutable",
+                  "name": "gameId",
+                  "nameLocation": "4077:6:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 185,
+                  "src": "4069:14:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 181,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4069:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4068:16:0"
+            },
+            "returnParameters": {
+              "id": 184,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "4093:0:0"
+            },
+            "scope": 225,
+            "src": "4044:50:0",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "functionSelector": "117a5b90",
+            "id": 199,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "games",
+            "nameLocation": "4229:5:0",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 188,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 187,
+                  "mutability": "mutable",
+                  "name": "gameId",
+                  "nameLocation": "4243:6:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 199,
+                  "src": "4235:14:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 186,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4235:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4234:16:0"
+            },
+            "returnParameters": {
+              "id": 198,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 191,
+                  "mutability": "mutable",
+                  "name": "rules",
+                  "nameLocation": "4290:5:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 199,
+                  "src": "4274:21:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_IGameJutsuRules_$284",
+                    "typeString": "contract IGameJutsuRules"
+                  },
+                  "typeName": {
+                    "id": 190,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 189,
+                      "name": "IGameJutsuRules",
+                      "nameLocations": [
+                        "4274:15:0"
+                      ],
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 284,
+                      "src": "4274:15:0"
+                    },
+                    "referencedDeclaration": 284,
+                    "src": "4274:15:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_IGameJutsuRules_$284",
+                      "typeString": "contract IGameJutsuRules"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 193,
+                  "mutability": "mutable",
+                  "name": "stake",
+                  "nameLocation": "4305:5:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 199,
+                  "src": "4297:13:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 192,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4297:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 195,
+                  "mutability": "mutable",
+                  "name": "started",
+                  "nameLocation": "4317:7:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 199,
+                  "src": "4312:12:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 194,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4312:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 197,
+                  "mutability": "mutable",
+                  "name": "finished",
+                  "nameLocation": "4331:8:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 199,
+                  "src": "4326:13:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 196,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4326:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4273:67:0"
+            },
+            "scope": 225,
+            "src": "4220:121:0",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "functionSelector": "460e2049",
+            "id": 208,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getPlayers",
+            "nameLocation": "4356:10:0",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 202,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 201,
+                  "mutability": "mutable",
+                  "name": "gameId",
+                  "nameLocation": "4375:6:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 208,
+                  "src": "4367:14:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 200,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4367:7:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4366:16:0"
+            },
+            "returnParameters": {
+              "id": 207,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 206,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 208,
+                  "src": "4406:17:0",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_address_$2_memory_ptr",
+                    "typeString": "address[2]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 203,
+                      "name": "address",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "4406:7:0",
+                      "stateMutability": "nonpayable",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "id": 205,
+                    "length": {
+                      "hexValue": "32",
+                      "id": 204,
+                      "isConstant": false,
+                      "isLValue": false,
+                      "isPure": true,
+                      "kind": "number",
+                      "lValueRequested": false,
+                      "nodeType": "Literal",
+                      "src": "4414:1:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_rational_2_by_1",
+                        "typeString": "int_const 2"
+                      },
+                      "value": "2"
+                    },
+                    "nodeType": "ArrayTypeName",
+                    "src": "4406:10:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_address_$2_storage_ptr",
+                      "typeString": "address[2]"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4405:19:0"
+            },
+            "scope": 225,
+            "src": "4347:78:0",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "functionSelector": "918bcf13",
+            "id": 216,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "isValidGameMove",
+            "nameLocation": "4440:15:0",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 212,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 211,
+                  "mutability": "mutable",
+                  "name": "gameMove",
+                  "nameLocation": "4474:8:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 216,
+                  "src": "4456:26:0",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_GameMove_$34_calldata_ptr",
+                    "typeString": "struct IGameJutsuArbiter.GameMove"
+                  },
+                  "typeName": {
+                    "id": 210,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 209,
+                      "name": "GameMove",
+                      "nameLocations": [
+                        "4456:8:0"
+                      ],
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 34,
+                      "src": "4456:8:0"
+                    },
+                    "referencedDeclaration": 34,
+                    "src": "4456:8:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_GameMove_$34_storage_ptr",
+                      "typeString": "struct IGameJutsuArbiter.GameMove"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4455:28:0"
+            },
+            "returnParameters": {
+              "id": 215,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 214,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 216,
+                  "src": "4507:4:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 213,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4507:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4506:6:0"
+            },
+            "scope": 225,
+            "src": "4431:82:0",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "functionSelector": "247278a8",
+            "id": 224,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "isValidSignedMove",
+            "nameLocation": "4528:17:0",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 220,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 219,
+                  "mutability": "mutable",
+                  "name": "signedMove",
+                  "nameLocation": "4570:10:0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 224,
+                  "src": "4546:34:0",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_SignedGameMove_$41_calldata_ptr",
+                    "typeString": "struct IGameJutsuArbiter.SignedGameMove"
+                  },
+                  "typeName": {
+                    "id": 218,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 217,
+                      "name": "SignedGameMove",
+                      "nameLocations": [
+                        "4546:14:0"
+                      ],
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 41,
+                      "src": "4546:14:0"
+                    },
+                    "referencedDeclaration": 41,
+                    "src": "4546:14:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_SignedGameMove_$41_storage_ptr",
+                      "typeString": "struct IGameJutsuArbiter.SignedGameMove"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4545:36:0"
+            },
+            "returnParameters": {
+              "id": 223,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 222,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 224,
+                  "src": "4605:4:0",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bool",
+                    "typeString": "bool"
+                  },
+                  "typeName": {
+                    "id": 221,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "4605:4:0",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bool",
+                      "typeString": "bool"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "4604:6:0"
+            },
+            "scope": 225,
+            "src": "4519:92:0",
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "scope": 226,
+        "src": "818:3795:0",
+        "usedErrors": []
+      }
+    ],
+    "src": "443:4171:0"
+  },
+  "contractName": "IGameJutsuArbiter",
+  "dependencies": [
+    "IGameJutsuRules"
+  ],
+  "offset": [
+    818,
+    4613
+  ],
+  "sha1": "493768db36283cb9268cdba38d73e4b16cf57976",
+  "source": "/*\n  ________                           ____.       __\n /  _____/_____    _____   ____     |    |__ ___/  |_  ________ __\n/   \\  ___\\__  \\  /     \\_/ __ \\    |    |  |  \\   __\\/  ___/  |  \\\n\\    \\_\\  \\/ __ \\|  Y Y  \\  ___//\\__|    |  |  /|  |  \\___ \\|  |  /\n \\______  (____  /__|_|  /\\___  >________|____/ |__| /____  >____/\n        \\/     \\/      \\/     \\/                          \\/\nhttps://gamejutsu.app\n*/\n// SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\n\nimport \"./IGameJutsuRules.sol\";\n\n/**\n    @title GameJutsu Arbiter\n    @notice gets cheaters bang to rights\n    @notice ETHOnline2022 submission by ChainHackers\n    @notice 2 players only for now to make it doable during the hackathon\n    @author Gene A. Tsvigun\n    @dev https://codesandbox.io/s/gamejutsu-moves-eip712-mvrh8v?file=/src/index.js\n  */\ninterface IGameJutsuArbiter {\n    /**\n        @notice What the Arbiter knows about the game\n        @custom rules the contract defining the rules of the game\n        @custom stake the amount of the chain's native currency to stake for the game\n        @custom started whether the game has started\n        @custom finished whether the game has finished\n        @custom players the players and their session addresses\n        @custom playersArray both players addresses\n      */\n    struct Game {\n        IGameJutsuRules rules;\n        uint256 stake;\n        bool started;\n        bool finished;\n        mapping(address => uint8) players;\n        address[2] playersArray;\n    }\n\n    /**\n        @notice The way players present their moves to the Arbiter\n        @custom gameId the id of the game\n        @custom nonce the nonce of the move - how many moves have been made before this one, for the first move it is 0\n        @custom player the address of the player making the move\n        @custom oldState the state of the game before the move, the player declares it to be the actual state\n        @custom newState the state of the game after the move, must be a valid transition from the oldState\n        @custom move the move itself, must be consistent with the newState\n      */\n    struct GameMove {\n        uint256 gameId;\n        uint256 nonce;\n        address player;\n        bytes oldState;\n        bytes newState;\n        bytes move;\n    }\n\n    /**\n        @notice Signed game move with players' signatures\n        @custom gameMove GameMove struct\n        @custom signatures the signatures of the players signing  `abi.encode`d gameMove\n      */\n    struct SignedGameMove {\n        GameMove gameMove;\n        bytes[] signatures;\n    }\n\n    event GameProposed(address indexed rules, uint256 gameId, uint256 stake, address indexed proposer);\n    event GameStarted(address indexed rules, uint256 gameId, uint256 stake, address[2] players);\n    event GameFinished(uint256 gameId, address winner, address loser, bool isDraw);\n    event PlayerDisqualified(uint256 gameId, address player);\n    event PlayerResigned(uint256 gameId, address player);\n    event SessionAddressRegistered(uint256 gameId, address player, address sessionAddress);\n    event TimeoutStarted(uint256 gameId, address player, uint256 nonce, uint256 timeout);\n    event TimeoutResolved(uint256 gameId, address player, uint256 nonce);\n\n    function proposeGame(IGameJutsuRules rules, address[] calldata sessionAddresses) payable external returns (uint256 gameId);\n\n    function acceptGame(uint256 gameId, address[] calldata sessionAddresses) payable external;\n\n    function registerSessionAddress(uint256 gameId, address sessionAddress) external;\n\n    function disputeMove(SignedGameMove calldata signedMove) external; //TODO mark the most important methods\n\n    function disputeMoveWithHistory(SignedGameMove[2] calldata signedMoves) external;\n\n    function finishGame(SignedGameMove[2] calldata signedMoves) external returns (address winner);\n\n    function resign(uint256 gameId) external;\n\n    function initTimeout(SignedGameMove[2] calldata signedMoves) payable external;\n\n    function resolveTimeout(SignedGameMove calldata signedMove) external;\n\n    function finalizeTimeout(uint256 gameId) external;\n\n    //TODO penalize griefers for starting timeouts despite valid moves being published, needs timing in SignedGameMove\n\n    function games(uint256 gameId) external view returns (IGameJutsuRules rules, uint256 stake, bool started, bool finished);\n\n    function getPlayers(uint256 gameId) external view returns (address[2] memory);\n\n    function isValidGameMove(GameMove calldata gameMove) external view returns (bool);\n\n    function isValidSignedMove(SignedGameMove calldata signedMove) external view returns (bool);\n}\n",
+  "type": "interface"
 }
