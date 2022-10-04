@@ -27,7 +27,7 @@ import { useAccount } from 'wagmi';
 import { Checkers } from 'components/Games/Checkers';
 import {CheckersBoard, CheckersState} from 'components/Games/Checkers/types';
 import { useRouter } from 'next/router';
-import {IGameState, IMyGameState, TPlayer} from 'components/Games/types';
+import {IGameState, IMyGameBoard, TPlayer} from 'components/Games/types';
 
 interface IGamePageProps {
   gameType?: string;
@@ -65,16 +65,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     const [log, setLog] = useState<IChatLog[]>([]);
     const [isLogLoading, setIsLogLoading] = useState<boolean>(true);
 
-    const initialTicTacToeState = new TicTacToeState(1, 'X')
-        .makeMove(TTTMove.fromMove(0, 'X'))
-        .makeMove(TTTMove.fromMove(1, 'X'))
-        .makeMove(TTTMove.fromMove(2, 'X'))
-        .makeMove(TTTMove.fromMove(3, 'X'))
-        .makeMove(TTTMove.fromMove(4, 'O'))
-        .makeMove(TTTMove.fromMove(5, 'X'))
-        .makeMove(TTTMove.fromMove(6, 'X'))
-        .makeMove(TTTMove.fromMove(7, 'X'))
-        .makeMove(TTTMove.fromMove(8, 'X'));
+    const initialTicTacToeState = new TicTacToeState({ gameId: 1, playerType: 'X' });
 
     const getInitialState = (gameId: number, playerType: TPlayer) => {
         let initialCheckersState = new CheckersState(gameId, playerType);
@@ -134,7 +125,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
         console.log('before init client');
         initClient(signer);
         if (gameType == 'tic-tac-toe') {
-            setGameState(new TicTacToeState(Number(gameId!), playerIngameId === 0 ? 'X' : 'O'));
+            setGameState(new TicTacToeState({ gameId: Number(gameId!), playerType: playerIngameId === 0 ? 'X' : 'O' }));
         } else {
             setGameState(getInitialState(Number(gameId), playerIngameId === 0 ? 'X' : 'O'));
         }
@@ -157,7 +148,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
         }
 
         _isValidSignedMove(getArbiter(), signedMove).then((isValid) => {
-          const nextGameState = gameState.encodedSignedMove(signedMove, isValid);
+          const nextGameState = gameState.makeNewGameStateFromSignedMove(signedMove, isValid);
           console.log('nextGameState, check Winner', nextGameState);
           conversation.send(messageText).then(() => {
             console.log(
@@ -448,8 +439,8 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
             console.log('gameState before move', gameState);
 
             _isValidSignedMove(getArbiter(), signedMove).then((isValid) => {
-              const nextGameState = gameState.opponentSignedMove(signedMove, isValid);
-              let decodedState: IMyGameState<any> | null = null;
+              const nextGameState = gameState.makeNewGameStateFromOpponentsSignedMove(signedMove, isValid);
+              let decodedState: IMyGameBoard<any> | null = null;
               let winner: TPlayer | null = null;
               if(gameType == 'tic-tac-toe'){
                   winner = TicTacToeBoard.fromEncoded(signedMove.gameMove.newEncodedGameBoard).getWinner();

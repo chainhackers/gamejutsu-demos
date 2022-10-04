@@ -1,5 +1,4 @@
 import {IGameMove, ISignedGameMove} from '../../types/arbiter';
-import {TTTMove} from "./ET-Tic-Tac-Toe/types";
 
 export type TPlayer = 'X' | 'O';
 export type TGameHistory = ISignedGameMove[]
@@ -8,7 +7,7 @@ export interface IMyGameMove {
     encodedMove: string;
 }
 
-export interface IMyGameState<IMyGameMove> {
+export interface IMyGameBoard<IMyGameMove> {
     getWinner(): TPlayer | null;
 }
 
@@ -18,33 +17,35 @@ export interface IMyGameState<IMyGameMove> {
  *
  */
 
-export type TGameStateContractParams = {
+export type TContractGameState = {
     gameId: number,
     nonce: number,
     state: string
 }
 
-export interface IGameState<IMyGameState, IMyGameMove> {
+export interface IGameState<IMyGameBoard, IMyGameMove> {
     gameId: number;
     playerId: number;
     movesHistory: TGameHistory;
-    disputableMoveNumbers: Set<number>;
+    disputableMoveNonces: Set<number>;
     lastMove: ISignedGameMove | null;
     lastOpponentMove: ISignedGameMove | null;
     redMoves: boolean;
-    myGameState: IMyGameState;
+    currentBoard: IMyGameBoard;
     isFinished: boolean;
     winner: number | null;
     nonce: number
 
-    makeMove(move: IMyGameMove, valid: boolean, winner: TPlayer | null ): IGameState<IMyGameState, IMyGameMove>
-    //todo makeSignedMove(signedMove: ISignedGameMove): IGameState<IMyGameState, IMyGameMove>
-    composeMove(move: IMyGameMove, playerAddress: string, winner: TPlayer | null): IGameMove
-    toGameStateContractParams() : TGameStateContractParams
-    encodedSignedMove(signedMove:ISignedGameMove, valid: boolean): IGameState<IMyGameState, IMyGameMove>
-    opponentSignedMove(signedMove:ISignedGameMove, valid: boolean): IGameState<IMyGameState, IMyGameMove>
+    makeNewGameState(contractGameState: TContractGameState, move: IMyGameMove, valid: boolean, winner: TPlayer | null ): IGameState<IMyGameBoard, IMyGameMove>
+    composeMove(contractGameState: TContractGameState,
+        move: IMyGameMove,
+        valid: boolean,
+        winner: TPlayer | null, playerAddress:string): IGameMove;
+    signMove(contractGameState: TContractGameState,
+        move: IMyGameMove,
+        valid: boolean,
+        winner: TPlayer | null, playerAddress:string): Promise<ISignedGameMove>;
+    toGameStateContractParams() : TContractGameState
+    makeNewGameStateFromSignedMove(signedMove:ISignedGameMove, valid: boolean): IGameState<IMyGameBoard, IMyGameMove>
+    makeNewGameStateFromOpponentsSignedMove(signedMove:ISignedGameMove, valid: boolean): IGameState<IMyGameBoard, IMyGameMove>
 }
-
-// export interface IGameProps {
-//
-// }

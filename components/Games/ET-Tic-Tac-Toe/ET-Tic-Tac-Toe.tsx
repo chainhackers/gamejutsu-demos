@@ -16,7 +16,7 @@ export const ETTicTacToe: React.FC<ITicTacToeProps> = ({
   getSignerAddress,
   sendSignedMove,
 }) => {
-  const boardState = gameState?.myGameState || TicTacToeBoard.empty();
+  const boardState = gameState?.currentBoard || TicTacToeBoard.empty();
 
   const clickHandler = async (i: number) => {
     if (!gameState) return;
@@ -32,7 +32,7 @@ export const ETTicTacToe: React.FC<ITicTacToeProps> = ({
           move.encodedMove,
         ).then((transitionResult) => {
           let winner: TPlayer | null = TicTacToeBoard.fromEncoded(transitionResult.state).getWinner();
-          const signedMove = gameState.signMove(move, address, winner);
+          const signedMove = gameState.signMove(transitionResult.state, move, true, winner, address);
           console.log({ signedMove, move });
           return signedMove;
         });

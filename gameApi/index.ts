@@ -5,7 +5,7 @@ import arbiterContract from 'contracts/Arbiter.json';
 import tictacRulesContract from 'contracts/TicTacToeRules.json';
 import checkersContract from 'contracts/CheckersRules.json';
 import { IGameMove, ISignedGameMove } from "../types/arbiter";
-import { TGameStateContractParams } from 'components/Games/types';
+import { TContractGameState } from 'components/Games/types';
 
 export const getArbiter = () => fromContractData(arbiterContract);
 export const getRulesContract = (gameType: 'tic-tac-toe' | 'checkers' | string | undefined): ethers.Contract => {
@@ -194,7 +194,7 @@ export const disputeMove = async (
 
 export const checkIsValidMove = async (
   contract: ethers.Contract,
-  gameState: TGameStateContractParams,
+  gameState: TContractGameState,
   playerIngameId: number,
   encodedMove: string,
 ) => {
@@ -207,7 +207,7 @@ export const checkIsValidMove = async (
 //function transition(GameState calldata state, uint8 playerId, bytes calldata move) external pure returns (GameState memory);
 export const transition = async (
   contract: ethers.Contract,
-  gameState: TGameStateContractParams,
+  gameState: TContractGameState,
   playerIngameId: number,
   encodedMove: string,
 ) => {
