@@ -168,6 +168,19 @@ export class CheckersState implements IGameState<CheckersBoard, CHECKERSMove> {
         this.playerId = playerType === 'X' ? 0 : 1;
     }
 
+    static fromCheckersState(checkersState: CheckersState): CheckersState {
+        const state = new CheckersState(checkersState.gameId, checkersState.playerType, checkersState.currentBoard);
+        state.movesHistory = checkersState.movesHistory;
+        state.decodedMovesHistory = checkersState.decodedMovesHistory;
+        state.disputableMoveNonces = checkersState.disputableMoveNonces;
+        state.lastMove = checkersState.lastMove;
+        state.lastOpponentMove = checkersState.lastOpponentMove;
+        state.isFinished = checkersState.isFinished;
+        state.winner = checkersState.winner;
+        state.nonce = checkersState.nonce;
+        return state;
+    }
+
 
     makeNewGameStateFromSignedMove(signedMove: ISignedGameMove, valid: boolean = true): CheckersState {
         const winner = CheckersBoard.fromEncoded(signedMove.gameMove.newEncodedGameBoard).winner;
