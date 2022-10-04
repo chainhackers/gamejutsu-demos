@@ -183,7 +183,7 @@ export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
     const move = TTTMove.fromEncoded(signedMove.gameMove.move, this.playerId == 0 ? 'X' : 'O');
     return this.makeNewGameState({
       gameId: signedMove.gameMove.gameId,
-      nonce: signedMove.gameMove.nonce,
+      nonce: signedMove.gameMove.nonce + 1,
       state: signedMove.gameMove.newState,
     }, move, valid, winner);
   }
