@@ -3,7 +3,6 @@ import cn from 'classnames';
 import { NavigationPropsI } from './NavigationProps';
 import styles from './Navigation.module.scss';
 import Link from 'next/link';
-import Image from 'next/image';
 export const Navigation: React.FC<NavigationPropsI> = ({ active }) => {
   const { t } = useTranslation();
   return (
