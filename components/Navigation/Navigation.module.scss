@@ -1,6 +1,12 @@
 .container {
   padding: 0 10px;
 
+    .logo {
+        position: relative;
+        width: 35px;
+        height: 35px;
+        top: 5px;
+    }
   .navigation {
     ul {
       list-style-type: none;
@@ -12,14 +18,23 @@
         &.active {
           font-weight: bold;
           color: var(--gray-darkest);
+            svg {
+                fill: var(--gray-darkest);
+            }
         }
 
         &.inactive {
           color: var(--gray);
+            svg {
+                fill: var(--gray);
+            }
         }
         &:hover {
           font-weight: bold;
           color: var(--black);
+            svg {
+                fill: var(--black);
+            }
         }
       }
     }
