@@ -5,4 +5,5 @@ export interface TeamMemberPropsI {
     role: string;
     description: string;
     link: string | null;
+    contacts: { type: string; ref: string; image: string }[];
 }
