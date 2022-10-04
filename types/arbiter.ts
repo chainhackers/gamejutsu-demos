@@ -12,10 +12,10 @@ export const TIC_TAC_TOE_STATE_TYPES = ['uint8[9]', 'bool', 'bool']
 export interface IGameMove {
     gameId: number;
     nonce: number;
-    playerAddress: string;
-    oldEncodedGameBoard: string;
-    newEncodedGameBoard: string;
-    encodedMove: string;
+    player: string; //address
+    oldState: string;
+    newState: string;
+    move: string;
 }
 
 export interface ISignedGameMove {
@@ -26,18 +26,18 @@ export interface ISignedGameMove {
 export class GameMove implements IGameMove {
     gameId: number;
     nonce: number;
-    playerAddress: string;
-    oldEncodedGameBoard: string;
-    newEncodedGameBoard: string;
-    encodedMove: string;
+    player: string;
+    oldState: string;
+    newState: string;
+    move: string;
 
     constructor(gameId: number, nonce: number, playerAddress: string, oldEncodedGameBoard: string, newEncodedGameBoard: string, encodedMove: string) {
         this.gameId = gameId;
         this.nonce = nonce;
-        this.playerAddress = playerAddress; //address
-        this.oldEncodedGameBoard = oldEncodedGameBoard;
-        this.newEncodedGameBoard = newEncodedGameBoard;
-        this.encodedMove = encodedMove;
+        this.player = playerAddress; //address
+        this.oldState = oldEncodedGameBoard;
+        this.newState = newEncodedGameBoard;
+        this.move = encodedMove;
     }
 }
 

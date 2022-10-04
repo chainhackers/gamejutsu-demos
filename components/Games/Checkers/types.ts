@@ -1,8 +1,7 @@
-import { IGameState, IMyGameMove, IMyGameBoard, TGameHistory, TContractGameState, TPlayer } from "../types";
+import { IGameState, IMyGameMove, IMyGameBoard, TGameHistory, TContractGameState as CGameState, TPlayer } from "../types";
 import { GameMove, IGameMove, ISignedGameMove, SignedGameMove } from "../../../types/arbiter";
 import { defaultAbiCoder } from 'ethers/lib/utils';
 import { signMoveWithAddress } from "../../../helpers/session_signatures";
-import { ChannelListener } from "diagnostics_channel";
 
 export const CHECKERS_STATE_TYPES = ["uint8[32]", "bool", "uint8"]
 export const CHECKERS_MOVE_TYPES = ["uint8", "uint8", "bool", "bool"]
@@ -160,7 +159,7 @@ export class CheckersState implements IGameState<CheckersBoard, CHECKERSMove> {
     playerId: number;
     nonce: number = 0;
 
-    constructor(gameId: number, playerType: TPlayer, board: CheckersBoard | null = null) {
+    constructor({ gameId, playerType, board = null }: { gameId: number; playerType: TPlayer; board?: CheckersBoard | null; }) {
         this.gameId = gameId;
         this.redMoves = true; //playerType === 'O';
         this.currentBoard = board || CheckersBoard.empty();
@@ -168,46 +167,38 @@ export class CheckersState implements IGameState<CheckersBoard, CHECKERSMove> {
         this.playerId = playerType === 'X' ? 0 : 1;
     }
 
-    static fromCheckersState(checkersState: CheckersState): CheckersState {
-        const state = new CheckersState(checkersState.gameId, checkersState.playerType, checkersState.currentBoard);
-        state.movesHistory = checkersState.movesHistory;
-        state.decodedMovesHistory = checkersState.decodedMovesHistory;
-        state.disputableMoveNonces = checkersState.disputableMoveNonces;
-        state.lastMove = checkersState.lastMove;
-        state.lastOpponentMove = checkersState.lastOpponentMove;
-        state.isFinished = checkersState.isFinished;
-        state.winner = checkersState.winner;
-        state.nonce = checkersState.nonce;
+    static shallowClone(checkersState: CheckersState): CheckersState {
+        let state = Object.create(Object.getPrototypeOf(checkersState));
+        Object.assign(state, checkersState);
         return state;
     }
 
-
     makeNewGameStateFromSignedMove(signedMove: ISignedGameMove, valid: boolean = true): CheckersState {
-        const winner = CheckersBoard.fromEncoded(signedMove.gameMove.newEncodedGameBoard).winner;
-        const move = CHECKERSMove.fromEncoded(signedMove.gameMove.encodedMove, this.playerId == 0 ? 'X' : 'O');
+        const winner = CheckersBoard.fromEncoded(signedMove.gameMove.newState).winner;
+        const move = CHECKERSMove.fromEncoded(signedMove.gameMove.move, this.playerId == 0 ? 'X' : 'O');
         return this.makeNewGameState({
             gameId: signedMove.gameMove.gameId,
             nonce: signedMove.gameMove.nonce,
-            state: signedMove.gameMove.newEncodedGameBoard,
+            state: signedMove.gameMove.newState,
         }, move, valid, winner);
     }
 
     makeNewGameStateFromOpponentsSignedMove(signedMove: ISignedGameMove, valid: boolean = true): CheckersState {
-        const winner = CheckersBoard.fromEncoded(signedMove.gameMove.newEncodedGameBoard).winner;
-        const move = CHECKERSMove.fromEncoded(signedMove.gameMove.encodedMove, this.playerId == 0 ? 'O' : 'X');
+        const winner = CheckersBoard.fromEncoded(signedMove.gameMove.newState).winner;
+        const move = CHECKERSMove.fromEncoded(signedMove.gameMove.move, this.playerId == 0 ? 'O' : 'X');
         return this.makeNewGameState({
             gameId: signedMove.gameMove.gameId,
             nonce: signedMove.gameMove.nonce,
-            state: signedMove.gameMove.newEncodedGameBoard,
+            state: signedMove.gameMove.newState,
         }, move, valid, winner);
     }
 
-    makeNewGameState(nextGameStateProvideByContractTODO_think_of_better_name: TContractGameState, move: CHECKERSMove, valid: boolean, winner: TPlayer | null): CheckersState {
-        const nextState = CheckersState.fromCheckersState(this);
+    makeNewGameState(nextCGameState: CGameState, move: CHECKERSMove, valid: boolean, winner: TPlayer | null): CheckersState {
+        const nextState = CheckersState.shallowClone(this);
 
-        nextState.gameId = nextGameStateProvideByContractTODO_think_of_better_name.gameId;
-        nextState.nonce = nextGameStateProvideByContractTODO_think_of_better_name.nonce;
-        nextState.currentBoard = CheckersBoard.fromEncoded(nextGameStateProvideByContractTODO_think_of_better_name.state);
+        nextState.gameId = nextCGameState.gameId;
+        nextState.nonce = nextCGameState.nonce;
+        nextState.currentBoard = CheckersBoard.fromEncoded(nextCGameState.state);
 
         //TODO just make getter if need
         //this line only in checkers implementation
@@ -232,7 +223,7 @@ export class CheckersState implements IGameState<CheckersBoard, CHECKERSMove> {
         return Object.freeze(nextState);
     }
 
-    composeMove(contractGameState: TContractGameState,
+    composeMove(contractGameState: CGameState,
         move: CHECKERSMove,
         valid: boolean = true,
         winner: TPlayer | null = null, playerAddress: string): IGameMove {
@@ -248,7 +239,7 @@ export class CheckersState implements IGameState<CheckersBoard, CHECKERSMove> {
     }
 
     async signMove(
-        contractGameState: TContractGameState,
+        contractGameState: CGameState,
         move: CHECKERSMove,
         valid: boolean = true,
         winner: TPlayer | null = null,
@@ -259,7 +250,7 @@ export class CheckersState implements IGameState<CheckersBoard, CHECKERSMove> {
         return new SignedGameMove(gameMove, [signature]);
     }
 
-    toGameStateContractParams(): TContractGameState {
+    toGameStateContractParams(): CGameState {
         return { gameId: this.gameId, nonce: this.nonce, state: this.encode() }
     }
 

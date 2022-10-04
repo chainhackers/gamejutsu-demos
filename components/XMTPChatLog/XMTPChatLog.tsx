@@ -46,16 +46,16 @@ export const XMTPChatLog: React.FC<XMTPChatLogPropsI> = ({ logData, isLoading })
     let move: string | null;
 
     if (signedGameMove.gameType == 'tic-tac-toe') {
-      oldState = TicTacToeBoard.fromEncoded(signedGameMove.gameMove.oldEncodedGameBoard);
-      newState = TicTacToeBoard.fromEncoded(signedGameMove.gameMove.newEncodedGameBoard);
+      oldState = TicTacToeBoard.fromEncoded(signedGameMove.gameMove.oldState);
+      newState = TicTacToeBoard.fromEncoded(signedGameMove.gameMove.newState);
       move = JSON.stringify(
-        defaultAbiCoder.decode(TIC_TAC_TOE_MOVE_TYPES, signedGameMove.gameMove.encodedMove)
+        defaultAbiCoder.decode(TIC_TAC_TOE_MOVE_TYPES, signedGameMove.gameMove.move)
       );
     } else {
-      oldState = CheckersBoard.fromEncoded(signedGameMove.gameMove.oldEncodedGameBoard);
-      newState = CheckersBoard.fromEncoded(signedGameMove.gameMove.newEncodedGameBoard);
+      oldState = CheckersBoard.fromEncoded(signedGameMove.gameMove.oldState);
+      newState = CheckersBoard.fromEncoded(signedGameMove.gameMove.newState);
       move = JSON.stringify(
-        defaultAbiCoder.decode(CHECKERS_MOVE_TYPES, signedGameMove.gameMove.encodedMove)
+        defaultAbiCoder.decode(CHECKERS_MOVE_TYPES, signedGameMove.gameMove.move)
       );
     }
     const id = message.id.slice(0, 17) + '...' + message.id.slice(-17);
