@@ -187,7 +187,7 @@ export class CheckersState implements IGameState<CheckersBoard, CHECKERSMove> {
         const move = CHECKERSMove.fromEncoded(signedMove.gameMove.move, this.playerId == 0 ? 'X' : 'O');
         return this.makeNewGameState({
             gameId: signedMove.gameMove.gameId,
-            nonce: signedMove.gameMove.nonce,
+            nonce: signedMove.gameMove.nonce + 1,
             state: signedMove.gameMove.newState,
         }, move, valid, winner);
     }
