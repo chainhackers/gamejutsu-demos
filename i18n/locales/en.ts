@@ -19,7 +19,7 @@ const en = {
     frontpage: {
       introduction: { l1: 'Say goodbye 👋🏼', l2: 'to signing transactions on every game move' },
       description: {
-        l1: 'GameJutsu is a gaming framwork to take care of the on-chain / off-chain communication on Web3.',
+        l1: 'GameJutsu is a gaming framework to take care of the on-chain / off-chain communication on Web3.',
         l2: 'Launch your awesome game on Web3 with us.',
       },
     },
