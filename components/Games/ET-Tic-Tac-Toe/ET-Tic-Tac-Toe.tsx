@@ -32,6 +32,8 @@ export const ETTicTacToe: React.FC<ITicTacToeProps> = ({
           move.encodedMove,
         ).then((transitionResult) => {
           let winner: TPlayer | null = TicTacToeBoard.fromEncoded(transitionResult.state).getWinner();
+          console.log('transitionResult', transitionResult);
+          console.log('board', TicTacToeBoard.fromEncoded(transitionResult.state));
           const signedMove = gameState.signMove(transitionResult, move, true, winner, address);
           console.log({ signedMove, move });
           return signedMove;
