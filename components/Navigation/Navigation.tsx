@@ -55,9 +55,6 @@ export const Navigation: React.FC<NavigationPropsI> = ({ active }) => {
                             </div>
                         </a>
                     </li>
-          <li className={cn(active && (active === 'team' ? styles.active : styles.inactive))}>
-            <Link href="/team">{t('navigation.team')}</Link>
-          </li>
         </ul>
       </nav>
     </div>
