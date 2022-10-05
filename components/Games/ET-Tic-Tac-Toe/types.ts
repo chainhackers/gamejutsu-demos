@@ -3,12 +3,12 @@ import {
   IMyGameMove,
   IMyGameBoard,
   TGameHistory,
-  TContractGameState as TContractGameState, TPlayer,
+  TContractGameState as TContractGameState, TPlayer, BaseGameState,
 } from '../types';
 
-import { GameMove, IGameMove, ISignedGameMove, SignedGameMove } from '../../../types/arbiter';
+import { ISignedGameMove } from '../../../types/arbiter';
 import { defaultAbiCoder } from 'ethers/lib/utils';
-import { signMoveWithAddress } from '../../../helpers/session_signatures';
+
 
 export const TIC_TAC_TOE_STATE_TYPES = ['uint8[9]', 'bool', 'bool'] as const;
 export const TIC_TAC_TOE_MOVE_TYPES = ['uint8'] as const;
@@ -149,36 +149,14 @@ export class TicTacToeBoard implements IMyGameBoard<TTTMove> {
   }
 }
 
-export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
-  movesHistory: TGameHistory = [];
-  decodedMovesHistory: TTTMove[] = [];
-  disputableMoveNonces: Set<number> = new Set();
-  lastMove: ISignedGameMove | null = null;
-  lastOpponentMove: ISignedGameMove | null = null;
-  isFinished: boolean = false;
-  winner: number | null = null;
-  gameId: number;
-  redMoves: boolean;
-  currentBoard: TicTacToeBoard;
-  playerType: TPlayer;
-  playerId: number;
-  nonce: number = 0;
+export class TicTacToeState extends BaseGameState<TicTacToeBoard, TTTMove> implements IGameState<TicTacToeBoard, TTTMove> {
 
   constructor({ gameId, playerType, board = null }: { gameId: number; playerType: TPlayer; board?: TicTacToeBoard | null; }) {
-    this.gameId = gameId;
-    this.redMoves = playerType === 'X';
+    super({ gameId, playerType });
     this.currentBoard = board || TicTacToeBoard.empty();
-    this.playerType = playerType;
-    this.playerId = playerType === 'X' ? 0 : 1;
   }
 
-  static shallowClone(tictactoeState: TicTacToeState): TicTacToeState {
-    let state = Object.create(Object.getPrototypeOf(tictactoeState));
-    Object.assign(state, tictactoeState);
-    return state;
-  }
-
-  makeNewGameStateFromSignedMove(signedMove: ISignedGameMove, valid: boolean = true): TicTacToeState {
+  makeNewGameStateFromSignedMove(signedMove: ISignedGameMove, valid: boolean = true): this {
     const winner = TicTacToeBoard.fromEncoded(signedMove.gameMove.newState).getWinner();
     const move = TTTMove.fromEncoded(signedMove.gameMove.move, this.playerId == 0 ? 'X' : 'O');
     return this.makeNewGameState({
@@ -188,7 +166,7 @@ export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
     }, move, valid, winner);
   }
 
-  makeNewGameStateFromOpponentsSignedMove(signedMove: ISignedGameMove, valid: boolean = true): TicTacToeState {
+  makeNewGameStateFromOpponentsSignedMove(signedMove: ISignedGameMove, valid: boolean = true): this {
     const winner = TicTacToeBoard.fromEncoded(signedMove.gameMove.newState).getWinner();
     const move = TTTMove.fromEncoded(signedMove.gameMove.move, this.playerId == 0 ? 'O' : 'X');
     return this.makeNewGameState({
@@ -203,59 +181,12 @@ export class TicTacToeState implements IGameState<TicTacToeBoard, TTTMove> {
     move: TTTMove,
     valid: boolean = true,
     winner: TPlayer | null = null,
-  ): TicTacToeState {
-    const nextState = TicTacToeState.shallowClone(this);
-
-    nextState.gameId = contractGameState.gameId;
-    nextState.nonce = contractGameState.nonce;
-    nextState.currentBoard = TicTacToeBoard.fromEncoded(contractGameState.state);
-
-    //above enough
-    if (winner) {
-      if (winner == this.playerType) {
-        nextState.winner = this.playerId;
-      } else {
-        nextState.winner = 1 - this.playerId;
-      }
-    }
-
-    nextState.decodedMovesHistory = [...this.decodedMovesHistory, move];
-    const nextDisputableMoveNonces = new Set(this.disputableMoveNonces);
-    if (!valid) {
-      nextDisputableMoveNonces.add(this.nonce);
-    }
-    nextState.disputableMoveNonces = nextDisputableMoveNonces;
-
-    return Object.freeze(nextState);
-  }
-
-  composeMove(contractGameState: TContractGameState,
-    move: TTTMove,
-    valid: boolean = true,
-    winner: TPlayer | null = null, playerAddress: string): IGameMove {
-    return new GameMove(
-      this.gameId,
-      this.nonce,
-      playerAddress,
-      this.encode(),
-      this.makeNewGameState(contractGameState, move, valid, winner).encode(),
-      move.encodedMove,
+  ): this {
+    const nextState = this._makeNewGameState(
+      contractGameState, move, valid, winner
     );
-  }
-
-  async signMove(
-    contractGameState: TContractGameState,
-    move: TTTMove,
-    valid: boolean = true,
-    winner: TPlayer | null = null, playerAddress: string,
-  ): Promise<ISignedGameMove> {
-    const gameMove = this.composeMove(contractGameState, move, valid, winner, playerAddress);
-    const signature = await signMoveWithAddress(gameMove, playerAddress);
-    return new SignedGameMove(gameMove, [signature]);
-  }
-
-  toGameStateContractParams(): TContractGameState {
-    return { gameId: this.gameId, nonce: this.nonce, state: this.encode() };
+    nextState.currentBoard = TicTacToeBoard.fromEncoded(contractGameState.state);
+    return Object.freeze(nextState);
   }
 
   encode(): string {
