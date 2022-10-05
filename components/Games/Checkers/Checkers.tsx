@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
-import {Board} from 'components/Games/Checkers';
-import {ICheckersProps} from './ICheckersProps';
+import { Board } from 'components/Games/Checkers';
+import { ICheckersProps } from './ICheckersProps';
 
 import styles from './Checkers.module.scss';
-import {CheckersBoard, CHECKERSMove} from './types';
+import { CheckersBoard, CHECKERSMove } from './types';
 import { getRulesContract, transition } from 'gameApi';
-import {TPlayer} from "../types";
+import { TPlayer } from "../types";
 
 export const Checkers: React.FC<ICheckersProps> = ({
-                                                           gameState,
-                                                           getSignerAddress,
-                                                           sendSignedMove
-                                                       }) => {
+    gameState,
+    getSignerAddress,
+    sendSignedMove
+}) => {
 
-    const [selectedCell, setSelectedCell] = useState<number| null>(null); 
+    const [selectedCell, setSelectedCell] = useState<number | null>(null);
 
     const boardState = gameState?.currentBoard || CheckersBoard.empty()
 
@@ -28,9 +28,18 @@ export const Checkers: React.FC<ICheckersProps> = ({
 
         setSelectedCell(null);
 
+        function isJump(oldPosition: number, newPosition: number): boolean {
+            function getRow(position: number) { return position % 4; }
+            function getColumn(position: number) { return Math.floor(position / 4); }
+            function distance(x: number, y: number) { return Math.abs(x - y); }
+            return distance(getRow(oldPosition), getRow(newPosition)) > 1 ||
+            distance(getColumn(oldPosition), getColumn(newPosition)) > 1
+        }
+
+        let _isJump = isJump(selectedCell, i);
         //TODO here !!!it's only log setting in next line
-        console.log('move', [selectedCell + 1, i + 1, false, true]);
-        const move: CHECKERSMove = CHECKERSMove.fromMove([selectedCell, i, false, true], gameState.playerType)
+        console.log('move', [selectedCell + 1, i + 1, _isJump, !_isJump]);
+        const move: CHECKERSMove = CHECKERSMove.fromMove([selectedCell, i, _isJump, !_isJump], gameState.playerType)
 
         getSignerAddress().then((address) => {
             return transition(getRulesContract('checkers'),
@@ -40,9 +49,6 @@ export const Checkers: React.FC<ICheckersProps> = ({
             ).then((transitionResult) => {
                 let winner: TPlayer | null = CheckersBoard.fromEncoded(transitionResult.state).getWinner();
                 const signedMove = gameState.signMove(transitionResult, move, true, winner, address);
-                console.log('transitionResult', transitionResult);
-                console.log('board', CheckersBoard.fromEncoded(transitionResult.state));
-                console.log({ signedMove, move });
                 return signedMove
             });
         }).then(sendSignedMove)
@@ -56,7 +62,7 @@ export const Checkers: React.FC<ICheckersProps> = ({
                     squares={boardState.cells}
                     onClick={clickHandler}
                     isFinished={!gameState || gameState?.isFinished}
-                    selectedCell = {selectedCell}
+                    selectedCell={selectedCell}
                     disputableMoves={boardState.disputableMoves}
                 />
             </div>
