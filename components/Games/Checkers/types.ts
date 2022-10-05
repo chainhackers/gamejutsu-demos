@@ -1,7 +1,6 @@
-import { IGameState, IMyGameMove, IMyGameBoard, TGameHistory, TContractGameState as CGameState, TPlayer } from "../types";
-import { GameMove, IGameMove, ISignedGameMove, SignedGameMove } from "../../../types/arbiter";
+import { IGameState, IMyGameMove, IMyGameBoard, TContractGameState, TPlayer, BaseGameState } from "../types";
+import { ISignedGameMove } from "../../../types/arbiter";
 import { defaultAbiCoder } from 'ethers/lib/utils';
-import { signMoveWithAddress } from "../../../helpers/session_signatures";
 
 export const CHECKERS_STATE_TYPES = ["uint8[32]", "bool", "uint8"]
 export const CHECKERS_MOVE_TYPES = ["uint8", "uint8", "bool", "bool"]
@@ -152,34 +151,13 @@ export class CheckersBoard implements IMyGameBoard<CHECKERSMove> {
 // }
 
 
-export class CheckersState implements IGameState<CheckersBoard, CHECKERSMove> {
-    movesHistory: TGameHistory = [];
-    decodedMovesHistory: CHECKERSMove[] = [];
-    disputableMoveNonces: Set<number> = new Set();
-    //TODO set
-    lastMove: ISignedGameMove | null = null;
-    lastOpponentMove: ISignedGameMove | null = null;
-    isFinished: boolean = false;
-    winner: number | null = null;
-    gameId: number;
-    redMoves: boolean; //aka redMoves
-    currentBoard: CheckersBoard;
-    playerType: TPlayer;
-    playerId: number;
-    nonce: number = 0;
+export class CheckersState extends BaseGameState<CheckersBoard, CHECKERSMove> implements IGameState<CheckersBoard, CHECKERSMove> {
+    redMoves: boolean;
 
     constructor({ gameId, playerType, board = null }: { gameId: number; playerType: TPlayer; board?: CheckersBoard | null; }) {
-        this.gameId = gameId;
-        this.redMoves = true; //playerType === 'O';
+        super({ gameId, playerType });
+        this.redMoves = true;
         this.currentBoard = board || CheckersBoard.empty();
-        this.playerType = playerType;
-        this.playerId = playerType === 'X' ? 0 : 1;
-    }
-
-    static shallowClone(checkersState: CheckersState): CheckersState {
-        let state = Object.create(Object.getPrototypeOf(checkersState));
-        Object.assign(state, checkersState);
-        return state;
     }
 
     makeNewGameStateFromSignedMove(signedMove: ISignedGameMove, valid: boolean = true): CheckersState {
@@ -202,65 +180,18 @@ export class CheckersState implements IGameState<CheckersBoard, CHECKERSMove> {
         }, move, valid, winner);
     }
 
-    makeNewGameState(nextCGameState: CGameState, move: CHECKERSMove, valid: boolean, winner: TPlayer | null): CheckersState {
-        const nextState = CheckersState.shallowClone(this);
-
-        nextState.gameId = nextCGameState.gameId;
-        nextState.nonce = nextCGameState.nonce;
-        nextState.currentBoard = CheckersBoard.fromEncoded(nextCGameState.state);
-
-        //TODO just make getter if need
-        //this line only in checkers implementation
-        nextState.redMoves = nextState.currentBoard.redMoves;
-
-        //above enough
-        if (winner) {
-            if (winner == this.playerType) {
-                nextState.winner = this.playerId;
-            } else {
-                nextState.winner = 1 - this.playerId;
-            }
-        }
-
-        nextState.decodedMovesHistory = [...this.decodedMovesHistory, move];
-        const nextDisputableMoveNonces = new Set(this.disputableMoveNonces);
-        if (!valid) {
-            nextDisputableMoveNonces.add(this.nonce);
-        }
-        nextState.disputableMoveNonces = nextDisputableMoveNonces;
-
-        return Object.freeze(nextState);
-    }
-
-    composeMove(contractGameState: CGameState,
-        move: CHECKERSMove,
-        valid: boolean = true,
-        winner: TPlayer | null = null, playerAddress: string): IGameMove {
-        const gameMove = new GameMove(
-            this.gameId,
-            this.nonce,
-            playerAddress,
-            this.encode(),
-            this.makeNewGameState(contractGameState, move, valid, winner).encode(),
-            move.encodedMove,
-        )
-        return gameMove;
-    }
-
-    async signMove(
-        contractGameState: CGameState,
+    makeNewGameState(
+        contractGameState: TContractGameState,
         move: CHECKERSMove,
         valid: boolean = true,
         winner: TPlayer | null = null,
-        playerAddress: string
-    ): Promise<ISignedGameMove> {
-        const gameMove = this.composeMove(contractGameState, move, valid, winner, playerAddress);
-        const signature = await signMoveWithAddress(gameMove, playerAddress);
-        return new SignedGameMove(gameMove, [signature]);
-    }
-
-    toGameStateContractParams(): CGameState {
-        return { gameId: this.gameId, nonce: this.nonce, state: this.encode() }
+    ): this {
+        const nextState = this._makeNewGameState(
+            contractGameState, move, valid, winner
+        );
+        nextState.currentBoard = CheckersBoard.fromEncoded(contractGameState.state);
+        nextState.redMoves = nextState.currentBoard.redMoves;
+        return Object.freeze(nextState);
     }
 
     encode(): string {
