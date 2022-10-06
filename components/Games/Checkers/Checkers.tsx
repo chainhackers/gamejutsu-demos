@@ -5,7 +5,6 @@ import { ICheckersProps } from './ICheckersProps';
 import styles from './Checkers.module.scss';
 import { CheckersBoard, CHECKERSMove } from './types';
 import { getRulesContract, transition } from 'gameApi';
-import { TPlayer } from "../types";
 
 export const Checkers: React.FC<ICheckersProps> = ({
     gameState,
@@ -33,7 +32,7 @@ export const Checkers: React.FC<ICheckersProps> = ({
             function getColumn(position: number) { return Math.floor(position / 4); }
             function distance(x: number, y: number) { return Math.abs(x - y); }
             return distance(getRow(oldPosition), getRow(newPosition)) > 1 ||
-            distance(getColumn(oldPosition), getColumn(newPosition)) > 1
+                distance(getColumn(oldPosition), getColumn(newPosition)) > 1
         }
 
         let _isJump = isJump(selectedCell, i);
@@ -41,32 +40,31 @@ export const Checkers: React.FC<ICheckersProps> = ({
         console.log('move', [selectedCell + 1, i + 1, _isJump, !_isJump]);
         const move: CHECKERSMove = CHECKERSMove.fromMove([selectedCell, i, _isJump, !_isJump], gameState.playerType)
 
-        getSignerAddress().then((address) => {
-            return transition(getRulesContract('checkers'),
-                gameState.toGameStateContractParams(),
-                gameState.playerId,
-                move.encodedMove
-            ).then((transitionResult) => {
-                const signedMove = gameState.signMove(
-                    gameState.composeMove(move, transitionResult, true, address), address);
-                return signedMove
-            });
-        }).then(sendSignedMove);
+        let address = await getSignerAddress();
+        let transitionResult = await transition(getRulesContract('checkers'),
+            gameState.toGameStateContractParams(),
+            gameState.playerId,
+            move.encodedMove
+        );
+        const signedMove = await gameState.signMove(
+                    gameState.composeMove(move, transitionResult, true, address),
+                    address);
+        sendSignedMove(signedMove);
     }
 
-    return (
-        <div className={styles.container}>
-            <div className={styles.boardPanel}>
-                <Board
-                    squares={boardState.cells}
-                    onClick={clickHandler}
-                    isFinished={!gameState || gameState?.isFinished}
-                    selectedCell={selectedCell}
-                    disputableMoves={boardState.disputableMoves}
-                />
-            </div>
+return (
+    <div className={styles.container}>
+        <div className={styles.boardPanel}>
+            <Board
+                squares={boardState.cells}
+                onClick={clickHandler}
+                isFinished={!gameState || gameState?.isFinished}
+                selectedCell={selectedCell}
+                disputableMoves={boardState.disputableMoves}
+            />
         </div>
-    );
+    </div>
+);
 };
 
 
