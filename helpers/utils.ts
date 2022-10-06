@@ -4,3 +4,4 @@ export function shallowClone<T extends Object>(source: T): T {
     console.log('shallowClone', source, destination)
     return destination;
 }
+

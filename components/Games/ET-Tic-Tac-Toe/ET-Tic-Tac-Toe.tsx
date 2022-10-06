@@ -4,12 +4,10 @@ import { ITicTacToeProps } from './ITicTacToeProps';
 
 import styles from './ET-Tic-Tac-Toe.module.scss';
 import {
-  TicTacToeBoard, TicTacToeState,
+  TicTacToeBoard,
   TTTMove,
 } from './types';
 import { getRulesContract, transition } from 'gameApi';
-import {TPlayer} from "../types";
-import {CheckersBoard} from "../Checkers/types";
 
 export const ETTicTacToe: React.FC<ITicTacToeProps> = ({
   gameState,
@@ -23,20 +21,16 @@ export const ETTicTacToe: React.FC<ITicTacToeProps> = ({
 
     const move: TTTMove = TTTMove.fromMove(i, gameState.playerType);
 
-    getSignerAddress()
-      .then((address) => {
-        return transition(
-          getRulesContract('tic-tac-toe'),
-          gameState.toGameStateContractParams(),
-          gameState.playerId,
-          move.encodedMove,
-        ).then((transitionResult) => {
-          const signedMove = gameState.signMove(
-            gameState.composeMove(move, transitionResult, true, address), address);
-          return signedMove;
-        });
-      })
-      .then(sendSignedMove);
+    let address = await getSignerAddress();
+    let transitionResult = await transition(getRulesContract('tic-tac-toe'),
+      gameState.toGameStateContractParams(),
+      gameState.playerId,
+      move.encodedMove
+    );
+    const signedMove = await gameState.signMove(
+      gameState.composeMove(move, transitionResult, true, address),
+      address);
+    sendSignedMove(signedMove);
   };
 
   return (
