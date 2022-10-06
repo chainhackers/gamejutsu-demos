@@ -31,16 +31,12 @@ export const ETTicTacToe: React.FC<ITicTacToeProps> = ({
           gameState.playerId,
           move.encodedMove,
         ).then((transitionResult) => {
-          let winner: TPlayer | null = TicTacToeBoard.fromEncoded(transitionResult.state).getWinner();
-          console.log('transitionResult', transitionResult);
-          console.log('board', TicTacToeBoard.fromEncoded(transitionResult.state));
-          const signedMove = gameState.signMove(transitionResult, move, true, winner, address);
-          console.log({ signedMove, move });
+          const signedMove = gameState.signMove(
+            gameState.composeMove(move, transitionResult, true, address), address);
           return signedMove;
         });
       })
-      .then(sendSignedMove)
-      .catch(console.error);
+      .then(sendSignedMove);
   };
 
   return (

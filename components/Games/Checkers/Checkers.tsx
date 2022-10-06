@@ -47,12 +47,11 @@ export const Checkers: React.FC<ICheckersProps> = ({
                 gameState.playerId,
                 move.encodedMove
             ).then((transitionResult) => {
-                let winner: TPlayer | null = CheckersBoard.fromEncoded(transitionResult.state).getWinner();
-                const signedMove = gameState.signMove(transitionResult, move, true, winner, address);
+                const signedMove = gameState.signMove(
+                    gameState.composeMove(move, transitionResult, true, address), address);
                 return signedMove
             });
-        }).then(sendSignedMove)
-            .catch(console.error)
+        }).then(sendSignedMove);
     }
 
     return (

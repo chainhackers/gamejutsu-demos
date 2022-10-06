@@ -1,5 +1,5 @@
 import { IGameState, IMyGameMove, IMyGameBoard, TContractGameState, TPlayer, BaseGameState } from "../types";
-import { ISignedGameMove } from "../../../types/arbiter";
+import { IGameMove, ISignedGameMove } from "../../../types/arbiter";
 import { defaultAbiCoder } from 'ethers/lib/utils';
 
 export const CHECKERS_STATE_TYPES = ["uint8[32]", "bool", "uint8"]
@@ -143,56 +143,28 @@ export class CheckersBoard implements IMyGameBoard<CHECKERSMove> {
     }
 }
 
-
-// struct State {
-//     uint8[32] cells;
-//     bool redMoves;
-//     uint8 winner;
-// }
-
-
 export class CheckersState extends BaseGameState<CheckersBoard, CHECKERSMove> implements IGameState<CheckersBoard, CHECKERSMove> {
-    redMoves: boolean;
 
     constructor({ gameId, playerType, board = null }: { gameId: number; playerType: TPlayer; board?: CheckersBoard | null; }) {
         super({ gameId, playerType });
-        this.redMoves = true;
         this.currentBoard = board || CheckersBoard.empty();
     }
 
-    makeNewGameStateFromSignedMove(signedMove: ISignedGameMove, valid: boolean = true): CheckersState {
-        const winner = CheckersBoard.fromEncoded(signedMove.gameMove.newState).winner;
-        const move = CHECKERSMove.fromEncoded(signedMove.gameMove.move, this.playerId == 0 ? 'X' : 'O');
-        return this.makeNewGameState({
-            gameId: signedMove.gameMove.gameId,
-            nonce: signedMove.gameMove.nonce,
-            state: signedMove.gameMove.newState,
-        }, move, valid, winner);
+    fromEncodedBoard(encodedBoard:string): CheckersBoard {
+        return CheckersBoard.fromEncoded(encodedBoard);
     }
 
-    makeNewGameStateFromOpponentsSignedMove(signedMove: ISignedGameMove, valid: boolean = true): CheckersState {
-        const winner = CheckersBoard.fromEncoded(signedMove.gameMove.newState).winner;
-        const move = CHECKERSMove.fromEncoded(signedMove.gameMove.move, this.playerId == 0 ? 'O' : 'X');
-        return this.makeNewGameState({
-            gameId: signedMove.gameMove.gameId,
-            nonce: signedMove.gameMove.nonce + 1,
-            state: signedMove.gameMove.newState,
-        }, move, valid, winner);
+    fromEncodedMove(encodedMove:string, opponentMove:boolean): CHECKERSMove {
+        if (opponentMove) {
+            return CHECKERSMove.fromEncoded(encodedMove, this.playerId == 0 ? 'O' : 'X');
+        }
+        return CHECKERSMove.fromEncoded(encodedMove, this.playerId == 0 ? 'X' : 'O')
     }
-
-    makeNewGameState(
-        contractGameState: TContractGameState,
-        move: CHECKERSMove,
-        valid: boolean = true,
-        winner: TPlayer | null = null,
-    ): this {
-        const nextState = this._makeNewGameState(
-            contractGameState, move, valid, winner
-        );
-        nextState.currentBoard = CheckersBoard.fromEncoded(contractGameState.state);
-        nextState.redMoves = nextState.currentBoard.redMoves;
-        return Object.freeze(nextState);
-    }
+    
+    //TODO move board encode to board togheter with winner and redmoves
+    getRedMoves():boolean {
+        return this.currentBoard.redMoves
+    };
 
     encode(): string {
         const cellsToEncode = this.currentBoard.cells.map((cell) => {
@@ -205,9 +177,9 @@ export class CheckersState extends BaseGameState<CheckersBoard, CHECKERSMove> im
             }
         });
         let contractWinner = 0;
-        if (this.winner) {
-            contractWinner = this.winner + 1;
+        if (this.getWinnerId()) {
+            contractWinner = this.getWinnerId()! + 1;
         }
-        return defaultAbiCoder.encode(CHECKERS_STATE_TYPES, [cellsToEncode, this.redMoves, contractWinner]);
+        return defaultAbiCoder.encode(CHECKERS_STATE_TYPES, [cellsToEncode, this.getRedMoves(), contractWinner]);
     }
 }
