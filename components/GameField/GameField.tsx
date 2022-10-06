@@ -20,6 +20,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   onConnect,
 }) => {
   const [isShowShade, setShowShade] = useState<boolean>(true);
+  const [isShowExplainMove, SetShowExplainMove] = useState<boolean>(false);
   const [isWaiting, setIsWaiting] = useState<boolean>(true);
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [isShowReport, setShowReport] = useState<boolean>(false);
@@ -212,6 +213,55 @@ export const GameField: React.FC<GameFieldPropsI> = ({
                   borderless
                   size="sm"
                   title={t('buttons.connect')}
+                  onClick={() => {
+                    onConnect(rivalPlayerAddress!);
+                  }}
+                />
+              </div>
+            </div>
+          )}
+          {isShowExplainMove && (
+            <div className={styles.wait}>
+              {t('shade.connecting')}
+              <div className={styles.moveButtonbb}>
+                <Button
+                  borderless
+                  color='black'
+                  size="sm"
+                  title="No jump. I move"
+                  onClick={() => {
+                    onConnect(rivalPlayerAddress!);
+                  }}
+                />
+              </div>
+              <div className={styles.moveButtonbr}>
+                <Button
+                  borderless
+                  color='black'
+                  size="sm"
+                  title="No jump. Let opponent move"
+                  onClick={() => {
+                    onConnect(rivalPlayerAddress!);
+                  }}
+                />
+              </div>
+              <div className={styles.moveButtonrb}>
+                <Button
+                  borderless
+                  color='black'
+                  size="sm"
+                  title="Jump. I move"
+                  onClick={() => {
+                    onConnect(rivalPlayerAddress!);
+                  }}
+                />
+              </div>
+              <div className={styles.moveButtonrr}>
+                <Button
+                  borderless
+                  color='black'
+                  size="sm"
+                  title="Jump. Let opponent move"
                   onClick={() => {
                     onConnect(rivalPlayerAddress!);
                   }}
