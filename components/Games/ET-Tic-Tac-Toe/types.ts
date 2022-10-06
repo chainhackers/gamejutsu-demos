@@ -156,42 +156,20 @@ export class TicTacToeState extends BaseGameState<TicTacToeBoard, TTTMove> imple
     this.currentBoard = board || TicTacToeBoard.empty();
   }
 
-  makeNewGameStateFromSignedMove(signedMove: ISignedGameMove, valid: boolean = true): this {
-    const winner = TicTacToeBoard.fromEncoded(signedMove.gameMove.newState).getWinner();
-    const move = TTTMove.fromEncoded(signedMove.gameMove.move, this.playerId == 0 ? 'X' : 'O');
-    return this.makeNewGameState({
-      gameId: signedMove.gameMove.gameId,
-      nonce: signedMove.gameMove.nonce,
-      state: signedMove.gameMove.newState,
-    }, move, valid, winner);
+  fromEncodedBoard(encodedBoard: string): TicTacToeBoard {
+    return TicTacToeBoard.fromEncoded(encodedBoard);
   }
 
-  makeNewGameStateFromOpponentsSignedMove(signedMove: ISignedGameMove, valid: boolean = true): this {
-    const winner = TicTacToeBoard.fromEncoded(signedMove.gameMove.newState).getWinner();
-    const move = TTTMove.fromEncoded(signedMove.gameMove.move, this.playerId == 0 ? 'O' : 'X');
-    return this.makeNewGameState({
-      gameId: signedMove.gameMove.gameId,
-      nonce: signedMove.gameMove.nonce + 1,
-      state: signedMove.gameMove.newState,
-    }, move, valid, winner);
-  }
-
-  makeNewGameState(
-    contractGameState: TContractGameState,
-    move: TTTMove,
-    valid: boolean = true,
-    winner: TPlayer | null = null,
-  ): this {
-    const nextState = this._makeNewGameState(
-      contractGameState, move, valid, winner
-    );
-    nextState.currentBoard = TicTacToeBoard.fromEncoded(contractGameState.state);
-    return Object.freeze(nextState);
+  fromEncodedMove(encodedMove: string, opponentMove: boolean): TTTMove {
+    if (opponentMove) {
+      return TTTMove.fromEncoded(encodedMove, this.playerId == 0 ? 'O' : 'X');
+    }
+    return TTTMove.fromEncoded(encodedMove, this.playerId == 0 ? 'X' : 'O')
   }
 
   encode(): string {
-    this.currentBoard.naughtsWin = this.winner === 1;
-    this.currentBoard.crossesWin = this.winner === 0;
+    this.currentBoard.naughtsWin = this.getWinnerId() === 1;
+    this.currentBoard.crossesWin = this.getWinnerId() === 0;
     return this.currentBoard.encode();
   }
 }
