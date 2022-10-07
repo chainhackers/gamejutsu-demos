@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch localhost",
+            "type": "firefox",
+            "request": "launch",
+            "reAttach": true,
+            "url": "http://localhost:3000",
+            "pathMappings": [
+                {
+                    "url": "webpack://_n_e",
+                    "path": "${workspaceFolder}"
+                },
+                {
+                    "url": "http://localhost:3000",
+                    "path": "${workspaceFolder}"
+                }
+            ]
+        }
+    ]
+}
