@@ -1,3 +1,5 @@
+// https://github.com/xmtp/example-chat-react/blob/main/components/Conversation/Conversation.tsx
+
 import React, {useCallback, useEffect, useRef} from 'react'
 import useConversation from '../../hooks/useConversation'
 import MessagesList from "./Messagelist";

@@ -1,7 +1,7 @@
-import { createContext } from 'react'
-import { Client, Message } from '@xmtp/xmtp-js'
-import { Conversation } from '@xmtp/xmtp-js'
-import { Signer } from 'ethers'
+import {createContext, useContext} from 'react'
+import {Client, Message} from '@xmtp/xmtp-js'
+import {Conversation} from '@xmtp/xmtp-js'
+import {Signer} from 'ethers'
 
 export type MessageStoreEvent = {
     peerAddress: string
@@ -14,6 +14,7 @@ export type XmtpContextType = {
     loadingConversations: boolean
     initClient: (wallet: Signer) => void
     convoMessages: Map<string, Message[]>
+    setConvoMessages: (value: Map<string, Message[]>) => void
 }
 
 export const XmtpContext = createContext<XmtpContextType>({
@@ -22,6 +23,11 @@ export const XmtpContext = createContext<XmtpContextType>({
     loadingConversations: false,
     initClient: () => undefined,
     convoMessages: new Map(),
+    setConvoMessages: () => undefined,
 })
+
+export const useXmtpContext = () => {
+    return useContext(XmtpContext)
+}
 
 export default XmtpContext
