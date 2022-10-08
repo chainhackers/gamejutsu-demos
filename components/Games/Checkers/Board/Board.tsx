@@ -2,7 +2,7 @@ import cn from 'classnames';
 import {Square} from 'components/Games/Checkers';
 import {IBoardProps} from './BoardProps';
 import styles from './Board.module.scss';
-import React, { useState } from "react";
+import React from "react";
 
 export const Board: React.FC<IBoardProps> = ({
                                                  squares,

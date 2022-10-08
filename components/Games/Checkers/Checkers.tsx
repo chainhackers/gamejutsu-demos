@@ -5,6 +5,9 @@ import { ICheckersProps } from './ICheckersProps';
 import styles from './Checkers.module.scss';
 import { CheckersBoard, CHECKERSMove } from './types';
 import { getRulesContract, transition } from 'gameApi';
+import { Button } from 'components/shared';
+import { t } from 'i18next';
+import cn from 'classnames';
 
 export const Checkers: React.FC<ICheckersProps> = ({
     gameState,
@@ -13,32 +16,26 @@ export const Checkers: React.FC<ICheckersProps> = ({
 }) => {
 
     const [selectedCell, setSelectedCell] = useState<number | null>(null);
+    const [lastMove, setLastMove] = useState<{ from: number, to: number } | null>(null);
 
-    const boardState = gameState?.currentBoard || CheckersBoard.empty()
+    const boardState = gameState?.currentBoard || CheckersBoard.empty();
 
-    //TODO here
-    const clickHandler = async (i: number) => {
-        if (!gameState) return;
 
-        if (!selectedCell) {
-            setSelectedCell(i);
+    async function onButtonClickHandler(undo: boolean, jump: boolean, passMove: boolean): Promise<void> {
+        if (undo) {
+            setLastMove(null);
+            return;
+        }
+        if (!lastMove) {
+            return;
+        }
+        if (!gameState) {
             return;
         }
 
-        setSelectedCell(null);
-
-        function isJump(oldPosition: number, newPosition: number): boolean {
-            function getRow(position: number) { return position % 4; }
-            function getColumn(position: number) { return Math.floor(position / 4); }
-            function distance(x: number, y: number) { return Math.abs(x - y); }
-            return distance(getRow(oldPosition), getRow(newPosition)) > 1 ||
-                distance(getColumn(oldPosition), getColumn(newPosition)) > 1
-        }
-
-        let _isJump = isJump(selectedCell, i);
-        //TODO here !!!it's only log setting in next line
-        console.log('move', [selectedCell + 1, i + 1, _isJump, !_isJump]);
-        const move: CHECKERSMove = CHECKERSMove.fromMove([selectedCell, i, _isJump, !_isJump], gameState.playerType)
+        const move: CHECKERSMove = CHECKERSMove.fromMove([lastMove.from, lastMove.to, jump, passMove], gameState.playerType);
+        console.log('move 1-based index', lastMove.from + 1, lastMove.to + 1, jump, passMove);
+        setLastMove(null);
 
         let address = await getSignerAddress();
         let transitionResult = await transition(getRulesContract('checkers'),
@@ -47,14 +44,42 @@ export const Checkers: React.FC<ICheckersProps> = ({
             move.encodedMove
         );
         const signedMove = await gameState.signMove(
-                    gameState.composeMove(move, transitionResult, true, address),
-                    address);
+            gameState.composeMove(move, transitionResult, true, address),
+            address);
         sendSignedMove(signedMove);
     }
 
-return (
-    <div className={styles.container}>
-        <div className={styles.boardPanel}>
+    const clickHandler = async (i: number) => {
+        if (!gameState) {
+            return;
+        }
+        if (lastMove) {
+            return;
+        }
+        if (!selectedCell) {
+            setSelectedCell(i);
+            return;
+        }
+        setLastMove({ from: selectedCell, to: i });
+        setSelectedCell(null);
+    }
+
+    function makeButton(title: string, style: string, undo: boolean, jump: boolean, passMove: boolean) {
+        return <div className={styles[style]}>
+            <Button
+                borderless
+                color='black'
+                size="sm"
+                title={title}
+                onClick={() => {
+                    onButtonClickHandler(undo, jump, passMove);
+                }}
+            />
+        </div>
+    }
+
+    return (
+        <div className={styles.container}>
             <Board
                 squares={boardState.cells}
                 onClick={clickHandler}
@@ -62,9 +87,17 @@ return (
                 selectedCell={selectedCell}
                 disputableMoves={boardState.disputableMoves}
             />
+            {lastMove && (
+                <div className={cn(styles.maybeShade, styles.buttons)}>
+                    {makeButton("Undo move", "moveButtonbb", true, false, false)}
+                    {makeButton("No jump. I move", "moveButtonbb", false, false, false)}
+                    {makeButton("No jump. Let opponent move", "moveButtonbr", false, false, true)}
+                    {makeButton("No jump. I move", "moveButtonrb", false, false, true)}
+                    {makeButton("Jump. Let opponent move", "moveButtonrr", false, true, true)}
+                </div>
+            )}
         </div>
-    </div>
-);
+    );
 };
 
 

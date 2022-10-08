@@ -4,11 +4,26 @@
   // background-color: rgba(211, 211, 211, 0.391);
   display: flex;
   justify-content: center;
+  flex-direction: column;
   flex-wrap: wrap;
   padding: 100px 20px;
+  position: relative;
 
   h2 {
     padding: 10px;
+  }
+  .shade {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    background-color: var(--gray-dark);
+    opacity: 0.95;
+    z-index: 1000;
+  }
+  .buttons {
+    width: 300px;
+    margin:auto
   }
 
   .leftPanel {
