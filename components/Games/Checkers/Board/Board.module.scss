@@ -1,21 +1,25 @@
 .container {
-  padding: 10px;
   border-radius: 10px;
   margin: 5px;
   background-color: white;
   box-shadow: 0px 0px 10px -4px #888888;
-  height: 465px;
+  width: 412px;
+  height: 412px;
+  background-image: url('/images/chessboard.svg');
+  background-repeat: no-repeat;
+  background-size: contain;
 
   &.finished {
     background-color: lightgray;
   }
 
-  .board-row {
-    min-width: 450px;
-    &:after {
-      clear: both;
-      content: '';
-      display: table;
-    }
+  .boardCells {
+    margin: 7.37179487179487%;
+    width: 85.25641025641026%;
+    height: 85.25641025641026%;
+  }
+
+  .boardRow {
+    height: 12.5%;
   }
 }

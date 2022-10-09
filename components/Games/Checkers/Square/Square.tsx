@@ -10,7 +10,7 @@ export const Square: React.FC<SquarePropsI> = (
 ) => {
     // console.log('Square disputable: ', disputable);
     return (
-        <button
+        <div
             className={cn(
                 styles.square,
                 disputable ? styles.disputable : null,
@@ -19,6 +19,6 @@ export const Square: React.FC<SquarePropsI> = (
             onClick={onClick}
         >
             {value}
-        </button>
+        </div>
     );
 };

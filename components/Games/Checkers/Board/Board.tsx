@@ -45,7 +45,7 @@ export const Board: React.FC<IBoardProps> = ({
     };
 
     const getRow = (row: number) => {
-        return (<div className="board-row">
+        return (<div className={styles.boardRow}>
             {renderSquare(row, (row * 4) + 0)}
             {renderSquare(row, (row * 4) + 1)}
             {renderSquare(row, (row * 4) + 2)}
@@ -54,14 +54,16 @@ export const Board: React.FC<IBoardProps> = ({
     }
     return (
         <div className={cn(styles.container, isFinished ? styles.finished : null)}>
-            {getRow(0)}
-            {getRow(1)}
-            {getRow(2)}
-            {getRow(3)}
-            {getRow(4)}
-            {getRow(5)}
-            {getRow(6)}
-            {getRow(7)}
+            <div className={styles.boardCells}>
+                {getRow(0)}
+                {getRow(1)}
+                {getRow(2)}
+                {getRow(3)}
+                {getRow(4)}
+                {getRow(5)}
+                {getRow(6)}
+                {getRow(7)}
+            </div>
         </div>
     );
 };
