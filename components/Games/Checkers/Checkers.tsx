@@ -80,13 +80,15 @@ export const Checkers: React.FC<ICheckersProps> = ({
 
     return (
         <div className={styles.container}>
-            <Board
-                squares={boardState.cells}
-                onClick={clickHandler}
-                isFinished={!gameState || gameState?.isFinished}
-                selectedCell={selectedCell}
-                disputableMoves={boardState.disputableMoves}
-            />
+            <div style = {gameState?.playerId === 0 ? {transform:'rotate(180deg)', display:'inherit'}: {display:'inherit'}}>
+                <Board 
+                    squares={boardState.cells}
+                    onClick={clickHandler}
+                    isFinished={!gameState || gameState?.isFinished}
+                    selectedCell={selectedCell}
+                    disputableMoves={boardState.disputableMoves}
+                />
+            </div>
             {lastMove && (
                 <div className={cn(styles.maybeShade, styles.buttons)}>
                     {makeButton("Undo move", "moveButtonbb", true, false, false)}

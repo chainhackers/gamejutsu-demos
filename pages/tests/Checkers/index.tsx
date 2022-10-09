@@ -7,16 +7,24 @@ import { CheckersState } from 'components/Games/Checkers/types';
 
 const TestGameFieldPage: NextPage = () => {
 
-  const gameState: CheckersState = new CheckersState(
+  const gameStateX: CheckersState = new CheckersState(
     {
       gameId: 158,
       playerType: 'X'
     }
   );
+
+  const gameStateO: CheckersState = new CheckersState(
+    {
+      gameId: 158,
+      playerType: 'O'
+    }
+  );
+
   const getSignerAddress = async() => {return Promise.resolve('OxSignerAddress')};
   const sendSignedMove = (move: ISignedGameMove) => void {};
 
-  const makeProps = (): ICheckersProps =>  {
+  const makeProps = (gameState:CheckersState): ICheckersProps =>  {
     return {
       gameState,
       getSignerAddress,
@@ -24,16 +32,14 @@ const TestGameFieldPage: NextPage = () => {
     }
   }
 
-  const epmtyBoard = makeProps();
-
   function makeGameFields() {
     return Object.entries({
-      empty: epmtyBoard
+      gameStateX, gameStateO
     }).map(([key, props])=> {
       return <div key={key} className={styles.padding}>
         <h2>{key} props</h2>
         <Checkers
-          {...makeProps()}
+          {...makeProps(props)}
         >
         </Checkers>
       </div>
