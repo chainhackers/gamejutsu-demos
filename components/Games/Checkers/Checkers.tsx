@@ -94,7 +94,7 @@ export const Checkers: React.FC<ICheckersProps> = ({
                     {makeButton("Undo move", "moveButtonbb", true, false, false)}
                     {makeButton("No jump. I move", "moveButtonbb", false, false, false)}
                     {makeButton("No jump. Let opponent move", "moveButtonbr", false, false, true)}
-                    {makeButton("No jump. I move", "moveButtonrb", false, false, true)}
+                    {makeButton("Jump. I move", "moveButtonrb", false, true, false)}
                     {makeButton("Jump. Let opponent move", "moveButtonrr", false, true, true)}
                 </div>
             )}
