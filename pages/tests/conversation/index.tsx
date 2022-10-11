@@ -1,64 +1,30 @@
 import {NextPage} from 'next';
-import AddressPill from "../../../components/Conversation/AddressPill";
-import React, {useEffect, useRef, useState} from "react";
-import MessagesList from "../../../components/Conversation/Messagelist";
-import {Client, Message} from '@xmtp/xmtp-js'
-
-import {useAccount, useSigner} from "wagmi";
+import React, {useEffect, useState} from "react";
+import GameHistory from "../../../components/Conversation/GameHistory";
+import {GameConversation} from "../../../components/Conversation/types";
+import {ConnectButton} from "@rainbow-me/rainbowkit";
+import {XmtpProvider} from "../../../context/XmtpProvider";
 
 const ConversationPage: NextPage = () => {
-
-    const [messages, setMessages] = useState<Message[]>([]);
-
-    const {address, isConnected} = useAccount();
-    const {data: signer} = useSigner();
-    const messagesEndRef = useRef(null);
-    const [addr, setAddr] = useState<string>("");
+    const [gameConversation, setGameConversation] = useState<GameConversation | null>(null);
 
     useEffect(() => {
-        if (isConnected && signer) {
-            console.log('isConnected', isConnected);
-            console.log('signer', signer);
-            const msgs = [...messages];
-            Client.create(signer).then(xmtp =>
+        setGameConversation(
+            new GameConversation(
+                {
+                    gameId: 1,
+                    peerAddress: '0x3Be65C389F095aaa50D0b0F3801f64Aa0258940b',
+                },
+            )
+        );
+    }, []);
 
-                xmtp.conversations.newConversation(
-                    '0x3Be65C389F095aaa50D0b0F3801f64Aa0258940b'
-                )
-            ).then(conversation => {
-                conversation.send('Hello world 112')
-                    .then(message => {
-                        msgs.push(message);
-                        setMessages([...msgs]);
-                    })
-                    .then(() => conversation.send('Hello world 2'))
-                    .then(message => {
-                        msgs.push(message);
-                        setMessages([...msgs]);
-                    })
-                    .then(() => conversation.send('Hello world 3'))
-                    .then(message => {
-                        msgs.push(message);
-                        setMessages([...msgs]);
-                    })
-            });
-
-            signer.getAddress().then(setAddr);
-        }
-
-    }, [isConnected, signer]);
-
-
-    if (signer) {
-        return <div>
-            <span>signer</span>
-            <AddressPill address={addr}/>
-            <MessagesList messagesEndRef={messagesEndRef} messages={messages}/>
-        </div>;
-
-    } else {
-        return <div>no signer</div>
-    }
+    return <XmtpProvider>
+        <div>
+            <ConnectButton/>
+            {gameConversation && <GameHistory conv={gameConversation}/>}
+        </div>
+    </XmtpProvider>
 }
 
 
