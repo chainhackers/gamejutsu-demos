@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react'
 import {Client, Conversation, Message} from '@xmtp/xmtp-js'
 import {Signer} from 'ethers'
-import {XmtpContext, XmtpContextType} from './xmtp'
+import {MessageStore, XmtpContext, XmtpContextType} from './xmtp'
 import {useAccount, useSigner} from "wagmi";
 
 export const XmtpProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
@@ -9,7 +9,7 @@ export const XmtpProvider: React.FC<{ children: React.ReactNode }> = ({children}
     const {data: signer} = useSigner();
     const {address} = useAccount()
 
-    const [convoMessages, setConvoMessages] = useState<Map<string, Message[]>>(
+    const [convoMessages, setConvoMessages] = useState<MessageStore>(
         new Map()
     )
     const [loadingConversations, setLoadingConversations] =
@@ -67,9 +67,7 @@ export const XmtpProvider: React.FC<{ children: React.ReactNode }> = ({children}
             Promise.all(
                 convos.map(async (convo) => {
                     if (convo.peerAddress !== address) {
-                        const messages = await convo.messages()
-                        convoMessages.set(convo.peerAddress, messages)
-                        setConvoMessages(new Map(convoMessages))
+                        
                         conversations.set(convo.peerAddress, convo)
                         setConversations(new Map(conversations))
                     }
@@ -85,9 +83,6 @@ export const XmtpProvider: React.FC<{ children: React.ReactNode }> = ({children}
             const stream = await client.conversations.stream()
             for await (const convo of stream) {
                 if (convo.peerAddress !== address) {
-                    const messages = await convo.messages()
-                    convoMessages.set(convo.peerAddress, messages)
-                    setConvoMessages(new Map(convoMessages))
                     conversations.set(convo.peerAddress, convo)
                     setConversations(new Map(conversations))
                 }

@@ -53,7 +53,7 @@ const ConversationPage: NextPage = () => {
 
         return <div>
             SIGNER IS HERE
-            <Conversation recipientWalletAddr={'0x3Be65C389F095aaa50D0b0F3801f64Aa0258940b'} />
+            <Conversation recipientWalletAddr={'0x4782353f75c32a6baFb5DA3678A1129a1d2d2Ee8'} />
         </div>
 
     } else {

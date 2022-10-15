@@ -1,5 +1,6 @@
 // https://github.com/xmtp/example-chat-react/blob/main/components/Conversation/Conversation.tsx
 
+import { Message } from '@xmtp/xmtp-js';
 import React, {useCallback, useEffect, useRef} from 'react'
 import useConversation from '../../hooks/useConversation'
 import MessagesList from "./Messagelist";
@@ -18,8 +19,11 @@ export const Conversation = ({
         ;(messagesEndRef.current as any)?.scrollIntoView({behavior: 'smooth'})
     }, [])
 
-    const {messages, sendMessage, loading} = useConversation(
+    let messages: Message[] = [];
+    const {sendMessage, loading} = useConversation(
         recipientWalletAddr,
+        "gameId", 
+        () => true,
         scrollToMessagesEndRef
     )
 
