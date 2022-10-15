@@ -1,83 +1,103 @@
 import { Conversation, Message, Stream } from '@xmtp/xmtp-js'
 import { useState, useEffect, useContext } from 'react'
-import XmtpContext from '../context/xmtp'
-import useMessageStore from './useMessageStore'
+import { WalletContext } from '../contexts/WalltetContext'
+import XmtpContext from '../contexts/xmtp'
 
 type OnMessageCallback = () => void
 
+let stream: Stream<Message>
+let latestMsgId: string
+
+// 1) дропнуть инициализацию из провайдера
+// 2) добавить в юзконверсэшон раскладывалку по стору в виде композитного ключа или просто функции 
+// 3) добавить инициализацию в юзконверсшон 
+// 4) добавить фильтрацию в инициализацию и слушалку
+// 5) возможно, накапливать сообщения из событий onMessageCallback в useConversation
+
 const useConversation = (
-    peerAddress: string,
-    onMessageCallback?: OnMessageCallback
+  peerAddress: string,
+  onMessageCallback?: OnMessageCallback,
 ) => {
-    const { client, convoMessages } = useContext(XmtpContext)
-    const { messageStore, dispatchMessages } = useMessageStore()
-    const [conversation, setConversation] = useState<Conversation | null>(null)
-    const [stream, setStream] = useState<Stream<Message>>()
-    const [loading, setLoading] = useState<boolean>(false)
+  const { address: walletAddress } = useContext(WalletContext)
+  const { client, convoMessages, setConvoMessages } = useContext(XmtpContext)
+  const [conversation, setConversation] = useState<Conversation | null>(null)
+  const [loading] = useState<boolean>(false)
+  const [browserVisible, setBrowserVisible] = useState<boolean>(true)
 
-    useEffect(() => {
-        const getConvo = async () => {
-            if (!client || !peerAddress) {
-                return
-            }
-            setConversation(await client.conversations.newConversation(peerAddress))
-        }
-        getConvo()
-    }, [peerAddress])
+  useEffect(() => {
+    window.addEventListener('focus', () => setBrowserVisible(true))
+    window.addEventListener('blur', () => setBrowserVisible(false))
+  }, [])
 
-    useEffect(() => {
-        const closeStream = async () => {
-            if (!stream) return
-            await stream.return()
-        }
-        closeStream()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
-    useEffect(() => {
-        if (!conversation) return
-        const listMessages = () => {
-            setLoading(true)
-            if (dispatchMessages) {
-                dispatchMessages({
-                    peerAddress: conversation.peerAddress,
-                    messages: convoMessages.get(conversation.peerAddress) ?? [],
-                })
-            }
-            if (onMessageCallback) {
-                onMessageCallback()
-            }
-            setLoading(false)
-        }
-        const streamMessages = async () => {
-            const stream = await conversation.streamMessages()
-            setStream(stream)
-            for await (const msg of stream) {
-                if (dispatchMessages) {
-                    await dispatchMessages({
-                        peerAddress: conversation.peerAddress,
-                        messages: [msg],
-                    })
-                }
-                if (onMessageCallback) {
-                    onMessageCallback()
-                }
-            }
-        }
-        listMessages()
-        streamMessages()
-    }, [conversation, convoMessages])
-
-    const handleSend = async (message: string) => {
-        if (!conversation) return
-        await conversation.send(message)
+  useEffect(() => {
+    const getConvo = async () => {
+      if (!client || !peerAddress) {
+        return
+      }
+      setConversation(await client.conversations.newConversation(peerAddress))
     }
+    getConvo()
+  }, [client, peerAddress])
 
-    return {
-        loading,
-        messages: messageStore[peerAddress] ?? [],
-        sendMessage: handleSend,
+  useEffect(() => {
+    if (!conversation) return
+    const streamMessages = async () => {
+      stream = await conversation.streamMessages()
+      for await (const msg of stream) {
+        if (setConvoMessages) {
+          const newMessages = convoMessages.get(conversation.peerAddress) ?? []
+          newMessages.push(msg)
+          const uniqueMessages = [
+            ...Array.from(
+              new Map(newMessages.map((item) => [item['id'], item])).values()
+            ),
+          ]
+          convoMessages.set(conversation.peerAddress, uniqueMessages)
+          setConvoMessages(new Map(convoMessages))
+        }
+        if (
+          latestMsgId !== msg.id &&
+          Notification.permission === 'granted' &&
+          msg.senderAddress !== walletAddress &&
+          !browserVisible
+        ) {
+          new Notification('XMTP', {
+            body: `${msg.senderAddress}\n${msg.content}`,
+          })
+
+          latestMsgId = msg.id
+        }
+        if (onMessageCallback) {
+          onMessageCallback()
+        }
+      }
     }
+    streamMessages()
+    return () => {
+      const closeStream = async () => {
+        if (!stream) return
+        await stream.return()
+      }
+      closeStream()
+    }
+  }, [
+    browserVisible,
+    conversation,
+    convoMessages,
+    onMessageCallback,
+    setConvoMessages,
+    walletAddress,
+  ])
+
+  const handleSend = async (message: string) => {
+    if (!conversation) return
+    await conversation.send(message)
+  }
+
+  return {
+    loading,
+    sendMessage: handleSend, 
+  }
 }
 
 export default useConversation

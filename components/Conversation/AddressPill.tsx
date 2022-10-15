@@ -1,7 +1,7 @@
 import React, {useContext} from 'react'
 import {classNames} from './helpers'
 import Address from './Address'
-import {WalletContext} from "../../context/WalltetContext";
+import {WalletContext} from "../../contexts/WalltetContext";
 
 type addressPillProps = {
     address: string

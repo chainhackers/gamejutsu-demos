@@ -1,6 +1,6 @@
 import {ISignedGameMove} from "../../types/arbiter";
 import React, {useContext, useEffect} from "react";
-import XmtpContext, {XmtpContextType} from "../../context/xmtp";
+import XmtpContext, {XmtpContextType} from "../../contexts/xmtp";
 import {Client, Conversation, Message} from "@xmtp/xmtp-js";
 
 export interface IGameConversation {
