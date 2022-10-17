@@ -6,22 +6,41 @@
   padding: 0;
   text-align: center;
   width: 12.5%;
-  background-image: url('/images/piece.svg');
-  background-repeat: no-repeat;
-  background-size: 41%;
   background-position: center;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  background-repeat: no-repeat;
+  
 
   &.disputable {
     background-color: red;
+  }
 
+  &.red {
+    mask-size: 41%;
+    background-color: red;
+    mask-image: url('/images/piece.svg');   
+  }
+
+  &.white {
+    mask-size: 41%;
+    background-color: white;
+    mask-image: url('/images/piece.svg');
   }
 
   &.selected {
-    background-image: url('/images/selected.svg');
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-color: yellow;
+    mask-image: url('/images/selection.svg');
+    mask-size: 55%;
+  }
 
+  &.red.selected {
+    mask-image: url('/images/piece.svg'), url('/images/selection.svg');
+    mask-size: 41%, 55%;
+    background-color: red;
+  }
+  &.white.selected {
+    mask-image: url('/images/piece.svg'), url('/images/selection.svg');
+    mask-size: 41%, 55%;
   }
 }
 .square:focus {

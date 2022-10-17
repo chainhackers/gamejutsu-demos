@@ -14,11 +14,13 @@ export const Square: React.FC<SquarePropsI> = (
             className={cn(
                 styles.square,
                 disputable ? styles.disputable : null,
-                selected ? styles.selected : null
+                selected ? styles.selected : null,
+                value == 'X' ? styles.white : null,
+                value == 'O' ? styles.red: null
                 )}
             onClick={onClick}
+            
         >
-            {value}
         </div>
     );
 };
