@@ -1,16 +1,18 @@
 // https://github.com/xmtp/example-chat-react/blob/main/components/Conversation/Conversation.tsx
 
-import { Message } from '@xmtp/xmtp-js';
+import {Message} from '@xmtp/xmtp-js';
 import React, {useCallback, useEffect, useRef, useState} from 'react'
-import useConversation, { makeIsPagingCompleteOnAttach } from '../../hooks/useConversation'
+import useConversation, {makeIsPagingCompleteOnAttach} from '../../hooks/useConversation'
 import MessagesList from "./Messagelist";
 
 type ConversationProps = {
-    recipientWalletAddr: string
+    recipientWalletAddr: string,
+    gameId: number
 }
 
 export const Conversation = ({
                                  recipientWalletAddr,
+                                 gameId
                              }: ConversationProps): JSX.Element => {
     const messagesEndRef = useRef(null)
 
@@ -25,13 +27,14 @@ export const Conversation = ({
     const onMessageCallback = useCallback((message: Message) => {
         //todo there are different order of new and old messages mb resort
         setMessages([message, ...messages]);
+        scrollToMessagesEndRef();
     }, []);
 
-    
-    const {sendMessage, loading, } = useConversation(
+
+    const {sendMessage, loading,} = useConversation(
         recipientWalletAddr,
-        String(17), 
-        makeIsPagingCompleteOnAttach(17),
+        String(gameId),
+        makeIsPagingCompleteOnAttach(gameId),
         onMessageCallback
     )
 

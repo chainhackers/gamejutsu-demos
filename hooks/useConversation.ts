@@ -1,12 +1,11 @@
-import { Conversation, Message, SortDirection, Stream } from '@xmtp/xmtp-js'
-import { ListMessagesPaginatedOptions } from '@xmtp/xmtp-js/dist/types/src/Client'
-import { SelectPrize } from 'components'
-import { useState, useEffect, useContext } from 'react'
-import { withTranslation } from 'react-i18next'
-import { ISignedGameMove } from 'types/arbiter'
-import { WalletContext } from '../contexts/WalltetContext'
+import {Conversation, Message, SortDirection, Stream} from '@xmtp/xmtp-js'
+import {ListMessagesPaginatedOptions} from '@xmtp/xmtp-js/dist/types/src/Client'
+import {useState, useEffect, useContext} from 'react'
+import {ISignedGameMove} from 'types/arbiter'
+import {WalletContext} from '../contexts/WalltetContext'
 import XmtpContext from '../contexts/xmtp'
 
+export const MESSAGES_PER_PAGE = 10;
 type OnMessageCallback = (mesage: Message) => void
 
 let stream: Stream<Message>
@@ -60,8 +59,8 @@ const useConversation = (
     isPagingComplete: (messages: Message[]) => boolean,
     onMessageCallback?: OnMessageCallback,
 ) => {
-    const { address: walletAddress } = useContext(WalletContext)
-    const { client, convoMessages, setConvoMessages } = useContext(XmtpContext)
+    const {address: walletAddress} = useContext(WalletContext)
+    const {client, convoMessages, setConvoMessages} = useContext(XmtpContext)
     const [conversation, setConversation] = useState<Conversation | null>(null)
     const [loading] = useState<boolean>(false)
     const [browserVisible, setBrowserVisible] = useState<boolean>(true)
@@ -98,31 +97,26 @@ const useConversation = (
 
     const nextPage = async (paginator: AsyncGenerator<Message[]>): Promise<Message[]> => {
         if (paginator && conversation) {
-            paginator.next().then((result) => {
-                if (result.done) {
-                    console.warn('done loading messages');
-                    console.assert(result.value === undefined);
-                    setPaginator(null)
-                } else {
-                    const oldMessages = getMessages(secondKeyAkaGameId);
-                    let almostUniqueMessages = [...oldMessages, ...result.value];
-                    setMessages(secondKeyAkaGameId, almostUniqueMessages);
-                    setConvoMessages(new Map(convoMessages))
-
-                    for (const message of result.value) {
-                        if (onMessageCallback) {
-                            onMessageCallback(message)
-                        }
-                        showNotification(message);
+            const result = await paginator.next()
+            if (result.done) {
+                console.warn('done loading messages');
+                console.assert(result.value === undefined);
+                setPaginator(null)
+            } else {
+                const oldMessages = getMessages(secondKeyAkaGameId);
+                let almostUniqueMessages = [...oldMessages, ...result.value];
+                setMessages(secondKeyAkaGameId, almostUniqueMessages);
+                setConvoMessages(new Map(convoMessages))
+                for (const message of result.value) {
+                    if (onMessageCallback) {
+                        onMessageCallback(message)
                     }
-                    return result.value;
-
+                    showNotification(message);
                 }
-
-
-            });
+            }
+            return result.value
         }
-        return Promise.reject();
+        return Promise.reject()
     }
 
     useEffect(() => {
@@ -131,7 +125,7 @@ const useConversation = (
             let _paginator = paginator;
             if (!_paginator) {
                 const paginationOptions: ListMessagesPaginatedOptions = {
-                    pageSize: 4,
+                    pageSize: MESSAGES_PER_PAGE,
                     direction: SortDirection.SORT_DIRECTION_DESCENDING,
                 }
                 _paginator = conversation.messagesPaginated(paginationOptions);
@@ -140,15 +134,14 @@ const useConversation = (
             }
             while (true) {
                 try {
-                    let messages = await nextPage(_paginator);
+                    const messages = await nextPage(_paginator)
                     if (isPagingComplete(messages)) {
                         return;
                     }
-                }
-                catch (error) {
+                } catch (error) {
                     return;
                 }
-            };
+            }
         }
 
         const streamMessages = async () => {
@@ -171,7 +164,7 @@ const useConversation = (
                 }
             }
         }
-        listMessages();
+        listMessages()
         streamMessages();
         return () => {
             const closeStream = async () => {
@@ -181,12 +174,12 @@ const useConversation = (
             closeStream();
         }
     }, [
-        browserVisible,
+        // browserVisible,
         conversation,
-        convoMessages,
-        onMessageCallback,
-        setConvoMessages,
-        walletAddress,
+        // convoMessages,
+        // onMessageCallback,
+        // setConvoMessages,
+        // walletAddress,
     ])
 
     const handleSend = async (message: string) => {
