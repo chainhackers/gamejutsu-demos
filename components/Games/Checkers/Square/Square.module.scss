@@ -6,13 +6,20 @@
   padding: 0;
   text-align: center;
   width: 12.5%;
+  background-image: url('/images/piece.svg');
+  background-repeat: no-repeat;
+  background-size: 41%;
+  background-position: center;
 
   &.disputable {
-    color: red;
+    background-color: red;
 
   }
 
   &.selected {
+    background-image: url('/images/selected.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
     background-color: yellow;
 
   }
