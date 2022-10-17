@@ -74,9 +74,6 @@ export const XmtpProvider: React.FC<{ children: React.ReactNode }> = ({children}
                 })
             ).then(() => {
                 setLoadingConversations(false)
-                if (Notification.permission === 'default') {
-                    Notification.requestPermission()
-                }
             })
         }
         const streamConversations = async () => {
