@@ -3,19 +3,56 @@ import { ListMessagesPaginatedOptions } from '@xmtp/xmtp-js/dist/types/src/Clien
 import { SelectPrize } from 'components'
 import { useState, useEffect, useContext } from 'react'
 import { withTranslation } from 'react-i18next'
+import { ISignedGameMove } from 'types/arbiter'
 import { WalletContext } from '../contexts/WalltetContext'
 import XmtpContext from '../contexts/xmtp'
 
 type OnMessageCallback = (mesage: Message) => void
 
 let stream: Stream<Message>
-let latestMsgId: string
 
-// 1) дропнуть инициализацию из провайдера
-// 2) добавить в юзконверсэшон раскладывалку по стору в виде композитного ключа или просто функции 
-// 3) добавить инициализацию в юзконверсшон 
-// 4) добавить фильтрацию в инициализацию и слушалку
-// 5) возможно, накапливать сообщения из событий onMessageCallback в useConversation
+export interface ISignedGameMoveInMessage extends ISignedGameMove {
+    gameType: string;
+}
+
+export function asSignedGameMoveInMessage(parsedObject: any): ISignedGameMoveInMessage | null {
+    let gameMove = parsedObject?.gameMove;
+    let oldState = gameMove?.oldState;
+    let newState = gameMove?.newState;
+    let gameType = parsedObject?.gameType
+    if (!oldState || !newState || !gameType) {
+        return null;
+    }
+    return parsedObject;
+}
+
+export function parseMessageContent(message: any) {
+    try {
+        return message.content && JSON.parse(message.content);
+    } catch (e) {
+        return null;
+    }
+}
+
+//TODO replace to NeedMore
+export function makeIsPagingCompleteOnAttach(gameId: number) {
+    return (messages: Message[]) => {
+        return _isPagingCompleteOnAttach(gameId, messages)
+    }
+}
+
+function _isPagingCompleteOnAttach(gameId: number, messages: Message[]): boolean {
+    for (const message of messages) {
+        let parsedObject = parseMessageContent(message);
+        let signedMove = asSignedGameMoveInMessage(parsedObject);
+        if ((signedMove?.gameMove.gameId === gameId) && (signedMove?.gameMove.nonce === 0)) {
+            console.log('paging complete');
+            return true;
+        }
+    }
+    console.log('need more pages');
+    return false;
+}
 
 const useConversation = (
     peerAddress: string,
@@ -49,16 +86,6 @@ const useConversation = (
 
     function showNotification(message: Message) {
         console.log(message);
-        // if (latestMsgId !== msg.id &&
-        //     Notification.permission === 'granted' &&
-        //     msg.senderAddress !== walletAddress &&
-        //     !browserVisible) {
-        //     new Notification('XMTP', {
-        //         body: `${msg.senderAddress}\n${msg.content}`,
-        //     })
-
-        //     latestMsgId = msg.id
-        // }
     }
 
     function getMessages(secondKey: string): Message[] {
