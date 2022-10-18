@@ -2,7 +2,7 @@
 
 import {Message} from '@xmtp/xmtp-js';
 import React, {useCallback, useEffect, useRef, useState} from 'react'
-import useConversation, {makeIsPagingCompleteOnAttach} from '../../hooks/useConversation'
+import useConversation from '../../hooks/useConversation'
 import MessagesList from "./Messagelist";
 
 type ConversationProps = {
@@ -21,24 +21,14 @@ export const Conversation = ({
         ;(messagesEndRef.current as any)?.scrollIntoView({behavior: 'smooth'})
     }, [])
 
-
-    const [messages, setMessages] = useState<Message[]>([]);
-
-    const onMessageCallback = useCallback((message: Message) => {
-        //todo there are different order of new and old messages mb resort
-        setMessages([message, ...messages]);
-        scrollToMessagesEndRef();
-    }, []);
-
-
-    const {sendMessage, loading,} = useConversation(
+    const {sendMessage, loading, otherMessagesState, signedGameMovesState} = useConversation(
         recipientWalletAddr,
-        String(gameId),
-        makeIsPagingCompleteOnAttach(gameId),
-        onMessageCallback
+        gameId,
+        false,
+        true
     )
 
-    const hasMessages = messages.length > 0
+    const hasMessages = otherMessagesState.length > 0
 
     useEffect(() => {
         if (!hasMessages) return
@@ -52,7 +42,7 @@ export const Conversation = ({
         return <div>NO RECIPIENT</div>
     }
 
-    if (loading && !messages?.length) {
+    if (loading && !otherMessagesState?.length) {
         return (
             <span>pls wait</span>
         )
@@ -60,9 +50,10 @@ export const Conversation = ({
 
     return (
         <main className="flex flex-col flex-1 bg-white h-screen">
-            <div>HERE GOES MESSAGE LIST</div>
-            <MessagesList messagesEndRef={messagesEndRef} messages={messages}/>
+            <div>HERE GOES MESSAGE LIST BUT NO ANY GAMEMOVES HERE</div>
+            <MessagesList messagesEndRef={messagesEndRef} messages={otherMessagesState}/>
             <div>AFTER MESSAGE LIST</div>
+            <div>{JSON.stringify(signedGameMovesState)}</div>
         </main>
     )
 }

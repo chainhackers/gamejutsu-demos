@@ -172,6 +172,8 @@ const useConversation = (
     return {
         loading,
         sendMessage: handleSend,
+        otherMessagesState, 
+        signedGameMovesState
     }
 }
 
