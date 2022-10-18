@@ -37,7 +37,9 @@ export function decodeEncodedBoardState(encodedBoardState: string) {
 //     bool passMoveToOpponent;
 // }
 
-export type TCellData = null | TPlayer;
+export type TPiece = TPlayer | 'XX' | 'OO'
+
+export type TCellData = null | TPiece ;
 //32
 export type TCells = [
     TCellData, TCellData, TCellData, TCellData,
@@ -59,9 +61,9 @@ export class CHECKERSMove implements IMyGameMove {
     to: number;
     isJump: boolean;
     passMoveToOpponent: boolean
-    player: TPlayer
+    player: TPiece
 
-    private constructor(encodedMove: string, player: TPlayer) {
+    private constructor(encodedMove: string, player: TPiece) {
         this.encodedMove = encodedMove;
         let from, to;
         [from, to, this.isJump, this.passMoveToOpponent] = defaultAbiCoder.decode(CHECKERS_MOVE_TYPES, encodedMove);
@@ -70,11 +72,11 @@ export class CHECKERSMove implements IMyGameMove {
         this.player = player;
     }
 
-    static fromEncoded(encodedMove: string, player: TPlayer): CHECKERSMove {
+    static fromEncoded(encodedMove: string, player: TPiece): CHECKERSMove {
         return Object.seal(new CHECKERSMove(encodedMove, player));
     }
 
-    static fromMove([from, to, isJump, passMoveToOpponent]: TCheckersContractMove, player: TPlayer): CHECKERSMove {
+    static fromMove([from, to, isJump, passMoveToOpponent]: TCheckersContractMove, player: TPiece): CHECKERSMove {
         const encodedMove = defaultAbiCoder.encode(CHECKERS_MOVE_TYPES, [from + 1, to + 1, isJump, passMoveToOpponent]);
         return Object.seal(new CHECKERSMove(encodedMove, player));
     }
@@ -121,6 +123,10 @@ export class CheckersBoard implements IMyGameBoard<CHECKERSMove> {
                 return 'X';
             } else if (cell == 2) {
                 return 'O';
+            }  else if (cell == 161) {
+                return 'XX';
+            } else if (cell == 162) {
+                return 'OO';
             }
             return cell;
         });
@@ -172,8 +178,12 @@ export class CheckersState extends BaseGameState<CheckersBoard, CHECKERSMove> im
                 return 0;
             } else if (cell === 'X') {
                 return 1;
-            } else {
+            } else if (cell === 'O'){
                 return 2;
+            } else if (cell === 'XX') {
+                return 161;
+            } else if (cell === 'OO'){
+                return 162;
             }
         });
         let contractWinner = 0;
