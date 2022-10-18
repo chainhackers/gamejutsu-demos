@@ -3,7 +3,7 @@ import { ListMessagesPaginatedOptions } from '@xmtp/xmtp-js/dist/types/src/Clien
 import { NewGameBoard } from 'components'
 import { useState, useEffect, useContext } from 'react'
 import { ISignedGameMove } from 'types/arbiter'
-import XmtpContext from '../contexts/xmtp'
+import XmtpContext, { MessageStore } from '../contexts/xmtp'
 
 export const MESSAGES_PER_PAGE = 100;
 
@@ -74,7 +74,7 @@ const useConversation = (
     newGame: boolean,
     stopOnFirstMove: boolean,
 ) => {
-    const { client, convoMessages, setConvoMessages } = useContext(XmtpContext)
+    const { client, setConvoMessages } = useContext(XmtpContext)
     const [conversation, setConversation] = useState<Conversation | null>(null)
     const [loading] = useState<boolean>(false)
     const [otherMessagesState, setOtherMessagesState] = useState<Message[]>([])
@@ -92,15 +92,17 @@ const useConversation = (
 
     //why?
     function updateMessages(secondKey: string, newerMessages: Message[]): void {
-        const oldMessages = convoMessages.get(conversation!.peerAddress)?.get(secondKey) || [];
-        oldMessages.unshift(...newerMessages);
-        const uniqueMessages = [
-            ...Array.from(
-                new Map(oldMessages.map((item) => [item['id'], item])).values()
-            ),
-        ]
-        convoMessages.get(conversation!.peerAddress)?.set(secondKey, uniqueMessages);
-        setConvoMessages(new Map(convoMessages));
+        setConvoMessages((convoMessages) => {
+            const oldMessages = convoMessages.get(conversation!.peerAddress)?.get(secondKey) || [];
+            oldMessages.unshift(...newerMessages);
+            const uniqueMessages = [
+                ...Array.from(
+                    new Map(oldMessages.map((item) => [item['id'], item])).values()
+                ),
+            ]
+            convoMessages.get(conversation!.peerAddress)?.set(secondKey, uniqueMessages);
+            return new Map(convoMessages);
+        });
     }
 
     const listMessages = async (conversation: Conversation):
@@ -144,14 +146,14 @@ const useConversation = (
             stream = await conversation.streamMessages()
             for await (const message of stream) {
                 const { signedGameMoves, otherMessages } = filterMessages(newGame, gameId, [message]);
-                setSignedGameMovesState([...signedGameMoves, ...signedGameMovesState]);
-                setOtherMessagesState([...otherMessages, ...otherMessagesState]);
+                setSignedGameMovesState((prevValue) => [...signedGameMoves, ...prevValue]);
+                setOtherMessagesState((prevValue) => [...otherMessages, ...prevValue]);
                 updateMessages(String(gameId), [message]);
             }
         }
         listMessages(conversation).then(({ otherMessages, signedGameMoves }) => {
-            setSignedGameMovesState([...signedGameMoves, ...signedGameMovesState]);
-            setOtherMessagesState([...otherMessages, ...otherMessagesState]);
+            setSignedGameMovesState((prevValue) => [...signedGameMoves, ...prevValue]);
+            setOtherMessagesState((prevValue) => [...otherMessages, ...prevValue]);
             updateMessages(String(gameId), otherMessages);
         }).then( // we can lose some useless messages here
             () => streamMessages()

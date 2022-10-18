@@ -16,7 +16,7 @@ export type XmtpContextType = {
     loadingConversations: boolean
     initClient: (wallet: Signer) => void
     convoMessages: MessageStore
-    setConvoMessages: (value: MessageStore) => void
+    setConvoMessages: React.Dispatch<React.SetStateAction<MessageStore>>
 }
 
 export const XmtpContext = createContext<XmtpContextType>({
