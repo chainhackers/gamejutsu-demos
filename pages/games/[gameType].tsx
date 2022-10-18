@@ -2,10 +2,10 @@ import { useEffect, useState, useRef } from 'react';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { ParsedUrlQuery } from 'querystring';
 import { Conversation, Stream, Message } from '@xmtp/xmtp-js';
-import { useXmptContext } from 'context/XmtpContext';
+import { useXmptContext } from 'contexts/XmtpContext';
 
 import { XMTPChatLog } from 'components/XMTPChatLog';
-import { useWalletContext } from 'context/WalltetContext';
+import { useWalletContext } from 'contexts/WalltetContext';
 import { ControlPanel, useInterval } from 'components/ControlPanel';
 import {
   GameField,

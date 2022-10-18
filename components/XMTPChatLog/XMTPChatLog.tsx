@@ -6,36 +6,16 @@ import { TIC_TAC_TOE_MOVE_TYPES, TicTacToeBoard, TTTMove } from "../Games/ET-Tic
 import { IMyGameBoard } from "../Games/types";
 import { CHECKERS_MOVE_TYPES, CheckersBoard, CHECKERSMove } from "../Games/Checkers/types";
 import React from "react";
-import { ISignedGameMove } from 'types/arbiter';
-import {IChatLog} from "../../types";
+import { IChatLog } from "../../types";
+import { parseMessageContent, asSignedGameMoveInMessage } from 'hooks/useConversation';
 
-export interface ISignedGameMoveInMessage extends ISignedGameMove {
-  gameType: string;
-}
-
-export function asSignedGameMoveInMessage(parsedObject: any): ISignedGameMoveInMessage | null {
-  let gameMove = parsedObject?.gameMove;
-  let oldState = gameMove?.oldState;
-  let newState = gameMove?.newState;
-  let gameType = parsedObject?.gameType
-  if (!oldState || !newState || !gameType) {
-    return null;
-  }
-  return parsedObject;
-}
 
 export const XMTPChatLog: React.FC<XMTPChatLogPropsI> = ({ logData, isLoading }) => {
   let slicedLogData = logData.slice(0, 10);
   let prettyLogData = slicedLogData.map((message) => {
-  console.log('message', message);
-    let parsedMessage: any = null;
-    try {
-      parsedMessage = message.content && JSON.parse(message.content); //TODO add more filters - valid JSON can contain non-valid messages
-    } catch (e) {
-      console.warn('Failed to parse message', message);
-      return null;
-    }
-    const signedGameMove = asSignedGameMoveInMessage(parsedMessage);
+    console.log('message', message);
+    let parsedObject = parseMessageContent(message);
+    const signedGameMove = asSignedGameMoveInMessage(parsedObject);
 
     if (!signedGameMove) {
       return message;
@@ -71,7 +51,7 @@ export const XMTPChatLog: React.FC<XMTPChatLogPropsI> = ({ logData, isLoading })
       newState: JSON.stringify(newState),
       content: message.content,
     };
-  }).filter(msg => msg != null) as IChatLog[] ;
+  }).filter(msg => msg != null) as IChatLog[];
 
   return (
     <div className={styles.container}>

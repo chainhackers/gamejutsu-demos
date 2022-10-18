@@ -2,7 +2,7 @@ import { NextPage } from 'next';
 import { GameField } from 'components';
 import { GameFieldPropsI } from 'components/GameField/GameFieldProps';
 import { FinishedGameState } from 'gameApi';
-import styles from './test.module.scss';
+import styles from '../tests.module.scss';
 
 const TestGameFieldPage: NextPage = () => {
 

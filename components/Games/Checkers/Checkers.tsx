@@ -99,7 +99,7 @@ export const Checkers: React.FC<ICheckersProps> = ({
                 </div>
             )}
         </div>
-    );
+);
 };
 
 

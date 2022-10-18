@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { useXmptContext } from '../../context/XmtpContext';
+import { useXmptContext } from '../../contexts/XmtpContext';
 import { Conversation, Message, Stream } from '@xmtp/xmtp-js';
 
 const ChatPage = () => {

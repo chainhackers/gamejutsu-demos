@@ -220,6 +220,55 @@ export const GameField: React.FC<GameFieldPropsI> = ({
               </div>
             </div>
           )}
+          {isShowExplainMove && (
+            <div className={styles.wait}>
+              {t('shade.connecting')}
+              <div className={styles.moveButtonbb}>
+                <Button
+                  borderless
+                  color='black'
+                  size="sm"
+                  title="No jump. I move"
+                  onClick={() => {
+                    onConnect(rivalPlayerAddress!);
+                  }}
+                />
+              </div>
+              <div className={styles.moveButtonbr}>
+                <Button
+                  borderless
+                  color='black'
+                  size="sm"
+                  title="No jump. Let opponent move"
+                  onClick={() => {
+                    onConnect(rivalPlayerAddress!);
+                  }}
+                />
+              </div>
+              <div className={styles.moveButtonrb}>
+                <Button
+                  borderless
+                  color='black'
+                  size="sm"
+                  title="Jump. I move"
+                  onClick={() => {
+                    onConnect(rivalPlayerAddress!);
+                  }}
+                />
+              </div>
+              <div className={styles.moveButtonrr}>
+                <Button
+                  borderless
+                  color='black'
+                  size="sm"
+                  title="Jump. Let opponent move"
+                  onClick={() => {
+                    onConnect(rivalPlayerAddress!);
+                  }}
+                />
+              </div>
+            </div>
+          )}
           {isShowReport && (
             <div className={styles.report}>
               <div className={styles.whatToReport}>{t('shade.whatToReport')}</div>
