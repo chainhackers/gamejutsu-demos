@@ -7,8 +7,6 @@
   text-align: center;
   width: 12.5%;
   background-position: center;
-  mask-position: center;
-  mask-repeat: no-repeat;
   background-repeat: no-repeat;
   
 
@@ -17,51 +15,44 @@
   }
 
   &.red {
-    mask-size: 41%;
-    background-color: red;
-    mask-image: url('/images/piece.svg');   
+    background-size: 41%;
+    background-image: url('/images/piece.red.svg');   
   }
 
   &.white {
-    mask-size: 41%;
-    background-color: white;
-    mask-image: url('/images/piece.svg');
+    background-size: 41%;
+    background-image: url('/images/piece.white.svg');
   }
 
   &.redQueen {
-    mask-size: 41%;
-    background-color: red;
-    mask-image: url('/images/queen.svg');   
+    background-size: 41%;
+    background-image: url('/images/queen.red.svg');   
   }
   &.whiteQueen {
-    mask-size: 41%;
-    background-color: white;
-    mask-image: url('/images/queen.svg');
+    background-size: 41%;
+    background-image: url('/images/queen.white.svg');
   }
   &.redQueen.selected {
-    mask-image: url('/images/queen.svg'), url('/images/selection.svg');
-    mask-size: 41%, 55%;
-    background-color: red;
+    background-image: url('/images/queen.red.svg'), url('/images/selection.svg');
+    background-size: 41%, 55%;
   }
   &.whiteQueen.selected {
-    mask-image: url('/images/queen.svg'), url('/images/selection.svg');
-    mask-size: 41%, 55%;
+    background-image: url('/images/queen.white.svg'), url('/images/selection.svg');
+    background-size: 41%, 55%;
   }
 
-
   &.selected {
-    mask-image: url('/images/selection.svg');
-    mask-size: 55%;
+    background-image: url('/images/selection.svg');
+    background-size: 55%;
   }
 
   &.red.selected {
-    mask-image: url('/images/piece.svg'), url('/images/selection.svg');
-    mask-size: 41%, 55%;
-    background-color: red;
+    background-image: url('/images/piece.red.svg'), url('/images/selection.svg');
+    background-size: 41%, 55%;
   }
   &.white.selected {
-    mask-image: url('/images/piece.svg'), url('/images/selection.svg');
-    mask-size: 41%, 55%;
+    background-image: url('/images/piece.white.svg'), url('/images/selection.svg');
+    background-size: 41%, 55%;
   }
 }
 .square:focus {
