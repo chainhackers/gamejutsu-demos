@@ -1,8 +1,8 @@
-import {Conversation, Message, SortDirection, Stream} from '@xmtp/xmtp-js'
-import {ListMessagesPaginatedOptions} from '@xmtp/xmtp-js/dist/types/src/Client'
-import {useState, useEffect, useContext} from 'react'
-import {ISignedGameMove} from 'types/arbiter'
-import {WalletContext} from '../contexts/WalltetContext'
+import { Conversation, Message, SortDirection, Stream } from '@xmtp/xmtp-js'
+import { ListMessagesPaginatedOptions } from '@xmtp/xmtp-js/dist/types/src/Client'
+import { useState, useEffect, useContext } from 'react'
+import { ISignedGameMove } from 'types/arbiter'
+import { WalletContext } from '../contexts/WalltetContext'
 import XmtpContext from '../contexts/xmtp'
 
 export const MESSAGES_PER_PAGE = 10;
@@ -33,17 +33,21 @@ export function parseMessageContent(message: any) {
     }
 }
 
-//TODO replace to NeedMore
-export function makeIsPagingCompleteOnAttach(gameId: number) {
+export function filterGameMoves(gameId: number) {
     return (messages: Message[]) => {
-        return _isPagingCompleteOnAttach(gameId, messages)
+        return _filterGameMoves(gameId, messages)
     }
 }
 
-function _isPagingCompleteOnAttach(gameId: number, messages: Message[]): boolean {
+//returns {need}
+function _filterGameMoves(gameId: number, messages: Message[]): boolean {
+    let signedMoves = [];
     for (const message of messages) {
         let parsedObject = parseMessageContent(message);
         let signedMove = asSignedGameMoveInMessage(parsedObject);
+        if (signedMove) {
+            signedMoves.push(signedMove)
+        }
         if ((signedMove?.gameMove.gameId === gameId) && (signedMove?.gameMove.nonce === 0)) {
             console.log('paging complete');
             return true;
@@ -55,12 +59,12 @@ function _isPagingCompleteOnAttach(gameId: number, messages: Message[]): boolean
 
 const useConversation = (
     peerAddress: string,
-    secondKeyAkaGameId: string,
+    secondKey: string,
     isPagingComplete: (messages: Message[]) => boolean,
     onMessageCallback?: OnMessageCallback,
 ) => {
-    const {address: walletAddress} = useContext(WalletContext)
-    const {client, convoMessages, setConvoMessages} = useContext(XmtpContext)
+    const { address: walletAddress } = useContext(WalletContext)
+    const { client, convoMessages, setConvoMessages } = useContext(XmtpContext)
     const [conversation, setConversation] = useState<Conversation | null>(null)
     const [loading] = useState<boolean>(false)
     const [browserVisible, setBrowserVisible] = useState<boolean>(true)
@@ -80,91 +84,58 @@ const useConversation = (
         getConvo()
     }, [client, peerAddress])
 
-    const [paginator, setPaginator] = useState<AsyncGenerator<Message[]> | null>(null);
-
+    function updateMessages(secondKey: string, newerMessages: Message[], olderMessages: Message[]): void {
+        const oldMessages = convoMessages.get(conversation!.peerAddress)?.get(secondKey) || [];
+        oldMessages.unshift(...newerMessages);
+        oldMessages.push(...olderMessages);
+        const uniqueMessages = [
+            ...Array.from(
+                new Map(oldMessages.map((item) => [item['id'], item])).values()
+            ),
+        ]
+        convoMessages.get(conversation!.peerAddress)?.set(secondKey, uniqueMessages);
+        setConvoMessages(new Map(convoMessages));
+    }
 
     function showNotification(message: Message) {
         console.log(message);
     }
 
-    function getMessages(secondKey: string): Message[] {
-        return convoMessages.get(conversation!.peerAddress)?.get(secondKey) || [];
-    }
-
-    function setMessages(secondKey: string, messages: Message[]): void {
-        convoMessages.get(conversation!.peerAddress)?.set(secondKey, messages);
-    }
-
-    const nextPage = async (paginator: AsyncGenerator<Message[]>): Promise<Message[]> => {
-        if (paginator && conversation) {
-            const result = await paginator.next()
-            if (result.done) {
-                console.warn('done loading messages');
-                console.assert(result.value === undefined);
-                setPaginator(null)
-            } else {
-                const oldMessages = getMessages(secondKeyAkaGameId);
-                let almostUniqueMessages = [...oldMessages, ...result.value];
-                setMessages(secondKeyAkaGameId, almostUniqueMessages);
-                setConvoMessages(new Map(convoMessages))
-                for (const message of result.value) {
-                    if (onMessageCallback) {
-                        onMessageCallback(message)
-                    }
-                    showNotification(message);
-                }
-            }
-            return result.value
+    const listMessages = async (conversation: Conversation): Promise<Message[]> => {
+        const paginationOptions: ListMessagesPaginatedOptions = {
+            pageSize: MESSAGES_PER_PAGE,
+            direction: SortDirection.SORT_DIRECTION_DESCENDING,
         }
-        return Promise.reject()
+        let paginator = conversation.messagesPaginated(paginationOptions);
+        let result = [];
+        let lastPage: Message[] = [];
+        while (isPagingComplete(lastPage)) {
+            const page = await paginator.next()
+            if (page.done) {
+                console.warn('done loading messages');
+                break;
+            }
+            lastPage = page.value;
+            result.push(...lastPage);
+        }
+        return result;
     }
 
     useEffect(() => {
-        if (!conversation) return
-        const listMessages = async () => {
-            let _paginator = paginator;
-            if (!_paginator) {
-                const paginationOptions: ListMessagesPaginatedOptions = {
-                    pageSize: MESSAGES_PER_PAGE,
-                    direction: SortDirection.SORT_DIRECTION_DESCENDING,
-                }
-                _paginator = conversation.messagesPaginated(paginationOptions);
-                setPaginator(_paginator);
-
-            }
-            while (true) {
-                try {
-                    const messages = await nextPage(_paginator)
-                    if (isPagingComplete(messages)) {
-                        return;
-                    }
-                } catch (error) {
-                    return;
-                }
-            }
+        if (!conversation) {
+            return
         }
-
         const streamMessages = async () => {
             stream = await conversation.streamMessages()
             for await (const message of stream) {
-                if (setConvoMessages) {
-                    const newMessages = getMessages(secondKeyAkaGameId);
-                    newMessages.push(message)
-                    const uniqueMessages = [
-                        ...Array.from(
-                            new Map(newMessages.map((item) => [item['id'], item])).values()
-                        ),
-                    ]
-                    setMessages(secondKeyAkaGameId, uniqueMessages);
-                    setConvoMessages(new Map(convoMessages))
-                }
+                updateMessages(secondKey, [message], []);
                 showNotification(message);
                 if (onMessageCallback) {
                     onMessageCallback(message)
                 }
             }
         }
-        listMessages()
+        listMessages(conversation);
         streamMessages();
         return () => {
             const closeStream = async () => {
@@ -194,3 +165,5 @@ const useConversation = (
 }
 
 export default useConversation
+
+
