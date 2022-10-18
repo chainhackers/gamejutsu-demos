@@ -15,44 +15,44 @@
   }
 
   &.red {
-    background-size: 41%;
+    background-size: 50%;
     background-image: url('/images/piece.red.svg');   
   }
 
   &.white {
-    background-size: 41%;
+    background-size: 50%;
     background-image: url('/images/piece.white.svg');
   }
 
   &.redQueen {
-    background-size: 41%;
+    background-size: 50%;
     background-image: url('/images/queen.red.svg');   
   }
   &.whiteQueen {
-    background-size: 41%;
+    background-size: 50%;
     background-image: url('/images/queen.white.svg');
   }
   &.redQueen.selected {
     background-image: url('/images/queen.red.svg'), url('/images/selection.svg');
-    background-size: 41%, 55%;
+    background-size: 50%, 75%;
   }
   &.whiteQueen.selected {
     background-image: url('/images/queen.white.svg'), url('/images/selection.svg');
-    background-size: 41%, 55%;
+    background-size: 50%, 75%;
   }
 
   &.selected {
     background-image: url('/images/selection.svg');
-    background-size: 55%;
+    background-size: 75%;
   }
 
   &.red.selected {
     background-image: url('/images/piece.red.svg'), url('/images/selection.svg');
-    background-size: 41%, 55%;
+    background-size: 50%, 75%;
   }
   &.white.selected {
     background-image: url('/images/piece.white.svg'), url('/images/selection.svg');
-    background-size: 41%, 55%;
+    background-size: 50%, 75%;
   }
 }
 .square:focus {
