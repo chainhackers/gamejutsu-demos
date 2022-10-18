@@ -16,7 +16,9 @@ export const Square: React.FC<SquarePropsI> = (
                 disputable ? styles.disputable : null,
                 selected ? styles.selected : null,
                 value == 'X' ? styles.white : null,
-                value == 'O' ? styles.red: null
+                value == 'O' ? styles.red: null,
+                value == 'XX' ? styles.whiteQueen : null,
+                value == 'OO' ? styles.redQueen : null,
                 )}
             onClick={onClick}
             

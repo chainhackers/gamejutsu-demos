@@ -160,6 +160,7 @@ export class CheckersState extends BaseGameState<CheckersBoard, CHECKERSMove> im
         return CheckersBoard.fromEncoded(encodedBoard);
     }
 
+    //TODO used only in game history. there are no kings or queens
     fromEncodedMove(encodedMove:string, opponentMove:boolean): CHECKERSMove {
         if (opponentMove) {
             return CHECKERSMove.fromEncoded(encodedMove, this.playerId == 0 ? 'O' : 'X');

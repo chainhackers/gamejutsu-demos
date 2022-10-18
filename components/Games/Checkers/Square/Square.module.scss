@@ -28,6 +28,27 @@
     mask-image: url('/images/piece.svg');
   }
 
+  &.redQueen {
+    mask-size: 41%;
+    background-color: red;
+    mask-image: url('/images/queen.svg');   
+  }
+  &.whiteQueen {
+    mask-size: 41%;
+    background-color: white;
+    mask-image: url('/images/queen.svg');
+  }
+  &.redQueen.selected {
+    mask-image: url('/images/queen.svg'), url('/images/selection.svg');
+    mask-size: 41%, 55%;
+    background-color: red;
+  }
+  &.whiteQueen.selected {
+    mask-image: url('/images/queen.svg'), url('/images/selection.svg');
+    mask-size: 41%, 55%;
+  }
+
+
   &.selected {
     mask-image: url('/images/selection.svg');
     mask-size: 55%;
