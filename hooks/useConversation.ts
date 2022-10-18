@@ -5,7 +5,7 @@ import { useState, useEffect, useContext } from 'react'
 import { ISignedGameMove } from 'types/arbiter'
 import XmtpContext from '../contexts/xmtp'
 
-export const MESSAGES_PER_PAGE = 10;
+export const MESSAGES_PER_PAGE = 100;
 
 let stream: Stream<Message>
 
@@ -48,8 +48,11 @@ function filterMessages(newGame: boolean, gameId: number,
         for (const message of messages) {
             let parsedObject = parseMessageContent(message);
             let signedMove = asSignedGameMoveInMessage(parsedObject);
-            if (signedMove) {
+            let thisGame = signedMove?.gameMove.gameId === gameId;
+            if (signedMove && thisGame) {
                 signedGameMoves.push(signedMove)
+            } else if (signedMove && !thisGame) {
+                //drop other moves
             } else {
                 otherMessages.push(message);
             }
@@ -140,13 +143,13 @@ const useConversation = (
         const streamMessages = async () => {
             stream = await conversation.streamMessages()
             for await (const message of stream) {
-                const {signedGameMoves, otherMessages} = filterMessages(newGame, gameId, [message]);
+                const { signedGameMoves, otherMessages } = filterMessages(newGame, gameId, [message]);
                 setSignedGameMovesState([...signedGameMoves, ...signedGameMovesState]);
                 setOtherMessagesState([...otherMessages, ...otherMessagesState]);
                 updateMessages(String(gameId), [message]);
             }
         }
-        listMessages(conversation).then(({otherMessages, signedGameMoves}) => {
+        listMessages(conversation).then(({ otherMessages, signedGameMoves }) => {
             setSignedGameMovesState([...signedGameMoves, ...signedGameMovesState]);
             setOtherMessagesState([...otherMessages, ...otherMessagesState]);
             updateMessages(String(gameId), otherMessages);
@@ -172,7 +175,7 @@ const useConversation = (
     return {
         loading,
         sendMessage: handleSend,
-        otherMessagesState, 
+        otherMessagesState,
         signedGameMovesState
     }
 }
