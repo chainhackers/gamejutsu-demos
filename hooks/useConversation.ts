@@ -42,23 +42,19 @@ function filterMessages(newGame: boolean, gameId: number,
     let signedGameMoves = [];
     let otherMessages = [];
     let firstMoveHere = false;
-    if (newGame) {
-        otherMessages = messages;
-    } else {
-        for (const message of messages) {
-            let parsedObject = parseMessageContent(message);
-            let signedMove = asSignedGameMoveInMessage(parsedObject);
-            let thisGame = signedMove?.gameMove.gameId === gameId;
-            if (signedMove && thisGame) {
-                signedGameMoves.push(signedMove)
-            } else if (signedMove && !thisGame) {
-                //drop other moves
-            } else {
-                otherMessages.push(message);
-            }
-            if ((signedMove?.gameMove.gameId === gameId) && (signedMove?.gameMove.nonce === 0)) {
-                firstMoveHere = true;;
-            }
+    for (const message of messages) {
+        let parsedObject = parseMessageContent(message);
+        let signedMove = asSignedGameMoveInMessage(parsedObject);
+        let thisGame = signedMove?.gameMove.gameId === gameId;
+        if (signedMove && thisGame) {
+            signedGameMoves.push(signedMove)
+        } else if (signedMove && !thisGame) {
+            //drop other moves
+        } else {
+            otherMessages.push(message);
+        }
+        if ((signedMove?.gameMove.gameId === gameId) && (signedMove?.gameMove.nonce === 0)) {
+            firstMoveHere = true;
         }
     }
     return {
@@ -72,7 +68,7 @@ const useConversation = (
     peerAddress: string,
     gameId: number,
     newGame: boolean,
-    stopOnFirstMove: boolean,
+    stopOnFirstMove: boolean,                                      
 ) => {
     const { client, setConvoMessages } = useContext(XmtpContext)
     const [conversation, setConversation] = useState<Conversation | null>(null)
@@ -89,21 +85,6 @@ const useConversation = (
         }
         getConvo()
     }, [client, peerAddress])
-
-    //why?
-    function updateMessages(secondKey: string, newerMessages: Message[]): void {
-        setConvoMessages((convoMessages) => {
-            const oldMessages = convoMessages.get(conversation!.peerAddress)?.get(secondKey) || [];
-            oldMessages.unshift(...newerMessages);
-            const uniqueMessages = [
-                ...Array.from(
-                    new Map(oldMessages.map((item) => [item['id'], item])).values()
-                ),
-            ]
-            convoMessages.get(conversation!.peerAddress)?.set(secondKey, uniqueMessages);
-            return new Map(convoMessages);
-        });
-    }
 
     const listMessages = async (conversation: Conversation):
         Promise<{
@@ -148,13 +129,11 @@ const useConversation = (
                 const { signedGameMoves, otherMessages } = filterMessages(newGame, gameId, [message]);
                 setSignedGameMovesState((prevValue) => [...signedGameMoves, ...prevValue]);
                 setOtherMessagesState((prevValue) => [...otherMessages, ...prevValue]);
-                updateMessages(String(gameId), [message]);
             }
         }
         listMessages(conversation).then(({ otherMessages, signedGameMoves }) => {
             setSignedGameMovesState((prevValue) => [...signedGameMoves, ...prevValue]);
             setOtherMessagesState((prevValue) => [...otherMessages, ...prevValue]);
-            updateMessages(String(gameId), otherMessages);
         }).then( // we can lose some useless messages here
             () => streamMessages()
         );
