@@ -1,9 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { ParsedUrlQuery } from 'querystring';
-import { Conversation, Stream, Message } from '@xmtp/xmtp-js';
-import { useXmptContext } from 'contexts/XmtpContext';
-
+import { Message } from '@xmtp/xmtp-js';
 import { XMTPChatLog } from 'components/XMTPChatLog';
 import { useWalletContext } from 'contexts/WalltetContext';
 import { ControlPanel, useInterval } from 'components/ControlPanel';
@@ -18,16 +16,17 @@ import {
 
 import styles from 'pages/games/gameType.module.scss';
 import { ETTicTacToe } from "components/Games/ET-Tic-Tac-Toe";
-import { TicTacToeBoard, TicTacToeState, TTTMove } from "components/Games/ET-Tic-Tac-Toe/types";
-import { IChatLog, PlayerI } from "../../types";
+import { TicTacToeState } from "components/Games/ET-Tic-Tac-Toe/types";
+import { PlayerI } from "../../types";
 import gameApi, { _isValidSignedMove, getArbiter, getSigner, getRulesContract, finishGame, disputeMove, initTimeout, resolveTimeout, finalizeTimeout, FinishedGameState } from "../../gameApi";
 import { ISignedGameMove, SignedGameMove } from "../../types/arbiter";
 import { signMoveWithAddress } from 'helpers/session_signatures';
 import { useAccount } from 'wagmi';
 import { Checkers } from 'components/Games/Checkers';
-import { CheckersBoard, CheckersState } from 'components/Games/Checkers/types';
+import { CheckersState } from 'components/Games/Checkers/types';
 import { useRouter } from 'next/router';
-import { IGameState, IMyGameBoard, TPlayer } from 'components/Games/types';
+import { IGameState, TPlayer } from 'components/Games/types';
+import useConversation from 'hooks/useConversation';
 
 interface IGamePageProps {
   gameType?: string;
@@ -42,8 +41,6 @@ const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 const FETCH_RIVAL_ADDRESS_TIMEOUT = 2500;
 
 const Game: NextPage<IGamePageProps> = ({ gameType }) => {
-  const [log, setLog] = useState<IChatLog[]>([]);
-  const [isLogLoading, setIsLogLoading] = useState<boolean>(true);
 
   const initialTicTacToeState = new TicTacToeState({ gameId: 1, playerType: 'X' });
 
@@ -53,10 +50,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   }
 
   const [playerIngameId, setPlayerIngameId] = useState<0 | 1>(0); //TODO use in game state creation
-  const [conversation, setConversation] = useState<Conversation | null>(null);
   const [isInDispute, setIsInDispute] = useState<boolean>(false);
-  const [conversationStatus, setConversationStatus] = useState<string | null>('not connected');
-  const [newMessage, setNewMessage] = useState<{ content: object; sender: string } | null>(null);
   const [lastMove, setLastMove] = useState<ISignedGameMove | null>(null);
   const [lastOpponentMove, setLastOpponentMove] = useState<ISignedGameMove | null>(null);
   const [finishedGameState, setFinishedGameState] = useState<FinishedGameState | null>(null);
@@ -77,7 +71,6 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   const [isTimeoutRequested, setIsTimeoutRequested] = useState<boolean>(false);
 
 
-  const { client, initClient } = useXmptContext();
   const { signer } = useWalletContext();
   const { query } = useRouter();
   const account = useAccount();
@@ -93,15 +86,20 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     [gameState, setGameState] = useState<IGameState<any, any>>(getInitialState(1, 'X'));
   }
 
+  const {sendMessage, loading, otherMessagesState, signedGameMovesState} = useConversation(
+    rivalPlayerAddress!,
+    Number(gameId!),
+    false,
+    true
+  )
+  
   const setConversationHandler = async (rivalPlayerAddress: string) => {
     if (!rivalPlayerAddress) {
       console.error('cant connect: no rival player address');
       return;
     }
     setRivalPlayerAddress(rivalPlayerAddress);
-    if (!signer) return;
-    console.log('before init client');
-    initClient(signer);
+    
     if (gameType == 'tic-tac-toe') {
       setGameState(new TicTacToeState({ gameId: Number(gameId!), playerType: playerIngameId === 0 ? 'X' : 'O' }));
     } else {
@@ -112,14 +110,14 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   const sendSignedMoveHandler = async (signedMove: ISignedGameMove) => {
     const messageText = JSON.stringify({ ...signedMove, gameType });
 
-    if (!conversation) {
+    if (!sendMessage) {
       console.warn('no conversation!');
       return;
     }
 
     _isValidSignedMove(getArbiter(), signedMove).then((isValid) => {
       const nextGameState = gameState.makeNewGameStateFromSignedMove(signedMove, isValid);
-      conversation.send(messageText).then(() => {
+      sendMessage(messageText).then(() => {
         setLastMove(signedMove);
         setGameState(nextGameState);
         console.log('nextGameState is set after sending the move', nextGameState);
@@ -199,10 +197,10 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
         lastMove,
       ]);
       console.log('initTimeoutResult', initTimeoutResult);
-      if (!!conversation) {
+      if (!!sendMessage) {
         const message = { initTimeout: true };
         const messageText = JSON.stringify(message);
-        conversation.send(messageText).then((message) => {
+        sendMessage(messageText).then((message) => {
           console.log('message InitTimeout', message);
         });
       }
@@ -220,10 +218,10 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     }
     const resolveTimeoutResult = await resolveTimeout(getArbiter(), lastMove);
     console.log('resolveTimeoutResult', resolveTimeoutResult);
-    if (!!conversation) {
+    if (!!sendMessage) {
       const message = { resolveTimeout: true };
       const messageText = JSON.stringify(message);
-      conversation.send(messageText).then((message) => {
+      sendMessage(messageText).then((message) => {
         console.log('message resloveTimeout', message);
       });
     }
@@ -277,136 +275,56 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
 
   const runDisputeHandler = async () => {
     setIsInDispute(true);
-    console.log('run dispute');
-    console.log('newMessage', newMessage); // Last Message with invalid move
-
-    if (newMessage) {
-      const signedMove = newMessage.content as ISignedGameMove;
-      // console.log('moveToDispute', signedMove);
-      const finishGameResult = await disputeMove(getArbiter(), signedMove);
+    console.log('run dispute with move', lastOpponentMove);
+    if (lastOpponentMove) {
+      const finishGameResult = await disputeMove(getArbiter(), lastOpponentMove);
       setFinishedGameState(finishGameResult);
     }
     setIsInDispute(false);
   };
 
-  const connectPlayerHandler = async () => {
-    console.log('conntect timeout handle ');
-  };
-
   useEffect(() => {
-    if (!!rivalPlayerAddress) {
-      // setConversationHandler(rivalPlayerAddress);
-    }
-  }, [rivalPlayerAddress]);
-
-  useEffect(() => {
-    if (!!client && !!rivalPlayerAddress) {
-      setConversationStatus('Connecting...');
-
-      client?.conversations
-        .newConversation(rivalPlayerAddress)
-        .then((newConversation) => {
-          setConversation(newConversation);
-          setConversationStatus('Connected');
-          console.log('connected conv', newConversation);
-        })
-        .catch((error) => {
-          console.log('Conversation error', error);
-          setConversationStatus('Failed');
-        });
-    }
-  }, [client]);
-
-  useEffect(() => {
-    let stream: Stream<Message>;
-    if (!conversation) {
-      // console.log('no conversation');
+    //todo need diff since last run of useEffect;
+    let signedMove = signedGameMovesState[0];
+    if (!signedMove) {
       return;
     }
-    const streamMessages = async () => {
-      stream = await conversation.streamMessages();
-      for await (const msg of stream) {
-        const messageContent = JSON.parse(msg.content);
-        console.log('stream message contenet', messageContent);
-
-        //all events 
-
-        if (msg.senderAddress === rivalPlayerAddress) {
-
-          //incoming events
-
-          console.log('incoming stream message contenet', messageContent);
-          if (messageContent.initTimeout) {
-            console.log('incoming stream timeout message', messageContent.initTimeout);
-            setIsTimeoutInited(messageContent.initTimeout);
-            setIsResolveTimeOutAllowed(messageContent.initTimeout);
-            setIsFinishTimeoutAllowed(!messageContent.initTimeout);
-            setIsTimeoutRequested(messageContent.initTimeout);
-          } else if (messageContent.resolveTimeout) {
-            console.log('incoming stream resolve timeout', messageContent.resolveTimeout);
-            setIsTimeoutInited(!messageContent.resolveTimeout);
-            setIsResolveTimeOutAllowed(!messageContent.resolveTimeout);
-            setIsFinishTimeoutAllowed(!messageContent.resolveTimeout);
-            setIsTimeoutRequested(!messageContent.resolveTimeout);
-            return;
-          } else {
-            setNewMessage({ content: messageContent, sender: msg.senderAddress! });
-            const signedMove = JSON.parse(msg.content) as ISignedGameMove;
-            console.log('signedMove from stream', signedMove);
-            console.log('gameState before move', gameState);
-
-            _isValidSignedMove(getArbiter(), signedMove).then((isValid) => {
-              const nextGameState = gameState.makeNewGameStateFromOpponentSignedMove(signedMove, isValid);
-              setLastOpponentMove(signedMove);
-              setGameState(nextGameState);
-              console.log('nextGameState + winner', nextGameState);
-              setIsInvalidMove(!isValid);
-            });
-          }
-        }
-      }
-    };
-
-    streamMessages();
-    return () => {
-      if (!!stream) stream.return();
-    };
-  }, [conversation, gameState]);
+    if (signedMove.gameMove.player === rivalPlayerAddress) {
+      _isValidSignedMove(getArbiter(), signedMove).then((isValid) => {
+        const nextGameState = gameState.makeNewGameStateFromOpponentSignedMove(signedMove, isValid);
+        setLastOpponentMove(signedMove);
+        setGameState(nextGameState);
+        console.log('nextGameState + winner', nextGameState);
+        setIsInvalidMove(!isValid);
+      });
+    }
+  }, [signedGameMovesState]);
 
   useEffect(() => {
-    const fetchMessages = async () => {
-      if (!conversation) {
-        return [];
-      }
-      //TODO Add fetch with offset or filter out old games
-      //deduplicate with chat component
-      const opts = {
-        // startTime: new Date(new Date().setDate(new Date().getDate() - 1)),
-        // endTime: new Date(),
-      }
-      const msgs = await conversation.messages(opts);
-      const sortedMessages = msgs
-        .sort((msg1, msg2) => msg2.sent!.getTime() - msg1.sent!.getTime())
-        .map(({ id, senderAddress, recipientAddress, sent, content }) => ({
-          id,
-          sender: senderAddress!,
-          recepient: recipientAddress!,
-          timestamp: sent!.getTime(),
-          content,
-        }));
-      return sortedMessages;
-    };
-    setIsLogLoading(true);
+    let lastMessage = otherMessagesState[0];
+    if (!lastMessage) {
+      return;
+    }
+    const messageContent = JSON.parse(lastMessage.content);
+    console.log('stream message contenet', messageContent);
+    if (lastMessage.senderAddress === rivalPlayerAddress) {
+      if (messageContent.initTimeout) {
+        console.log('incoming stream timeout message', messageContent.initTimeout);
+        setIsTimeoutInited(messageContent.initTimeout);
+        setIsResolveTimeOutAllowed(messageContent.initTimeout);
+        setIsFinishTimeoutAllowed(!messageContent.initTimeout);
+        setIsTimeoutRequested(messageContent.initTimeout);
+      } else if (messageContent.resolveTimeout) {
+        console.log('incoming stream resolve timeout', messageContent.resolveTimeout);
+        setIsTimeoutInited(!messageContent.resolveTimeout);
+        setIsResolveTimeOutAllowed(!messageContent.resolveTimeout);
+        setIsFinishTimeoutAllowed(!messageContent.resolveTimeout);
+        setIsTimeoutRequested(!messageContent.resolveTimeout);
 
-    fetchMessages()
-      .then((data) => {
-        setLog(data!);
-      })
-      .finally(() => {
-        setIsLogLoading(false);
-      });
-  }, [conversation, gameState]);
-
+      }
+    }
+  }, [otherMessagesState]);
+ 
   useEffect(() => {
     setPlayers([
       {
@@ -425,14 +343,12 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   }, [rivalPlayerAddress, gameId]);
 
   useEffect(() => {
-    console.log('newMessage', newMessage?.sender);
-    console.log('isInvalidMove', isInvalidMove);
-    if (newMessage?.sender === rivalPlayerAddress && isInvalidMove) {
+    if (lastOpponentMove?.gameMove.player === rivalPlayerAddress && isInvalidMove) {
       setIsDisputeAvailavle(true);
       return;
     }
     setIsDisputeAvailavle(false);
-  }, [newMessage, isInvalidMove]);
+  }, [isInvalidMove]);
 
   useInterval(async () => {
     if (rivalPlayerAddress) {
@@ -493,7 +409,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
         onConnectPlayer={setConversationHandler}
         onSetPlayerIngameId={setPlayerIngameId}
         finishedGameState={finishedGameState}
-        rivalPlayerConversationStatus={conversationStatus}
+        rivalPlayerConversationStatus={"todo: always connected string"}
         onProposeGame={setGameId}
         onAcceptGame={setGameId}
         isInvalidMove={isInvalidMove}
@@ -521,8 +437,8 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
 
           <RightPanel>
             <XMTPChatLog
-              logData={log}
-              isLoading={isLogLoading} />
+              logData={[]}
+              isLoading={loading} />
           </RightPanel>
         </div>
       );
@@ -548,7 +464,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
           <GameField
             gameId={gameId}
             rivalPlayerAddress={rivalPlayerAddress}
-            isConnected={!!conversation}
+            isConnected={!!loading}
             isInDispute={isInDispute}
             finishedGameState={finishedGameState}
             onConnect={setConversationHandler}
@@ -556,7 +472,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
             {gameComponent}
           </GameField>
           <RightPanel>
-            <XMTPChatLog logData={log} isLoading={isLogLoading} />
+            <XMTPChatLog logData={[]} isLoading={loading} />
           </RightPanel>
         </div>
       );
