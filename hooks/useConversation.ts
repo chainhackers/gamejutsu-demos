@@ -1,12 +1,11 @@
 import { Conversation, Message, SortDirection, Stream } from '@xmtp/xmtp-js'
 import { ListMessagesPaginatedOptions } from '@xmtp/xmtp-js/dist/types/src/Client'
+import { NewGameBoard } from 'components'
 import { useState, useEffect, useContext } from 'react'
 import { ISignedGameMove } from 'types/arbiter'
-import { WalletContext } from '../contexts/WalltetContext'
 import XmtpContext from '../contexts/xmtp'
 
 export const MESSAGES_PER_PAGE = 10;
-type OnMessageCallback = (mesage: Message) => void
 
 let stream: Stream<Message>
 
@@ -33,46 +32,50 @@ export function parseMessageContent(message: any) {
     }
 }
 
-export function filterGameMoves(gameId: number) {
-    return (messages: Message[]) => {
-        return _filterGameMoves(gameId, messages)
-    }
-}
-
-//returns {need}
-function _filterGameMoves(gameId: number, messages: Message[]): boolean {
-    let signedMoves = [];
-    for (const message of messages) {
-        let parsedObject = parseMessageContent(message);
-        let signedMove = asSignedGameMoveInMessage(parsedObject);
-        if (signedMove) {
-            signedMoves.push(signedMove)
+function filterMessages(newGame: boolean, gameId: number,
+    messages: Message[]
+): {
+    firstMoveHere: boolean,
+    signedGameMoves: ISignedGameMove[],
+    otherMessages: Message[]
+} {
+    let signedGameMoves = [];
+    let otherMessages = [];
+    let firstMoveHere = false;
+    if (newGame) {
+        otherMessages = messages;
+    } else {
+        for (const message of messages) {
+            let parsedObject = parseMessageContent(message);
+            let signedMove = asSignedGameMoveInMessage(parsedObject);
+            if (signedMove) {
+                signedGameMoves.push(signedMove)
+            } else {
+                otherMessages.push(message);
+            }
+            if ((signedMove?.gameMove.gameId === gameId) && (signedMove?.gameMove.nonce === 0)) {
+                firstMoveHere = true;;
+            }
         }
-        if ((signedMove?.gameMove.gameId === gameId) && (signedMove?.gameMove.nonce === 0)) {
-            console.log('paging complete');
-            return true;
-        }
     }
-    console.log('need more pages');
-    return false;
+    return {
+        firstMoveHere,
+        signedGameMoves,
+        otherMessages
+    };
 }
 
 const useConversation = (
     peerAddress: string,
-    secondKey: string,
-    isPagingComplete: (messages: Message[]) => boolean,
-    onMessageCallback?: OnMessageCallback,
+    gameId: number,
+    newGame: boolean,
+    stopOnFirstMove: boolean,
 ) => {
-    const { address: walletAddress } = useContext(WalletContext)
     const { client, convoMessages, setConvoMessages } = useContext(XmtpContext)
     const [conversation, setConversation] = useState<Conversation | null>(null)
     const [loading] = useState<boolean>(false)
-    const [browserVisible, setBrowserVisible] = useState<boolean>(true)
-
-    useEffect(() => {
-        window.addEventListener('focus', () => setBrowserVisible(true))
-        window.addEventListener('blur', () => setBrowserVisible(false))
-    }, [])
+    const [otherMessagesState, setOtherMessagesState] = useState<Message[]>([])
+    const [signedGameMovesState, setSignedGameMovesState] = useState<ISignedGameMove[]>([])
 
     useEffect(() => {
         const getConvo = async () => {
@@ -84,10 +87,10 @@ const useConversation = (
         getConvo()
     }, [client, peerAddress])
 
-    function updateMessages(secondKey: string, newerMessages: Message[], olderMessages: Message[]): void {
+    //why?
+    function updateMessages(secondKey: string, newerMessages: Message[]): void {
         const oldMessages = convoMessages.get(conversation!.peerAddress)?.get(secondKey) || [];
         oldMessages.unshift(...newerMessages);
-        oldMessages.push(...olderMessages);
         const uniqueMessages = [
             ...Array.from(
                 new Map(oldMessages.map((item) => [item['id'], item])).values()
@@ -97,28 +100,37 @@ const useConversation = (
         setConvoMessages(new Map(convoMessages));
     }
 
-    function showNotification(message: Message) {
-        console.log(message);
-    }
-
-    const listMessages = async (conversation: Conversation): Promise<Message[]> => {
+    const listMessages = async (conversation: Conversation):
+        Promise<{
+            signedGameMoves: ISignedGameMove[],
+            otherMessages: Message[]
+        }> => {
         const paginationOptions: ListMessagesPaginatedOptions = {
             pageSize: MESSAGES_PER_PAGE,
             direction: SortDirection.SORT_DIRECTION_DESCENDING,
         }
         let paginator = conversation.messagesPaginated(paginationOptions);
-        let result = [];
-        let lastPage: Message[] = [];
-        while (isPagingComplete(lastPage)) {
+        let _signedGameMoves: ISignedGameMove[] = [];
+        let _otherMessages: Message[] = [];
+        while (true) {
             const page = await paginator.next()
             if (page.done) {
                 console.warn('done loading messages');
                 break;
             }
-            lastPage = page.value;
-            result.push(...lastPage);
+            {
+                const { signedGameMoves, otherMessages, firstMoveHere } = filterMessages(newGame, gameId, page.value);
+                _signedGameMoves.push(...signedGameMoves);
+                _otherMessages.push(...otherMessages);
+                if (firstMoveHere && stopOnFirstMove) {
+                    break;
+                }
+            }
         }
-        return result;
+        return {
+            signedGameMoves: _signedGameMoves,
+            otherMessages: _otherMessages
+        };
     }
 
     useEffect(() => {
@@ -128,15 +140,19 @@ const useConversation = (
         const streamMessages = async () => {
             stream = await conversation.streamMessages()
             for await (const message of stream) {
-                updateMessages(secondKey, [message], []);
-                showNotification(message);
-                if (onMessageCallback) {
-                    onMessageCallback(message)
-                }
+                const {signedGameMoves, otherMessages} = filterMessages(newGame, gameId, [message]);
+                setSignedGameMovesState([...signedGameMoves, ...signedGameMovesState]);
+                setOtherMessagesState([...otherMessages, ...otherMessagesState]);
+                updateMessages(String(gameId), [message]);
             }
         }
-        listMessages(conversation);
-        streamMessages();
+        listMessages(conversation).then(({otherMessages, signedGameMoves}) => {
+            setSignedGameMovesState([...signedGameMoves, ...signedGameMovesState]);
+            setOtherMessagesState([...otherMessages, ...otherMessagesState]);
+            updateMessages(String(gameId), otherMessages);
+        }).then( // we can lose some useless messages here
+            () => streamMessages()
+        );
         return () => {
             const closeStream = async () => {
                 if (!stream) return;
@@ -145,12 +161,7 @@ const useConversation = (
             closeStream();
         }
     }, [
-        // browserVisible,
         conversation,
-        // convoMessages,
-        // onMessageCallback,
-        // setConvoMessages,
-        // walletAddress,
     ])
 
     const handleSend = async (message: string) => {
