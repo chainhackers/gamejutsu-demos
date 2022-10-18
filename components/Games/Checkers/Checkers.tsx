@@ -33,9 +33,7 @@ export const Checkers: React.FC<ICheckersProps> = ({
             return;
         }
 
-        //TODO Here check if necessary to create special move for king
-        const pieceType = boardState.cells[lastMove.from] || gameState.playerType;
-        const move: CHECKERSMove = CHECKERSMove.fromMove([lastMove.from, lastMove.to, jump, passMove], pieceType);
+        const move: CHECKERSMove = CHECKERSMove.fromMove([lastMove.from, lastMove.to, jump, passMove], gameState.playerType);
         console.log('move 1-based index', lastMove.from + 1, lastMove.to + 1, jump, passMove);
         setLastMove(null);
 

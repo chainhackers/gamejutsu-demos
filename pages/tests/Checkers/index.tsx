@@ -21,6 +21,20 @@ const TestGameFieldPage: NextPage = () => {
     }
   );
 
+  const gameStateOO: CheckersState = new CheckersState(
+    {
+      gameId: 158,
+      playerType: 'O'
+    }
+  );
+
+  gameStateOO.currentBoard.cells = [
+    'XX', 'XX', 'XX', 'XX', 'X', 'X', 'X', 'X',
+    'X', 'X', 'X', 'X', null, null, null, null,
+    null, null, null, null, 'O', 'O', 'O', 'O',
+    'O', 'O', 'O', 'OO', 'OO', 'OO', 'OO', 'OO',
+  ];
+
   const getSignerAddress = async() => {return Promise.resolve('OxSignerAddress')};
   const sendSignedMove = (move: ISignedGameMove) => void {};
 
@@ -34,7 +48,7 @@ const TestGameFieldPage: NextPage = () => {
 
   function makeGameFields() {
     return Object.entries({
-      gameStateX, gameStateO
+      gameStateX, gameStateO, gameStateOO
     }).map(([key, props])=> {
       return <div key={key} className={styles.padding}>
         <h2>{key} props</h2>
