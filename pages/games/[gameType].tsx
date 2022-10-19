@@ -58,7 +58,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
 
   const [isDisputAvailable, setIsDisputeAvailavle] = useState<boolean>(false);
 
-  const [rivalPlayerAddress, setRivalPlayerAddress] = useState<string | null>(null,);
+  const [opponentPlayerAddress, setOpponentPlayerAddress] = useState<string | null>(null,);
 
 
   const [isInvalidMove, setIsInvalidMove] = useState<boolean>(false);
@@ -87,7 +87,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   }
 
   const { sendMessage, loading, collectedOtherMessages, collectedSignedGameMoves } = useConversation(
-    rivalPlayerAddress!,
+    opponentPlayerAddress!,
     Number(gameId!),
     false,
     true
@@ -98,7 +98,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       console.error('cant connect: no rival player address');
       return;
     }
-    setRivalPlayerAddress(rivalPlayerAddress);
+    setOpponentPlayerAddress(rivalPlayerAddress);
 
     if (gameType == 'tic-tac-toe') {
       setGameState(new TicTacToeState({ gameId: Number(gameId!), playerType: playerIngameId === 0 ? 'X' : 'O' }));
@@ -111,8 +111,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     const messageText = JSON.stringify({ ...signedMove, gameType });
 
     if (!sendMessage) {
-      console.warn('no conversation!');
-      return;
+      throw 'no conversation!';
     }
 
     _isValidSignedMove(getArbiter(), signedMove).then((isValid) => {
@@ -131,14 +130,11 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     });
   };
 
-  const runFinishGameHandler = async (signedGameMove?: ISignedGameMove) => {
+  const runFinishGameHandler = async (_lastMove: ISignedGameMove | null) => {
     if (!lastOpponentMove) {
-      console.log('no lastOpponentMove');
       throw 'no lastOpponentMove';
     }
-
-    if (!lastMove && !signedGameMove) {
-      console.log('no lastMove');
+    if (!_lastMove) {
       throw 'no lastMove'
     }
 
@@ -150,23 +146,11 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       signatures,
     );
 
-    console.log('lastOpponentMoveSignedByAll', lastOpponentMoveSignedByAll);
-
-    if (!!signedGameMove) {
-      const finishGameResult = await finishGame(getArbiter(), [
-        lastOpponentMoveSignedByAll,
-        signedGameMove,
-      ]);
-      console.log('finishGameResult', finishGameResult);
-      return;
-    } else
-      if (!!lastMove) {
-        const finishGameResult = await finishGame(getArbiter(), [
-          lastOpponentMoveSignedByAll,
-          lastMove,
-        ]);
-        console.log('finishGameResult', finishGameResult);
-      }
+    const finishGameResult = await finishGame(getArbiter(), [
+      lastOpponentMoveSignedByAll,
+      _lastMove,
+    ]);
+    setFinishedGameState(finishGameResult);
   };
 
   const initTimeoutHandler = async () => {
@@ -250,32 +234,28 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       stake,
     );
     let rivalPlayer = players[PROPOSER_INGAME_ID];
-    setRivalPlayerAddress(rivalPlayer);
+    setOpponentPlayerAddress(rivalPlayer);
     setPlayerIngameId(ACCEPTER_INGAME_ID);
     setGameId(gameId);
   };
 
   const finishTimeoutHandler = async () => {
     if (!gameId) {
-      console.log('no gameId');
-      return;
+      throw ('no gameId');
     }
     try {
-      const finalizeTimeoutResult = await finalizeTimeout(getArbiter(), parseInt(gameId));
-      console.log('finalizeTimeoutResult', finalizeTimeoutResult);
-      console.log('finish timeout handler');
+      const finishedGameResult = await finalizeTimeout(getArbiter(), parseInt(gameId));
+      setFinishedGameState(finishedGameResult);
       setIsTimeoutInited(false);
       setIsFinishTimeoutAllowed(false);
       setIsTimeoutRequested(false);
     } catch (error) {
-      console.error('finilize Timeout error:', error);
       throw error;
     }
   };
 
   const runDisputeHandler = async () => {
     setIsInDispute(true);
-    console.log('run dispute with move', lastOpponentMove);
     if (lastOpponentMove) {
       const finishGameResult = await disputeMove(getArbiter(), lastOpponentMove);
       setFinishedGameState(finishGameResult);
@@ -285,7 +265,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
 
   useEffect(() => {
     collectedSignedGameMoves.reduceRight((_, signedMove) => {
-      if (signedMove.gameMove.player === rivalPlayerAddress) {
+      if (signedMove.gameMove.player === opponentPlayerAddress) {
         _isValidSignedMove(getArbiter(), signedMove).then((isValid) => {
           const nextGameState = gameState.makeNewGameStateFromOpponentSignedMove(signedMove, isValid);
           setLastOpponentMove(signedMove);
@@ -305,7 +285,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     }
     const messageContent = JSON.parse(lastMessage.content);
     console.log('stream message contenet', messageContent);
-    if (lastMessage.senderAddress === rivalPlayerAddress) {
+    if (lastMessage.senderAddress === opponentPlayerAddress) {
       if (messageContent.initTimeout) {
         console.log('incoming stream timeout message', messageContent.initTimeout);
         setIsTimeoutInited(messageContent.initTimeout);
@@ -333,15 +313,15 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       },
       {
         playerName: playerIngameId === 1 ? 'Player1' : 'Player2',
-        address: rivalPlayerAddress,
+        address: opponentPlayerAddress,
         avatarUrl: '/images/empty_avatar.png',
         playerType: playersTypesMap[playerIngameId === 0 ? 1 : 0],
       },
     ]);
-  }, [rivalPlayerAddress, gameId]);
+  }, [opponentPlayerAddress, gameId]);
 
   useEffect(() => {
-    if (lastOpponentMove?.gameMove.player === rivalPlayerAddress && isInvalidMove) {
+    if (lastOpponentMove?.gameMove.player === opponentPlayerAddress && isInvalidMove) {
       setIsDisputeAvailavle(true);
       return;
     }
@@ -349,7 +329,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   }, [isInvalidMove]);
 
   useInterval(async () => {
-    if (rivalPlayerAddress) {
+    if (opponentPlayerAddress) {
       return;
     }
     if (!gameId) {
@@ -365,9 +345,9 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       return;
     }
     if (rivalPlayer) {
-      setRivalPlayerAddress(rivalPlayer);
+      setOpponentPlayerAddress(rivalPlayer);
     } else {
-      setRivalPlayerAddress(null);
+      setOpponentPlayerAddress(null);
     }
   }, FETCH_RIVAL_ADDRESS_TIMEOUT);
 
@@ -412,7 +392,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
         onAcceptGame={setGameId}
         isInvalidMove={isInvalidMove}
         isInDispute={isInDispute}
-        onFinishGame={runFinishGameHandler}
+        onFinishGame={() => runFinishGameHandler(lastMove)}
         onDispute={runDisputeHandler}
         onInitTimeout={initTimeoutHandler}
         onResolveTimeout={resolveTimeoutHandler}
@@ -461,7 +441,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
           />
           <GameField
             gameId={gameId}
-            rivalPlayerAddress={rivalPlayerAddress}
+            rivalPlayerAddress={opponentPlayerAddress}
             isConnected={!!loading}
             isInDispute={isInDispute}
             finishedGameState={finishedGameState}

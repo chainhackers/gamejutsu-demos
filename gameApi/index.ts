@@ -166,7 +166,7 @@ export const resolveTimeout = async (
 export const finalizeTimeout = async (
   contract: ethers.Contract,
   gameId: number,
-) => {
+): Promise<FinishedGameState> => {
   const gasEstimated = await contract.estimateGas.finalizeTimeout(gameId);
   const tx = await contract.finalizeTimeout(gameId, { gasLimit: gasEstimated.mul(2) });
   console.log('tx', tx);
@@ -174,7 +174,8 @@ export const finalizeTimeout = async (
   console.log('rc', rc);
   const gameFinishedEvent = rc.events.find((event: { event: string }) => event.event === 'GameFinished');
   const playerDisqualifiedEvent = rc.events.find((event: { event: string }) => event.event === 'PlayerDisqualified');
-  return { ...gameFinishedEvent.args, ...playerDisqualifiedEvent.args };
+  return FinishedGameState.fromGameFinishedArgs(gameFinishedEvent.args)
+  .addPlayerDisqualified(playerDisqualifiedEvent.args);
 };
 
 export const disputeMove = async (
