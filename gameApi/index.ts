@@ -6,6 +6,7 @@ import tictacRulesContract from 'contracts/TicTacToeRules.json';
 import checkersContract from 'contracts/CheckersRules.json';
 import { IGameMove, ISignedGameMove } from "../types/arbiter";
 import { TContractGameState } from 'components/Games/types';
+import {GameProposedEvent, GameProposedEventObject, GameStartedEventObject} from "../.generated/contracts/Arbiter";
 
 export const getArbiter = () => fromContractData(arbiterContract);
 export const getRulesContract = (gameType: 'tic-tac-toe' | 'checkers' | string | undefined): ethers.Contract => {
@@ -264,7 +265,7 @@ export const proposeGame = async (
   contract: ethers.Contract,
   rulesContractAddress: string,
   isPaid?: boolean,
-): Promise<{ gameId: string; proposer: string; stake: string }> => {
+): Promise<GameProposedEventObject> => {
   console.log('proposeGame', { contract, rulesContractAddress });
   const value = ethers.BigNumber.from(10).pow(16);
   let wallet = await getSessionWallet(await getSigner().getAddress());
@@ -278,18 +279,17 @@ export const proposeGame = async (
   const rc = await tx.wait();
   console.log('rc', rc);
   const event = rc.events.find((event: { event: string }) => event.event === 'GameProposed');
-  const { gameId, proposer, stake } = event.args;
-  return { gameId, proposer, stake };
+  return event.args;
 };
 
 export const acceptGame = async (
-  contract: ethers.Contract,
-  gamdIdToAccept: string,
-  value: string | null = null,
-): Promise<{ gameId: string; players: [string, string]; stake: string }> => {
+    contract: ethers.Contract,
+    gamdIdToAccept: string,
+    value: string | null = null,
+): Promise<GameStartedEventObject> => {
   console.log('stake1', value);
   const gasEstimated = await contract.estimateGas.acceptGame(gamdIdToAccept, [],
-    { value });
+      {value});
   let wallet = await getSessionWallet(await getSigner().getAddress());
   const tx = await contract.acceptGame(gamdIdToAccept, [wallet.address], {
     gasLimit: gasEstimated.mul(2),
@@ -299,8 +299,7 @@ export const acceptGame = async (
   const rc = await tx.wait();
   console.log('rc', rc);
   const event = rc.events.find((event: { event: string }) => event.event === 'GameStarted');
-  const { gameId, players, stake } = event.args;
-  return { gameId, players, stake };
+  return event.args;
 };
 
 export const resign = async (

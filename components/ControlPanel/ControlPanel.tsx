@@ -91,25 +91,23 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
     setGameStatus('Proposing...');
 
     try {
-      let { gameId } = await gameApi.proposeGame(
-        getArbiter(),
-        getRulesContract(gameType).address,
+      let {gameId} = await gameApi.proposeGame(
+          getArbiter(),
+          getRulesContract(gameType).address,
       );
       if (!!gameId) {
-        gameId = gameId.toString();
+        const id = gameId.toString();
         console.log('gameId', gameId);
-        setGameId(gameId);
+        setGameId(id);
         setPlayerIngameId(PROPOSER_INGAME_ID);
         setGameStatus('Proposed');
-        onProposeGame(gameId);
+        onProposeGame(id);
       }
     } catch (error) {
       console.error('Propose game failed', error);
       setGameStatus(null);
       throw 'Propose failed';
     }
-
-    
   };
 
   const submitAcceptGameHandler: React.FormEventHandler<HTMLFormElement> = async (event) => {

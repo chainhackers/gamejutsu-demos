@@ -26,10 +26,11 @@ import { Checkers } from 'components/Games/Checkers';
 import { CheckersState } from 'components/Games/Checkers/types';
 import { useRouter } from 'next/router';
 import { IGameState, TPlayer } from 'components/Games/types';
-import useConversation from 'hooks/useConversation';
+import useConversation, {TGameType} from 'hooks/useConversation';
+import {GameProposedEvent, GameProposedEventObject} from "../../.generated/contracts/Arbiter";
 
 interface IGamePageProps {
-  gameType?: string;
+  gameType: TGameType
 }
 
 interface IParams extends ParsedUrlQuery {
@@ -86,7 +87,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     [gameState, setGameState] = useState<IGameState<any, any>>(getInitialState(1, 'X'));
   }
 
-  const { sendMessage, loading, collectedOtherMessages, collectedSignedGameMoves } = useConversation(
+  const { sendMessage, loading, collectedOtherMessages, collectedSignedGameMoves, lastChunkKnownGameMessages} = useConversation(
     opponentPlayerAddress!,
     Number(gameId!),
     false,
@@ -108,15 +109,14 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   };
 
   const sendSignedMoveHandler = async (signedMove: ISignedGameMove) => {
-    const messageText = JSON.stringify({ ...signedMove, gameType });
-
-    if (!sendMessage) {
-      throw 'no conversation!';
-    }
 
     _isValidSignedMove(getArbiter(), signedMove).then((isValid) => {
       const nextGameState = gameState.makeNewGameStateFromSignedMove(signedMove, isValid);
-      sendMessage(messageText).then(() => {
+      sendMessage({
+        message: signedMove,
+        messageType: 'ISignedGameMove',
+        gameType
+      }).then(() => {
         setLastMove(signedMove);
         setGameState(nextGameState);
         console.log('nextGameState is set after sending the move', nextGameState);
@@ -146,94 +146,110 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       signatures,
     );
 
-    const finishGameResult = await finishGame(getArbiter(), [
+    const finishedGameResult = await finishGame(getArbiter(), [
       lastOpponentMoveSignedByAll,
       _lastMove,
     ]);
-    setFinishedGameState(finishGameResult);
+    sendMessage({
+      message: finishedGameResult,
+      messageType: 'FinishedGameState',
+      gameType
+    })
+    setFinishedGameState(finishedGameResult);
   };
 
-  const initTimeoutHandler = async () => {
-    console.log('initTimeout Handler');
-    if (!lastOpponentMove) {
-      console.log('no lastOpponentMove');
-      return;
-    }
-    if (!lastMove) {
-      console.log('no lastMove');
-      return;
-    }
-    setIsTimeoutInited(true);
-    setIsFinishTimeoutAllowed(true);
-    setIsResolveTimeOutAllowed(false);
-    try {
-      let address = await getSigner().getAddress();
-      const signature = await signMoveWithAddress(lastOpponentMove.gameMove, address);
-      const signatures = [...lastOpponentMove.signatures, signature];
-      let lastOpponentMoveSignedByAll = new SignedGameMove(
-        lastOpponentMove.gameMove,
-        signatures,
-      );
-      console.log('lastOpponentMoveSignedByAll', lastOpponentMoveSignedByAll);
+    const initTimeoutHandler = async () => {
+        console.log('initTimeout Handler');
+        if (!lastOpponentMove) {
+            console.log('no lastOpponentMove');
+            return;
+        }
+        if (!lastMove) {
+            console.log('no lastMove');
+            return;
+        }
+        setIsTimeoutInited(true);
+        setIsFinishTimeoutAllowed(true);
+        setIsResolveTimeOutAllowed(false);
+        try {
+            let address = await getSigner().getAddress();
+            const signature = await signMoveWithAddress(lastOpponentMove.gameMove, address);
+            const signatures = [...lastOpponentMove.signatures, signature];
+            let lastOpponentMoveSignedByAll = new SignedGameMove(
+                lastOpponentMove.gameMove,
+                signatures,
+            );
+            console.log('lastOpponentMoveSignedByAll', lastOpponentMoveSignedByAll);
 
-      const initTimeoutResult = await initTimeout(getArbiter(), [
-        lastOpponentMoveSignedByAll,
-        lastMove,
-      ]);
-      console.log('initTimeoutResult', initTimeoutResult);
-      if (!!sendMessage) {
-        const message = { initTimeout: true };
-        const messageText = JSON.stringify(message);
-        sendMessage(messageText).then((message) => {
-          console.log('message InitTimeout', message);
-        });
-      }
-    } catch (error) {
-      setIsTimeoutInited(false);
-      setIsFinishTimeoutAllowed(false);
-      setIsResolveTimeOutAllowed(false);
-      throw error;
-    }
-  };
+            const initTimeoutResult = await initTimeout(getArbiter(), [
+                lastOpponentMoveSignedByAll,
+                lastMove,
+            ]);
 
-  const resolveTimeoutHandler = async () => {
-    if (!lastMove) {
-      throw Error('no lastMove');
-    }
-    const resolveTimeoutResult = await resolveTimeout(getArbiter(), lastMove);
-    console.log('resolveTimeoutResult', resolveTimeoutResult);
-    if (!!sendMessage) {
-      const message = { resolveTimeout: true };
-      const messageText = JSON.stringify(message);
-      sendMessage(messageText).then((message) => {
-        console.log('message resloveTimeout', message);
-      });
-    }
-    setIsTimeoutInited(false);
-    setIsResolveTimeOutAllowed(false);
-    setIsFinishTimeoutAllowed(false);
-    setIsTimeoutRequested(false);
-  };
+            sendMessage({
+                message: initTimeoutResult,
+                messageType: 'TimeoutStartedEvent',
+                gameType
+            })
+        } catch (error) {
+            setIsTimeoutInited(false);
+            setIsFinishTimeoutAllowed(false);
+            setIsResolveTimeOutAllowed(false);
+            throw error;
+        }
+    };
+
+    const resolveTimeoutHandler = async () => {
+        if (!lastMove) {
+            throw Error('no lastMove');
+        }
+        const resolveTimeoutResult = await resolveTimeout(getArbiter(), lastMove);
+        console.log('resolveTimeoutResult', resolveTimeoutResult);
+        sendMessage({
+            message: resolveTimeoutResult,
+            messageType: 'TimeoutResolvedEvent',
+            gameType
+        })
+        setIsTimeoutInited(false);
+        setIsResolveTimeOutAllowed(false);
+        setIsFinishTimeoutAllowed(false);
+        setIsTimeoutRequested(false);
+    };
 
   const createNewGameHandler = async (isPaid: boolean = false) => {
-    let { gameId, proposer, stake } = await gameApi.proposeGame(
+
+    let proposeGameResult: GameProposedEventObject = await gameApi.proposeGame(
       getArbiter(),
       getRulesContract(gameType).address,
       isPaid,
     );
-    setGameId(gameId.toString());
+
+    sendMessage({
+          message: proposeGameResult,
+          messageType: 'GameProposedEvent',
+          gameType
+      })
+
+    setGameId(proposeGameResult.gameId.toString());
     setPlayerIngameId(PROPOSER_INGAME_ID);
   }
 
   const acceptGameHandler = async (gameId: string, stake: string): Promise<void> => {
     if (!account) throw new Error(`No wallet`);
     if (!gameId || gameId.length === 0) throw new Error(`Empty game id`);
-    const { players } = await gameApi.acceptGame(
-      getArbiter(),
-      gameId,
-      stake,
+    const acceptGameResult = await gameApi.acceptGame(
+        getArbiter(),
+        gameId,
+        stake,
     );
-    let rivalPlayer = players[PROPOSER_INGAME_ID];
+
+    sendMessage({
+      message: acceptGameResult,
+      messageType: 'GameStartedEvent',
+      gameType
+    })
+
+    let rivalPlayer = acceptGameResult.players[PROPOSER_INGAME_ID];
     setOpponentPlayerAddress(rivalPlayer);
     setPlayerIngameId(ACCEPTER_INGAME_ID);
     setGameId(gameId);
@@ -245,6 +261,12 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     }
     try {
       const finishedGameResult = await finalizeTimeout(getArbiter(), parseInt(gameId));
+      sendMessage({
+        message: finishedGameResult,
+        messageType: 'FinishedGameState',
+        gameType
+      })
+
       setFinishedGameState(finishedGameResult);
       setIsTimeoutInited(false);
       setIsFinishTimeoutAllowed(false);
@@ -257,8 +279,13 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   const runDisputeHandler = async () => {
     setIsInDispute(true);
     if (lastOpponentMove) {
-      const finishGameResult = await disputeMove(getArbiter(), lastOpponentMove);
-      setFinishedGameState(finishGameResult);
+      const finishedGameResult = await disputeMove(getArbiter(), lastOpponentMove);
+      sendMessage({
+        message: finishedGameResult,
+        messageType: 'FinishedGameState',
+        gameType
+      })
+      setFinishedGameState(finishedGameResult);
     }
     setIsInDispute(false);
   };
@@ -283,25 +310,27 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     if (!lastMessage) {
       return;
     }
-    const messageContent = JSON.parse(lastMessage.content);
-    console.log('stream message contenet', messageContent);
-    if (lastMessage.senderAddress === opponentPlayerAddress) {
-      if (messageContent.initTimeout) {
-        console.log('incoming stream timeout message', messageContent.initTimeout);
-        setIsTimeoutInited(messageContent.initTimeout);
-        setIsResolveTimeOutAllowed(messageContent.initTimeout);
-        setIsFinishTimeoutAllowed(!messageContent.initTimeout);
-        setIsTimeoutRequested(messageContent.initTimeout);
-      } else if (messageContent.resolveTimeout) {
-        console.log('incoming stream resolve timeout', messageContent.resolveTimeout);
-        setIsTimeoutInited(!messageContent.resolveTimeout);
-        setIsResolveTimeOutAllowed(!messageContent.resolveTimeout);
-        setIsFinishTimeoutAllowed(!messageContent.resolveTimeout);
-        setIsTimeoutRequested(!messageContent.resolveTimeout);
+    }, [collectedOtherMessages]);
 
-      }
-    }
-  }, [collectedOtherMessages]);
+  useEffect(() => {
+    lastChunkKnownGameMessages.reduceRight((_, msg) => { //TODO check sender address
+        if (msg.messageType === 'TimeoutStartedEvent') {
+          setIsTimeoutInited(true);
+          setIsResolveTimeOutAllowed(true);
+          setIsFinishTimeoutAllowed(true);
+          setIsTimeoutRequested(true);
+        } else if (msg.messageType === 'TimeoutResolvedEvent') {
+          setIsTimeoutInited(false);
+          setIsResolveTimeOutAllowed(false);
+          setIsFinishTimeoutAllowed(false);
+          setIsTimeoutRequested(false); //TODO consider one state instead of 4
+        }
+
+        return msg
+    });
+
+
+  }, [lastChunkKnownGameMessages]);
 
   useEffect(() => {
     setPlayers([
@@ -442,7 +471,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
           <GameField
             gameId={gameId}
             rivalPlayerAddress={opponentPlayerAddress}
-            isConnected={!!loading}
+            isConnected={loading}
             isInDispute={isInDispute}
             finishedGameState={finishedGameState}
             onConnect={setConversationHandler}
@@ -463,7 +492,7 @@ export const getStaticProps: GetStaticProps<IGamePageProps, IParams> = (context)
   console.log('context', context.params?.gameType);
   return {
     props: {
-      gameType: context.params?.gameType,
+      gameType: context.params?.gameType as TGameType,
     },
   };
 };

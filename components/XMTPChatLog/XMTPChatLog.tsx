@@ -7,25 +7,24 @@ import { IMyGameBoard } from "../Games/types";
 import { CHECKERS_MOVE_TYPES, CheckersBoard, CHECKERSMove } from "../Games/Checkers/types";
 import React from "react";
 import { IChatLog } from "../../types";
-import { parseMessageContent, asSignedGameMoveInMessage } from 'hooks/useConversation';
+import {ISignedGameMove} from "../../types/arbiter";
 
 
 export const XMTPChatLog: React.FC<XMTPChatLogPropsI> = ({ logData, isLoading }) => {
   let slicedLogData = logData.slice(0, 10);
-  let prettyLogData = slicedLogData.map((message) => {
-    console.log('message', message);
-    let parsedObject = parseMessageContent(message);
-    const signedGameMove = asSignedGameMoveInMessage(parsedObject);
+  let prettyLogData = slicedLogData.map((gameMessage) => {
+    console.log('message', gameMessage);
+    let signedGameMove = gameMessage.messageType == "ISignedGameMove" && gameMessage.message as ISignedGameMove;
 
     if (!signedGameMove) {
-      return message;
+      return gameMessage;
     }
 
     let oldState: IMyGameBoard<TTTMove | CHECKERSMove> | null = null;
     let newState: IMyGameBoard<TTTMove | CHECKERSMove> | null = null;
     let move: string | null;
 
-    if (signedGameMove.gameType == 'tic-tac-toe') {
+    if (gameMessage.gameType == 'tic-tac-toe') {
       oldState = TicTacToeBoard.fromEncoded(signedGameMove.gameMove.oldState);
       newState = TicTacToeBoard.fromEncoded(signedGameMove.gameMove.newState);
       move = JSON.stringify(
@@ -38,18 +37,11 @@ export const XMTPChatLog: React.FC<XMTPChatLogPropsI> = ({ logData, isLoading })
         defaultAbiCoder.decode(CHECKERS_MOVE_TYPES, signedGameMove.gameMove.move)
       );
     }
-    const id = message.id.slice(0, 17) + '...' + message.id.slice(-17);
-
     return {
-      id: id,
-      sender: message.sender,
-      recepient: message.recepient,
-      timestamp: message.timestamp,
       signatures: signedGameMove.signatures,
       move: move,
       oldState: JSON.stringify(oldState),
       newState: JSON.stringify(newState),
-      content: message.content,
     };
   }).filter(msg => msg != null) as IChatLog[];
 
