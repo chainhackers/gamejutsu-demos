@@ -292,6 +292,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   useEffect(() => {
     for (let i = collectedSignedGameMoves.length - 1; i >= 0; i--) {
       const signedMove = collectedSignedGameMoves[i];
+      //TODO maybe replace with sender address
       if (signedMove.gameMove.player === opponentPlayerAddress) {
         _isValidSignedMove(getArbiter(), signedMove).then((isValid) => {
           const nextGameState = gameState.makeNewGameStateFromOpponentSignedMove(signedMove, isValid);
