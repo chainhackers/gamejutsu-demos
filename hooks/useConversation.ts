@@ -10,7 +10,7 @@ import {
     GameStartedEventObject,
     TimeoutResolvedEventObject,
     TimeoutStartedEventObject
-} from "../.generated/contracts/Arbiter";
+} from "../.generated/contracts/esm/types/polygon/Arbiter";
 import {FinishedGameState} from "../gameApi";
 
 export const MESSAGES_PER_PAGE = 100;

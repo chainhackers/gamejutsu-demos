@@ -6,7 +6,7 @@ import tictacRulesContract from 'contracts/TicTacToeRules.json';
 import checkersContract from 'contracts/CheckersRules.json';
 import { IGameMove, ISignedGameMove } from "../types/arbiter";
 import { TContractGameState } from 'components/Games/types';
-import {GameProposedEvent, GameProposedEventObject, GameStartedEventObject} from "../.generated/contracts/Arbiter";
+import {GameProposedEvent, GameProposedEventObject, GameStartedEventObject} from "../.generated/contracts/esm/types/polygon/Arbiter";
 
 export const getArbiter = () => fromContractData(arbiterContract);
 export const getRulesContract = (gameType: 'tic-tac-toe' | 'checkers' | string | undefined): ethers.Contract => {

@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { ParsedUrlQuery } from 'querystring';
-import { Message } from '@xmtp/xmtp-js';
 import { XMTPChatLog } from 'components/XMTPChatLog';
 import { useWalletContext } from 'contexts/WalltetContext';
 import { ControlPanel, useInterval } from 'components/ControlPanel';
@@ -27,7 +26,7 @@ import { CheckersState } from 'components/Games/Checkers/types';
 import { useRouter } from 'next/router';
 import { IGameState, TPlayer } from 'components/Games/types';
 import useConversation, {TGameType} from 'hooks/useConversation';
-import {GameProposedEvent, GameProposedEventObject} from "../../.generated/contracts/Arbiter";
+import {GameProposedEvent, GameProposedEventObject} from "../../.generated/contracts/esm/types/polygon/Arbiter";
 
 interface IGamePageProps {
   gameType: TGameType
