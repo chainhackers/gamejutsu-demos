@@ -10,13 +10,11 @@
     "start-dev": "next start -p 3355",
     "lint": "next lint",
     "clear": "rm -rf node_modules/ yarn.lock",
-    "generate": "eth-sdk",
-    "generate-types": "typechain --discriminate-types --target ethers-v5 --out-dir .generated/contracts './eth-sdk/abis/polygon/*.json'"
+    "generate": "eth-sdk"
   },
   "dependencies": {
     "@apollo/client": "^3.6.9",
     "@rainbow-me/rainbowkit": "^0.5.1",
-    "@typechain/ethers-v5": "^10.1.0",
     "@walletconnect/web3-provider": "^1.8.0",
     "@xmtp/xmtp-js": "^6.8.0",
     "autoprefixer": "^10.4.12",
