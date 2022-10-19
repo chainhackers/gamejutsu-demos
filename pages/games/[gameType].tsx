@@ -290,7 +290,8 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   };
 
   useEffect(() => {
-    collectedSignedGameMoves.reduceRight((_, signedMove) => {
+    for (let i = collectedSignedGameMoves.length - 1; i >= 0; i--) {
+      const signedMove = collectedSignedGameMoves[i];
       if (signedMove.gameMove.player === opponentPlayerAddress) {
         _isValidSignedMove(getArbiter(), signedMove).then((isValid) => {
           const nextGameState = gameState.makeNewGameStateFromOpponentSignedMove(signedMove, isValid);
@@ -300,8 +301,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
           setIsInvalidMove(!isValid);
         });
       }
-      return signedMove
-    });
+    };
   }, [collectedSignedGameMoves]);
 
   useEffect(() => {
@@ -312,23 +312,20 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     }, [collectedOtherMessages]);
 
   useEffect(() => {
-    lastChunkKnownGameMessages.reduceRight((_, msg) => { //TODO check sender address
-        if (msg.messageType === 'TimeoutStartedEvent') {
-          setIsTimeoutInited(true);
-          setIsResolveTimeOutAllowed(true);
-          setIsFinishTimeoutAllowed(true);
-          setIsTimeoutRequested(true);
-        } else if (msg.messageType === 'TimeoutResolvedEvent') {
-          setIsTimeoutInited(false);
-          setIsResolveTimeOutAllowed(false);
-          setIsFinishTimeoutAllowed(false);
-          setIsTimeoutRequested(false); //TODO consider one state instead of 4
-        }
-
-        return msg
-    });
-
-
+    for (let i = lastChunkKnownGameMessages.length - 1; i >= 0; i--) {
+      const knownGameMessage = lastChunkKnownGameMessages[i];
+      if (knownGameMessage.messageType === 'TimeoutStartedEvent') {
+        setIsTimeoutInited(true);
+        setIsResolveTimeOutAllowed(true);
+        setIsFinishTimeoutAllowed(true);
+        setIsTimeoutRequested(true);
+      } else if (knownGameMessage.messageType === 'TimeoutResolvedEvent') {
+        setIsTimeoutInited(false);
+        setIsResolveTimeOutAllowed(false);
+        setIsFinishTimeoutAllowed(false);
+        setIsTimeoutRequested(false); //TODO consider one state instead of 4
+      }
+    }
   }, [lastChunkKnownGameMessages]);
 
   useEffect(() => {
