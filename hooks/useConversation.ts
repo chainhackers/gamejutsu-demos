@@ -73,8 +73,9 @@ const useConversation = (
     const { client, setConvoMessages } = useContext(XmtpContext)
     const [conversation, setConversation] = useState<Conversation | null>(null)
     const [loading] = useState<boolean>(false)
-    const [otherMessagesState, setOtherMessagesState] = useState<Message[]>([])
-    const [signedGameMovesState, setSignedGameMovesState] = useState<ISignedGameMove[]>([])
+    const [collectedOtherMessages, setCollectedOtherMessages] = useState<Message[]>([])
+    const [collectedSignedGameMoves, setCollectedSignedGameMoves] = useState<ISignedGameMove[]>([])
+    const [lastChunckSignedGameMoves, setLastChunckSignedGameMoves] = useState<ISignedGameMove[]>([])
 
     useEffect(() => {
         const getConvo = async () => {
@@ -123,17 +124,25 @@ const useConversation = (
         if (!conversation) {
             return
         }
+        function setMessageStates(signedGameMoves: ISignedGameMove[], otherMessages: Message[]) {
+            if (signedGameMoves.length) {
+                setCollectedSignedGameMoves((prevValue) => [...signedGameMoves, ...prevValue])
+                setLastChunckSignedGameMoves(signedGameMoves);
+            }
+            if (otherMessages.length) {
+                setCollectedOtherMessages((prevValue) => [...otherMessages, ...prevValue])
+            }
+        }
+
         const streamMessages = async () => {
             stream = await conversation.streamMessages()
             for await (const message of stream) {
                 const { signedGameMoves, otherMessages } = filterMessages(newGame, gameId, [message]);
-                setSignedGameMovesState((prevValue) => [...signedGameMoves, ...prevValue]);
-                setOtherMessagesState((prevValue) => [...otherMessages, ...prevValue]);
+                setMessageStates(signedGameMoves, otherMessages);
             }
         }
         listMessages(conversation).then(({ otherMessages, signedGameMoves }) => {
-            setSignedGameMovesState((prevValue) => [...signedGameMoves, ...prevValue]);
-            setOtherMessagesState((prevValue) => [...otherMessages, ...prevValue]);
+            setMessageStates(signedGameMoves, otherMessages);
         }).then( // we can lose some useless messages here
             () => streamMessages()
         );
@@ -156,8 +165,9 @@ const useConversation = (
     return {
         loading,
         sendMessage: handleSend,
-        otherMessagesState,
-        signedGameMovesState
+        collectedOtherMessages,
+        collectedSignedGameMoves,
+        lastChunckSignedGameMoves
     }
 }
 

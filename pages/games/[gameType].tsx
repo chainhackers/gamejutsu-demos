@@ -86,20 +86,20 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     [gameState, setGameState] = useState<IGameState<any, any>>(getInitialState(1, 'X'));
   }
 
-  const {sendMessage, loading, otherMessagesState, signedGameMovesState} = useConversation(
+  const { sendMessage, loading, collectedOtherMessages, collectedSignedGameMoves } = useConversation(
     rivalPlayerAddress!,
     Number(gameId!),
     false,
     true
   )
-  
+
   const setConversationHandler = async (rivalPlayerAddress: string) => {
     if (!rivalPlayerAddress) {
       console.error('cant connect: no rival player address');
       return;
     }
     setRivalPlayerAddress(rivalPlayerAddress);
-    
+
     if (gameType == 'tic-tac-toe') {
       setGameState(new TicTacToeState({ gameId: Number(gameId!), playerType: playerIngameId === 0 ? 'X' : 'O' }));
     } else {
@@ -284,24 +284,22 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   };
 
   useEffect(() => {
-    //todo need diff since last run of useEffect;
-    let signedMove = signedGameMovesState[0];
-    if (!signedMove) {
-      return;
-    }
-    if (signedMove.gameMove.player === rivalPlayerAddress) {
-      _isValidSignedMove(getArbiter(), signedMove).then((isValid) => {
-        const nextGameState = gameState.makeNewGameStateFromOpponentSignedMove(signedMove, isValid);
-        setLastOpponentMove(signedMove);
-        setGameState(nextGameState);
-        console.log('nextGameState + winner', nextGameState);
-        setIsInvalidMove(!isValid);
-      });
-    }
-  }, [signedGameMovesState]);
+    collectedSignedGameMoves.reduceRight((_, signedMove) => {
+      if (signedMove.gameMove.player === rivalPlayerAddress) {
+        _isValidSignedMove(getArbiter(), signedMove).then((isValid) => {
+          const nextGameState = gameState.makeNewGameStateFromOpponentSignedMove(signedMove, isValid);
+          setLastOpponentMove(signedMove);
+          setGameState(nextGameState);
+          console.log('nextGameState + winner', nextGameState);
+          setIsInvalidMove(!isValid);
+        });
+      }
+      return signedMove
+    });
+  }, [collectedSignedGameMoves]);
 
   useEffect(() => {
-    let lastMessage = otherMessagesState[0];
+    let lastMessage = collectedOtherMessages[0];
     if (!lastMessage) {
       return;
     }
@@ -323,8 +321,8 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
 
       }
     }
-  }, [otherMessagesState]);
- 
+  }, [collectedOtherMessages]);
+
   useEffect(() => {
     setPlayers([
       {
