@@ -116,7 +116,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
         messageType: 'ISignedGameMove',
         gameType
       }).then(() => {
-        setLastMove(signedMove);
+        setLastMove(signedMove); //TODO set last move in game state
         setGameState(nextGameState);
         console.log('nextGameState is set after sending the move', nextGameState);
 

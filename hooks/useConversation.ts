@@ -29,9 +29,15 @@ const allMessageTypes = ["ISignedGameMove",
 
 export interface IGameMessage {
     gameType: TGameType,
+    gameId: number;
     messageType: "ISignedGameMove" | "GameProposedEvent" | "GameStartedEvent" | "GameFinishedEvent" | "TimeoutStartedEvent" | "TimeoutResolvedEvent" | "FinishedGameState",
-    message: TMessageType
+    message: TMessageType,
 }
+
+export interface IAnyMessage extends IGameMessage {
+    underlyingMessage: Message
+}
+
 
 async function sendMessage(conversation: Conversation | null, message: IGameMessage) {
     if (!conversation) {
@@ -49,47 +55,30 @@ export function parseMessageContent(message: any) {
 }
 
 function filterMessages(newGame: boolean, gameId: number,
-                        messages: Message[]
+                        incomingMessages: Message[]
 ): {
     firstMoveHere: boolean,
-    signedGameMoves: ISignedGameMove[],
-    knownGameMessages: IGameMessage[],
-    otherMessages: Message[]
+    messages: IAnyMessage[]
 } {
-    let signedGameMoves: ISignedGameMove[] = [];
-    let otherMessages: Message[] = [];
-    let knownGameMessages: IGameMessage[] = [];
+    let messages: IAnyMessage[] = []
     let firstMoveHere = false;
-    for (const message of messages) {
-        let parsedObject = parseMessageContent(message);
+    for (const incomingMessage of incomingMessages) {
+        let parsedObject = parseMessageContent(incomingMessage);
         if (!parsedObject) {
-            otherMessages.push(message);
+            console.log("Could not parse message content", incomingMessage)
             continue;
         }
-
-        if (parsedObject && parsedObject.messageType === "ISignedGameMove") {
-            const signedMove = parsedObject.message as ISignedGameMove;
-
-            let thisGame = signedMove.gameMove.gameId === gameId;
-            if (thisGame) {
-                signedGameMoves.push(signedMove)
-            }
-            if (thisGame && (signedMove.gameMove.nonce === 0)) {
-                firstMoveHere = true;
-            }
-        } else if (allMessageTypes.includes(parsedObject.messageType)) {
-            let thisGame = parsedObject.message.gameId === gameId;
-            thisGame && knownGameMessages.push(parsedObject)
+        if (allMessageTypes.includes(parsedObject.messageType)) {
+            let thisGame = parsedObject.gameId === gameId;
+            thisGame && messages.push(parsedObject)
         }
     }
-
     return {
         firstMoveHere,
-        signedGameMoves,
-        knownGameMessages,
-        otherMessages
+        messages
     };
 }
+//TODO create a playback component for the filtered messages defined above
 
 const useConversation = (
     peerAddress: string,
@@ -97,7 +86,7 @@ const useConversation = (
     newGame: boolean,
     stopOnFirstMove: boolean,
 ) => {
-    const {client, setConvoMessages} = useContext(XmtpContext)
+    const {client} = useContext(XmtpContext)
     const [conversation, setConversation] = useState<Conversation | null>(null)
     const [loading] = useState<boolean>(false)
     const [collectedOtherMessages, setCollectedOtherMessages] = useState<Message[]>([])
@@ -115,7 +104,7 @@ const useConversation = (
         getConvo()
     }, [client, peerAddress])
 
-    const listMessages = async (conversation: Conversation):
+    const getMessageHistory = async (conversation: Conversation):
         Promise<{
             signedGameMoves: ISignedGameMove[],
             otherMessages: Message[],
@@ -137,10 +126,8 @@ const useConversation = (
             }
             {
                 const {
-                    signedGameMoves,
-                    knownGameMessages,
-                    otherMessages,
-                    firstMoveHere
+                    firstMoveHere,
+                    filteredMessages
                 } = filterMessages(newGame, gameId, page.value);
                 _signedGameMoves.push(...signedGameMoves);
                 _knownGameMessages.push(...knownGameMessages);
@@ -182,7 +169,7 @@ const useConversation = (
                 setMessageStates(signedGameMoves, otherMessages, knownGameMessages);
             }
         }
-        listMessages(conversation).then(({otherMessages, signedGameMoves, knownGameMessages}) => {
+        getMessageHistory(conversation).then(({otherMessages, signedGameMoves, knownGameMessages}) => {
             setMessageStates(signedGameMoves, otherMessages, knownGameMessages);
         }).then( // we can lose some useless messages here
             () => streamMessages()
