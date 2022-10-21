@@ -45,7 +45,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
   playersTypes,
   onConnectPlayer,
   onSetPlayerIngameId,
-  rivalPlayerConversationStatus,
+  isLoading: loading,
   finishedGameState,
   isInDispute,
   isInvalidMove,
@@ -59,13 +59,6 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
   const [delay, setDelay] = useState(FETCH_RIVAL_ADDRESS_TIMEOUT);
   const [currentPlayerAddress, setCurrentPlayerAddress] = useState<string | null>(null);
   const [rivalPlayerAddress, setRivalPlayerAddress] = useState<string | null>(null);
-  // const [rivalPlayerConversationStatus, setRivalPlayerConversationStatus] = useState<
-  //   string | null
-  // >(null);
-  // const rivalPlayerAddress =
-  // currentPlayerAddress === '0x1215991085d541A586F0e1968355A36E58C9b2b4'
-  //   ? '0xDb0b11d1281da49e950f89bD0F6B47D464d25F91'
-  //   : '0x1215991085d541A586F0e1968355A36E58C9b2b4';
   const [rivalAddressStatus, setRivalAddressStatus] = useState<
     'Fetching rival address...' | 'Failed to get rival address' | null
   >(null);
@@ -423,7 +416,7 @@ export const ControlPanel: React.FC<ControlPanelPropsI> = ({
             </button>
             {!!rivalPlayerAddress && (
               <span className={styles.connectPlayerStatus}>
-                {rivalPlayerConversationStatus}
+                {loading}
               </span>
             )}
           </div>

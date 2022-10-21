@@ -13,7 +13,7 @@ export interface ControlPanelPropsI {
   onConnectPlayer: (rivalPlayerAddress: string) => Promise<void>;
   onSetPlayerIngameId: any;
   finishedGameState:FinishedGameState | null;
-  rivalPlayerConversationStatus: string | null;
+  isLoading: boolean;
   isInDispute: boolean;
   isInvalidMove: boolean;
   onFinishGame: () => void;

@@ -413,7 +413,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
         onConnectPlayer={setConversationHandler}
         onSetPlayerIngameId={setPlayerIngameId}
         finishedGameState={finishedGameState}
-        rivalPlayerConversationStatus={"todo: always connected string"}
+        isLoading={loading}
         onProposeGame={setGameId}
         onAcceptGame={setGameId}
         isInvalidMove={isInvalidMove}
@@ -468,7 +468,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
           <GameField
             gameId={gameId}
             rivalPlayerAddress={opponentPlayerAddress}
-            isConnected={loading}
+            isLoading={loading}
             isInDispute={isInDispute}
             finishedGameState={finishedGameState}
             onConnect={setConversationHandler}

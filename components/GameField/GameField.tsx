@@ -14,7 +14,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   children,
   gameId,
   rivalPlayerAddress,
-  isConnected,
+  isLoading: isConnected,
   isInDispute,
   finishedGameState,
   onConnect,
