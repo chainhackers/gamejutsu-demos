@@ -49,10 +49,9 @@ export interface IGameState<IMyGameBoard, IMyGameMove> {
         nextContractGameState: TContractGameState,
         valid: boolean,
         playerAddress: string): IGameMove;
-    signMove(gameMove: IGameMove, playerAddress:string): Promise<ISignedGameMove>
+    signMove(gameMove: IGameMove, playerAddress: string): Promise<ISignedGameMove>
     toGameStateContractParams(): TContractGameState
-    makeNewGameStateFromSignedMove(signedMove: ISignedGameMove, valid: boolean): IGameState<IMyGameBoard, IMyGameMove>
-    makeNewGameStateFromOpponentSignedMove(signedMove: ISignedGameMove, valid: boolean): IGameState<IMyGameBoard, IMyGameMove>
+    makeNewGameStateFromSignedMove(signedMove: ISignedGameMove, valid: boolean, isOpponentMove: boolean): IGameState<IMyGameBoard, IMyGameMove>
 }
 
 export abstract class BaseGameState<T1 extends IMyGameBoard<T2>, T2 extends IMyGameMove> implements IGameState<IMyGameBoard<IMyGameMove>, IMyGameMove> {
@@ -72,7 +71,7 @@ export abstract class BaseGameState<T1 extends IMyGameBoard<T2>, T2 extends IMyG
 
     abstract encode(): string;
     abstract fromEncodedBoard(encodedBoardState: string): T1;
-    abstract fromEncodedMove(encodedMove: string, opponentMove:boolean): T2;
+    abstract fromEncodedMove(encodedMove: string, opponentMove: boolean): T2;
 
     constructor({ gameId, playerType }: { gameId: number; playerType: TPlayer; }) {
         this.gameId = gameId;
@@ -97,7 +96,7 @@ export abstract class BaseGameState<T1 extends IMyGameBoard<T2>, T2 extends IMyG
 
     //TODO Add player address of game initiator to properties
     //and session player address here
-    async signMove(gameMove: IGameMove, playerAddress:string): Promise<ISignedGameMove> {
+    async signMove(gameMove: IGameMove, playerAddress: string): Promise<ISignedGameMove> {
         const signature = await signMoveWithAddress(gameMove, playerAddress);
         return new SignedGameMove(gameMove, [signature]);
     }
@@ -134,17 +133,16 @@ export abstract class BaseGameState<T1 extends IMyGameBoard<T2>, T2 extends IMyG
         }, valid);
     }
 
-    makeNewGameStateFromSignedMove(signedMove: ISignedGameMove, valid: boolean): this {
+    makeNewGameStateFromSignedMove(signedMove: ISignedGameMove, valid: boolean, isOpponentMove: boolean): this {
+        if (isOpponentMove) {
+            const nextState = this._makeNewGameStateFromSignedMove(signedMove, valid, 1);
+            nextState.lastOpponentMove = signedMove;
+            this._updateMoveHistory(nextState, this.fromEncodedMove(signedMove.gameMove.move, true), valid);
+            return Object.freeze(nextState);
+        }
         const nextState = this._makeNewGameStateFromSignedMove(signedMove, valid, 0);
         nextState.lastMove = signedMove;
         this._updateMoveHistory(nextState, this.fromEncodedMove(signedMove.gameMove.move, false), valid);
-        return Object.freeze(nextState);
-    }
-
-    makeNewGameStateFromOpponentSignedMove(signedMove: ISignedGameMove, valid: boolean): this {
-        const nextState =  this._makeNewGameStateFromSignedMove(signedMove, valid, 1);
-        nextState.lastOpponentMove = signedMove;
-        this._updateMoveHistory(nextState, this.fromEncodedMove(signedMove.gameMove.move, true), valid);
         return Object.freeze(nextState);
     }
 

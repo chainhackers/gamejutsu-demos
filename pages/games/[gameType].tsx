@@ -52,8 +52,6 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
 
   const [playerIngameId, setPlayerIngameId] = useState<0 | 1>(0); //TODO use in game state creation
   const [isInDispute, setIsInDispute] = useState<boolean>(false);
-  const [lastMove, setLastMove] = useState<ISignedGameMove | null>(null);
-  const [lastOpponentMove, setLastOpponentMove] = useState<ISignedGameMove | null>(null);
   const [finishedGameState, setFinishedGameState] = useState<FinishedGameState | null>(null);
   const [gameId, setGameId] = useState<BigNumber | null>(null);
 
@@ -87,7 +85,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     [gameState, setGameState] = useState<IGameState<any, any>>(getInitialState(1, 'X'));
   }
 
-  let {loading, collectedMessages, sendMessage, lastMessages} = useConversation(
+  let { loading, collectedMessages, sendMessage, lastMessages } = useConversation(
     opponentPlayerAddress!,
     gameId?.toNumber()!,
     false,
@@ -107,7 +105,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     if (gameType == 'tic-tac-toe') {
       setGameState(new TicTacToeState({ gameId: gameId.toNumber(), playerType: playerIngameId === 0 ? 'X' : 'O' }));
     }
-    if (gameType == 'checkers')  {
+    if (gameType == 'checkers') {
       setGameState(getInitialState(gameId.toNumber(), playerIngameId === 0 ? 'X' : 'O'));
     }
   };
@@ -121,25 +119,25 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     })
   };
 
-  const runFinishGameHandler = async (_lastMove: ISignedGameMove | null) => {
-    if (!lastOpponentMove) {
+  const runFinishGameHandler = async (nextGameState: IGameState<any, any>) => {
+    if (!nextGameState.lastOpponentMove) {
       throw 'no lastOpponentMove';
     }
-    if (!_lastMove) {
+    if (!nextGameState.lastMove) {
       throw 'no lastMove'
     }
 
     let address = await getSigner().getAddress();
-    const signature = await signMoveWithAddress(lastOpponentMove.gameMove, address);
-    const signatures = [...lastOpponentMove.signatures, signature];
+    const signature = await signMoveWithAddress(nextGameState.lastOpponentMove.gameMove, address);
+    const signatures = [...nextGameState.lastOpponentMove.signatures, signature];
     let lastOpponentMoveSignedByAll = new SignedGameMove(
-      lastOpponentMove.gameMove,
+      nextGameState.lastOpponentMove.gameMove,
       signatures,
     );
 
     const finishedGameResult = await finishGame(getArbiter(), [
       lastOpponentMoveSignedByAll,
-      _lastMove,
+      nextGameState.lastMove,
     ]);
     sendMessage({
       gameId: gameId!.toNumber(),
@@ -151,31 +149,28 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   };
 
   const initTimeoutHandler = async () => {
-    console.log('initTimeout Handler');
-    if (!lastOpponentMove) {
-      console.log('no lastOpponentMove');
-      return;
+    if (!gameState.lastOpponentMove) {
+      throw 'no lastOpponentMove';
     }
-    if (!lastMove) {
-      console.log('no lastMove');
-      return;
+    if (!gameState.lastMove) {
+      throw 'no lastMove'
     }
     setIsTimeoutInited(true);
     setIsFinishTimeoutAllowed(true);
     setIsResolveTimeOutAllowed(false);
     try {
       let address = await getSigner().getAddress();
-      const signature = await signMoveWithAddress(lastOpponentMove.gameMove, address);
-      const signatures = [...lastOpponentMove.signatures, signature];
+      const signature = await signMoveWithAddress(gameState.lastOpponentMove.gameMove, address);
+      const signatures = [...gameState.lastOpponentMove.signatures, signature];
       let lastOpponentMoveSignedByAll = new SignedGameMove(
-        lastOpponentMove.gameMove,
+        gameState.lastOpponentMove.gameMove,
         signatures,
       );
       console.log('lastOpponentMoveSignedByAll', lastOpponentMoveSignedByAll);
 
       const initTimeoutResult = await initTimeout(getArbiter(), [
         lastOpponentMoveSignedByAll,
-        lastMove,
+        gameState.lastMove,
       ]);
 
       sendMessage({
@@ -193,10 +188,10 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   };
 
   const resolveTimeoutHandler = async () => {
-    if (!lastMove) {
+    if (!gameState.lastMove) {
       throw Error('no lastMove');
     }
-    const resolveTimeoutResult = await resolveTimeout(getArbiter(), lastMove);
+    const resolveTimeoutResult = await resolveTimeout(getArbiter(), gameState.lastMove);
     console.log('resolveTimeoutResult', resolveTimeoutResult);
     sendMessage({
       gameId: gameId!.toNumber(),
@@ -275,17 +270,21 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   };
 
   const runDisputeHandler = async () => {
-    setIsInDispute(true);
-    if (lastOpponentMove) {
-      const finishedGameResult = await disputeMove(getArbiter(), lastOpponentMove);
-      sendMessage({
-        gameId: gameId!.toNumber(),
-        message: finishedGameResult,
-        messageType: 'FinishedGameState',
-        gameType
-      })
-      setFinishedGameState(finishedGameResult);
+    if (!gameState.lastOpponentMove) {
+      throw 'no lastOpponentMove'; 
     }
+    
+    setIsInDispute(true);
+    
+    const finishedGameResult = await disputeMove(getArbiter(), gameState.lastOpponentMove);
+    sendMessage({
+      gameId: gameId!.toNumber(),
+      message: finishedGameResult,
+      messageType: 'FinishedGameState',
+      gameType
+    })
+
+    setFinishedGameState(finishedGameResult);
     setIsInDispute(false);
   };
 
@@ -305,32 +304,25 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       }
       if (lastMessage.messageType == 'ISignedGameMove') {
         const signedMove = lastMessage.message as ISignedGameMove;
-        //TODO maybe replace with sender address
-        if (signedMove.gameMove.player === opponentPlayerAddress) {
-          _isValidSignedMove(getArbiter(), signedMove).then((isValid) => {
-            const nextGameState = gameState.makeNewGameStateFromOpponentSignedMove(signedMove, isValid);
-            setLastOpponentMove(signedMove);
-            setGameState(nextGameState);
-            console.log('nextGameState + winner', nextGameState);
-            setIsInvalidMove(!isValid);
-          });
-        } else {
-          _isValidSignedMove(getArbiter(), signedMove).then((isValid) => {
-            const nextGameState = gameState.makeNewGameStateFromSignedMove(signedMove, isValid);
-            setLastMove(signedMove); //TODO set last move in game state
-            setGameState(nextGameState);
-
-            if (nextGameState.getWinnerId() !== null) {
-              if (playerIngameId === nextGameState.getWinnerId()) {
-                runFinishGameHandler(signedMove);
-              }
+        _isValidSignedMove(getArbiter(), signedMove).then((isValid) => {
+          //TODO maybe replace with sender address
+          const isOpponentMove = signedMove.gameMove.player === opponentPlayerAddress;
+          const nextGameState = gameState.makeNewGameStateFromSignedMove(
+            signedMove,
+            isValid,
+            isOpponentMove);
+          setGameState(nextGameState);
+          setIsInvalidMove(!isValid);
+          if (nextGameState.getWinnerId() !== null) {
+            if (playerIngameId === nextGameState.getWinnerId()) {
+              runFinishGameHandler(nextGameState);
             }
-          })
-        }
-      };
+          }
+        });
+      }
     }
   }, [lastMessages]);
-  
+
   useEffect(() => {
     setPlayers([
       {
@@ -349,7 +341,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   }, [opponentPlayerAddress, gameId]);
 
   useEffect(() => {
-    if (lastOpponentMove?.gameMove.player === opponentPlayerAddress && isInvalidMove) {
+    if (gameState.lastOpponentMove?.gameMove.player === opponentPlayerAddress && isInvalidMove) {
       setIsDisputeAvailavle(true);
       return;
     }
@@ -435,11 +427,9 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
         <div className={styles.container}>
           <LeftPanel
             players={players}
-            isTimeoutAllowed={!!lastOpponentMove && !!lastMove && !isTimeoutInited}
-            // isTimeoutAllowed={!isTimeoutInited}
+            isTimeoutAllowed={!isTimeoutInited}
             initTimeout={initTimeoutHandler}
-            isResolveTimeoutAllowed={!!lastMove && isResolveTimeOutAllowed}
-            // isResolveTimeoutAllowed={isResolveTimeOutAllowed}
+            isResolveTimeoutAllowed={isResolveTimeOutAllowed}
             resolveTimeout={resolveTimeoutHandler}
             isFinishTimeOutAllowed={isFinishTimeoutAllowed}
             finishTimeout={finishTimeoutHandler}
