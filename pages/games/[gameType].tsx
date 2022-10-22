@@ -410,19 +410,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     </div>
   }
   if (gameComponent) {
-    if (gameType === 'checkers') {
-      return (
-        <div className={styles.container}>
-          {gameComponent}
-
-          <RightPanel>
-            <XMTPChatLog
-              logData={[]}
-              isLoading={loading} />
-          </RightPanel>
-        </div>
-      );
-    } else if (gameType === 'tic-tac-toe') {
+    if (gameType === 'checkers' || gameType === 'tic-tac-toe') {
       return (
         <div className={styles.container}>
           <LeftPanel
