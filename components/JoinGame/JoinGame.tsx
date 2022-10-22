@@ -30,7 +30,7 @@ export const JoinGame: React.FC<JoinGamePropsI> = ({ acceptGameHandler }) => {
     // router.push(`/games/${router.query.gameType}?acceptGameId=${gameId}&prize=true`);
     setAcceptingError(null);
     setAccepting(true);
-    acceptGameHandler(gameId, stake)
+    acceptGameHandler(parseInt(gameId), stake)
       .then(() => {
         router.push(`/games/${router.query.gameType}`);
       })

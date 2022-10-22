@@ -1,5 +1,5 @@
 import { IContractData, TBoardState } from 'types';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { getSessionWallet, signMove } from 'helpers/session_signatures';
 import arbiterContract from 'contracts/Arbiter.json';
 import tictacRulesContract from 'contracts/TicTacToeRules.json';
@@ -166,7 +166,7 @@ export const resolveTimeout = async (
 // disqualifyPlayer(gameId, loser);
 export const finalizeTimeout = async (
   contract: ethers.Contract,
-  gameId: number,
+  gameId: BigNumber,
 ): Promise<FinishedGameState> => {
   const gasEstimated = await contract.estimateGas.finalizeTimeout(gameId);
   const tx = await contract.finalizeTimeout(gameId, { gasLimit: gasEstimated.mul(2) });
@@ -249,7 +249,7 @@ export const _isValidSignedMove = async (
 
 export async function registerSessionAddress(
   contract: ethers.Contract,
-  gameId: number,
+  gameId: BigNumber,
   wallet: ethers.Wallet,
 ): Promise<void> {
   const gasEstimatedRedeem = await contract.estimateGas.registerSessionAddress(
@@ -284,14 +284,13 @@ export const proposeGame = async (
 
 export const acceptGame = async (
     contract: ethers.Contract,
-    gamdIdToAccept: string,
+    gameId: BigNumber,
     value: string | null = null,
 ): Promise<GameStartedEventObject> => {
-  console.log('stake1', value);
-  const gasEstimated = await contract.estimateGas.acceptGame(gamdIdToAccept, [],
+  const gasEstimated = await contract.estimateGas.acceptGame(gameId, [],
       {value});
   let wallet = await getSessionWallet(await getSigner().getAddress());
-  const tx = await contract.acceptGame(gamdIdToAccept, [wallet.address], {
+  const tx = await contract.acceptGame(gameId, [wallet.address], {
     gasLimit: gasEstimated.mul(2),
     value,
   });
@@ -304,10 +303,10 @@ export const acceptGame = async (
 
 export const resign = async (
   contract: ethers.Contract,
-  gameIdToResign: string,
+  gameId: BigNumber,
 ) => {
-  const gasEstimated = await contract.estimateGas.resign(gameIdToResign);
-  const tx = await contract.resign(gameIdToResign, { gasLimit: gasEstimated.mul(2) });
+  const gasEstimated = await contract.estimateGas.resign(gameId);
+  const tx = await contract.resign(gameId, { gasLimit: gasEstimated.mul(2) });
   console.log('tx', tx);
   const rc = await tx.wait();
   console.log('rc', rc);
@@ -317,8 +316,8 @@ export const resign = async (
   .addPlayerResigned(PlayerResignedEvent);
 };
 
-export const getPlayers = async (contract: ethers.Contract, gamdId: string) => {
-  const response = contract.getPlayers(gamdId);
+export const getPlayers = async (contract: ethers.Contract, gameId: BigNumber) => {
+  const response = contract.getPlayers(gameId);
   return response;
 };
 

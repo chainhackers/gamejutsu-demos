@@ -5,9 +5,10 @@ import Blockies from 'react-blockies'
 import React, {MutableRefObject} from 'react'
 import {formatTime} from './helpers'
 import AddressPill from "./AddressPill";
+import { IAnyMessage } from 'hooks/useConversation';
 
 export type MessageListProps = {
-    messages: Message[]
+    messages: IAnyMessage[]
     messagesEndRef: MutableRefObject<null>
 }
 
@@ -61,10 +62,10 @@ const MessagesList = ({
                         {messages && messages.length ? (
                             <ConversationBeginningNotice/>
                         ) : null}
-                        {messages?.map((msg: Message) => {
-                            lastMessageDate = msg.sent
+                        {messages?.map((msg) => {
+                            lastMessageDate = msg.underlyingMessage.sent
                             return (
-                                <MessageTile message={msg} key={msg.id}/>
+                                <MessageTile message={msg.underlyingMessage} key={msg.underlyingMessage.id}/>
                             )
                         })}
                         <div ref={messagesEndRef}/>

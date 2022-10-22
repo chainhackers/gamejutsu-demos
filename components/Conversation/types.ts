@@ -2,6 +2,7 @@ import {ISignedGameMove} from "../../types/arbiter";
 import React, {useContext, useEffect} from "react";
 import XmtpContext, {XmtpContextType} from "../../contexts/xmtp";
 import {Client, Conversation, Message} from "@xmtp/xmtp-js";
+import { IAnyMessage } from "hooks/useConversation";
 
 export interface IGameConversation {
     gameId(): number;
@@ -9,7 +10,7 @@ export interface IGameConversation {
     peerAddress(): string;
 
     moves: ISignedGameMove[]; //filtered by game, sorted by nonce
-    messages: Message[];
+    messages: IAnyMessage[];
 
     getMove(nonce: number): ISignedGameMove | null;
 
@@ -32,7 +33,7 @@ export class GameConversation extends React.Component<IGameConversationProps>
 
     connected = false;
     moves: ISignedGameMove[] = [];
-    messages: Message[] = [];
+    messages: IAnyMessage[] = [];
     conversation: Conversation | null = null;
 
     constructor(props: IGameConversationProps) {
@@ -58,7 +59,7 @@ export class GameConversation extends React.Component<IGameConversationProps>
                 );
             }
             this.connected = true;
-            this.messages = await this.conversation.messages(); //TODO filter by game
+            //this.messages = await this.conversation.messages(); //TODO filter by game
         }
     }
 

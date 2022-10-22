@@ -1,7 +1,6 @@
 export * from 'components/Player';
 export * from 'components/XMTPChatLog';
 export * from 'components/Games';
-export * from 'components/ControlPanel';
 export * from 'components/Layout';
 export * from 'components/Logo';
 export * from 'components/Header';

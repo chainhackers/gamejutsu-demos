@@ -21,14 +21,14 @@ export const Conversation = ({
         ;(messagesEndRef.current as any)?.scrollIntoView({behavior: 'smooth'})
     }, [])
 
-    const {sendMessage, loading, collectedOtherMessages, collectedSignedGameMoves} = useConversation(
+    const {sendMessage, loading, collectedMessages} = useConversation(
         recipientWalletAddr,
         gameId,
         false,
         true
     )
 
-    const hasMessages = collectedOtherMessages.length > 0
+    const hasMessages = collectedMessages.length > 0
 
     useEffect(() => {
         if (!hasMessages) return
@@ -42,7 +42,7 @@ export const Conversation = ({
         return <div>NO RECIPIENT</div>
     }
 
-    if (loading && !collectedOtherMessages?.length) {
+    if (loading && !collectedMessages?.length) {
         return (
             <span>pls wait</span>
         )
@@ -51,9 +51,9 @@ export const Conversation = ({
     return (
         <main className="flex flex-col flex-1 bg-white h-screen">
             <div>HERE GOES MESSAGE LIST BUT NO ANY GAMEMOVES HERE</div>
-            <MessagesList messagesEndRef={messagesEndRef} messages={collectedOtherMessages}/>
+            <MessagesList messagesEndRef={messagesEndRef} messages={collectedMessages}/>
             <div>AFTER MESSAGE LIST</div>
-            <div>{JSON.stringify(collectedSignedGameMoves)}</div>
+            <div>{JSON.stringify(collectedMessages)}</div>
         </main>
     )
 }
