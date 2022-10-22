@@ -1,3 +1,4 @@
+export type TGameType = 'tic-tac-toe' | 'checkers'
 export interface IPlayer {
   id: string;
 }

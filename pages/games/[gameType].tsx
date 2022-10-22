@@ -15,7 +15,7 @@ import {
 import styles from 'pages/games/gameType.module.scss';
 import { ETTicTacToe } from "components/Games/ET-Tic-Tac-Toe";
 import { TicTacToeState } from "components/Games/ET-Tic-Tac-Toe/types";
-import { PlayerI } from "../../types";
+import {PlayerI, TGameType} from "../../types";
 import gameApi, { _isValidSignedMove, getArbiter, getSigner, getRulesContract, finishGame, disputeMove, initTimeout, resolveTimeout, finalizeTimeout, FinishedGameState } from "../../gameApi";
 import { ISignedGameMove, SignedGameMove } from "../../types/arbiter";
 import { signMoveWithAddress } from 'helpers/session_signatures';
@@ -24,10 +24,10 @@ import { Checkers } from 'components/Games/Checkers';
 import { CheckersState } from 'components/Games/Checkers/types';
 import { useRouter } from 'next/router';
 import { IGameState, TPlayer } from 'components/Games/types';
-import useConversation, { IAnyMessage, IGameMessage, TGameType } from 'hooks/useConversation';
 import { GameProposedEvent, GameProposedEventObject } from "../../.generated/contracts/esm/types/polygon/Arbiter";
 import { BigNumber } from 'ethers';
 import { useInterval } from 'hooks/useInterval';
+import useConversation from "../../hooks/useConversation";
 
 interface IGamePageProps {
   gameType: TGameType

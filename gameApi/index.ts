@@ -1,20 +1,19 @@
-import { IContractData, TBoardState } from 'types';
+import {TGameType} from 'types';
 import { BigNumber, ethers } from 'ethers';
 import { getSessionWallet, signMove } from 'helpers/session_signatures';
-import arbiterContract from 'contracts/Arbiter.json';
-import tictacRulesContract from 'contracts/TicTacToeRules.json';
-import checkersContract from 'contracts/CheckersRules.json';
 import { IGameMove, ISignedGameMove } from "../types/arbiter";
 import { TContractGameState } from 'components/Games/types';
 import {GameProposedEvent, GameProposedEventObject, GameStartedEventObject} from "../.generated/contracts/esm/types/polygon/Arbiter";
+import {getPolygonSdk} from "../.generated/contracts";
 
-export const getArbiter = () => fromContractData(arbiterContract);
-export const getRulesContract = (gameType: 'tic-tac-toe' | 'checkers' | string | undefined): ethers.Contract => {
+const getSdk = () => getPolygonSdk(getSigner())
+export const getArbiter = () => getSdk().arbiter
+export const getRulesContract = (gameType: TGameType): ethers.Contract => {
   if (gameType == 'checkers') {
-    return fromContractData(checkersContract);
+    return getSdk().checkersRules
   }
   if (gameType == 'tic-tac-toe') {
-    return fromContractData(tictacRulesContract);
+    return getSdk().ticTacToeRules
   }
   throw "Unknown gameType: " + gameType;
 }
@@ -25,10 +24,6 @@ export function getSigner(): ethers.Signer {
   );
   const signer = provider.getSigner();
   return signer;
-}
-
-export function fromContractData(data: IContractData): ethers.Contract {
-  return newContract(data.address, data.abi, getSigner());
 }
 
 export function newContract(
@@ -322,8 +317,6 @@ export const getPlayers = async (contract: ethers.Contract, gameId: BigNumber) =
 };
 
 export default {
-  fromContractData,
-  newContract,
   proposeGame,
   acceptGame,
   resign,

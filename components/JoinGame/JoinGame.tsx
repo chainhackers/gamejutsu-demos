@@ -7,11 +7,12 @@ import styles from './JoinGame.module.scss';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { getRulesContract } from "../../gameApi";
+import {TGameType} from "../../types";
 export const JoinGame: React.FC<JoinGamePropsI> = ({ acceptGameHandler }) => {
   const { t } = useTranslation();
   const router = useRouter();
 
-  const gameType = router.query.gameType as string;
+  const gameType = router.query.gameType as TGameType;
   const { data, error, loading } = useQuery(gameEntitiesQuery, {
     variables: { rules: getRulesContract(gameType).address },
   });

@@ -12,12 +12,12 @@ import {
     TimeoutStartedEventObject
 } from "../.generated/contracts/esm/types/polygon/Arbiter";
 import { FinishedGameState } from "../gameApi";
+import {TGameType} from "../types";
 
 export const MESSAGES_PER_PAGE = 100;
 
 let stream: Stream<Message>
 
-export type TGameType = 'tic-tac-toe' | 'checkers'
 export type TMessageType = ISignedGameMove |
     GameProposedEventObject | GameStartedEventObject | GameFinishedEventObject |
     TimeoutStartedEventObject | TimeoutResolvedEventObject | FinishedGameState

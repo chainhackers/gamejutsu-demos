@@ -1,3 +1,3 @@
 export * from 'types/game';
 export * from 'types/xmtp';
-export * from 'types/contract';
+export type TGameType = 'tic-tac-toe' | 'checkers'
