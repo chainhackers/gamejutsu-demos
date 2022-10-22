@@ -1,8 +1,9 @@
 import { useEffect, useState, useRef } from 'react';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
+import { useRouter } from 'next/router';
+
 import { ParsedUrlQuery } from 'querystring';
 import { XMTPChatLog } from 'components/XMTPChatLog';
-import { useWalletContext } from 'contexts/WalltetContext';
 import {
   GameField,
   JoinGame,
@@ -22,7 +23,6 @@ import { signMoveWithAddress } from 'helpers/session_signatures';
 import { useAccount } from 'wagmi';
 import { Checkers } from 'components/Games/Checkers';
 import { CheckersState } from 'components/Games/Checkers/types';
-import { useRouter } from 'next/router';
 import { IGameState, TPlayer } from 'components/Games/types';
 import { GameProposedEvent, GameProposedEventObject } from "../../.generated/contracts/esm/types/polygon/Arbiter";
 import { BigNumber } from 'ethers';
@@ -42,6 +42,9 @@ const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 const FETCH_RIVAL_ADDRESS_TIMEOUT = 2500;
 
 const Game: NextPage<IGamePageProps> = ({ gameType }) => {
+  const router = useRouter();
+  const gameId = parseInt(router.query.gameId as string);
+  //TODO discuss - playerInGameId parameter vs getting it from the contract
 
   const initialTicTacToeState = new TicTacToeState({ gameId: 1, playerType: 'X' });
 
@@ -53,7 +56,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   const [playerIngameId, setPlayerIngameId] = useState<0 | 1>(0); //TODO use in game state creation
   const [isInDispute, setIsInDispute] = useState<boolean>(false);
   const [finishedGameState, setFinishedGameState] = useState<FinishedGameState | null>(null);
-  const [gameId, setGameId] = useState<BigNumber | null>(null);
+  // const [gameId, setGameId] = useState<BigNumber | null>(null);
 
   const [isDisputAvailable, setIsDisputeAvailavle] = useState<boolean>(false);
 
@@ -69,8 +72,6 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   const [isFinishTimeoutAllowed, setIsFinishTimeoutAllowed] = useState<boolean>(false);
   const [isTimeoutRequested, setIsTimeoutRequested] = useState<boolean>(false);
 
-
-  const { signer } = useWalletContext();
   const { query } = useRouter();
   const account = useAccount();
 
@@ -87,7 +88,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
 
   let { loading, collectedMessages, sendMessage, lastMessages } = useConversation(
     opponentPlayerAddress!,
-    gameId?.toNumber()!,
+    gameId,
     false,
     true
   )
@@ -103,16 +104,16 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     setOpponentPlayerAddress(rivalPlayerAddress);
 
     if (gameType == 'tic-tac-toe') {
-      setGameState(new TicTacToeState({ gameId: gameId.toNumber(), playerType: playerIngameId === 0 ? 'X' : 'O' }));
+      setGameState(new TicTacToeState({ gameId: gameId, playerType: playerIngameId === 0 ? 'X' : 'O' }));
     }
     if (gameType == 'checkers') {
-      setGameState(getInitialState(gameId.toNumber(), playerIngameId === 0 ? 'X' : 'O'));
+      setGameState(getInitialState(gameId, playerIngameId === 0 ? 'X' : 'O'));
     }
   };
 
   const sendSignedMoveHandler = async (signedMove: ISignedGameMove) => {
     sendMessage({
-      gameId: gameId!.toNumber(),
+      gameId: gameId,
       message: signedMove,
       messageType: 'ISignedGameMove',
       gameType
@@ -140,7 +141,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       nextGameState.lastMove,
     ]);
     sendMessage({
-      gameId: gameId!.toNumber(),
+      gameId: gameId,
       message: finishedGameResult,
       messageType: 'FinishedGameState',
       gameType
@@ -174,7 +175,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       ]);
 
       sendMessage({
-        gameId: gameId!.toNumber(),
+        gameId: gameId,
         message: initTimeoutResult,
         messageType: 'TimeoutStartedEvent',
         gameType
@@ -194,7 +195,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     const resolveTimeoutResult = await resolveTimeout(getArbiter(), gameState.lastMove);
     console.log('resolveTimeoutResult', resolveTimeoutResult);
     sendMessage({
-      gameId: gameId!.toNumber(),
+      gameId: gameId,
       message: resolveTimeoutResult,
       messageType: 'TimeoutResolvedEvent',
       gameType
@@ -220,7 +221,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       gameType
     })
 
-    setGameId(proposeGameResult.gameId);
+    // setGameId(proposeGameResult.gameId); //TODO
     setPlayerIngameId(PROPOSER_INGAME_ID);
   }
 
@@ -247,14 +248,14 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     let rivalPlayer = acceptGameResult.players[PROPOSER_INGAME_ID];
     setOpponentPlayerAddress(rivalPlayer);
     setPlayerIngameId(ACCEPTER_INGAME_ID);
-    setGameId(acceptGameResult.gameId);
+    // setGameId(acceptGameResult.gameId); //TODO
   };
 
   const finishTimeoutHandler = async () => {
     try {
-      const finishedGameResult = await finalizeTimeout(getArbiter(), gameId!);
+      const finishedGameResult = await finalizeTimeout(getArbiter(), BigNumber.from(gameId));
       sendMessage({
-        gameId: gameId?.toNumber()!,
+        gameId: gameId,
         message: finishedGameResult,
         messageType: 'FinishedGameState',
         gameType
@@ -278,7 +279,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     
     const finishedGameResult = await disputeMove(getArbiter(), gameState.lastOpponentMove);
     sendMessage({
-      gameId: gameId!.toNumber(),
+      gameId: gameId,
       message: finishedGameResult,
       messageType: 'FinishedGameState',
       gameType
@@ -358,7 +359,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     console.log('in poller');
     let players: [string, string] = await gameApi.getPlayers(
       getArbiter(),
-      gameId,
+      BigNumber.from(gameId),
     );
     let rivalPlayer = players[playerIngameId == 0 ? 1 : 0];
     if (rivalPlayer == ZERO_ADDRESS) {
