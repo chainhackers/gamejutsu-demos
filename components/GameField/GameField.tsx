@@ -7,14 +7,13 @@ import { Button } from 'components/shared';
 import { useAccount } from 'wagmi';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import cn from 'classnames';
 import { FinishedGameState } from 'gameApi';
 export const GameField: React.FC<GameFieldPropsI> = ({
   children,
   gameId,
   rivalPlayerAddress,
-  isLoading: isConnected,
+  isConnected,
   isInDispute,
   finishedGameState,
   onConnect,

@@ -39,12 +39,11 @@ interface IParams extends ParsedUrlQuery {
 const PROPOSER_INGAME_ID = 0;
 const ACCEPTER_INGAME_ID = 1;
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
-const FETCH_RIVAL_ADDRESS_TIMEOUT = 2500;
+const FETCH_OPPONENT_ADDRESS_TIMEOUT = 2500;
 
 const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   const router = useRouter();
-  const gameId = parseInt(router.query.gameId as string);
-  //TODO discuss - playerInGameId parameter vs getting it from the contract
+  let gameId = parseInt(router.query.gameId as string); //TODO redirect to ?gameId= when gameId is set
 
   const initialTicTacToeState = new TicTacToeState({ gameId: 1, playerType: 'X' });
 
@@ -53,14 +52,13 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     return initialCheckersState;
   }
 
-  const [playerIngameId, setPlayerIngameId] = useState<0 | 1>(0); //TODO use in game state creation
+  const [playerIngameId, setPlayerIngameId] = useState<0 | 1>(0);
   const [isInDispute, setIsInDispute] = useState<boolean>(false);
   const [finishedGameState, setFinishedGameState] = useState<FinishedGameState | null>(null);
-  // const [gameId, setGameId] = useState<BigNumber | null>(null);
 
   const [isDisputAvailable, setIsDisputeAvailavle] = useState<boolean>(false);
 
-  const [opponentPlayerAddress, setOpponentPlayerAddress] = useState<string | null>(null,);
+  const [opponentAddress, setOpponentAddress] = useState<string | null>(null,);
 
 
   const [isInvalidMove, setIsInvalidMove] = useState<boolean>(false);
@@ -86,22 +84,23 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     [gameState, setGameState] = useState<IGameState<any, any>>(getInitialState(1, 'X'));
   }
 
-  let { loading, collectedMessages, sendMessage, lastMessages } = useConversation(
-    opponentPlayerAddress!,
+  let { loading, collectedMessages, sendMessage, lastMessages, initClient, client } = useConversation(
+    opponentAddress!,
     gameId,
     false,
     true
   )
 
-  const setConversationHandler = async (rivalPlayerAddress: string) => {
+  const setConversationHandler = async (opponentAddress: string) => {
+    console.log("setConversationHandler", opponentAddress);
     if (!gameId) {
       throw "No gameId"
     }
-    if (!rivalPlayerAddress) {
-      console.error('cant connect: no rival player address');
+    if (!opponentAddress) {
+      console.error('cant connect: no opponent address');
       return;
     }
-    setOpponentPlayerAddress(rivalPlayerAddress);
+    setOpponentAddress(opponentAddress);
 
     if (gameType == 'tic-tac-toe') {
       setGameState(new TicTacToeState({ gameId: gameId, playerType: playerIngameId === 0 ? 'X' : 'O' }));
@@ -109,6 +108,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     if (gameType == 'checkers') {
       setGameState(getInitialState(gameId, playerIngameId === 0 ? 'X' : 'O'));
     }
+    initClient(getSigner())
   };
 
   const sendSignedMoveHandler = async (signedMove: ISignedGameMove) => {
@@ -221,20 +221,20 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       gameType
     })
 
-    // setGameId(proposeGameResult.gameId); //TODO
+    gameId = proposeGameResult.gameId.toNumber();
     setPlayerIngameId(PROPOSER_INGAME_ID);
   }
 
-  const acceptGameHandler = async (gameId: number, stake: string): Promise<void> => {
+  const acceptGameHandler = async (acceptedGameId: number, stake: string): Promise<void> => {
     if (!account) {
       throw new Error(`No wallet`);
     }
-    if (!gameId) {
+    if (!acceptedGameId) {
       throw new Error(`No game id`);
     }
     const acceptGameResult = await gameApi.acceptGame(
       getArbiter(),
-      BigNumber.from(gameId),
+      BigNumber.from(acceptedGameId),
       stake,
     );
 
@@ -245,10 +245,10 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       gameType
     })
 
-    let rivalPlayer = acceptGameResult.players[PROPOSER_INGAME_ID];
-    setOpponentPlayerAddress(rivalPlayer);
+    let opponent = acceptGameResult.players[PROPOSER_INGAME_ID];
+    setOpponentAddress(opponent);
     setPlayerIngameId(ACCEPTER_INGAME_ID);
-    // setGameId(acceptGameResult.gameId); //TODO
+    gameId = acceptGameResult.gameId.toNumber();
   };
 
   const finishTimeoutHandler = async () => {
@@ -272,11 +272,11 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
 
   const runDisputeHandler = async () => {
     if (!gameState.lastOpponentMove) {
-      throw 'no lastOpponentMove'; 
+      throw 'no lastOpponentMove';
     }
-    
+
     setIsInDispute(true);
-    
+
     const finishedGameResult = await disputeMove(getArbiter(), gameState.lastOpponentMove);
     sendMessage({
       gameId: gameId,
@@ -307,7 +307,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
         const signedMove = lastMessage.message as ISignedGameMove;
         _isValidSignedMove(getArbiter(), signedMove).then((isValid) => {
           //TODO maybe replace with sender address
-          const isOpponentMove = signedMove.gameMove.player === opponentPlayerAddress;
+          const isOpponentMove = signedMove.gameMove.player === opponentAddress;
           const nextGameState = gameState.makeNewGameStateFromSignedMove(
             signedMove,
             isValid,
@@ -334,43 +334,48 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       },
       {
         playerName: playerIngameId === 1 ? 'Player1' : 'Player2',
-        address: opponentPlayerAddress,
+        address: opponentAddress,
         avatarUrl: '/images/empty_avatar.png',
         playerType: playersTypesMap[playerIngameId === 0 ? 1 : 0],
       },
     ]);
-  }, [opponentPlayerAddress, gameId]);
+  }, [opponentAddress, gameId]);
 
-  useEffect(() => {
-    if (gameState.lastOpponentMove?.gameMove.player === opponentPlayerAddress && isInvalidMove) {
-      setIsDisputeAvailavle(true);
-      return;
-    }
-    setIsDisputeAvailavle(false);
-  }, [isInvalidMove]);
+    useEffect(() => {
+        if (gameState.lastOpponentMove?.gameMove.player === opponentAddress && isInvalidMove) {
+            setIsDisputeAvailavle(true);
+            return;
+        }
+        setIsDisputeAvailavle(false);
+    }, [isInvalidMove]);
 
-  useInterval(async () => {
-    if (opponentPlayerAddress) {
-      return;
-    }
-    if (!gameId) {
-      return;
-    }
-    console.log('in poller');
-    let players: [string, string] = await gameApi.getPlayers(
-      getArbiter(),
-      BigNumber.from(gameId),
-    );
-    let rivalPlayer = players[playerIngameId == 0 ? 1 : 0];
-    if (rivalPlayer == ZERO_ADDRESS) {
-      return;
-    }
-    if (rivalPlayer) {
-      setOpponentPlayerAddress(rivalPlayer);
-    } else {
-      setOpponentPlayerAddress(null);
-    }
-  }, FETCH_RIVAL_ADDRESS_TIMEOUT);
+    useInterval(async () => {
+        if (opponentAddress) {
+            return;
+        }
+        if (!gameId) {
+            return;
+        }
+        console.log('polling for opponent address');
+        let players: [string, string] = await gameApi.getPlayers(
+            getArbiter(),
+            BigNumber.from(gameId),
+        );
+        const address = account.address;
+        if (!address) {
+            return;
+        }
+        if (!players.includes(address)) {
+            throw new Error(`Player ${address} is not in game ${gameId}, players: ${players}`);
+        }
+        const inGameId = players.indexOf(address) == 0 ? 0 : 1;
+        setPlayerIngameId(inGameId);
+        let opponent = players[1 - inGameId];
+        if (!opponent || opponent == ZERO_ADDRESS) {
+            return;
+        }
+        setOpponentAddress(opponent);
+    }, FETCH_OPPONENT_ADDRESS_TIMEOUT);
 
   if (!!gameType && !!query && query?.join === 'true') {
     return <JoinGame acceptGameHandler={acceptGameHandler} />;
@@ -430,8 +435,8 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
           />
           <GameField
             gameId={gameId?.toString()}
-            rivalPlayerAddress={opponentPlayerAddress}
-            isLoading={loading}
+            rivalPlayerAddress={opponentAddress}
+            isConnected={!!client}
             isInDispute={isInDispute}
             finishedGameState={finishedGameState}
             onConnect={setConversationHandler}

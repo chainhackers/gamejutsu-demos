@@ -54,7 +54,7 @@ export const XmtpProvider: React.FC<{ children: React.ReactNode }> = ({children}
     }
 
     useEffect(() => {
-        signer ? initClient(signer) : disconnect()
+        !signer && disconnect()
     }, [signer])
 
     useEffect(() => {
@@ -67,7 +67,6 @@ export const XmtpProvider: React.FC<{ children: React.ReactNode }> = ({children}
             Promise.all(
                 convos.map(async (convo) => {
                     if (convo.peerAddress !== address) {
-                        
                         conversations.set(convo.peerAddress, convo)
                         setConversations(new Map(conversations))
                     }

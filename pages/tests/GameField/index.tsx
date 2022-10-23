@@ -66,10 +66,10 @@ const TestGameFieldPage: NextPage = () => {
     return {
       gameId: '158',
       rivalPlayerAddress: opponentAddress,
-      isLoading: true,
       isInDispute: false,
       finishedGameState,
-      onConnect: async (opponent) => { }
+      onConnect: async (opponent) => { },
+      isConnected: true,
     }
   }
 

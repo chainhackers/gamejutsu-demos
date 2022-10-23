@@ -123,7 +123,7 @@ const useConversation = (
     newGame: boolean,
     stopOnFirstMove: boolean,
 ) => {
-    const { client } = useContext(XmtpContext);
+    const { client, initClient } = useContext(XmtpContext);
     const [conversation, setConversation] = useState<Conversation | null>(null);
     const [loading] = useState<boolean>(false);
     const [collectedMessages, setCollectedMessages] = useState<IAnyMessage[]>([]);
@@ -184,10 +184,10 @@ const useConversation = (
         loading,
         sendMessage: ((msg: IGameMessage) => sendMessage(conversation, msg)),
         collectedMessages,
-        lastMessages
+        lastMessages,
+        initClient,
+        client
     }
 }
 
 export default useConversation
-
-
