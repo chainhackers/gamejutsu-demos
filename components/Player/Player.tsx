@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Blockies from 'react-blockies';
 import empty_avatar from 'public/images/empty_avatar.png';
 import { PlayerPropsI } from './PlayerProps';
 import styles from './Player.module.scss';
@@ -13,7 +14,15 @@ export const Player: React.FC<PlayerPropsI> = ({
   return (
     <div className={styles.container}>
       <div className={styles.avatar}>
-        {avatarUrl && <Image src={avatarUrl} alt="avatar" width="33px" height="33px"></Image>}
+        {address ? (
+          <Blockies
+            seed={!!address ? address : '0x00000000000'}
+            size={10}
+            className="rounded-full"
+          />
+        ) : (
+          <Image src={empty_avatar} alt="avatar" width="33px" height="33px"></Image>
+        )}
       </div>
       {address ? (
         <div className={styles.playerData}>
