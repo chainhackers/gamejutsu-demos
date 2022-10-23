@@ -8,7 +8,7 @@ export const XMTPChatLog: React.FC<XMTPChatLogPropsI> = ({ anyMessages, isLoadin
   let filteredMessages: IAnyMessage[] = [];
   for (const anyMessage of anyMessages) {
     if (anyMessage.messageType == "ISignedGameMove") {
-      filteredMessages.push();
+      filteredMessages.push(anyMessage);
     }
   }
 
@@ -27,7 +27,7 @@ export const XMTPChatLog: React.FC<XMTPChatLogPropsI> = ({ anyMessages, isLoadin
   return (
     <div className={styles.container}>
       <div className={styles.title}>XMTPChatLog</div>
-      <div className={styles.loader}>{`Satus: ${filteredMessages.length === 0 ? 'Waiting...' : isLoading ? 'Fetching...' : 'Ready'
+      <div className={styles.loader}>{`Status: ${filteredMessages.length === 0 ? 'Waiting...' : isLoading ? 'Fetching...' : 'Ready'
         }`}</div>
       <div className={styles.log}>
         {makeElements()}
