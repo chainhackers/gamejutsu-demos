@@ -16,7 +16,6 @@ import {
 import styles from 'pages/games/gameType.module.scss';
 import { ETTicTacToe } from "components/Games/ET-Tic-Tac-Toe";
 import { TicTacToeState } from "components/Games/ET-Tic-Tac-Toe/types";
-import {PlayerI, TGameType} from "../../types";
 import gameApi, { _isValidSignedMove, getArbiter, getSigner, getRulesContract, finishGame, disputeMove, initTimeout, resolveTimeout, finalizeTimeout, FinishedGameState } from "../../gameApi";
 import { ISignedGameMove, SignedGameMove } from "../../types/arbiter";
 import { signMoveWithAddress } from 'helpers/session_signatures';
@@ -28,6 +27,7 @@ import { GameProposedEvent, GameProposedEventObject } from "../../.generated/con
 import { BigNumber } from 'ethers';
 import { useInterval } from 'hooks/useInterval';
 import useConversation from "../../hooks/useConversation";
+import { PlayerI, TGameType } from 'types/game';
 
 interface IGamePageProps {
   gameType: TGameType
@@ -439,7 +439,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
             {gameComponent}
           </GameField>
           <RightPanel>
-            <XMTPChatLog logData={[]} isLoading={loading} />
+            <XMTPChatLog anyMessages={collectedMessages} isLoading={loading} />
           </RightPanel>
         </div>
       );

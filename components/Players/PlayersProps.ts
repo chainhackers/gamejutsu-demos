@@ -1,4 +1,5 @@
-import { PlayerI } from 'types';
+import { PlayerI } from "types/game";
+
 export interface PlayersPropsI {
   children?: React.ReactNode;
   player1: PlayerI;

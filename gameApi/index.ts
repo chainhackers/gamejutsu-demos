@@ -1,10 +1,10 @@
-import {TGameType} from 'types';
 import { BigNumber, ethers } from 'ethers';
 import { getSessionWallet, signMove } from 'helpers/session_signatures';
 import { IGameMove, ISignedGameMove } from "../types/arbiter";
 import { TContractGameState } from 'components/Games/types';
 import {GameProposedEvent, GameProposedEventObject, GameStartedEventObject} from "../.generated/contracts/esm/types/polygon/Arbiter";
 import {getPolygonSdk} from "../.generated/contracts";
+import { TGameType } from 'types/game';
 
 const getSdk = () => getPolygonSdk(getSigner())
 export const getArbiter = () => getSdk().arbiter

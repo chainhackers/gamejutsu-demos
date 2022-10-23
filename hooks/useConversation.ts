@@ -12,7 +12,7 @@ import {
     TimeoutStartedEventObject
 } from "../.generated/contracts/esm/types/polygon/Arbiter";
 import { FinishedGameState } from "../gameApi";
-import {TGameType} from "../types";
+import { TGameType } from 'types/game'
 
 export const MESSAGES_PER_PAGE = 100;
 
@@ -160,7 +160,7 @@ const useConversation = (
                 setMessageStates(messages);
             }
         }
-        if (newGame) {
+        if (!newGame) {
             getMessageHistory(conversation, gameId, stopOnFirstMove).then(({ messages }) => {
                 setMessageStates(messages);
             }).then( // we can lose some useless messages here

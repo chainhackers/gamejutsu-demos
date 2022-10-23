@@ -7,7 +7,7 @@ import styles from './JoinGame.module.scss';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { getRulesContract } from "../../gameApi";
-import {TGameType} from "../../types";
+import { TGameType } from 'types/game';
 export const JoinGame: React.FC<JoinGamePropsI> = ({ acceptGameHandler }) => {
   const { t } = useTranslation();
   const router = useRouter();
