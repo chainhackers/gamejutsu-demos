@@ -1,6 +1,6 @@
-import { signMoveWithAddress } from 'helpers/session_signatures';
-import { shallowClone } from 'helpers/utils';
-import { GameMove, IGameMove, ISignedGameMove, SignedGameMove } from '../../types/arbiter';
+import {signMoveWithAddress} from 'helpers/session_signatures';
+import {shallowClone} from 'helpers/utils';
+import {GameMove, IGameMove, ISignedGameMove, SignedGameMove} from '../../types/arbiter';
 
 export type TPlayer = 'X' | 'O';
 export type TGameHistory = ISignedGameMove[]
@@ -38,19 +38,24 @@ export interface IGameState<IMyGameBoard, IMyGameMove> {
     nonce: number
 
     getWinnerId(): number | null;
+
     makeNewGameState(
         contractGameState: TContractGameState,
         valid: boolean,
         gameMove: IGameMove,
         fromOpponent: boolean,
     ): IGameState<IMyGameBoard, IMyGameMove>
+
     composeMove(
         move: IMyGameMove,
         nextContractGameState: TContractGameState,
         valid: boolean,
         playerAddress: string): IGameMove;
+
     signMove(gameMove: IGameMove, playerAddress: string): Promise<ISignedGameMove>
+
     toGameStateContractParams(): TContractGameState
+
     makeNewGameStateFromSignedMove(signedMove: ISignedGameMove, valid: boolean, isOpponentMove: boolean): IGameState<IMyGameBoard, IMyGameMove>
 }
 
@@ -70,10 +75,12 @@ export abstract class BaseGameState<T1 extends IMyGameBoard<T2>, T2 extends IMyG
     isFinished: boolean = false;
 
     abstract encode(): string;
+
     abstract fromEncodedBoard(encodedBoardState: string): T1;
+
     abstract fromEncodedMove(encodedMove: string, opponentMove: boolean): T2;
 
-    constructor({ gameId, playerType }: { gameId: number; playerType: TPlayer; }) {
+    constructor({gameId, playerType}: { gameId: number; playerType: TPlayer; }) {
         this.gameId = gameId;
         this.playerType = playerType;
         this.playerId = playerType === 'X' ? 0 : 1;
@@ -102,7 +109,7 @@ export abstract class BaseGameState<T1 extends IMyGameBoard<T2>, T2 extends IMyG
     }
 
     toGameStateContractParams(): TContractGameState {
-        return { gameId: this.gameId, nonce: this.nonce, state: this.encode() };
+        return {gameId: this.gameId, nonce: this.nonce, state: this.encode()};
     }
 
     getWinnerId(): number | null {
@@ -125,22 +132,22 @@ export abstract class BaseGameState<T1 extends IMyGameBoard<T2>, T2 extends IMyG
         return nextState;
     }
 
-    protected _makeNewGameStateFromSignedMove(signedMove: ISignedGameMove, valid: boolean, nonceIncrement: number): this {
+    protected _makeNewGameStateFromSignedMove(signedMove: ISignedGameMove, valid: boolean): this {
         return this.makeNewGameState({
             gameId: signedMove.gameMove.gameId,
-            nonce: signedMove.gameMove.nonce + nonceIncrement,
+            nonce: signedMove.gameMove.nonce + 1,
             state: signedMove.gameMove.newState,
         }, valid);
     }
 
     makeNewGameStateFromSignedMove(signedMove: ISignedGameMove, valid: boolean, isOpponentMove: boolean): this {
         if (isOpponentMove) {
-            const nextState = this._makeNewGameStateFromSignedMove(signedMove, valid, 1);
+            const nextState = this._makeNewGameStateFromSignedMove(signedMove, valid);
             nextState.lastOpponentMove = signedMove;
             this._updateMoveHistory(nextState, this.fromEncodedMove(signedMove.gameMove.move, true), valid);
             return Object.freeze(nextState);
         }
-        const nextState = this._makeNewGameStateFromSignedMove(signedMove, valid, 0);
+        const nextState = this._makeNewGameStateFromSignedMove(signedMove, valid);
         nextState.lastMove = signedMove;
         this._updateMoveHistory(nextState, this.fromEncodedMove(signedMove.gameMove.move, false), valid);
         return Object.freeze(nextState);
