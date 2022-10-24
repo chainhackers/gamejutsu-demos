@@ -201,7 +201,6 @@ export const checkIsValidMove = async (
   return response;
 };
 
-//function transition(GameState calldata state, uint8 playerId, bytes calldata move) external pure returns (GameState memory);
 export const transition = async (
   contract: ethers.Contract,
   gameState: TContractGameState,

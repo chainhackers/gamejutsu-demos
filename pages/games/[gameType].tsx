@@ -344,7 +344,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
         if (!gameId) {
             return;
         }
-        console.log('polling for opponent address');
+        console.log('polling for opponent address, gameId=', gameId);
         let players: [string, string] = await gameApi.getPlayers(
             getArbiter(),
             BigNumber.from(gameId),

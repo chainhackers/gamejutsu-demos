@@ -62,7 +62,7 @@ export const Checkers: React.FC<ICheckersProps> = ({
         if (lastMove) {
             return;
         }
-        if (!selectedCell) {
+        if (selectedCell == null) {
             setSelectedCell(i);
             return;
         }
