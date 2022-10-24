@@ -8,6 +8,10 @@ import { getRulesContract, transition } from 'gameApi';
 import { Button } from 'components/shared';
 import { t } from 'i18next';
 import cn from 'classnames';
+export type TLastMove = {
+    from: number;
+    to: number;
+} | null;
 
 export const Checkers: React.FC<ICheckersProps> = ({
     gameState,
@@ -16,7 +20,9 @@ export const Checkers: React.FC<ICheckersProps> = ({
 }) => {
 
     const [selectedCell, setSelectedCell] = useState<number | null>(null);
-    const [lastMove, setLastMove] = useState<{ from: number, to: number } | null>(null);
+    
+
+    const [lastMove, setLastMove] = useState<TLastMove>(null);
 
     const boardState = gameState?.currentBoard || CheckersBoard.empty();
 
@@ -87,6 +93,7 @@ export const Checkers: React.FC<ICheckersProps> = ({
                     isFinished={!gameState || gameState?.isFinished}
                     selectedCell={selectedCell}
                     disputableMoves={boardState.disputableMoves}
+                    lastMove={lastMove}
                 />
             </div>
             {lastMove && (
