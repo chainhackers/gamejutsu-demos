@@ -45,13 +45,6 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   const router = useRouter();
   let gameId = parseInt(router.query.game as string);
 
-  const initialTicTacToeState = new TicTacToeState({ gameId: 1, playerType: 'X' });
-
-  const getInitialState = (gameId: number, playerType: TPlayer) => {
-    let initialCheckersState = new CheckersState({ gameId, playerType });
-    return initialCheckersState;
-  }
-
   const [playerIngameId, setPlayerIngameId] = useState<0 | 1>(0);
   const [isInDispute, setIsInDispute] = useState<boolean>(false);
   const [finishedGameState, setFinishedGameState] = useState<FinishedGameState | null>(null);
@@ -75,14 +68,18 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
 
   const playersTypesMap = { 0: 'X', 1: 'O' };
 
+    const getInitialState = () => {
+        const playerType: TPlayer = playerIngameId === 0 ? 'X' : 'O'
+        if (gameType == 'tic-tac-toe') {
+            return new TicTacToeState({gameId, playerType})
+        }
+        return new CheckersState({gameId, playerType})
+    }
 
-  let gameState: IGameState<any, any>;
-  let setGameState: ((arg0: any) => void);
-  if (gameType == 'tic-tac-toe') {
-    [gameState, setGameState] = useState<IGameState<any, any>>(initialTicTacToeState);
-  } else {
-    [gameState, setGameState] = useState<IGameState<any, any>>(getInitialState(1, 'X'));
-  }
+    let gameState: IGameState<any, any>;
+    let setGameState: ((arg0: any) => void);
+
+    [gameState, setGameState] = useState<IGameState<any, any>>(getInitialState());
 
   let { loading, collectedMessages, sendMessage, lastMessages, initClient, client } = useConversation(
     opponentAddress!,
@@ -100,13 +97,6 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       return;
     }
     setOpponentAddress(opponentAddress);
-
-    if (gameType == 'tic-tac-toe') {
-      setGameState(new TicTacToeState({ gameId: gameId, playerType: playerIngameId === 0 ? 'X' : 'O' }));
-    }
-    if (gameType == 'checkers') {
-      setGameState(getInitialState(gameId, playerIngameId === 0 ? 'X' : 'O'));
-    }
     initClient(getSigner())
   };
 

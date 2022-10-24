@@ -24,8 +24,7 @@ export const Conversation = ({
     const {sendMessage, loading, collectedMessages} = useConversation(
         recipientWalletAddr,
         gameId,
-        false,
-        true
+        false
     )
 
     const hasMessages = collectedMessages.length > 0
