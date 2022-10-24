@@ -11,7 +11,8 @@ function formatGameMove(anyMessage: IAnyMessage): {
     newState: string,
     move: string,
     signatures: string,
-    nonce: string
+    nonce: string,
+    gameId: string,
 } | null {
     let signedGameMove = anyMessage.messageType == "ISignedGameMove" && anyMessage.message as ISignedGameMove;
     if (!signedGameMove) {
@@ -23,6 +24,7 @@ function formatGameMove(anyMessage: IAnyMessage): {
                 TicTacToeBoard.fromEncoded(signedGameMove.gameMove.oldState)),
             newState: JSON.stringify(
                 TicTacToeBoard.fromEncoded(signedGameMove.gameMove.newState)),
+            gameId: signedGameMove.gameMove.gameId.toString(),
             nonce: signedGameMove.gameMove.nonce.toString(),
             move: JSON.stringify(
                 defaultAbiCoder.decode(TIC_TAC_TOE_MOVE_TYPES, signedGameMove.gameMove.move)
@@ -36,6 +38,7 @@ function formatGameMove(anyMessage: IAnyMessage): {
                 CheckersBoard.fromEncoded(signedGameMove.gameMove.oldState)),
             newState: JSON.stringify(
                 CheckersBoard.fromEncoded(signedGameMove.gameMove.newState)),
+            gameId: signedGameMove.gameMove.gameId.toString(),
             nonce: signedGameMove.gameMove.nonce.toString(),
             move: JSON.stringify(
                 defaultAbiCoder.decode(CHECKERS_MOVE_TYPES, signedGameMove.gameMove.move)),
@@ -67,6 +70,10 @@ export const XMTPChatLogElement: React.FC<XMTPChatLogElementPropsI> = ({
             <div className={styles.row}>
                 <div className={styles.title}>Date:</div>
                 <div className={styles.data}>{anyMessage.underlyingMessage.sent?.toISOString()}</div>
+            </div>
+            <div className={styles.row}>
+                <div className={styles.title}>Game Id:</div>
+                <div className={styles.data}>{formattedMessage?.gameId}</div>
             </div>
             <div className={styles.row}>
                 <div className={styles.title}>Nonce:</div>
