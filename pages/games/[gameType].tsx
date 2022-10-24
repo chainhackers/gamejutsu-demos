@@ -43,7 +43,7 @@ const FETCH_OPPONENT_ADDRESS_TIMEOUT = 2500;
 
 const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   const router = useRouter();
-  let gameId = parseInt(router.query.gameId as string); //TODO redirect to ?gameId= when gameId is set
+  let gameId = parseInt(router.query.game as string);
 
   const initialTicTacToeState = new TicTacToeState({ gameId: 1, playerType: 'X' });
 
@@ -87,7 +87,6 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   let { loading, collectedMessages, sendMessage, lastMessages, initClient, client } = useConversation(
     opponentAddress!,
     gameId,
-    false,
     true
   )
 
@@ -221,8 +220,8 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       gameType
     })
 
-    gameId = proposeGameResult.gameId.toNumber();
     setPlayerIngameId(PROPOSER_INGAME_ID);
+    return proposeGameResult.gameId.toNumber();
   }
 
   const acceptGameHandler = async (acceptedGameId: number, stake: string): Promise<void> => {
@@ -248,7 +247,6 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     let opponent = acceptGameResult.players[PROPOSER_INGAME_ID];
     setOpponentAddress(opponent);
     setPlayerIngameId(ACCEPTER_INGAME_ID);
-    gameId = acceptGameResult.gameId.toNumber();
   };
 
   const finishTimeoutHandler = async () => {

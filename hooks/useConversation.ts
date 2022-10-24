@@ -14,7 +14,7 @@ import {
 import { FinishedGameState } from "../gameApi";
 import { TGameType } from 'types/game'
 
-export const MESSAGES_PER_PAGE = 100;
+export const MESSAGES_PER_PAGE = 20;
 
 let stream: Stream<Message>
 
@@ -120,7 +120,6 @@ async function getMessageHistory(conversation: Conversation, gameId: number, sto
 const useConversation = (
     peerAddress: string,
     gameId: number,
-    newGame: boolean,
     stopOnFirstMove: boolean,
 ) => {
     const { client, initClient } = useContext(XmtpContext);
@@ -160,15 +159,13 @@ const useConversation = (
                 setMessageStates(messages);
             }
         }
-        if (!newGame) {
-            getMessageHistory(conversation, gameId, stopOnFirstMove).then(({ messages }) => {
-                setMessageStates(messages);
-            }).then( // we can lose some useless messages here
-                () => streamMessages()
-            )
-        } else {
-            streamMessages();
-        }
+    
+        getMessageHistory(conversation, gameId, stopOnFirstMove).then(({ messages }) => {
+            setMessageStates(messages);
+        }).then( // we can lose some useless messages here
+            () => streamMessages()
+        )
+
         return () => {
             const closeStream = async () => {
                 if (!stream) return;

@@ -1,5 +1,5 @@
 export interface SelectPrizePropsI {
   children?: React.ReactNode;
   gameId: string | undefined;
-  createNewGameHandler: (isPaid?: boolean) => Promise<void>;
+  createNewGameHandler: (isPaid?: boolean) => Promise<number>;
 }

@@ -13,11 +13,6 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({ createNewGameHandler 
   const [stakeValue, setStakeValue] = useState<string>('0.00');
   const { t } = useTranslation();
   const router = useRouter();
-  // console.log(router);
-  const { query } = router;
-  // console.log(query);
-
-  // console.log('gameId in prize', gameId);
 
   const selectPrizeHandler = (prize: 'free' | 'stake' | null) => {
     setSelected(prize);
@@ -31,8 +26,8 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({ createNewGameHandler 
     console.log('selected', selected);
     selected === 'stake';
     createNewGameHandler(selected === 'stake')
-      .then(() => {
-        router.push(`/games/${query.gameType}`);
+      .then((gameId) => {
+        router.push(`/games/${router.query.gameType}?game=${gameId}`);
       })
       .catch((error) => {
         setCreatingGameError('Failed to create new game');
@@ -43,7 +38,7 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({ createNewGameHandler 
       });
   };
   const returnButtonClickHandler = () => {
-    router.push(`/games/${query.gameType}?select=true`);
+    router.push(`/games/${router.query.gameType}?select=true`);
   };
   return (
     <div className={styles.container}>

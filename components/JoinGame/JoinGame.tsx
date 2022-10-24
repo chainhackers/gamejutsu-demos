@@ -28,12 +28,11 @@ export const JoinGame: React.FC<JoinGamePropsI> = ({ acceptGameHandler }) => {
     : [];
 
   const clickHandler = async (gameId: string, stake: string) => {
-    // router.push(`/games/${router.query.gameType}?acceptGameId=${gameId}&prize=true`);
     setAcceptingError(null);
     setAccepting(true);
     acceptGameHandler(parseInt(gameId), stake)
       .then(() => {
-        router.push(`/games/${router.query.gameType}?gameId=${gameId}`);
+        router.push(`/games/${router.query.gameType}?game=${gameId}`);
       })
       .catch((error) => {
         setAcceptingError(t('joinGame.error'));
