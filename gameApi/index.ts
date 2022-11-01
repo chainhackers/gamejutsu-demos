@@ -189,13 +189,17 @@ export const disputeMove = async (
   .addPlayerDisqualified(playerDisqualifiedEvent.args);
 };
 
+
 export const checkIsValidMove = async (
   contract: ethers.Contract,
   gameState: TContractGameState,
   playerIngameId: number,
   encodedMove: string,
 ) => {
+  const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));//TODO
+
   console.log('checkIsValidMove', { gameState, playerIngameId, encodedMove });
+  await sleep(1000);
   const response = contract.isValidMove(gameState, playerIngameId, encodedMove);
   console.log('response', response);
   return response;

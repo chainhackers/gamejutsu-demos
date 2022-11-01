@@ -148,7 +148,7 @@ const useConversation = (
         function setMessageStates(messages: IAnyMessage[]) {
             if (messages.length) {
                 setCollectedMessages((prevValue) => [...messages, ...prevValue])
-                setLastMessages(messages);
+                setLastMessages([...messages]); //TODO
             }
         }
 

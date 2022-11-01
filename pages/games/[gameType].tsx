@@ -43,7 +43,7 @@ const FETCH_OPPONENT_ADDRESS_TIMEOUT = 2500;
 
 const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   const router = useRouter();
-  let gameId = parseInt(router.query.game as string);
+  let gameId = 149;//parseInt(router.query.game as string);
 
   const [playerIngameId, setPlayerIngameId] = useState<0 | 1>(0);
   const [isInDispute, setIsInDispute] = useState<boolean>(false);
@@ -277,39 +277,52 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     setIsInDispute(false);
   };
 
+
+async function processOneMessage(i: number){//TODO
+  const lastMessage = lastMessages[i];
+  if (lastMessage.messageType === 'TimeoutStartedEvent') {
+    setIsTimeoutInited(true);
+    setIsResolveTimeOutAllowed(true);
+    setIsFinishTimeoutAllowed(true);
+    setIsTimeoutRequested(true);
+  } else if (lastMessage.messageType === 'TimeoutResolvedEvent') {
+    setIsTimeoutInited(false);
+    setIsResolveTimeOutAllowed(false);
+    setIsFinishTimeoutAllowed(false);
+    setIsTimeoutRequested(false); //TODO consider one state instead of 4
+  }
+  if (lastMessage.messageType == 'ISignedGameMove') {
+    const signedMove = lastMessage.message as ISignedGameMove;
+
+    const isValid = await _isValidSignedMove(getArbiter(), signedMove);
+   
+      //TODO maybe replace with sender address
+      const isOpponentMove = signedMove.gameMove.player === opponentAddress;
+      const nextGameState = gameState.makeNewGameStateFromSignedMove(
+        signedMove,
+        isValid,
+        isOpponentMove);
+      setGameState(nextGameState);
+      setIsInvalidMove(!isValid);
+      if (nextGameState.getWinnerId() !== null) {
+        if (playerIngameId === nextGameState.getWinnerId()) {
+          runFinishGameHandler(nextGameState);
+        }
+      }
+  }
+
+  if(i > 0){
+    setTimeout(function(){
+      processOneMessage(i - 1)
+    }, 1000);
+  }
+}
+
   useEffect(() => {
-    for (let i = lastMessages.length - 1; i >= 0; i--) {
-      const lastMessage = lastMessages[i];
-      if (lastMessage.messageType === 'TimeoutStartedEvent') {
-        setIsTimeoutInited(true);
-        setIsResolveTimeOutAllowed(true);
-        setIsFinishTimeoutAllowed(true);
-        setIsTimeoutRequested(true);
-      } else if (lastMessage.messageType === 'TimeoutResolvedEvent') {
-        setIsTimeoutInited(false);
-        setIsResolveTimeOutAllowed(false);
-        setIsFinishTimeoutAllowed(false);
-        setIsTimeoutRequested(false); //TODO consider one state instead of 4
-      }
-      if (lastMessage.messageType == 'ISignedGameMove') {
-        const signedMove = lastMessage.message as ISignedGameMove;
-        _isValidSignedMove(getArbiter(), signedMove).then((isValid) => {
-          //TODO maybe replace with sender address
-          const isOpponentMove = signedMove.gameMove.player === opponentAddress;
-          const nextGameState = gameState.makeNewGameStateFromSignedMove(
-            signedMove,
-            isValid,
-            isOpponentMove);
-          setGameState(nextGameState);
-          setIsInvalidMove(!isValid);
-          if (nextGameState.getWinnerId() !== null) {
-            if (playerIngameId === nextGameState.getWinnerId()) {
-              runFinishGameHandler(nextGameState);
-            }
-          }
-        });
-      }
-    }
+    // for (let i = lastMessages.length - 1; i >= 0; i--) {
+
+    // }
+    processOneMessage(lastMessages.length - 1);
   }, [lastMessages]);
 
   useEffect(() => {
