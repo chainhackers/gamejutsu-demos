@@ -68,18 +68,18 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
 
   const playersTypesMap = { 0: 'X', 1: 'O' };
 
-    const getInitialState = () => {
-        const playerType: TPlayer = playerIngameId === 0 ? 'X' : 'O'
-        if (gameType == 'tic-tac-toe') {
-            return new TicTacToeState({gameId, playerType})
-        }
-        return new CheckersState({gameId, playerType})
+  const getInitialState = () => {
+    const playerType: TPlayer = playerIngameId === 0 ? 'X' : 'O'
+    if (gameType == 'tic-tac-toe') {
+      return new TicTacToeState({ gameId, playerType })
     }
+    return new CheckersState({ gameId, playerType })
+  }
 
-    let gameState: IGameState<any, any>;
-    let setGameState: ((arg0: any) => void);
+  let gameState: IGameState<any, any>;
+  let setGameState: ((arg0: any) => void);
 
-    [gameState, setGameState] = useState<IGameState<any, any>>(getInitialState());
+  [gameState, setGameState] = useState<IGameState<any, any>>(getInitialState());
 
   let { loading, collectedMessages, sendMessage, lastMessages, initClient, client } = useConversation(
     opponentAddress!,
@@ -278,24 +278,24 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   };
 
 
-async function processOneMessage(i: number){//TODO
-  const lastMessage = lastMessages[i];
-  if (lastMessage.messageType === 'TimeoutStartedEvent') {
-    setIsTimeoutInited(true);
-    setIsResolveTimeOutAllowed(true);
-    setIsFinishTimeoutAllowed(true);
-    setIsTimeoutRequested(true);
-  } else if (lastMessage.messageType === 'TimeoutResolvedEvent') {
-    setIsTimeoutInited(false);
-    setIsResolveTimeOutAllowed(false);
-    setIsFinishTimeoutAllowed(false);
-    setIsTimeoutRequested(false); //TODO consider one state instead of 4
-  }
-  if (lastMessage.messageType == 'ISignedGameMove') {
-    const signedMove = lastMessage.message as ISignedGameMove;
+  async function processOneMessage(i: number) {//TODO
+    const lastMessage = lastMessages[i];
+    if (lastMessage.messageType === 'TimeoutStartedEvent') {
+      setIsTimeoutInited(true);
+      setIsResolveTimeOutAllowed(true);
+      setIsFinishTimeoutAllowed(true);
+      setIsTimeoutRequested(true);
+    } else if (lastMessage.messageType === 'TimeoutResolvedEvent') {
+      setIsTimeoutInited(false);
+      setIsResolveTimeOutAllowed(false);
+      setIsFinishTimeoutAllowed(false);
+      setIsTimeoutRequested(false); //TODO consider one state instead of 4
+    }
+    if (lastMessage.messageType == 'ISignedGameMove') {
+      const signedMove = lastMessage.message as ISignedGameMove;
 
-    const isValid = await _isValidSignedMove(getArbiter(), signedMove);
-   
+      const isValid = await _isValidSignedMove(getArbiter(), signedMove);
+
       //TODO maybe replace with sender address
       const isOpponentMove = signedMove.gameMove.player === opponentAddress;
       const nextGameState = gameState.makeNewGameStateFromSignedMove(
@@ -309,20 +309,15 @@ async function processOneMessage(i: number){//TODO
           runFinishGameHandler(nextGameState);
         }
       }
+    }
   }
-
-  if(i > 0){
-    setTimeout(function(){
-      processOneMessage(i - 1)
-    }, 1000);
-  }
-}
 
   useEffect(() => {
-    // for (let i = lastMessages.length - 1; i >= 0; i--) {
-
-    // }
-    processOneMessage(lastMessages.length - 1);
+    for (let i = lastMessages.length - 1; i >= 0; i--) {
+      setTimeout(function () {
+        processOneMessage(i)
+      }, 100 * (lastMessages.length - i - 1));
+    }
   }, [lastMessages]);
 
   useEffect(() => {
@@ -342,41 +337,41 @@ async function processOneMessage(i: number){//TODO
     ]);
   }, [opponentAddress, gameId]);
 
-    useEffect(() => {
-        if (gameState.lastOpponentMove?.gameMove.player === opponentAddress && isInvalidMove) {
-            setIsDisputeAvailavle(true);
-            return;
-        }
-        setIsDisputeAvailavle(false);
-    }, [isInvalidMove]);
+  useEffect(() => {
+    if (gameState.lastOpponentMove?.gameMove.player === opponentAddress && isInvalidMove) {
+      setIsDisputeAvailavle(true);
+      return;
+    }
+    setIsDisputeAvailavle(false);
+  }, [isInvalidMove]);
 
-    useInterval(async () => {
-        if (opponentAddress) {
-            return;
-        }
-        if (!gameId) {
-            return;
-        }
-        console.log('polling for opponent address, gameId=', gameId);
-        let players: [string, string] = await gameApi.getPlayers(
-            getArbiter(),
-            BigNumber.from(gameId),
-        );
-        const address = account.address;
-        if (!address) {
-            return;
-        }
-        if (!players.includes(address)) {
-            throw new Error(`Player ${address} is not in game ${gameId}, players: ${players}`);
-        }
-        const inGameId = players.indexOf(address) == 0 ? 0 : 1;
-        setPlayerIngameId(inGameId);
-        let opponent = players[1 - inGameId];
-        if (!opponent || opponent == ZERO_ADDRESS) {
-            return;
-        }
-        setOpponentAddress(opponent);
-    }, FETCH_OPPONENT_ADDRESS_TIMEOUT);
+  useInterval(async () => {
+    if (opponentAddress) {
+      return;
+    }
+    if (!gameId) {
+      return;
+    }
+    console.log('polling for opponent address, gameId=', gameId);
+    let players: [string, string] = await gameApi.getPlayers(
+      getArbiter(),
+      BigNumber.from(gameId),
+    );
+    const address = account.address;
+    if (!address) {
+      return;
+    }
+    if (!players.includes(address)) {
+      throw new Error(`Player ${address} is not in game ${gameId}, players: ${players}`);
+    }
+    const inGameId = players.indexOf(address) == 0 ? 0 : 1;
+    setPlayerIngameId(inGameId);
+    let opponent = players[1 - inGameId];
+    if (!opponent || opponent == ZERO_ADDRESS) {
+      return;
+    }
+    setOpponentAddress(opponent);
+  }, FETCH_OPPONENT_ADDRESS_TIMEOUT);
 
   if (!!gameType && !!query && query?.join === 'true') {
     return <JoinGame acceptGameHandler={acceptGameHandler} />;
