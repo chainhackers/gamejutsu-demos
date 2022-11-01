@@ -40,7 +40,7 @@ export const Checkers: React.FC<ICheckersProps> = ({
         }
 
         const move: CHECKERSMove = CHECKERSMove.fromMove([lastMove.from, lastMove.to, jump, passMove], gameState.playerType);
-        console.log('move 1-based index', lastMove.from + 1, lastMove.to + 1, jump, passMove);
+        console.log('move', lastMove.from, lastMove.to, jump, passMove);
         setLastMove(null);
 
         let address = await getSignerAddress();

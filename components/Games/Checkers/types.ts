@@ -65,10 +65,7 @@ export class CHECKERSMove implements IMyGameMove {
 
     private constructor(encodedMove: string, player: TPlayer) {
         this.encodedMove = encodedMove;
-        let from, to;
-        [from, to, this.isJump, this.passMoveToOpponent] = defaultAbiCoder.decode(CHECKERS_MOVE_TYPES, encodedMove);
-        this.from = from - 1;
-        this.to = to - 1;
+        [this.from, this.to, this.isJump, this.passMoveToOpponent] = defaultAbiCoder.decode(CHECKERS_MOVE_TYPES, encodedMove);
         this.player = player;
     }
 
@@ -77,7 +74,7 @@ export class CHECKERSMove implements IMyGameMove {
     }
 
     static fromMove([from, to, isJump, passMoveToOpponent]: TCheckersContractMove, player: TPlayer): CHECKERSMove {
-        const encodedMove = defaultAbiCoder.encode(CHECKERS_MOVE_TYPES, [from + 1, to + 1, isJump, passMoveToOpponent]);
+        const encodedMove = defaultAbiCoder.encode(CHECKERS_MOVE_TYPES, [from, to, isJump, passMoveToOpponent]);
         return Object.seal(new CHECKERSMove(encodedMove, player));
     }
 }
