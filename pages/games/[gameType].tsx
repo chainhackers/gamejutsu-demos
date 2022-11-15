@@ -14,13 +14,13 @@ import {
 } from 'components';
 
 import styles from 'pages/games/gameType.module.scss';
-import { ETTicTacToe } from "components/Games/ET-Tic-Tac-Toe";
+import { ETTicTacToe, PlayerType as TicTacToePlayerType } from "components/Games/ET-Tic-Tac-Toe";
 import { TicTacToeState } from "components/Games/ET-Tic-Tac-Toe/types";
 import gameApi, { _isValidSignedMove, getArbiter, getSigner, getRulesContract, finishGame, disputeMove, initTimeout, resolveTimeout, finalizeTimeout, FinishedGameState } from "../../gameApi";
 import { ISignedGameMove, SignedGameMove } from "../../types/arbiter";
 import { signMoveWithAddress } from 'helpers/session_signatures';
 import { useAccount } from 'wagmi';
-import { Checkers } from 'components/Games/Checkers';
+import { Checkers, PlayerType as CheckersPlayerType } from 'components/Games/Checkers';
 import { CheckersState } from 'components/Games/Checkers/types';
 import { IGameState, TPlayer } from 'components/Games/types';
 import { GameProposedEvent, GameProposedEventObject } from "../../.generated/contracts/esm/types/polygon/Arbiter";
@@ -66,7 +66,15 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   const { query } = useRouter();
   const account = useAccount();
 
-  const playersTypesMap = { 0: 'X', 1: 'O' };
+  const playersTypesMap: { [id in TGameType]: { 0: JSX.Element, 1: JSX.Element}} = {
+    'tic-tac-toe': {
+      0: <TicTacToePlayerType playerIngameId={0}/>,
+      1: <TicTacToePlayerType playerIngameId={1}/>,
+    }, 'checkers': {
+      0: <CheckersPlayerType playerIngameId={0}/>,
+      1: <CheckersPlayerType playerIngameId={1}/>,
+    }
+  }
 
   const getInitialState = () => {
     const playerType: TPlayer = playerIngameId === 0 ? 'X' : 'O'
@@ -326,13 +334,13 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
         playerName: playerIngameId === 0 ? 'Player1' : 'Player2',
         address: gameId && account.address ? account.address : null,
         avatarUrl: '/images/empty_avatar.png',
-        playerType: playersTypesMap[playerIngameId],
+        playerType: playersTypesMap[gameType][playerIngameId]
       },
       {
         playerName: playerIngameId === 1 ? 'Player1' : 'Player2',
         address: opponentAddress,
         avatarUrl: '/images/empty_avatar.png',
-        playerType: playersTypesMap[playerIngameId === 0 ? 1 : 0],
+        playerType: playersTypesMap[gameType][playerIngameId === 0 ? 1 : 0]
       },
     ]);
   }, [opponentAddress, gameId]);

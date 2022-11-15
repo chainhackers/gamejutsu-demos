@@ -1,0 +1,37 @@
+.container { 
+  
+  width: 25px;
+  height: 25px;
+
+  &.round {
+    border-radius: 50%;
+    border: 3px solid black;
+    box-shadow: 0 0 8px rgba(#000, 0.1);
+    
+  }
+
+  &.cross {
+    // background-color: aqua;
+    position: relative;
+    transform: rotate(45deg);
+    &::after {
+      content: "";
+      position: absolute;
+      width: 110%;
+      height: 3px;
+      top: 55%;
+      transform: translateY(-50%);
+      background-color: #000;
+    }
+    &::before {
+      content: "";
+      position: absolute;
+      width: 3px;
+      height: 110%;
+      top: 0;
+      left: 55%;
+      transform: translateX(-50%);
+      background-color: #000;
+    }
+  }
+ }

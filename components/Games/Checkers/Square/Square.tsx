@@ -24,6 +24,15 @@ export const Square: React.FC<SquarePropsI> = (
             
         >
             <span style={{
+                fontSize: '14px',
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)'
+                }}>
+                {value}
+            </span>
+            <span style={{
                 fontSize: '12px',
                 position: 'absolute',
                 color: 'lightgrey',
