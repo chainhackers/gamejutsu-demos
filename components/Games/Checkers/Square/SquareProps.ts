@@ -6,4 +6,5 @@ export interface SquarePropsI {
     disputable: boolean;
     selected: boolean;
     number?: number;
+    flip?: boolean;
 }

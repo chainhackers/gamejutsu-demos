@@ -8,6 +8,7 @@ export const Player: React.FC<PlayerPropsI> = ({
   address,
   playerType,
   avatarUrl,
+  moves,
 }) => {
   // const address = '0x1215991085d541A586F0e1968355A36E58C9b2b4';
   const truncatedAddress = address ? address.slice(0, 5) + '...' + address.slice(-5) : null;
@@ -26,7 +27,7 @@ export const Player: React.FC<PlayerPropsI> = ({
       </div>
       {address ? (
         <div className={styles.playerData}>
-          <div className={styles.name}>{playerName}</div>
+          <div className={styles.name}>{playerName}&nbsp;{moves && (<span className={styles.move}>move</span>)}</div>
           <div className={styles.address}>{truncatedAddress}</div>
         </div>
       ) : (

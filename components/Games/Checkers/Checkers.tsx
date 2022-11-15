@@ -16,11 +16,13 @@ export type TLastMove = {
 export const Checkers: React.FC<ICheckersProps> = ({
     gameState,
     getSignerAddress,
-    sendSignedMove
+    sendSignedMove,
+    playerIngameId,
 }) => {
 
     const [selectedCell, setSelectedCell] = useState<number | null>(null);
     
+
 
     const [lastMove, setLastMove] = useState<TLastMove>(null);
 
@@ -86,7 +88,7 @@ export const Checkers: React.FC<ICheckersProps> = ({
 
     return (
         <div className={styles.container}>
-            <div style = {gameState?.playerId === 0 ? {transform:'rotate(180deg)', display:'inherit'}: {display:'inherit'}}>
+            <div style = {playerIngameId === 0 ? {transform:'rotate(180deg)', display:'inherit'}: {display:'inherit'}}>
                 <Board 
                     squares={boardState.cells}
                     onClick={clickHandler}
@@ -94,6 +96,7 @@ export const Checkers: React.FC<ICheckersProps> = ({
                     selectedCell={selectedCell}
                     disputableMoves={boardState.disputableMoves}
                     lastMove={lastMove}
+                    flip={playerIngameId === 0}
                 />
             </div>
             {lastMove && (
@@ -108,5 +111,3 @@ export const Checkers: React.FC<ICheckersProps> = ({
         </div>
 );
 };
-
-

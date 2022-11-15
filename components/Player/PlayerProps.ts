@@ -6,4 +6,5 @@ export interface PlayerPropsI {
   address: string | null;
   playerType: React.ReactNode;
   avatarUrl: string;
+  moves?: boolean;
 }

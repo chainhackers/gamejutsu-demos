@@ -329,21 +329,36 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   }, [lastMessages]);
 
   useEffect(() => {
+
+    const isPlayerMoves = (gameType: TGameType, gameState: IGameState<any, any>, playerIngameId: 0 | 1) => {
+      switch (gameType) {
+        case 'checkers': 
+          return playerIngameId === 0 ? !gameState.currentBoard.redMoves : gameState.currentBoard.redMoves;
+        case 'tic-tac-toe':
+          return false;
+        default:
+          throw new Error('unknown game type');
+      }
+    }
+
+    console.log('ISMOVE', isPlayerMoves(gameType, gameState, playerIngameId))
     setPlayers([
       {
         playerName: playerIngameId === 0 ? 'Player1' : 'Player2',
         address: gameId && account.address ? account.address : null,
         avatarUrl: '/images/empty_avatar.png',
-        playerType: playersTypesMap[gameType][playerIngameId]
+        playerType: playersTypesMap[gameType][playerIngameId],
+        moves: isPlayerMoves(gameType, gameState, playerIngameId),
       },
       {
         playerName: playerIngameId === 1 ? 'Player1' : 'Player2',
         address: opponentAddress,
         avatarUrl: '/images/empty_avatar.png',
-        playerType: playersTypesMap[gameType][playerIngameId === 0 ? 1 : 0]
+        playerType: playersTypesMap[gameType][playerIngameId === 0 ? 1 : 0],
+        moves: !isPlayerMoves(gameType, gameState, playerIngameId),
       },
     ]);
-  }, [opponentAddress, gameId]);
+  }, [opponentAddress, gameId, gameType, gameState]);
 
   useEffect(() => {
     if (gameState.lastOpponentMove?.gameMove.player === opponentAddress && isInvalidMove) {
@@ -409,15 +424,15 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     />
   }
   if (gameType === 'checkers') {
-    gameComponent = <div className={styles.container}>
+    gameComponent =
       <Checkers
         gameState={gameState as CheckersState}
         getSignerAddress={() => {
           return getSigner().getAddress()
         }}
         sendSignedMove={sendSignedMoveHandler}
+        playerIngameId={playerIngameId}
       />
-    </div>
   }
   if (gameComponent) {
     if (gameType === 'checkers' || gameType === 'tic-tac-toe') {
@@ -444,6 +459,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
             isInDispute={isInDispute}
             finishedGameState={finishedGameState}
             onConnect={setConversationHandler}
+            players={players}
           >
             {gameComponent}
           </GameField>

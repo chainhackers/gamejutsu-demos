@@ -7,4 +7,5 @@ export interface ICheckersProps {
     gameState?: CheckersState;
     getSignerAddress: () => Promise<string>;
     sendSignedMove: (move: ISignedGameMove) => void;
+    playerIngameId: 0 | 1;
 }

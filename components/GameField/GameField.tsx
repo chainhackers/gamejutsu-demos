@@ -17,6 +17,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   isInDispute,
   finishedGameState,
   onConnect,
+  players,
 }) => {
   const [isShowShade, setShowShade] = useState<boolean>(true);
   const [isShowExplainMove, SetShowExplainMove] = useState<boolean>(false);
@@ -308,6 +309,8 @@ export const GameField: React.FC<GameFieldPropsI> = ({
       <div className={styles.header}>
         <div className={styles.room}>Game Id: {gameId ? gameId : 'n/a'}</div>
         <div className={styles.message}>
+          {players && (players[0]?.moves || players[1]?.moves) &&
+            <div className={styles.moveMessage}>{players[0].moves ? 'Your move' : 'Opponent\'s move'}</div>}
 
         </div>
         <div className={styles.prize}></div>

@@ -10,4 +10,5 @@ export interface PlayerI {
   address: string | null;
   playerType: React.ReactNode;
   avatarUrl: string;
+  moves?: boolean;
 }
