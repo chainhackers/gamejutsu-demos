@@ -21,12 +21,14 @@ export const Board: React.FC<IBoardProps> = ({
                 onClick={() => {onClick(i)}}
                 disputable={disputableMoves.has(i)}
                 selected={selectedCell == i || lastMove?.to == i || lastMove?.from == i}
+                number={i}    
                 />
                 <Square
                 value={null}
                 onClick={() => {}}
                 disputable={false}
                 selected={false}
+                // number={i}
                 />
                 
             </>
@@ -42,8 +44,10 @@ export const Board: React.FC<IBoardProps> = ({
                 onClick={() => {onClick(i)}}
                 disputable={disputableMoves.has(i)}
                 selected={selectedCell == i || lastMove?.to == i || lastMove?.from == i}
+                number={i}
                 />
-            </> 
+            </>
+        
     };
 
     const getRow = (row: number) => {

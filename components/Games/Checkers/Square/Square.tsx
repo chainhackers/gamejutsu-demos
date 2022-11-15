@@ -6,7 +6,7 @@ import React from "react";
 
 
 export const Square: React.FC<SquarePropsI> = (
-    {value, selected, onClick, disputable}
+    {value, selected, onClick, disputable, number}
 ) => {
     // console.log('Square disputable: ', disputable);
     return (
@@ -23,6 +23,15 @@ export const Square: React.FC<SquarePropsI> = (
             onClick={onClick}
             
         >
+            <span style={{
+                fontSize: '12px',
+                position: 'absolute',
+                color: 'lightgrey',
+                transform: 'rotate(180deg)',
+                left: '0',
+                }}>
+                {number}
+            </span>
         </div>
     );
 };

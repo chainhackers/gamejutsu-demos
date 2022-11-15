@@ -43,7 +43,7 @@ const FETCH_OPPONENT_ADDRESS_TIMEOUT = 2500;
 
 const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   const router = useRouter();
-  let gameId = 149;//parseInt(router.query.game as string);
+  let gameId = 155;//parseInt(router.query.game as string);
 
   const [playerIngameId, setPlayerIngameId] = useState<0 | 1>(0);
   const [isInDispute, setIsInDispute] = useState<boolean>(false);
