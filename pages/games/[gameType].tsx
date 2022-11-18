@@ -42,8 +42,6 @@ const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 const FETCH_OPPONENT_ADDRESS_TIMEOUT = 2500;
 
 const Game: NextPage<IGamePageProps> = ({ gameType }) => {
-  const router = useRouter();
-  let gameId = 155;//parseInt(router.query.game as string);
 
   const [playerIngameId, setPlayerIngameId] = useState<0 | 1>(0);
   const [isInDispute, setIsInDispute] = useState<boolean>(false);
@@ -75,6 +73,8 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       1: <CheckersPlayerType playerIngameId={1}/>,
     }
   }
+
+  const gameId = parseInt(query.game as string);
 
   const getInitialState = () => {
     const playerType: TPlayer = playerIngameId === 0 ? 'X' : 'O'
@@ -319,6 +319,10 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       }
     }
   }
+
+  useEffect(() => {
+    if (Number.isNaN(gameId)) setGameState(getInitialState());
+  }, [gameId]);
 
   useEffect(() => {
     for (let i = lastMessages.length - 1; i >= 0; i--) {
