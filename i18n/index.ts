@@ -8,7 +8,7 @@ const i18nConfig = {
   },
   lng: 'en',
   fallbackLng: 'en',
-  debug: true,
+  debug: false,
 };
 
 i18n.use(initReactI18next).init(i18nConfig);
