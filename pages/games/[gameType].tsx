@@ -321,7 +321,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   }
 
   useEffect(() => {
-    if (Number.isNaN(gameId)) setGameState(getInitialState());
+    if (!Number.isNaN(gameId)) setGameState(getInitialState());
   }, [gameId]);
 
   useEffect(() => {
