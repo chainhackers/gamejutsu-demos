@@ -335,11 +335,12 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   useEffect(() => {
 
     const isPlayerMoves = (gameType: TGameType, gameState: IGameState<any, any>, playerIngameId: 0 | 1) => {
+      console.log('ISMOVE gamestate', gameState);
       switch (gameType) {
         case 'checkers': 
           return playerIngameId === 0 ? !gameState.currentBoard.redMoves : gameState.currentBoard.redMoves;
         case 'tic-tac-toe':
-          return false;
+          return playerIngameId === 0 ? gameState.nonce % 2 === 0 : gameState.nonce % 2 !== 0;
         default:
           throw new Error('unknown game type');
       }
