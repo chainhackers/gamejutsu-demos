@@ -61,6 +61,8 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   const [isFinishTimeoutAllowed, setIsFinishTimeoutAllowed] = useState<boolean>(false);
   const [isTimeoutRequested, setIsTimeoutRequested] = useState<boolean>(false);
 
+  const [checkingFinishGameResults, setCheckingFinishGameResults] = useState<null | { winner: boolean}>(null)
+
   const { query } = useRouter();
   const account = useAccount();
 
@@ -143,6 +145,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       messageType: 'FinishedGameState',
       gameType
     })
+    setCheckingFinishGameResults(null);
     setFinishedGameState(finishedGameResult);
   };
 
@@ -313,9 +316,18 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       setGameState(nextGameState);
       setIsInvalidMove(!isValid);
       if (nextGameState.getWinnerId() !== null) {
+        setCheckingFinishGameResults({winner: playerIngameId === nextGameState.getWinnerId()})
         if (playerIngameId === nextGameState.getWinnerId()) {
           runFinishGameHandler(nextGameState);
         }
+      }
+    }
+    if (lastMessage.messageType === "FinishedGameState") {
+      const {loser } = lastMessage.message as FinishedGameState;
+      console.log('GOT MESSAGE');
+      if (loser === account.address) { 
+        setCheckingFinishGameResults(null);
+        setFinishedGameState(lastMessage.message as FinishedGameState);
       }
     }
   }
@@ -465,6 +477,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
             finishedGameState={finishedGameState}
             onConnect={setConversationHandler}
             players={players}
+            checkingResults={checkingFinishGameResults}
           >
             {gameComponent}
           </GameField>

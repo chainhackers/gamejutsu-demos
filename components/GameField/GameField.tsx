@@ -18,6 +18,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   finishedGameState,
   onConnect,
   players,
+  checkingResults,
 }) => {
   const [isShowShade, setShowShade] = useState<boolean>(true);
   const [isShowExplainMove, SetShowExplainMove] = useState<boolean>(false);
@@ -114,6 +115,15 @@ export const GameField: React.FC<GameFieldPropsI> = ({
       setShowDispute(false);
     }
   }, [finishedGameState]);
+
+  useEffect(() => {
+    if (!!checkingResults) {
+      setShowShade(true);
+      setIsWaiting(false);
+      setIsConnecting(false);
+      setShowDispute(false);
+    }
+  })
 
   const isBadgeAvailable = (data: any, medal: TMedal, achievement: TAchievement): boolean => {
     let entity = data && data.inRowCounterEntities[0];
@@ -286,15 +296,19 @@ export const GameField: React.FC<GameFieldPropsI> = ({
               <div className={styles.notice}>{t('shade.notice')}</div>
             </div>
           )}
-          {finishedGameState && (
-            <>
+          {!!checkingResults &&
+            <div className={styles.checking_results}>
+              { checkingResults && checkingResults.winner &&<p className={styles.message}>{t('shade.checking.winner')}</p>}
+              {checkingResults && !checkingResults.winner && <p className={styles.message}>{t('shade.checking.loser')}</p>}
+              <p className={styles.message}>{t('shade.checking.checking')}</p>
+              </div>}
+          {finishedGameState && (            
               <div className={styles.win}>
                 {makeFinishedGameDescription(finishedGameState)}
                 <div className={styles.small}>
                   {makeFinishedGameReasonDescription(finishedGameState)}
                 </div>
               </div>
-            </>
           )}
           {finishedGameState && (
             <div className={styles.link}>

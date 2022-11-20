@@ -10,4 +10,5 @@ export interface GameFieldPropsI {
   finishedGameState: FinishedGameState | null;
   onConnect: (opponent: string) => Promise<void>;
   players?: PlayerI[];
+  checkingResults: { winner: boolean } | null;
 }
