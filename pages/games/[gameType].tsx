@@ -14,8 +14,8 @@ import {
 } from 'components';
 
 import styles from 'pages/games/gameType.module.scss';
-import { ETTicTacToe, PlayerType as TicTacToePlayerType } from "components/Games/ET-Tic-Tac-Toe";
-import { TicTacToeState } from "components/Games/ET-Tic-Tac-Toe/types";
+import { TicTacToe, PlayerType as TicTacToePlayerType } from "components/Games/Tic-Tac-Toe";
+import { TicTacToeState } from "components/Games/Tic-Tac-Toe/types";
 import gameApi, { _isValidSignedMove, getArbiter, getSigner, getRulesContract, finishGame, disputeMove, initTimeout, resolveTimeout, finalizeTimeout, FinishedGameState } from "../../gameApi";
 import { ISignedGameMove, SignedGameMove } from "../../types/arbiter";
 import { signMoveWithAddress } from 'helpers/session_signatures';
@@ -61,7 +61,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   const [isFinishTimeoutAllowed, setIsFinishTimeoutAllowed] = useState<boolean>(false);
   const [isTimeoutRequested, setIsTimeoutRequested] = useState<boolean>(false);
 
-  const [checkingFinishGameResults, setCheckingFinishGameResults] = useState<null | { winner: boolean}>(null)
+  const [finishGameCheckResult, setFinishGameCheckResult] = useState<null | { winner: boolean}>(null)
 
   const { query } = useRouter();
   const account = useAccount();
@@ -145,7 +145,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       messageType: 'FinishedGameState',
       gameType
     })
-    setCheckingFinishGameResults(null);
+    setFinishGameCheckResult(null);
     setFinishedGameState(finishedGameResult);
   };
 
@@ -316,7 +316,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       setGameState(nextGameState);
       setIsInvalidMove(!isValid);
       if (nextGameState.getWinnerId() !== null) {
-        setCheckingFinishGameResults({winner: playerIngameId === nextGameState.getWinnerId()})
+        setFinishGameCheckResult({winner: playerIngameId === nextGameState.getWinnerId()})
         if (playerIngameId === nextGameState.getWinnerId()) {
           runFinishGameHandler(nextGameState);
         }
@@ -326,7 +326,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       const {loser } = lastMessage.message as FinishedGameState;
       console.log('GOT MESSAGE');
       if (loser === account.address) { 
-        setCheckingFinishGameResults(null);
+        setFinishGameCheckResult(null);
         setFinishedGameState(lastMessage.message as FinishedGameState);
       }
     }
@@ -352,9 +352,9 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
         case 'checkers': 
           return playerIngameId === 0 ? !gameState.currentBoard.redMoves : gameState.currentBoard.redMoves;
         case 'tic-tac-toe':
-          return playerIngameId === 0 ? gameState.nonce % 2 === 0 : gameState.nonce % 2 !== 0;
+          return playerIngameId === gameState.nonce % 2;
         default:
-          throw new Error('unknown game type');
+          throw new Error(`unknown game type: ${gameType}`);
       }
     }
 
@@ -401,7 +401,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     if (!address) {
       return;
     }
-    if (!players.includes(address)) {
+    if (!(players[0] === ZERO_ADDRESS && players[1] === ZERO_ADDRESS) && !players.includes(address)) {
       throw new Error(`Player ${address} is not in game ${gameId}, players: ${players}`);
     }
     const inGameId = players.indexOf(address) == 0 ? 0 : 1;
@@ -432,7 +432,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
 
   let gameComponent = null;
   if (gameType === 'tic-tac-toe') {
-    gameComponent = <ETTicTacToe
+    gameComponent = <TicTacToe
       gameState={gameState as TicTacToeState}
       getSignerAddress={() => {
         return getSigner().getAddress()
@@ -477,7 +477,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
             finishedGameState={finishedGameState}
             onConnect={setConversationHandler}
             players={players}
-            checkingResults={checkingFinishGameResults}
+            finishGameCheckResult={finishGameCheckResult}
           >
             {gameComponent}
           </GameField>

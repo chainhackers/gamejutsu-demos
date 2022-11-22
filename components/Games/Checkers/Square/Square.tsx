@@ -21,17 +21,7 @@ export const Square: React.FC<SquarePropsI> = (
                 value == 'OO' ? styles.redQueen : null,
                 )}
             onClick={onClick}
-            
-        >
-            {/* <span style={{
-                fontSize: '14px',
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)'
-                }}>
-                {value}
-            </span> */}
+        >            
             <span style={{
                 fontSize: '12px',
                 position: 'absolute',

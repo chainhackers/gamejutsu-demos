@@ -1,5 +1,5 @@
 import cn from 'classnames';
-import { Square } from 'components/Games/ET-Tic-Tac-Toe';
+import { Square } from 'components/Games/Tic-Tac-Toe';
 import { NewSquare } from '../NewSquare';
 import { IBoardProps } from './BoardProps';
 import styles from './Board.module.scss';

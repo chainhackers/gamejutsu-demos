@@ -1,7 +1,7 @@
 import {XMTPChatLogElementPropsI} from './XMTPChatLogElementProps';
 import styles from './XMTPChatLogElement.module.scss';
 import {CheckersBoard, CHECKERS_MOVE_TYPES} from 'components/Games/Checkers/types';
-import {TicTacToeBoard, TIC_TAC_TOE_MOVE_TYPES} from 'components/Games/ET-Tic-Tac-Toe/types';
+import {TicTacToeBoard, TIC_TAC_TOE_MOVE_TYPES} from 'components/Games/Tic-Tac-Toe/types';
 import {defaultAbiCoder} from 'ethers/lib/utils';
 import {IAnyMessage} from 'hooks/useConversation';
 import {ISignedGameMove} from 'types/arbiter';
