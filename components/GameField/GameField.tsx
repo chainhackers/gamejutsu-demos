@@ -17,6 +17,8 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   isInDispute,
   finishedGameState,
   onConnect,
+  players,
+  finishGameCheckResult,
 }) => {
   const [isShowShade, setShowShade] = useState<boolean>(true);
   const [isShowExplainMove, SetShowExplainMove] = useState<boolean>(false);
@@ -113,6 +115,15 @@ export const GameField: React.FC<GameFieldPropsI> = ({
       setShowDispute(false);
     }
   }, [finishedGameState]);
+
+  useEffect(() => {
+    if (!!finishGameCheckResult) {
+      setShowShade(true);
+      setIsWaiting(false);
+      setIsConnecting(false);
+      setShowDispute(false);
+    }
+  })
 
   const isBadgeAvailable = (data: any, medal: TMedal, achievement: TAchievement): boolean => {
     let entity = data && data.inRowCounterEntities[0];
@@ -285,15 +296,19 @@ export const GameField: React.FC<GameFieldPropsI> = ({
               <div className={styles.notice}>{t('shade.notice')}</div>
             </div>
           )}
-          {finishedGameState && (
-            <>
+          {!!finishGameCheckResult &&
+            <div className={styles.checking_results}>
+              {finishGameCheckResult && finishGameCheckResult.winner &&<p className={styles.message}>{t('shade.checking.winner')}</p>}
+              {finishGameCheckResult && !finishGameCheckResult.winner && <p className={styles.message}>{t('shade.checking.loser')}</p>}
+              <p className={styles.message}>{t('shade.checking.checking')}</p>
+              </div>}
+          {finishedGameState && (            
               <div className={styles.win}>
                 {makeFinishedGameDescription(finishedGameState)}
                 <div className={styles.small}>
                   {makeFinishedGameReasonDescription(finishedGameState)}
                 </div>
               </div>
-            </>
           )}
           {finishedGameState && (
             <div className={styles.link}>
@@ -308,6 +323,8 @@ export const GameField: React.FC<GameFieldPropsI> = ({
       <div className={styles.header}>
         <div className={styles.room}>Game Id: {gameId ? gameId : 'n/a'}</div>
         <div className={styles.message}>
+          {players && (players[0]?.moves || players[1]?.moves) &&
+            <div className={styles.moveMessage}>{players[0].moves ? 'Your move' : 'Opponent\'s move'}</div>}
 
         </div>
         <div className={styles.prize}></div>

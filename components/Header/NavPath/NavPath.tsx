@@ -14,7 +14,6 @@ export const NavPath: React.FC<NavPathPropsI> = ({ path }) => {
       .split('/')
       .filter((el) => el.length !== 0)
       .map((el) => {
-        console.log(el, map[el]);
         return map[el] ? map[el] : el;
       });
   };

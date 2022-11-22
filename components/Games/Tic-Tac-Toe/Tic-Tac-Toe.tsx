@@ -1,15 +1,15 @@
 import React from 'react';
-import { Board } from 'components/Games/ET-Tic-Tac-Toe';
+import { Board } from 'components/Games/Tic-Tac-Toe';
 import { ITicTacToeProps } from './ITicTacToeProps';
 
-import styles from './ET-Tic-Tac-Toe.module.scss';
+import styles from './Tic-Tac-Toe.module.scss';
 import {
   TicTacToeBoard,
   TTTMove,
 } from './types';
 import { getRulesContract, transition } from 'gameApi';
 
-export const ETTicTacToe: React.FC<ITicTacToeProps> = ({
+export const TicTacToe: React.FC<ITicTacToeProps> = ({
   gameState,
   getSignerAddress,
   sendSignedMove,
@@ -46,5 +46,3 @@ export const ETTicTacToe: React.FC<ITicTacToeProps> = ({
     </div>
   );
 };
-
-

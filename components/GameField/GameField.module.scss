@@ -233,8 +233,6 @@
                 cursor: pointer;
               }
             }
-
-            // border: 1px solid red;
           }
         }
       }
@@ -244,17 +242,15 @@
   .header {
     padding: 25px;
     position: relative;
-    // background-color: aquamarine;
     display: flex;
+    align-items: flex-end;
     justify-content: space-between;
     height: 15%;
     z-index: 1000;
 
     .room,
     .prize {
-      width: 100px;
-      flex-shrink: 0;
-      flex-grow: 0;
+      flex: 0 0 120px;
       font-size: 16px;
       font-weight: bold;
       text-align: center;
@@ -264,6 +260,13 @@
       max-width: 65%;
       text-align: center;
     }
+
+    .moveMessage {
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 16px;
+      font-weight: 600;
+    }
   }
 
   .gameBoardContainer {
@@ -272,4 +275,20 @@
     justify-content: center;
     align-items: center;
   }
+}
+
+.checking_results {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font-weight: 500;
+  color: #fff;
+  font-size: 30px;
+  letter-spacing: 2px;
+
+  .message:not(:last-child) {
+    margin-bottom: 15px;
+  }  
 }

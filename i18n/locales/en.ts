@@ -101,6 +101,7 @@ const en = {
       inactive: 'Inactive',
       madeAppeal: 'made an appeal to the Game Master you cheated',
       notice: 'Pending decision from Game Master',
+      checking: {checking: 'Checking results...', winner: 'You seem to be a winner.', loser: 'You seem to have lost this game.'},
     },
     wins: 'wins!',
     players: {

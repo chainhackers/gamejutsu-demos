@@ -8,4 +8,5 @@ export interface IBoardProps {
     disputableMoves: Set<number>;
     lastMove: TLastMove;
     selectedCell: number | null;
+    flip?: boolean;
 }

@@ -10,7 +10,8 @@ export const Board: React.FC<IBoardProps> = ({
                                                  isFinished,
                                                  disputableMoves,
                                                  lastMove,
-                                                 selectedCell
+                                                 selectedCell,
+                                                 flip
                                              }) => { 
     console.log('lastMove', lastMove);                                                   
     const renderSquare = (row: number, i: number) => {
@@ -21,12 +22,15 @@ export const Board: React.FC<IBoardProps> = ({
                 onClick={() => {onClick(i)}}
                 disputable={disputableMoves.has(i)}
                 selected={selectedCell == i || lastMove?.to == i || lastMove?.from == i}
+                number={i}    
+                flip={flip}
                 />
                 <Square
                 value={null}
                 onClick={() => {}}
                 disputable={false}
                 selected={false}
+                flip={flip}
                 />
                 
             </>
@@ -36,14 +40,19 @@ export const Board: React.FC<IBoardProps> = ({
                 value={null}
                 onClick={() => {}}
                 disputable={false}
-                selected={false}/>
+                selected={false}
+                flip={flip}
+                />
                 <Square
                 value={squares[i]}
                 onClick={() => {onClick(i)}}
                 disputable={disputableMoves.has(i)}
                 selected={selectedCell == i || lastMove?.to == i || lastMove?.from == i}
+                number={i}
+                flip={flip}
                 />
-            </> 
+            </>
+        
     };
 
     const getRow = (row: number) => {
