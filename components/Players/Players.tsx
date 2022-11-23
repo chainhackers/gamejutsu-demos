@@ -1,4 +1,5 @@
-import { useSSR, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
+import cn from 'classnames'
 import { Button, Player } from 'components';
 import { PlayersPropsI } from './PlayersProps';
 import styles from './Players.module.scss';
@@ -16,17 +17,12 @@ export const Players: React.FC<PlayersPropsI> = ({
   isTimeoutRequested,
   // connectPlayer,
 }) => {
-  const [isTimeoutInit, setIsTimeoutInit] = useState<boolean>(false);
-  const [isConnectionAllowed, setIsConnectionAllower] = useState<boolean>(false);
-
   const { t } = useTranslation();
 
   return (
     <div className={styles.container}>
-      <div className={styles.title}>{t('players.title')}</div>
-      <div>
-        <div>
-          <Player {...player1} />
+      <Player {...player1} />
+      <div className={styles.controls}>
           <Button
             size="sm"
             color="black"
@@ -51,14 +47,11 @@ export const Players: React.FC<PlayersPropsI> = ({
             disabled={!isFinishTimeOutAllowed}
             onClick={finishTimeout}
           />
+        <div className={cn(styles.timeout, isTimeoutRequested ? styles.show: null)}>
+          {isTimeoutRequested && t('players.timeout')}
         </div>
-
-        <div className={styles.timeout}>
-          {isTimeoutRequested && 'Another player reqeusted timeout!'}
-        </div>
-
+      </div> 
         <Player {...player2} />
-      </div>
     </div>
   );
 };

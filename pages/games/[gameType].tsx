@@ -466,6 +466,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
             onRunDisput={runDisputeHandler}
             isDisputAvailable={isDisputAvailable}
           // connectPlayer={connectPlayerHandler}
+            gameId={gameId}
           />
           <GameField
             gameId={gameId?.toString()}

@@ -1,17 +1,49 @@
 .container {
-  // background-color: aqua;
+  position: relative;
+  flex: 1 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
-  .title {
-    font-size: 16px;
-    font-weight: bold;
+  > *:not(:last-child) {
+    margin-bottom: 5px;
+  }
+
+  .controls {
+    flex: 1 0;
+    padding-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    > *:not(:last-child) {
+      margin-bottom: 5px;
+    }
+    transition: all 0.2s;
   }
 
   .timeout {
-    height: 50px;
+    position: relative;
     text-align: center;
-    font-size: 16px;
+    font-size: 1.8rem;
     color: red;
     font-weight: bold;
     padding: 5px;
+    letter-spacing: 1px;
+    align-self: center;
+    left: -100%;
+    opacity: 0;
+    transition: left 0.5s ease-out, opacity 1s;
+    
+
+    &.show {
+      left: 0;
+      opacity: 1;
+    }    
   }
+}
+
+.test {
+  background-color: aqua;
+  position: absolute;
+
 }

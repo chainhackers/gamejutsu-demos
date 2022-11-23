@@ -318,7 +318,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
           )}
         </div>
       )}
-      <div className={styles.header}>
+   {!isShowShade && <div className={styles.header}>
         <div className={styles.room}>Game Id: {gameId ? gameId : 'n/a'}</div>
         <div className={styles.message}>
           {players && (players[0]?.moves || players[1]?.moves) &&
@@ -326,7 +326,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
 
         </div>
         <div className={styles.prize}></div>
-      </div>
+      </div>}
       <div className={styles.gameBoardContainer}>{children}</div>
     </div>
   );

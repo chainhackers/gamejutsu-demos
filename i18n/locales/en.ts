@@ -106,6 +106,10 @@ const en = {
     wins: 'wins!',
     players: {
       title: 'Players',
+      timeout: 'Opponent requested timeout!',
+    },
+    leftpanel: {
+      'gameId': 'Game ID'
     },
   },
 };
