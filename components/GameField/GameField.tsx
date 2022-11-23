@@ -37,7 +37,6 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   const { data, error, loading } = useQuery(badgesQuery, {
     variables: { id: account.address?.toLowerCase() },
   });
-  console.log('queryResponse', data);
 
   function isOpponentAddress(address: string): boolean {
     return address === rivalPlayerAddress;
@@ -79,7 +78,6 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   }
 
   useEffect(() => {
-    console.log('isConnected gameField', isConnected);
     if (!rivalPlayerAddress) {
       setShowShade(true);
       setIsWaiting(true);

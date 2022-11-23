@@ -347,7 +347,6 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
   useEffect(() => {
 
     const isPlayerMoves = (gameType: TGameType, gameState: IGameState<any, any>, playerIngameId: 0 | 1) => {
-      console.log('ISMOVE gamestate', gameState);
       switch (gameType) {
         case 'checkers': 
           return playerIngameId === 0 ? !gameState.currentBoard.redMoves : gameState.currentBoard.redMoves;
@@ -358,7 +357,6 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
       }
     }
 
-    console.log('ISMOVE', isPlayerMoves(gameType, gameState, playerIngameId))
     setPlayers([
       {
         playerName: playerIngameId === 0 ? 'Player1' : 'Player2',

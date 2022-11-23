@@ -42,7 +42,8 @@ const TestGameFieldPage: NextPage = () => {
     return {
       gameState,
       getSignerAddress,
-      sendSignedMove
+      sendSignedMove,
+      playerIngameId: 0,
     }
   }
 

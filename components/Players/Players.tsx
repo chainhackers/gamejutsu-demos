@@ -20,7 +20,7 @@ export const Players: React.FC<PlayersPropsI> = ({
   const [isConnectionAllowed, setIsConnectionAllower] = useState<boolean>(false);
 
   const { t } = useTranslation();
-  console.log('isTimeOutAllowed', isTimeoutAllowed);
+
   return (
     <div className={styles.container}>
       <div className={styles.title}>{t('players.title')}</div>

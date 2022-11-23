@@ -22,7 +22,6 @@ export const JoinGame: React.FC<JoinGamePropsI> = ({ acceptGameHandler }) => {
 
   const gameEntities = data?.gameEntities as { started: boolean | null; rules: string }[];
 
-  console.log('gameEntities', gameEntities);
   const dataToShow = !!gameEntities
     ? gameEntities
     : [];

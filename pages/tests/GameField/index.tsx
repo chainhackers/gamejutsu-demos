@@ -70,6 +70,7 @@ const TestGameFieldPage: NextPage = () => {
       finishedGameState,
       onConnect: async (opponent) => { },
       isConnected: true,
+      finishGameCheckResult: null,
     }
   }
 

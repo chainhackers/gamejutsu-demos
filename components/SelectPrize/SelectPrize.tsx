@@ -23,7 +23,6 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({ createNewGameHandler 
     setCreatingNewGame(true);
     setCreatingGameError(null);
 
-    console.log('selected', selected);
     selected === 'stake';
     createNewGameHandler(selected === 'stake')
       .then((gameId) => {
