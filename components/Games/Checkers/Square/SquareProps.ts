@@ -1,3 +1,4 @@
+import { TLastMove } from '../Checkers';
 import { TCellData } from '../types';
 
 export interface SquarePropsI {
@@ -7,4 +8,6 @@ export interface SquarePropsI {
     selected: boolean;
     number?: number;
     flip?: boolean;
+    onHandleMove: (undo: boolean, jump: boolean, passMove: boolean) => Promise<void>;
+    lastMove?: TLastMove;
 }

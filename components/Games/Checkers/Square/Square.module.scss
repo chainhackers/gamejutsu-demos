@@ -58,3 +58,72 @@
 .square:focus {
   outline: none;
 }
+
+.controls {
+  position: absolute;
+  font-size: 10px;
+  width: 200%;
+  height: 200%;
+  transform: translate(-25%, -17%);
+  z-index: 3000;
+
+  display: grid;
+  grid-template-rows: 40% 40%;
+  grid-template-columns: 1fr;
+  justify-content: space-between;
+  align-content: space-between;
+
+  &.flip {
+    transform: rotate(180deg);
+    transform: rotate(180deg) translate(25%, 33%);
+  }
+
+  .row {
+    justify-self: stretch;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  
+
+  .button {
+    position: relative;
+    z-index: 2000;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    border: 1px solid currentColor;
+    box-shadow: 0 0 5px rgba(0,0,0,0.8);
+    flex: 0 0 40%;
+    
+    cursor: pointer;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &:not(:first-child) {
+      margin-left: auto;
+    }
+
+    &.undo {
+      color: red;
+    }
+
+    &.confirm {
+      color: green;
+    }
+
+    &.jump {
+      color: blue;
+      transform: rotate(12deg);
+      
+    }
+
+    svg {
+      width: 85%;
+      height: 85%;
+      stroke: currentColor;
+      
+    }
+  }
+}

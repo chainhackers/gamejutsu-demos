@@ -8,6 +8,7 @@ import { getRulesContract, transition } from 'gameApi';
 import { Button } from 'components/shared';
 import { t } from 'i18next';
 import cn from 'classnames';
+import { isJumpMove } from 'helpers/utils';
 export type TLastMove = {
     from: number;
     to: number;
@@ -86,6 +87,8 @@ export const Checkers: React.FC<ICheckersProps> = ({
         </div>
     }
 
+    // console.log('lastMove', lastMove);
+
     return (
         <div className={styles.container}>
             <div style = {playerIngameId === 0 ? {transform:'rotate(180deg)', display:'inherit'}: {display:'inherit'}}>
@@ -97,17 +100,10 @@ export const Checkers: React.FC<ICheckersProps> = ({
                     disputableMoves={boardState.disputableMoves}
                     lastMove={lastMove}
                     flip={playerIngameId === 0}
+                    onHandleMove={onButtonClickHandler}
+                    
                 />
             </div>
-            {lastMove && (
-                <div className={cn(styles.maybeShade, styles.buttons)}>
-                    {makeButton("Undo move", "moveButtonbb", true, false, false)}
-                    {makeButton("No jump. I move", "moveButtonbb", false, false, false)}
-                    {makeButton("No jump. Let opponent move", "moveButtonbr", false, false, true)}
-                    {makeButton("Jump. I move", "moveButtonrb", false, true, false)}
-                    {makeButton("Jump. Let opponent move", "moveButtonrr", false, true, true)}
-                </div>
-            )}
         </div>
 );
 };

@@ -477,6 +477,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
             onConnect={setConversationHandler}
             players={players}
             finishGameCheckResult={finishGameCheckResult}
+            version={'1.0.12'}
           >
             {gameComponent}
           </GameField>

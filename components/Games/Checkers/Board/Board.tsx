@@ -11,9 +11,10 @@ export const Board: React.FC<IBoardProps> = ({
                                                  disputableMoves,
                                                  lastMove,
                                                  selectedCell,
-                                                 flip
+                                                 flip,
+                                                 onHandleMove,
                                              }) => { 
-    console.log('lastMove', lastMove);                                                   
+    console.log('lastMove board', lastMove);                                                   
     const renderSquare = (row: number, i: number) => {
         if (row % 2 == 1) {
             return <>
@@ -24,6 +25,8 @@ export const Board: React.FC<IBoardProps> = ({
                 selected={selectedCell == i || lastMove?.to == i || lastMove?.from == i}
                 number={i}    
                 flip={flip}
+                onHandleMove={onHandleMove}
+                lastMove={lastMove}
                 />
                 <Square
                 value={null}
@@ -31,6 +34,7 @@ export const Board: React.FC<IBoardProps> = ({
                 disputable={false}
                 selected={false}
                 flip={flip}
+                onHandleMove={onHandleMove}
                 />
                 
             </>
@@ -42,6 +46,7 @@ export const Board: React.FC<IBoardProps> = ({
                 disputable={false}
                 selected={false}
                 flip={flip}
+                onHandleMove={onHandleMove}
                 />
                 <Square
                 value={squares[i]}
@@ -50,6 +55,8 @@ export const Board: React.FC<IBoardProps> = ({
                 selected={selectedCell == i || lastMove?.to == i || lastMove?.from == i}
                 number={i}
                 flip={flip}
+                onHandleMove={onHandleMove}
+                lastMove={lastMove}
                 />
             </>
         

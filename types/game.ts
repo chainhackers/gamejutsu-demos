@@ -12,3 +12,8 @@ export interface PlayerI {
   avatarUrl: string;
   moves?: boolean;
 }
+
+export type TLastMove = {
+    from: number;
+    to: number;
+} | null;

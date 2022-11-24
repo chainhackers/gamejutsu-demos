@@ -11,4 +11,5 @@ export interface GameFieldPropsI {
   onConnect: (opponent: string) => Promise<void>;
   players?: PlayerI[];
   finishGameCheckResult: { winner: boolean } | null;
+  version?: string;
 }

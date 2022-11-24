@@ -8,6 +8,12 @@
   border-radius: 10px;
   z-index: 1000;
 
+  .version {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+  }
+
   .shade {
     position: absolute;
     width: 100%;
@@ -261,6 +267,10 @@
     }
 
     .moveMessage {
+      position: absolute;
+      top: 5rem;
+      left: 50%;
+      transform: translateX(-50%);
       text-transform: uppercase;
       letter-spacing: 1px;
       font-size: 16px;
