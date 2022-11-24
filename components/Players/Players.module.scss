@@ -14,7 +14,7 @@
     padding-top: 2rem;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    // overflow: hidden;
     > *:not(:last-child) {
       margin-bottom: 5px;
     }
@@ -46,4 +46,143 @@
   background-color: aqua;
   position: absolute;
 
+}
+
+.popup_button {
+  position: relative;
+  color: white;
+  background-color: black;
+  border-radius: 100px;
+  font-size: 1.4rem;
+  text-align: center;
+  font-weight: 700;
+  padding: 8px;
+  transition: all 0.5s;
+  cursor: pointer;
+
+  &.disabled {
+    cursor: not-allowed;
+    background-color: var(--gray-darker);
+  }
+
+
+  &:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 5px rgb(40 61 44);
+  }
+
+  &:hover > .hint {
+    // background-color: aqua;
+    display: inline-block;
+    visibility: visible;
+    opacity: 1;
+  }
+
+  &:active {
+    // background-color: aqua;
+    transform: scale(1.06);
+    box-shadow: 0 0 1px rgb(40 61 44);
+  }
+}
+
+.hint {
+  display: inline-block;
+  visibility: hidden;
+  border: 1px solid white;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  color: white;
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.8s;
+
+
+  &:hover {
+    transform: scale(1.3);
+  }
+  &:active {
+    transform: scale(1.1);
+  }
+}
+
+.legend {
+  position: absolute;
+  font-size: 1.7rem;
+  letter-spacing: 1px;
+  width: 22rem;
+  background-color: white;
+  padding: 2rem 1rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  z-index: 1000;
+  left: 0;
+  top: -50%;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.3s;
+
+  &.show {
+   visibility: visible; 
+   opacity: 1;
+   top: 20%;
+  }
+
+
+  .text {
+    padding: 1rem;
+    display: inline-block;
+    color: black;
+  } 
+  
+  .close {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 25px;
+    height: 25px;
+    color: gray;
+    transition: all 0.3s;
+    &::after {
+      content: "";
+      position: absolute;
+      background-color: currentColor;
+      width: 25px;
+      height: 2px;
+      top: 50%;
+      transform: translateY(-2px);
+      transform: rotate(45deg);
+      transform-origin: center;
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      background-color: currentColor;
+      width: 25px;
+      height: 2px;
+      top: 50%;
+      transform: rotate(-45deg);
+    }
+    &:hover {
+      color: black;
+      transform: scale(1.2);
+      &::after, &::before {
+        box-shadow: 0 0 2px rgba(0,0,0,0.2);
+      }
+    }
+
+    &:active {
+      transform: scale(1.05);
+    }
+  }
+
+  
+
+ > *:last-child {
+    margin-top: 1rem;
+    
+  }
 }

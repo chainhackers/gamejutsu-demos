@@ -1,5 +1,4 @@
 .container {
-  background-color: aqua;
   padding: 16px 64px;
   border-radius: 30px;
   font-size: 16px;
@@ -16,7 +15,7 @@
   }
 
   &.sm {
-    padding: 8px 48px;
+    padding: 8px 40px;
     font-size: 14px;
     width: 100%;
   }
