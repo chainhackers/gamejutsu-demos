@@ -5,21 +5,21 @@ import { isJumpMove } from 'helpers/utils';
 
 const bottomLeftCornerMoves: TLastMove[] = [{ from: 3, to: 7 }]
 const bottomLeftCornerJumpMoves: TLastMove[] = [
-  { from: 3, to: 2},
-  { from: 3, to: 11},
-  { from: 3, to: 10},
-  { from: 3, to: 17},
-]
+  { from: 3, to: 2 },
+  { from: 3, to: 11 },
+  { from: 3, to: 10 },
+  { from: 3, to: 17 },
+];
 const bottomRightCornerMoves: TLastMove[] = [
   { from: 0, to: 4 },
   { from: 0, to: 5 },
-]
+];
 const bottomRightCornerJumpMoves: TLastMove[] = [
-  { from: 0, to: 9},
-  { from: 0, to: 18},
-  { from: 0, to: 8},
-  { from: 0, to: 6},
-]
+  { from: 0, to: 9 },
+  { from: 0, to: 18 },
+  { from: 0, to: 8 },
+  { from: 0, to: 6 },
+];
 
 const topLeftCornerMoves: TLastMove[] = [
   {from: 31, to: 27},
@@ -84,4 +84,4 @@ describe('isJumpMove', () => {
       expect(isJumpMove(move)).toBe(true);
     })
   })
-})
+});
