@@ -13,4 +13,5 @@ export interface LeftPanelPropsI {
   // connectPlayer: () => Promise<void>;
   isDisputAvailable?: boolean;
   onRunDisput: () => Promise<void>;
+  gameId?: number;
 }

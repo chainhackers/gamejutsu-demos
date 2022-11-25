@@ -19,6 +19,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   onConnect,
   players,
   finishGameCheckResult,
+  version,
 }) => {
   const [isShowShade, setShowShade] = useState<boolean>(true);
   const [isShowExplainMove, SetShowExplainMove] = useState<boolean>(false);
@@ -210,6 +211,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
 
   return (
     <div className={styles.container}>
+      {version && <div className={styles.version}>{`Ver.${version}`}</div>}
       {isShowShade && (
         <div className={styles.shade}>
           {isWaiting && <div className={styles.wait}>{t('shade.wait')}</div>}
@@ -318,15 +320,13 @@ export const GameField: React.FC<GameFieldPropsI> = ({
           )}
         </div>
       )}
-      <div className={styles.header}>
-        <div className={styles.room}>Game Id: {gameId ? gameId : 'n/a'}</div>
+   {!isShowShade && <div className={styles.header}>
         <div className={styles.message}>
           {players && (players[0]?.moves || players[1]?.moves) &&
             <div className={styles.moveMessage}>{players[0].moves ? 'Your move' : 'Opponent\'s move'}</div>}
-
         </div>
         <div className={styles.prize}></div>
-      </div>
+      </div>}
       <div className={styles.gameBoardContainer}>{children}</div>
     </div>
   );

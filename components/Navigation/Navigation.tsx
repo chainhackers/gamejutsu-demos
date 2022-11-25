@@ -28,7 +28,7 @@ export const Navigation: React.FC<NavigationPropsI> = ({ active }) => {
                     >
                         <Link href="/team">{t('navigation.team')}</Link>
                     </li>
-                    <li
+                    <li style={{ position: 'relative', top: '10px'}}
                         className={cn(
                             active &&
                                 (active === 'documents' ? styles.active : styles.inactive),
@@ -42,7 +42,7 @@ export const Navigation: React.FC<NavigationPropsI> = ({ active }) => {
                             </div>
                         </a>
                     </li>
-                    <li
+                    <li style={{ position: 'relative', top: '2px'}}
                         className={cn(
                             active && (active === 'github' ? styles.active : styles.inactive),
                         )}

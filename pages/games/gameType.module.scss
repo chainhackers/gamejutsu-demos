@@ -1,5 +1,5 @@
 .container {
-  // background-color: #759aab;
+  position: relative;
   background-color: var(--gray-lightest);
   background-color: var(--white);
   display: flex;
@@ -7,4 +7,13 @@
   align-items: center;
   padding-top: 90px;
   flex-wrap: wrap;
+}
+
+.version {
+  position: absolute;
+  top: 5rem;
+  left: 15rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+
 }

@@ -106,6 +106,20 @@ const en = {
     wins: 'wins!',
     players: {
       title: 'Players',
+      timeout: 'Opponent requested timeout!',
+      timeoutButtons: {
+        finish: 'Finish timeout',
+        resolve: 'Resolve timeout',
+        init: 'Init timeout',
+      },
+      legend: {
+        finish: 'You can finish timeout if you decide to stop forcing you opponent fo move.',
+        resolve: 'You can reslove timeout after you make a move if timeout is requested',
+        init: 'You can initiate timeout to force your opponent to make a new move.',
+      }
+    },
+    leftpanel: {
+      'gameId': 'Game ID'
     },
   },
 };

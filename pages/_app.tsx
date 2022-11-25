@@ -44,7 +44,9 @@ const client = new ApolloClient({
   cache,
 });
 
+const version = '1.0.12'
 function MyApp({ Component, pageProps }: AppProps) {
+  const props = { ...pageProps, version };
   return (
     <WagmiConfig client={wagmiClient}>
       <ApolloProvider client={client}>
@@ -52,11 +54,11 @@ function MyApp({ Component, pageProps }: AppProps) {
           <XmtpContextProvider>
             <RainbowKitProvider chains={chains}>
               <XmtpProvider>
-              <Layout>
+              <Layout version={version}>
                 <Head>
                   <meta name="viewport" content="width=device-width, initial-scale=1" />
                 </Head>
-                <Component {...pageProps} />
+                <Component {...props} />
               </Layout>
               </XmtpProvider>
             </RainbowKitProvider>
