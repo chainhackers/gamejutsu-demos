@@ -1,6 +1,5 @@
 .container {
   position: relative;
-  background-color: aqua;
   background-color: var(--white);
   display: flex;
   justify-content: space-between;
@@ -19,4 +18,10 @@
     display: flex;
     align-items: center;
   }
+}
+
+.version {
+  position: relative;
+  align-self: flex-end;
+  top: -0.4rem;
 }

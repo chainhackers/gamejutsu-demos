@@ -87,8 +87,6 @@ export const Checkers: React.FC<ICheckersProps> = ({
         </div>
     }
 
-    // console.log('lastMove', lastMove);
-
     return (
         <div className={styles.container}>
             <div style = {playerIngameId === 0 ? {transform:'rotate(180deg)', display:'inherit'}: {display:'inherit'}}>

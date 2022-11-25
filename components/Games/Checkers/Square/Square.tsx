@@ -9,8 +9,6 @@ import React from "react";
 export const Square: React.FC<SquarePropsI> = (
     {value, selected, onClick, disputable, number, flip, lastMove, onHandleMove}
 ) => {
-    // console.log('Square disputable: ', disputable);
-
     const controlButtonClickHandler = (undo: boolean, jump: boolean, passMove: boolean): React.MouseEventHandler<HTMLDivElement> => (event) => {
         event.stopPropagation();
         onHandleMove(undo, jump, passMove)

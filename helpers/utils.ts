@@ -11,7 +11,6 @@ const isLastColumn = (a: number): boolean => (a - 4) % 8 === 0
 const isEvenRow = (a: number) => Math.floor(a / 4) % 2 === 0;
 
 export const isJumpMove = (lastMove: TLastMove) => {
-    console.log('lastmove', lastMove)
     if (!lastMove) return false;
     const oddRowOffset = isEvenRow(lastMove.from) ? 0 : 1;
     const BOTTOM_LEFT_CORNER_DISTANCE = -4;

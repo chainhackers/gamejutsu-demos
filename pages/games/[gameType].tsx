@@ -30,7 +30,8 @@ import useConversation from "../../hooks/useConversation";
 import { PlayerI, TGameType } from 'types/game';
 
 interface IGamePageProps {
-  gameType: TGameType
+  gameType: TGameType,
+  version?: string;
 }
 
 interface IParams extends ParsedUrlQuery {
@@ -41,7 +42,7 @@ const ACCEPTER_INGAME_ID = 1;
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 const FETCH_OPPONENT_ADDRESS_TIMEOUT = 2500;
 
-const Game: NextPage<IGamePageProps> = ({ gameType }) => {
+const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
 
   const [playerIngameId, setPlayerIngameId] = useState<0 | 1>(0);
   const [isInDispute, setIsInDispute] = useState<boolean>(false);
@@ -453,6 +454,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
     if (gameType === 'checkers' || gameType === 'tic-tac-toe') {
       return (
         <div className={styles.container}>
+          <div className={styles.version}>{`Ver.${version}`}</div>
           <LeftPanel
             players={players}
             isTimeoutAllowed={!isTimeoutInited}
@@ -477,7 +479,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType }) => {
             onConnect={setConversationHandler}
             players={players}
             finishGameCheckResult={finishGameCheckResult}
-            version={'1.0.12'}
+            version={version}
           >
             {gameComponent}
           </GameField>

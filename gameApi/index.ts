@@ -238,7 +238,6 @@ export const _isValidSignedMove = async (
 ) => {
   console.log('isValidSignedMove', { contract, signedgameMove });
   const response = contract.isValidSignedMove(signedgameMove);
-  console.log({ response });
   return response;
 };
 

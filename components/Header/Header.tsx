@@ -5,7 +5,7 @@ import { HeaderPropsI } from './HeaderProps';
 import styles from './Header.module.scss';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-export const Header: React.FC<HeaderPropsI> = () => {
+export const Header: React.FC<HeaderPropsI> = ({version}) => {
   const { t } = useTranslation();
   const { asPath } = useRouter();
   const parsedPath = asPath.split('/').filter((el) => el.length !== 0);
@@ -22,12 +22,8 @@ export const Header: React.FC<HeaderPropsI> = () => {
           <a>
             <Logo image="/logo/gj-logo.png" />
           </a>
-      </Link>
-        {/* <Link href="/">
-          <a>
-            <div className={styles.title}>{t('header.title')}</div>
-          </a>
-        </Link> */}
+        </Link>
+        <div className={styles.version}>{`Ver.${version}`}</div>
       </div>
       <div className={styles.right}>
         {currentPath?.split('?')[0] !== 'connect' && <Navigation active={currentPath} />}
