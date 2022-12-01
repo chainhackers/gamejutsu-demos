@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import { ParsedUrlQuery } from 'querystring';
 import { XMTPChatLog } from 'components/XMTPChatLog';
 import {
+  ChatLog,
   GameField,
   JoinGame,
   LeftPanel,
@@ -110,7 +111,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
   let { loading, collectedMessages, sendMessage, lastMessages, initClient, client } =
     useConversation(opponentAddress!, gameId, true);
 
-  const { sendFirebaseMessage } = useFirebaseConversation(gameId);
+  const { sendFirebaseMessage, collectedFirebaseMessages } = useFirebaseConversation(gameId);
 
   const setConversationHandler = async (opponentAddress: string) => {
     console.log('setConversationHandler', opponentAddress);
@@ -138,6 +139,9 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
       message: { signatures, gameMove: { ...gameMove } },
       messageType: 'ISignedGameMove',
       gameType,
+      senderAddress: account.address,
+      recipientAddress: opponentAddress,
+      sent: Date.now(),
     });
   };
 
@@ -317,7 +321,9 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
 
   async function processOneMessage(i: number) {
     //TODO
+
     const lastMessage = lastMessages[i];
+    console.log('processOneMessage, lastmessage', lastMessage, lastMessages);
     if (lastMessage.messageType === 'TimeoutStartedEvent') {
       setIsTimeoutInited(true);
       setIsResolveTimeOutAllowed(true);
@@ -519,7 +525,8 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
             {gameComponent}
           </GameField>
           <RightPanel>
-            <XMTPChatLog anyMessages={collectedMessages} isLoading={loading} />
+            {/* <XMTPChatLog anyMessages={collectedMessages} isLoading={loading} /> */}
+            <ChatLog anyMessages={collectedFirebaseMessages} />
           </RightPanel>
         </div>
       );
