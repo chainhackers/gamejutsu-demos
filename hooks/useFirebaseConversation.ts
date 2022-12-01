@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { IChatLogMessage } from 'types/chat';
 // import { IChatLogMessage } from 'types';
 import {
   addDataWithCustomId,
@@ -8,26 +9,26 @@ import {
   updateDocumentArrayDataByField,
 } from 'utils/firebase';
 
-export interface IChatLogMessage {
-  gameId: string;
-  messageType: 'ISignedGameMove' | string;
-  gameType: string;
-  nonce: number;
-  senderAddress: string;
-  recipientAddress: string;
-  sent: number;
-  signedMove: {
-    signatures: string[];
-    gameMove: {
-      gameId: number;
-      nonce: number;
-      player: string;
-      oldState: any;
-      newState: any;
-      move: string;
-    };
-  };
-}
+// export interface IChatLogMessage {
+//   gameId: string;
+//   messageType: 'ISignedGameMove' | string;
+//   gameType: string;
+//   nonce: number;
+//   senderAddress: string;
+//   recipientAddress: string;
+//   sent: number;
+//   message: {
+//     signatures: string[];
+//     gameMove: {
+//       gameId: number;
+//       nonce: number;
+//       player: string;
+//       oldState: any;
+//       newState: any;
+//       move: string;
+//     };
+//   };
+// }
 
 const useFirebaseConversation = (
   // peerAddress: string,
@@ -106,8 +107,6 @@ const useFirebaseConversation = (
   // };
 
   useEffect(() => {
-    // console.log('LOG collectedFirebaseMessages', collectedFirebaseMessages);
-    // console.log('LOG collectedFirebaseMessages', collectedFirebaseMessages?.moves);
     if (collectedFirebaseMessages?.moves && collectedFirebaseMessages?.moves.length > 0) {
       setLastMessages(collectedFirebaseMessages.moves);
     }

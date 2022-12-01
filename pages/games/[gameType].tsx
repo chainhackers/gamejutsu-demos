@@ -111,7 +111,8 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
   let { loading, collectedMessages, sendMessage, lastMessages, initClient, client } =
     useConversation(opponentAddress!, gameId, true);
 
-  const { sendFirebaseMessage, collectedFirebaseMessages } = useFirebaseConversation(gameId);
+  const { sendFirebaseMessage, collectedFirebaseMessages, lastFirebaseMessages } =
+    useFirebaseConversation(gameId);
 
   const setConversationHandler = async (opponentAddress: string) => {
     console.log('setConversationHandler', opponentAddress);
@@ -323,7 +324,62 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
     //TODO
 
     const lastMessage = lastMessages[i];
-    console.log('processOneMessage, lastmessage', lastMessage, lastMessages);
+    if (lastMessage.messageType === 'TimeoutStartedEvent') {
+      setIsTimeoutInited(true);
+      setIsResolveTimeOutAllowed(true);
+      setIsFinishTimeoutAllowed(true);
+      setIsTimeoutRequested(true);
+    } else if (lastMessage.messageType === 'TimeoutResolvedEvent') {
+      setIsTimeoutInited(false);
+      setIsResolveTimeOutAllowed(false);
+      setIsFinishTimeoutAllowed(false);
+      setIsTimeoutRequested(false); //TODO consider one state instead of 4
+    }
+    if (lastMessage.messageType == 'ISignedGameMove') {
+      const signedMove = lastMessage.message as ISignedGameMove;
+      // if (i === 0) {
+      //   const signedMove2 = lastFirebaseMessages[lastFirebaseMessages.length - 1]
+      //     .message as ISignedGameMove;
+      //   console.log('signedMove', signedMove);
+      //   console.log('signedMove', signedMove2);
+      //   const isValid2 = await _isValidSignedMove(getArbiter(), signedMove2);
+      //   console.log('isValid 2', isValid2);
+      // }
+
+      const isValid = await _isValidSignedMove(getArbiter(), signedMove);
+      console.log('isValid original', signedMove.gameMove.nonce, isValid);
+
+      //TODO maybe replace with sender address
+      const isOpponentMove = signedMove.gameMove.player === opponentAddress;
+      const nextGameState = gameState.makeNewGameStateFromSignedMove(
+        signedMove,
+        isValid,
+        isOpponentMove,
+      );
+      // setGameState(nextGameState);
+      // setIsInvalidMove(!isValid);
+      // if (nextGameState.getWinnerId() !== null) {
+      //   setFinishGameCheckResult({ winner: playerIngameId === nextGameState.getWinnerId() });
+      //   if (playerIngameId === nextGameState.getWinnerId()) {
+      //     runFinishGameHandler(nextGameState);
+      //   }
+      // }
+    }
+    if (lastMessage.messageType === 'FinishedGameState') {
+      const { loser } = lastMessage.message as FinishedGameState;
+      console.log('GOT MESSAGE');
+      if (loser === account.address) {
+        setFinishGameCheckResult(null);
+        setFinishedGameState(lastMessage.message as FinishedGameState);
+      }
+    }
+  }
+
+  async function processOneFirebaseMessage(i: number) {
+    //TODO
+    if (lastFirebaseMessages.length === 0) return;
+    if (!opponentAddress) return;
+    const lastMessage = lastFirebaseMessages[i];
     if (lastMessage.messageType === 'TimeoutStartedEvent') {
       setIsTimeoutInited(true);
       setIsResolveTimeOutAllowed(true);
@@ -339,31 +395,39 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
       const signedMove = lastMessage.message as ISignedGameMove;
 
       const isValid = await _isValidSignedMove(getArbiter(), signedMove);
+      console.log('isValid firebase', signedMove.gameMove.nonce, isValid);
 
       //TODO maybe replace with sender address
       const isOpponentMove = signedMove.gameMove.player === opponentAddress;
+      console.log('isOpponentMove', isOpponentMove, opponentAddress);
       const nextGameState = gameState.makeNewGameStateFromSignedMove(
         signedMove,
         isValid,
         isOpponentMove,
       );
+      console.log('nextGameState', nextGameState);
       setGameState(nextGameState);
       setIsInvalidMove(!isValid);
+      console.log(
+        'nextGameState.getWinnerId() !== null',
+        nextGameState.getWinnerId() !== null,
+      );
       if (nextGameState.getWinnerId() !== null) {
         setFinishGameCheckResult({ winner: playerIngameId === nextGameState.getWinnerId() });
         if (playerIngameId === nextGameState.getWinnerId()) {
+          console.log('nextGameState', nextGameState);
           runFinishGameHandler(nextGameState);
         }
       }
     }
-    if (lastMessage.messageType === 'FinishedGameState') {
-      const { loser } = lastMessage.message as FinishedGameState;
-      console.log('GOT MESSAGE');
-      if (loser === account.address) {
-        setFinishGameCheckResult(null);
-        setFinishedGameState(lastMessage.message as FinishedGameState);
-      }
-    }
+    // if (lastMessage.messageType === 'FinishedGameState') {
+    //   const { loser } = lastMessage.message as FinishedGameState;
+    //   console.log('GOT MESSAGE');
+    //   if (loser === account.address) {
+    //     setFinishGameCheckResult(null);
+    //     setFinishedGameState(lastMessage.message as FinishedGameState);
+    //   }
+    // }
   }
 
   useEffect(() => {
@@ -371,12 +435,23 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
   }, [gameId]);
 
   useEffect(() => {
+    console.log('lastMessages', lastMessages);
     for (let i = lastMessages.length - 1; i >= 0; i--) {
       setTimeout(function () {
         processOneMessage(i);
       }, 100 * (lastMessages.length - i - 1));
     }
   }, [lastMessages]);
+
+  useEffect(() => {
+    //TODO
+    // for (let i = 0; i < lastFirebaseMessages.length; i += 1) {
+    //   setTimeout(function () {
+    //     processOneFirebaseMessage(i);
+    //   }, 500 * (i + 1));
+    // }
+    processOneFirebaseMessage(lastFirebaseMessages.length - 1);
+  }, [lastFirebaseMessages, opponentAddress]);
 
   useEffect(() => {
     const isPlayerMoves = (
