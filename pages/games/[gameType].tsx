@@ -128,12 +128,12 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
   };
 
   const sendSignedMoveHandler = async (signedMove: ISignedGameMove) => {
-    sendMessage({
-      gameId: gameId,
-      message: signedMove,
-      messageType: 'ISignedGameMove',
-      gameType,
-    });
+    // sendMessage({
+    //   gameId: gameId,
+    //   message: signedMove,
+    //   messageType: 'ISignedGameMove',
+    //   gameType,
+    // });
     const { signatures, gameMove } = signedMove;
     sendFirebaseMessage({
       gameId,
@@ -434,14 +434,14 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
     if (!Number.isNaN(gameId)) setGameState(getInitialState());
   }, [gameId]);
 
-  useEffect(() => {
-    console.log('lastMessages', lastMessages);
-    for (let i = lastMessages.length - 1; i >= 0; i--) {
-      setTimeout(function () {
-        processOneMessage(i);
-      }, 100 * (lastMessages.length - i - 1));
-    }
-  }, [lastMessages]);
+  // useEffect(() => {
+  //   console.log('lastMessages', lastMessages);
+  //   for (let i = lastMessages.length - 1; i >= 0; i--) {
+  //     setTimeout(function () {
+  //       processOneMessage(i);
+  //     }, 100 * (lastMessages.length - i - 1));
+  //   }
+  // }, [lastMessages]);
 
   useEffect(() => {
     //TODO
