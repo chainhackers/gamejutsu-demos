@@ -11,7 +11,8 @@
     "lint": "next lint",
     "clear": "rm -rf node_modules/ yarn.lock",
     "generate": "eth-sdk",
-    "test:w": "jest --watch"
+    "test:w": "jest --watch",
+    "test": "jest"
   },
   "dependencies": {
     "@apollo/client": "^3.6.9",
