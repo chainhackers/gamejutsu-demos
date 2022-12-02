@@ -80,7 +80,6 @@ describe('isJumpMove', () => {
   })
   test('top right corner, jump moves', () => {
     topRightCornerJumpMoves.map(move => {
-      console.log('asdfasdfa', move)
       expect(isJumpMove(move)).toBe(true);
     })
   })
