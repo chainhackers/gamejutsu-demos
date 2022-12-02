@@ -48,3 +48,13 @@ export interface IChatLogMessage {
     };
   };
 }
+
+export interface IFinishgameMessage {
+  gameId: string;
+  messageType: 'FinishedGameState';
+  gameType: string;
+  senderAddress: string;
+  recipientAddress: string;
+  sent: number;
+  message: FinishedGameState;
+}
