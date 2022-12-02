@@ -169,11 +169,22 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
       lastOpponentMoveSignedByAll,
       nextGameState.lastMove,
     ]);
-    sendMessage({
+    // console.log('finishedGameResult', finishedGameResult);
+    // sendMessage({
+    //   gameId: gameId,
+    //   message: finishedGameResult,
+    //   messageType: 'FinishedGameState',
+    //   gameType,
+    // });
+
+    sendFirebaseMessage({
       gameId: gameId,
-      message: finishedGameResult,
       messageType: 'FinishedGameState',
       gameType,
+      message: { ...finishedGameResult, gameId },
+      senderAddress: account.address,
+      recipientAddress: opponentAddress,
+      sent: Date.now(),
     });
     setFinishGameCheckResult(null);
     setFinishedGameState(finishedGameResult);
@@ -320,60 +331,60 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
     setIsInDispute(false);
   };
 
-  async function processOneMessage(i: number) {
-    //TODO
+  // async function processOneMessage(i: number) {
+  //   //TODO
 
-    const lastMessage = lastMessages[i];
-    if (lastMessage.messageType === 'TimeoutStartedEvent') {
-      setIsTimeoutInited(true);
-      setIsResolveTimeOutAllowed(true);
-      setIsFinishTimeoutAllowed(true);
-      setIsTimeoutRequested(true);
-    } else if (lastMessage.messageType === 'TimeoutResolvedEvent') {
-      setIsTimeoutInited(false);
-      setIsResolveTimeOutAllowed(false);
-      setIsFinishTimeoutAllowed(false);
-      setIsTimeoutRequested(false); //TODO consider one state instead of 4
-    }
-    if (lastMessage.messageType == 'ISignedGameMove') {
-      const signedMove = lastMessage.message as ISignedGameMove;
-      // if (i === 0) {
-      //   const signedMove2 = lastFirebaseMessages[lastFirebaseMessages.length - 1]
-      //     .message as ISignedGameMove;
-      //   console.log('signedMove', signedMove);
-      //   console.log('signedMove', signedMove2);
-      //   const isValid2 = await _isValidSignedMove(getArbiter(), signedMove2);
-      //   console.log('isValid 2', isValid2);
-      // }
+  //   const lastMessage = lastMessages[i];
+  //   if (lastMessage.messageType === 'TimeoutStartedEvent') {
+  //     setIsTimeoutInited(true);
+  //     setIsResolveTimeOutAllowed(true);
+  //     setIsFinishTimeoutAllowed(true);
+  //     setIsTimeoutRequested(true);
+  //   } else if (lastMessage.messageType === 'TimeoutResolvedEvent') {
+  //     setIsTimeoutInited(false);
+  //     setIsResolveTimeOutAllowed(false);
+  //     setIsFinishTimeoutAllowed(false);
+  //     setIsTimeoutRequested(false); //TODO consider one state instead of 4
+  //   }
+  //   if (lastMessage.messageType == 'ISignedGameMove') {
+  //     const signedMove = lastMessage.message as ISignedGameMove;
+  //     // if (i === 0) {
+  //     //   const signedMove2 = lastFirebaseMessages[lastFirebaseMessages.length - 1]
+  //     //     .message as ISignedGameMove;
+  //     //   console.log('signedMove', signedMove);
+  //     //   console.log('signedMove', signedMove2);
+  //     //   const isValid2 = await _isValidSignedMove(getArbiter(), signedMove2);
+  //     //   console.log('isValid 2', isValid2);
+  //     // }
 
-      const isValid = await _isValidSignedMove(getArbiter(), signedMove);
-      console.log('isValid original', signedMove.gameMove.nonce, isValid);
+  //     const isValid = await _isValidSignedMove(getArbiter(), signedMove);
+  //     console.log('isValid original', signedMove.gameMove.nonce, isValid);
 
-      //TODO maybe replace with sender address
-      const isOpponentMove = signedMove.gameMove.player === opponentAddress;
-      const nextGameState = gameState.makeNewGameStateFromSignedMove(
-        signedMove,
-        isValid,
-        isOpponentMove,
-      );
-      // setGameState(nextGameState);
-      // setIsInvalidMove(!isValid);
-      // if (nextGameState.getWinnerId() !== null) {
-      //   setFinishGameCheckResult({ winner: playerIngameId === nextGameState.getWinnerId() });
-      //   if (playerIngameId === nextGameState.getWinnerId()) {
-      //     runFinishGameHandler(nextGameState);
-      //   }
-      // }
-    }
-    if (lastMessage.messageType === 'FinishedGameState') {
-      const { loser } = lastMessage.message as FinishedGameState;
-      console.log('GOT MESSAGE');
-      if (loser === account.address) {
-        setFinishGameCheckResult(null);
-        setFinishedGameState(lastMessage.message as FinishedGameState);
-      }
-    }
-  }
+  //     //TODO maybe replace with sender address
+  //     const isOpponentMove = signedMove.gameMove.player === opponentAddress;
+  //     const nextGameState = gameState.makeNewGameStateFromSignedMove(
+  //       signedMove,
+  //       isValid,
+  //       isOpponentMove,
+  //     );
+  //     // setGameState(nextGameState);
+  //     // setIsInvalidMove(!isValid);
+  //     // if (nextGameState.getWinnerId() !== null) {
+  //     //   setFinishGameCheckResult({ winner: playerIngameId === nextGameState.getWinnerId() });
+  //     //   if (playerIngameId === nextGameState.getWinnerId()) {
+  //     //     runFinishGameHandler(nextGameState);
+  //     //   }
+  //     // }
+  //   }
+  //   if (lastMessage.messageType === 'FinishedGameState') {
+  //     const { loser } = lastMessage.message as FinishedGameState;
+  //     console.log('GOT MESSAGE');
+  //     if (loser === account.address) {
+  //       setFinishGameCheckResult(null);
+  //       setFinishedGameState(lastMessage.message as FinishedGameState);
+  //     }
+  //   }
+  // }
 
   async function processOneFirebaseMessage(i: number) {
     //TODO
@@ -420,14 +431,14 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
         }
       }
     }
-    // if (lastMessage.messageType === 'FinishedGameState') {
-    //   const { loser } = lastMessage.message as FinishedGameState;
-    //   console.log('GOT MESSAGE');
-    //   if (loser === account.address) {
-    //     setFinishGameCheckResult(null);
-    //     setFinishedGameState(lastMessage.message as FinishedGameState);
-    //   }
-    // }
+    if (lastMessage.messageType === 'FinishedGameState') {
+      const { loser } = lastMessage.message as FinishedGameState;
+      console.log('GOT MESSAGE', lastMessage);
+      if (loser === account.address) {
+        setFinishGameCheckResult(null);
+        setFinishedGameState(lastMessage.message as FinishedGameState);
+      }
+    }
   }
 
   useEffect(() => {
