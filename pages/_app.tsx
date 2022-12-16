@@ -12,7 +12,8 @@ import 'i18n/index';
 
 import '@rainbow-me/rainbowkit/styles.css';
 import 'styles/globals.css';
-import XmtpProvider from "../contexts/XmtpProvider";
+import XmtpProvider from '../contexts/XmtpProvider';
+import Script from 'next/script';
 
 const { chains, provider, webSocketProvider } = configureChains(
   [
@@ -21,9 +22,7 @@ const { chains, provider, webSocketProvider } = configureChains(
       ? [chain.goerli, chain.kovan, chain.rinkeby, chain.ropsten]
       : []),
   ],
-  [
-    publicProvider(),
-  ],
+  [publicProvider()],
 );
 
 const { connectors } = getDefaultWallets({
@@ -44,7 +43,7 @@ const client = new ApolloClient({
   cache,
 });
 
-const version = '1.0.12'
+const version = '1.0.12';
 function MyApp({ Component, pageProps }: AppProps) {
   const props = { ...pageProps, version };
   return (
@@ -54,12 +53,23 @@ function MyApp({ Component, pageProps }: AppProps) {
           <XmtpContextProvider>
             <RainbowKitProvider chains={chains}>
               <XmtpProvider>
-              <Layout version={version}>
-                <Head>
-                  <meta name="viewport" content="width=device-width, initial-scale=1" />
-                </Head>
-                <Component {...props} />
-              </Layout>
+                <Layout version={version}>
+                  <Head>
+                    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+                    <Script
+                      async={true}
+                      src="https://www.googletagmanager.com/gtag/js?id=G-5ZN54R7HFK"
+                    ></Script>
+                    <Script>{`window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-5ZN54R7HFK');`}</Script>
+
+
+                  </Head>
+                  <Component {...props} />
+                </Layout>
               </XmtpProvider>
             </RainbowKitProvider>
           </XmtpContextProvider>
