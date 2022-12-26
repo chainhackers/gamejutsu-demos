@@ -33,7 +33,7 @@ export const WalletContextProvider = ({ children }: { children: React.ReactNode 
 
       // let ethereum = await detectEthereumProvider();
       
-      let signer = getSigner();
+      let signer = await getSigner();
       setSigner(signer);
 
       // console.log(account);

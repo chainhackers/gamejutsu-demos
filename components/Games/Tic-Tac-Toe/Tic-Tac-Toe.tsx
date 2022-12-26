@@ -22,7 +22,7 @@ export const TicTacToe: React.FC<ITicTacToeProps> = ({
     const move: TTTMove = TTTMove.fromMove(i, gameState.playerType);
 
     let address = await getSignerAddress();
-    let transitionResult = await transition(getRulesContract('tic-tac-toe'),
+    let transitionResult = await transition( await getRulesContract('tic-tac-toe'),
       gameState.toGameStateContractParams(),
       gameState.playerId,
       move.encodedMove

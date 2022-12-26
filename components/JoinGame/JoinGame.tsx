@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { ActualGamesList } from 'components';
 import { useQuery } from '@apollo/client';
-import { gameEntitiesQuery, gameEntitiesAllQuery } from 'queries';
+import { gameEntitiesQuery } from 'queries';
 import { JoinGamePropsI } from './JoinGameProps';
 import styles from './JoinGame.module.scss';
 import { useRouter } from 'next/router';
