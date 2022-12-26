@@ -1,20 +1,24 @@
 import { useTranslation } from 'react-i18next';
 import { ActualGamesList } from 'components';
 import { useQuery } from '@apollo/client';
-import { gameEntitiesQuery } from 'queries';
+import { gameEntitiesQuery, gameEntitiesAllQuery } from 'queries';
 import { JoinGamePropsI } from './JoinGameProps';
 import styles from './JoinGame.module.scss';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
-import { getRulesContract } from "../../gameApi";
+import React, { useEffect, useState } from 'react';
+import { getRulesContract } from '../../gameApi';
 import { TGameType } from 'types/game';
+
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 export const JoinGame: React.FC<JoinGamePropsI> = ({ acceptGameHandler }) => {
+  const [rulesContractAddress, setRulesContractAddress] = useState<string>(ZERO_ADDRESS);
   const { t } = useTranslation();
   const router = useRouter();
 
   const gameType = router.query.gameType as TGameType;
+
   const { data, error, loading } = useQuery(gameEntitiesQuery, {
-    variables: { rules: getRulesContract(gameType).address },
+    variables: { rules: rulesContractAddress }, // getRulesContract
   });
 
   const [isAccepting, setAccepting] = useState<boolean>(false);
@@ -22,9 +26,7 @@ export const JoinGame: React.FC<JoinGamePropsI> = ({ acceptGameHandler }) => {
 
   const gameEntities = data?.gameEntities as { started: boolean | null; rules: string }[];
 
-  const dataToShow = !!gameEntities
-    ? gameEntities
-    : [];
+  const dataToShow = !!gameEntities ? gameEntities : [];
 
   const clickHandler = async (gameId: string, stake: string) => {
     setAcceptingError(null);
@@ -41,6 +43,10 @@ export const JoinGame: React.FC<JoinGamePropsI> = ({ acceptGameHandler }) => {
         setAccepting(false);
       });
   };
+
+  useEffect(() => {
+    getRulesContract(gameType).then((contract) => setRulesContractAddress(contract.address));
+  });
 
   return (
     <div className={styles.container}>
