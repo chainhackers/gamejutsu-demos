@@ -9,7 +9,6 @@ import { PoweredBy } from 'components/PoweredBy';
 
 import companies from 'data/partners.json';
 import { useRouter } from 'next/router';
-import { useSigner } from 'wagmi';
 
 interface IHomePageProps {
   partners: { image: string; name: string; href: string }[];
