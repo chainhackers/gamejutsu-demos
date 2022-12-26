@@ -9,20 +9,21 @@ import {
 } from '../.generated/contracts/esm/types/polygon/Arbiter';
 import { getPolygonSdk } from '../.generated/contracts';
 import { TGameType } from 'types/game';
+import { fetchSigner } from '@wagmi/core';
 
-const getSdk = () => getPolygonSdk(getSigner()!);
-export const getArbiter = () => getSdk().arbiter;
-export const getRulesContract = (gameType: TGameType): ethers.Contract => {
+const getSdk = async () => getPolygonSdk(await getSigner()!);
+export const getArbiter = async () => (await getSdk()).arbiter;
+export const getRulesContract = async (gameType: TGameType): Promise<ethers.Contract> => {
   if (gameType == 'checkers') {
-    return getSdk().checkersRules;
+    return (await getSdk()).checkersRules;
   }
   if (gameType == 'tic-tac-toe') {
-    return getSdk().ticTacToeRules;
+    return (await getSdk()).ticTacToeRules;
   }
   throw 'Unknown gameType: ' + gameType;
 };
 
-export function getSigner(): ethers.Signer | null {
+export async function getSigner(): Promise<ethers.Signer> {
   console.log('window.ethereum', window.ethereum);
   // const provider =
   //   window.ethereum != null
@@ -32,7 +33,9 @@ export function getSigner(): ethers.Signer | null {
     // const provider = ethers.providers.getDefaultProvider();
     // const signer = provider.getSigner();
     // return signer;
-    return null;
+    const signer = await fetchSigner();
+
+    return signer!;
   }
 
   const provider = new ethers.providers.Web3Provider(
@@ -264,7 +267,7 @@ export const isValidSignedMove = async (
   gameMove: IGameMove,
   signatures: string[] = [],
 ) => {
-  let wallet = await getSessionWallet(await getSigner()!.getAddress());
+  let wallet = await getSessionWallet(await (await getSigner()).getAddress());
   let signature: string = await signMove(gameMove, wallet);
   signatures.push(signature);
   return _isValidSignedMove(contract, { gameMove, signatures });
@@ -300,7 +303,7 @@ export const proposeGame = async (
 ): Promise<GameProposedEventObject> => {
   console.log('proposeGame', { contract, rulesContractAddress });
   const value = ethers.BigNumber.from(10).pow(16);
-  let wallet = await getSessionWallet(await getSigner()!.getAddress());
+  let wallet = await getSessionWallet(await (await getSigner()).getAddress());
   const gasEstimated = await contract.estimateGas.proposeGame(rulesContractAddress, []);
 
   const tx = await contract.proposeGame(rulesContractAddress, [wallet.address], {
@@ -320,7 +323,7 @@ export const acceptGame = async (
   value: string | null = null,
 ): Promise<GameStartedEventObject> => {
   const gasEstimated = await contract.estimateGas.acceptGame(gameId, [], { value });
-  let wallet = await getSessionWallet(await getSigner()!.getAddress());
+  let wallet = await getSessionWallet(await (await getSigner()).getAddress());
   const tx = await contract.acceptGame(gameId, [wallet.address], {
     gasLimit: gasEstimated.mul(2),
     value,
