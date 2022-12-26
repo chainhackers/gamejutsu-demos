@@ -16,10 +16,7 @@ interface IHomePageProps {
 }
 const Home: NextPage<IHomePageProps> = ({ partners }) => {
   const { t } = useTranslation();
-  const { data: signer, isError, isLoading } = useSigner();
-
-  console.log('signer', signer);
-
+  
   const router = useRouter();
 
   return (
