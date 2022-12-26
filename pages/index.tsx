@@ -16,10 +16,10 @@ interface IHomePageProps {
 }
 const Home: NextPage<IHomePageProps> = ({ partners }) => {
   const { t } = useTranslation();
-  
+
   const router = useRouter();
 
-  return (
+return (
     <div className={styles.container}>
       <Head>
         <title>GameJutsu</title>
