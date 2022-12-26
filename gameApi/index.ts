@@ -1,24 +1,40 @@
 import { BigNumber, ethers } from 'ethers';
 import { getSessionWallet, signMove } from 'helpers/session_signatures';
-import { IGameMove, ISignedGameMove } from "../types/arbiter";
+import { IGameMove, ISignedGameMove } from '../types/arbiter';
 import { TContractGameState } from 'components/Games/types';
-import {GameProposedEvent, GameProposedEventObject, GameStartedEventObject} from "../.generated/contracts/esm/types/polygon/Arbiter";
-import {getPolygonSdk} from "../.generated/contracts";
+import {
+  GameProposedEvent,
+  GameProposedEventObject,
+  GameStartedEventObject,
+} from '../.generated/contracts/esm/types/polygon/Arbiter';
+import { getPolygonSdk } from '../.generated/contracts';
 import { TGameType } from 'types/game';
 
-const getSdk = () => getPolygonSdk(getSigner())
-export const getArbiter = () => getSdk().arbiter
+const getSdk = () => getPolygonSdk(getSigner()!);
+export const getArbiter = () => getSdk().arbiter;
 export const getRulesContract = (gameType: TGameType): ethers.Contract => {
   if (gameType == 'checkers') {
-    return getSdk().checkersRules
+    return getSdk().checkersRules;
   }
   if (gameType == 'tic-tac-toe') {
-    return getSdk().ticTacToeRules
+    return getSdk().ticTacToeRules;
   }
-  throw "Unknown gameType: " + gameType;
-}
+  throw 'Unknown gameType: ' + gameType;
+};
 
-export function getSigner(): ethers.Signer {
+export function getSigner(): ethers.Signer | null {
+  console.log('window.ethereum', window.ethereum);
+  // const provider =
+  //   window.ethereum != null
+  //     ? new ethers.providers.Web3Provider(window.ethereum)
+  //     : ethers.providers.getDefaultProvider();
+  if (!window.ethereum) {
+    // const provider = ethers.providers.getDefaultProvider();
+    // const signer = provider.getSigner();
+    // return signer;
+    return null;
+  }
+
   const provider = new ethers.providers.Web3Provider(
     window.ethereum as ethers.providers.ExternalProvider,
   );
@@ -35,24 +51,20 @@ export function newContract(
   return contract;
 }
 
-
 // event GameProposed(address indexed rules, uint256 gameId, uint256 stake, address indexed proposer);
 // event GameStarted(address indexed rules, uint256 gameId, uint256 stake, address[2] players);
-
 
 // event GameFinished(uint256 gameId, address winner, address loser, bool isDraw);
 // event PlayerDisqualified(uint256 gameId, address player);
 // event PlayerResigned(uint256 gameId, address player);
 
-
 // event SessionAddressRegistered(uint256 gameId, address player, address sessionAddress);
 // event TimeoutStarted(uint256 gameId, address player, uint256 nonce, uint256 timeout);
 // event TimeoutResolved(uint256 gameId, address player, uint256 nonce);
 
-type TGameFinished = { gameId: number, winner: string, loser: string, isDraw: boolean };
-type TPlayerDisqualified = { gameId: number, player: string };
-type TPlayerResigned = { gameId: number, player: string };
-
+type TGameFinished = { gameId: number; winner: string; loser: string; isDraw: boolean };
+type TPlayerDisqualified = { gameId: number; player: string };
+type TPlayerResigned = { gameId: number; player: string };
 
 export class FinishedGameState {
   gameId: number;
@@ -62,8 +74,14 @@ export class FinishedGameState {
   disqualified: string | null;
   resigned: string | null;
 
-  constructor(gameId: number, winner: string | null = null, loser: string | null = null, isDraw: boolean,
-    disqualified: string | null = null, resigned: string | null = null) {
+  constructor(
+    gameId: number,
+    winner: string | null = null,
+    loser: string | null = null,
+    isDraw: boolean,
+    disqualified: string | null = null,
+    resigned: string | null = null,
+  ) {
     this.gameId = gameId;
     this.winner = winner;
     this.loser = loser;
@@ -72,8 +90,12 @@ export class FinishedGameState {
     this.resigned = resigned;
   }
   static fromGameFinishedArgs(gameFinished: TGameFinished) {
-    return new FinishedGameState(gameFinished.gameId, gameFinished.winner, gameFinished.loser,
-       gameFinished.isDraw);
+    return new FinishedGameState(
+      gameFinished.gameId,
+      gameFinished.winner,
+      gameFinished.loser,
+      gameFinished.isDraw,
+    );
   }
   addPlayerDisqualified(playerDisqualified: TPlayerDisqualified) {
     this.gameId = playerDisqualified.gameId;
@@ -106,7 +128,9 @@ export const finishGame = async (
   console.log('tx', tx);
   const rc = await tx.wait();
   console.log('rc', rc);
-  const gameFinishedEvent = rc.events.find((event: { event: string }) => event.event === 'GameFinished');
+  const gameFinishedEvent = rc.events.find(
+    (event: { event: string }) => event.event === 'GameFinished',
+  );
   return FinishedGameState.fromGameFinishedArgs(gameFinishedEvent.args);
 };
 
@@ -124,7 +148,10 @@ export const initTimeout = async (
   console.log('signedGameMoves', signedGameMoves);
   const value = ethers.BigNumber.from(10).pow(17);
   const gasEstimated = await contract.estimateGas.initTimeout(signedGameMoves, { value });
-  const tx = await contract.initTimeout(signedGameMoves, { value, gasLimit: gasEstimated.mul(2) });
+  const tx = await contract.initTimeout(signedGameMoves, {
+    value,
+    gasLimit: gasEstimated.mul(2),
+  });
   console.log('tx', tx);
   const rc = await tx.wait();
   console.log('rc', rc);
@@ -149,7 +176,9 @@ export const resolveTimeout = async (
   console.log('tx', tx);
   const rc = await tx.wait();
   console.log('rc', rc);
-  const event = rc.events.find((event: { event: string }) => event.event === 'TimeoutResolved');
+  const event = rc.events.find(
+    (event: { event: string }) => event.event === 'TimeoutResolved',
+  );
   return { ...event.args };
 };
 
@@ -168,10 +197,15 @@ export const finalizeTimeout = async (
   console.log('tx', tx);
   const rc = await tx.wait();
   console.log('rc', rc);
-  const gameFinishedEvent = rc.events.find((event: { event: string }) => event.event === 'GameFinished');
-  const playerDisqualifiedEvent = rc.events.find((event: { event: string }) => event.event === 'PlayerDisqualified');
-  return FinishedGameState.fromGameFinishedArgs(gameFinishedEvent.args)
-  .addPlayerDisqualified(playerDisqualifiedEvent.args);
+  const gameFinishedEvent = rc.events.find(
+    (event: { event: string }) => event.event === 'GameFinished',
+  );
+  const playerDisqualifiedEvent = rc.events.find(
+    (event: { event: string }) => event.event === 'PlayerDisqualified',
+  );
+  return FinishedGameState.fromGameFinishedArgs(gameFinishedEvent.args).addPlayerDisqualified(
+    playerDisqualifiedEvent.args,
+  );
 };
 
 export const disputeMove = async (
@@ -183,12 +217,16 @@ export const disputeMove = async (
   console.log('tx', tx);
   const rc = await tx.wait();
   console.log('rc', rc);
-  const gameFinishedEvent = rc.events.find((event: { event: string }) => event.event === 'GameFinished');
-  const playerDisqualifiedEvent = rc.events.find((event: { event: string }) => event.event === 'PlayerDisqualified');
-  return FinishedGameState.fromGameFinishedArgs(gameFinishedEvent.args)
-  .addPlayerDisqualified(playerDisqualifiedEvent.args);
+  const gameFinishedEvent = rc.events.find(
+    (event: { event: string }) => event.event === 'GameFinished',
+  );
+  const playerDisqualifiedEvent = rc.events.find(
+    (event: { event: string }) => event.event === 'PlayerDisqualified',
+  );
+  return FinishedGameState.fromGameFinishedArgs(gameFinishedEvent.args).addPlayerDisqualified(
+    playerDisqualifiedEvent.args,
+  );
 };
-
 
 export const checkIsValidMove = async (
   contract: ethers.Contract,
@@ -226,7 +264,7 @@ export const isValidSignedMove = async (
   gameMove: IGameMove,
   signatures: string[] = [],
 ) => {
-  let wallet = await getSessionWallet(await getSigner().getAddress());
+  let wallet = await getSessionWallet(await getSigner()!.getAddress());
   let signature: string = await signMove(gameMove, wallet);
   signatures.push(signature);
   return _isValidSignedMove(contract, { gameMove, signatures });
@@ -262,7 +300,7 @@ export const proposeGame = async (
 ): Promise<GameProposedEventObject> => {
   console.log('proposeGame', { contract, rulesContractAddress });
   const value = ethers.BigNumber.from(10).pow(16);
-  let wallet = await getSessionWallet(await getSigner().getAddress());
+  let wallet = await getSessionWallet(await getSigner()!.getAddress());
   const gasEstimated = await contract.estimateGas.proposeGame(rulesContractAddress, []);
 
   const tx = await contract.proposeGame(rulesContractAddress, [wallet.address], {
@@ -277,13 +315,12 @@ export const proposeGame = async (
 };
 
 export const acceptGame = async (
-    contract: ethers.Contract,
-    gameId: BigNumber,
-    value: string | null = null,
+  contract: ethers.Contract,
+  gameId: BigNumber,
+  value: string | null = null,
 ): Promise<GameStartedEventObject> => {
-  const gasEstimated = await contract.estimateGas.acceptGame(gameId, [],
-      {value});
-  let wallet = await getSessionWallet(await getSigner().getAddress());
+  const gasEstimated = await contract.estimateGas.acceptGame(gameId, [], { value });
+  let wallet = await getSessionWallet(await getSigner()!.getAddress());
   const tx = await contract.acceptGame(gameId, [wallet.address], {
     gasLimit: gasEstimated.mul(2),
     value,
@@ -295,19 +332,21 @@ export const acceptGame = async (
   return event.args;
 };
 
-export const resign = async (
-  contract: ethers.Contract,
-  gameId: BigNumber,
-) => {
+export const resign = async (contract: ethers.Contract, gameId: BigNumber) => {
   const gasEstimated = await contract.estimateGas.resign(gameId);
   const tx = await contract.resign(gameId, { gasLimit: gasEstimated.mul(2) });
   console.log('tx', tx);
   const rc = await tx.wait();
   console.log('rc', rc);
-  const gameFinishedEvent = rc.events.find((event: { event: string }) => event.event === 'GameFinished');
-  const PlayerResignedEvent = rc.events.find((event: { event: string }) => event.event === 'PlayerResigned');
-  return FinishedGameState.fromGameFinishedArgs(gameFinishedEvent.args)
-  .addPlayerResigned(PlayerResignedEvent);
+  const gameFinishedEvent = rc.events.find(
+    (event: { event: string }) => event.event === 'GameFinished',
+  );
+  const PlayerResignedEvent = rc.events.find(
+    (event: { event: string }) => event.event === 'PlayerResigned',
+  );
+  return FinishedGameState.fromGameFinishedArgs(gameFinishedEvent.args).addPlayerResigned(
+    PlayerResignedEvent,
+  );
 };
 
 export const getPlayers = async (contract: ethers.Contract, gameId: BigNumber) => {
@@ -323,5 +362,5 @@ export default {
   disputeMove,
   checkIsValidMove,
   transition,
-  isValidGameMove
+  isValidGameMove,
 };

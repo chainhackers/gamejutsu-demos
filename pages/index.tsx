@@ -9,16 +9,20 @@ import { PoweredBy } from 'components/PoweredBy';
 
 import companies from 'data/partners.json';
 import { useRouter } from 'next/router';
+import { useSigner } from 'wagmi';
 
 interface IHomePageProps {
   partners: { image: string; name: string; href: string }[];
 }
 const Home: NextPage<IHomePageProps> = ({ partners }) => {
   const { t } = useTranslation();
+  const { data: signer, isError, isLoading } = useSigner();
+
+  console.log('signer', signer);
 
   const router = useRouter();
 
-return (
+  return (
     <div className={styles.container}>
       <Head>
         <title>GameJutsu</title>
