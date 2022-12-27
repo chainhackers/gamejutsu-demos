@@ -1,5 +1,5 @@
 .container {
-  position: relative;
+  //position: relative;
   background-color: var(--white);
   display: flex;
   justify-content: space-between;
@@ -17,6 +17,13 @@
   .left {
     display: flex;
     align-items: center;
+  }
+
+  .left {
+    @media (max-width: 576px) {
+      display: flex;
+      flex-direction: column;
+    }
   }
 }
 
