@@ -47,7 +47,7 @@ export const Checkers: React.FC<ICheckersProps> = ({
         setLastMove(null);
 
         let address = await getSignerAddress();
-        let transitionResult = await transition(getRulesContract('checkers'),
+        let transitionResult = await transition(await getRulesContract('checkers'),
             gameState.toGameStateContractParams(),
             gameState.playerId,
             move.encodedMove

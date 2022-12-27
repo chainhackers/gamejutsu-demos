@@ -14,7 +14,7 @@ export const Board: React.FC<IBoardProps> = ({
                                                  flip,
                                                  onHandleMove,
                                              }) => { 
-    console.log('lastMove board', lastMove);                                                   
+    
     const renderSquare = (row: number, i: number) => {
         if (row % 2 == 1) {
             return <>
