@@ -3,33 +3,53 @@
 }
 
 .main {
+  display: flex;
   background-color: var(--white);
   padding: 100px 5px;
-
   max-width: 1250px;
   margin: auto;
-  display: flex;
   justify-content: space-between;
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+    padding-top: 10px;
+  }
 
   .introductionBlock {
     .intro {
-      font-size: 50px;
+      font-size: 5rem;
       font-weight: bold;
       max-width: 604px;
+
+      @media (max-width: 576px) {
+        font-size: 4rem;
+      }
     }
 
     .description {
-      font-size: 26px;
+      font-size: 2.6rem;
       max-width: 650px;
       padding: 10px 0;
+
+      @media (max-width: 576px) {
+        font-size: 2rem;
+      }
     }
     .tryButton {
       margin-top: 50px;
+
+      @media (max-width: 576px) {
+        margin-top: 30px;
+      }
     }
   }
 
   .sponsorBlock {
     text-align: -webkit-right;
+
+    @media (max-width: 768px) {
+      margin-top: 40px;
+    }
 
     .logo {
       position: relative;
@@ -43,6 +63,18 @@
       text-align: center;
       // padding-top: 115px;
       margin-right: 30px;
+
+      @media (max-width: 768px) {
+        top: 0;
+        width: 350px;
+        height: 321px;
+      }
+
+      @media (max-width: 576px) {
+        width: 245px;
+        height: 245px;
+      }
     }
+    
   }
 }
