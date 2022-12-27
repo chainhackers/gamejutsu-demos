@@ -40,9 +40,7 @@ export const XmtpContextProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const initClient = useCallback(async (wallet: Signer) => {
     if (wallet) {
       try {
-        //buildDirectMessageTopic;
-        let _client = await Client.create(wallet, { env: 'production' });
-        // _client.init //streamConversationMessages
+        const _client = await Client.create(wallet, { env: 'production' });      
         setClient(_client);
       } catch (e) {
         console.error(e);
