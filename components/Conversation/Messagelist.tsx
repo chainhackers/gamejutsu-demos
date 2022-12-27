@@ -1,6 +1,6 @@
 //https://github.com/xmtp/example-chat-react/blob/main/components/Conversation/MessagesList.tsx
 
-import {Message} from '@xmtp/xmtp-js'
+import { DecodedMessage as Message } from '@xmtp/xmtp-js'
 import Blockies from 'react-blockies'
 import React, {MutableRefObject} from 'react'
 import {formatTime} from './helpers'

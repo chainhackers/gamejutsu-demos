@@ -1,4 +1,4 @@
-import { Conversation, Message, SortDirection, Stream } from '@xmtp/xmtp-js'
+import { Conversation, DecodedMessage as Message, SortDirection, Stream } from '@xmtp/xmtp-js';
 import { ListMessagesPaginatedOptions } from '@xmtp/xmtp-js/dist/types/src/Client'
 import { useState, useEffect, useContext } from 'react'
 import { ISignedGameMove } from 'types/arbiter'
@@ -130,10 +130,12 @@ const useConversation = (
 
     useEffect(() => {
         const getConvo = async () => {
-            if (!client || !peerAddress) {
+            if (!client || !peerAddress || !gameId) {
                 return
             }
-            setConversation(await client.conversations.newConversation(peerAddress))
+            setConversation(await client.conversations.newConversation(peerAddress, {
+                conversationId: String(gameId),
+                metadata: { title: String(gameId)}}))
         }
         getConvo()
     }, [client, peerAddress])
