@@ -5,20 +5,25 @@ import { TContractGameState } from 'components/Games/types';
 import {GameProposedEvent, GameProposedEventObject, GameStartedEventObject} from "../.generated/contracts/esm/types/polygon/Arbiter";
 import {getPolygonSdk} from "../.generated/contracts";
 import { TGameType } from 'types/game';
+import { fetchSigner } from '@wagmi/core';
 
-const getSdk = () => getPolygonSdk(getSigner())
-export const getArbiter = () => getSdk().arbiter
-export const getRulesContract = (gameType: TGameType): ethers.Contract => {
+const getSdk = async () => getPolygonSdk(await getSigner())
+export const getArbiter = async () => (await getSdk()).arbiter
+export const getRulesContract = async (gameType: TGameType): Promise<ethers.Contract> => {
   if (gameType == 'checkers') {
-    return getSdk().checkersRules
+    return (await getSdk()).checkersRules
   }
   if (gameType == 'tic-tac-toe') {
-    return getSdk().ticTacToeRules
+    return (await getSdk()).ticTacToeRules
   }
   throw "Unknown gameType: " + gameType;
 }
 
-export function getSigner(): ethers.Signer {
+export async function getSigner(): Promise<ethers.Signer> {
+  if (!window.ethereum) {
+    const signer = await fetchSigner();
+    return signer!;
+  }
   const provider = new ethers.providers.Web3Provider(
     window.ethereum as ethers.providers.ExternalProvider,
   );
@@ -100,12 +105,12 @@ export const finishGame = async (
   contract: ethers.Contract,
   signedGameMoves: [ISignedGameMove, ISignedGameMove],
 ) => {
-  console.log('signedGameMoves', signedGameMoves);
+  console.log('GameAPI finishGame: signedGameMoves = ', signedGameMoves);
   const gasEstimated = await contract.estimateGas.finishGame(signedGameMoves);
   const tx = await contract.finishGame(signedGameMoves, { gasLimit: gasEstimated.mul(2) });
-  console.log('tx', tx);
+  console.log('GameAPI finishGame: tx = ', tx);
   const rc = await tx.wait();
-  console.log('rc', rc);
+  console.log('GameAPI finishGame: rc = ', rc);
   const gameFinishedEvent = rc.events.find((event: { event: string }) => event.event === 'GameFinished');
   return FinishedGameState.fromGameFinishedArgs(gameFinishedEvent.args);
 };
@@ -121,13 +126,13 @@ export const initTimeout = async (
   contract: ethers.Contract,
   signedGameMoves: [ISignedGameMove, ISignedGameMove],
 ) => {
-  console.log('signedGameMoves', signedGameMoves);
+  console.log('GameAPI initTimeout: signedGameMoves = ', signedGameMoves);
   const value = ethers.BigNumber.from(10).pow(17);
   const gasEstimated = await contract.estimateGas.initTimeout(signedGameMoves, { value });
   const tx = await contract.initTimeout(signedGameMoves, { value, gasLimit: gasEstimated.mul(2) });
-  console.log('tx', tx);
+  console.log('GameAPI initTimeout: tx = ', tx);
   const rc = await tx.wait();
-  console.log('rc', rc);
+  console.log('GameAPI initTimeout: rc = ', rc);
   const event = rc.events.find((event: { event: string }) => event.event === 'TimeoutStarted');
   return { ...event.args };
 };
@@ -143,12 +148,12 @@ export const resolveTimeout = async (
   contract: ethers.Contract,
   signedGameMove: ISignedGameMove,
 ) => {
-  console.log('signedGameMove', signedGameMove);
+  console.log('GameAPI resolveTimeout: signedGameMove = ', signedGameMove);
   const gasEstimated = await contract.estimateGas.resolveTimeout(signedGameMove);
   const tx = await contract.resolveTimeout(signedGameMove, { gasLimit: gasEstimated.mul(2) });
-  console.log('tx', tx);
+  console.log('GameAPI resolveTimeout: tx = ', tx);
   const rc = await tx.wait();
-  console.log('rc', rc);
+  console.log('GameAPI resolveTimeout: rc = ', rc);
   const event = rc.events.find((event: { event: string }) => event.event === 'TimeoutResolved');
   return { ...event.args };
 };
@@ -165,9 +170,9 @@ export const finalizeTimeout = async (
 ): Promise<FinishedGameState> => {
   const gasEstimated = await contract.estimateGas.finalizeTimeout(gameId);
   const tx = await contract.finalizeTimeout(gameId, { gasLimit: gasEstimated.mul(2) });
-  console.log('tx', tx);
+  console.log('GameAPI finalizeTimeout: tx = ', tx);
   const rc = await tx.wait();
-  console.log('rc', rc);
+  console.log('GameAPI finalizeTimeout: rc = ', rc);
   const gameFinishedEvent = rc.events.find((event: { event: string }) => event.event === 'GameFinished');
   const playerDisqualifiedEvent = rc.events.find((event: { event: string }) => event.event === 'PlayerDisqualified');
   return FinishedGameState.fromGameFinishedArgs(gameFinishedEvent.args)
@@ -178,11 +183,12 @@ export const disputeMove = async (
   contract: ethers.Contract,
   signedGameMove: ISignedGameMove,
 ): Promise<FinishedGameState> => {
+  console.log('GameAPI disputeMove: signedGameMove = ', signedGameMove);
   const gasEstimated = await contract.estimateGas.disputeMove(signedGameMove);
   const tx = await contract.disputeMove(signedGameMove, { gasLimit: gasEstimated.mul(2) });
-  console.log('tx', tx);
+  console.log('GameAPI disputeMove: tx =', tx);
   const rc = await tx.wait();
-  console.log('rc', rc);
+  console.log('GameAPI disputeMove: rc =', rc);
   const gameFinishedEvent = rc.events.find((event: { event: string }) => event.event === 'GameFinished');
   const playerDisqualifiedEvent = rc.events.find((event: { event: string }) => event.event === 'PlayerDisqualified');
   return FinishedGameState.fromGameFinishedArgs(gameFinishedEvent.args)
@@ -196,9 +202,9 @@ export const checkIsValidMove = async (
   playerIngameId: number,
   encodedMove: string,
 ) => {
-  console.log('checkIsValidMove', { gameState, playerIngameId, encodedMove });
+  console.log(`GameAPI checkIsValidMove: gameState = ${gameState}, playerIngameId = ${playerIngameId}, encodedMove = ${encodedMove}`);
   const response = contract.isValidMove(gameState, playerIngameId, encodedMove);
-  console.log('response', response);
+  console.log('GameAPI checkIsValidMove: response =', response);
   return response;
 };
 
@@ -208,35 +214,38 @@ export const transition = async (
   playerIngameId: number,
   encodedMove: string,
 ) => {
-  console.log('transition', { gameState, playerIngameId, encodedMove });
+  console.log(`GameAPI transition: gameState = ${gameState}, playerIngameId = ${playerIngameId}, encodedMove = ${encodedMove}`);
   const response = await contract.transition(gameState, playerIngameId, encodedMove);
-  console.log('response', response);
+  console.log('GameAPI transition: response =', response);
   return response;
 };
 
-export const isValidGameMove = async (contract: ethers.Contract, gameMove: IGameMove) => {
-  console.log('isValidGameMove', { contract, gameMove });
-  const response = contract.isValidGameMove(gameMove);
-  console.log({ response });
-  return response;
-};
+// seems to be unused anywhere
+// export const isValidGameMove = async (contract: ethers.Contract, gameMove: IGameMove) => {
+//   console.log(`GameAPI isValidGameMove: contract = ${contract}, gameMove = ${gameMove}`);
+  
+//   const response = contract.isValidGameMove(gameMove);
+//   console.log('GameAPI isValidGameMove: response =', await response);
+//   return response;
+// };
 
-export const isValidSignedMove = async (
-  contract: ethers.Contract,
-  gameMove: IGameMove,
-  signatures: string[] = [],
-) => {
-  let wallet = await getSessionWallet(await getSigner().getAddress());
-  let signature: string = await signMove(gameMove, wallet);
-  signatures.push(signature);
-  return _isValidSignedMove(contract, { gameMove, signatures });
-};
+// seems to be unused anywhere
+// const isValidSignedMove = async (
+//   contract: ethers.Contract,
+//   gameMove: IGameMove,
+//   signatures: string[] = [],
+// ) => {
+//   let wallet = await getSessionWallet(await getSigner().getAddress());
+//   let signature: string = await signMove(gameMove, wallet);
+//   signatures.push(signature);
+//   return _isValidSignedMove(contract, { gameMove, signatures });
+// };
 
 export const _isValidSignedMove = async (
   contract: ethers.Contract,
   signedgameMove: ISignedGameMove,
 ) => {
-  console.log('isValidSignedMove', { contract, signedgameMove });
+  console.log(`GameAPI isValidSignedMove: contract = ${contract}, signedgameMove = ${signedgameMove}`);
   const response = contract.isValidSignedMove(signedgameMove);
   return response;
 };
@@ -260,18 +269,18 @@ export const proposeGame = async (
   rulesContractAddress: string,
   isPaid?: boolean,
 ): Promise<GameProposedEventObject> => {
-  console.log('proposeGame', { contract, rulesContractAddress });
+  console.log('GameAPI proposeGame:', contract, 'rulesContractAddress: ', rulesContractAddress);
   const value = ethers.BigNumber.from(10).pow(16);
-  let wallet = await getSessionWallet(await getSigner().getAddress());
+  let wallet = await getSessionWallet(await (await getSigner()).getAddress());
   const gasEstimated = await contract.estimateGas.proposeGame(rulesContractAddress, []);
 
   const tx = await contract.proposeGame(rulesContractAddress, [wallet.address], {
     gasLimit: gasEstimated.mul(2),
     value: isPaid ? value : null,
   });
-  console.log('tx', tx);
+  console.log('GameAPI proposeGame: tx = ', tx);
   const rc = await tx.wait();
-  console.log('rc', rc);
+  console.log('GameAPI proposeGame: rc = ', rc);
   const event = rc.events.find((event: { event: string }) => event.event === 'GameProposed');
   return event.args;
 };
@@ -281,16 +290,17 @@ export const acceptGame = async (
     gameId: BigNumber,
     value: string | null = null,
 ): Promise<GameStartedEventObject> => {
+  console.log('GameAPI acceptGame:', contract, '\n gameId =', gameId, Number(gameId));
   const gasEstimated = await contract.estimateGas.acceptGame(gameId, [],
       {value});
-  let wallet = await getSessionWallet(await getSigner().getAddress());
+  let wallet = await getSessionWallet(await (await getSigner()).getAddress());
   const tx = await contract.acceptGame(gameId, [wallet.address], {
     gasLimit: gasEstimated.mul(2),
     value,
   });
-  console.log('tx', tx);
+  console.log('GameAPI acceptGame: tx = ', tx);
   const rc = await tx.wait();
-  console.log('rc', rc);
+  console.log('GameAPI acceptGame: rc = ', rc);
   const event = rc.events.find((event: { event: string }) => event.event === 'GameStarted');
   return event.args;
 };
@@ -299,11 +309,12 @@ export const resign = async (
   contract: ethers.Contract,
   gameId: BigNumber,
 ) => {
+  console.log(`GameAPI resign: contract = ${contract} gameId = ${gameId}`);
   const gasEstimated = await contract.estimateGas.resign(gameId);
   const tx = await contract.resign(gameId, { gasLimit: gasEstimated.mul(2) });
-  console.log('tx', tx);
+  console.log('GameAPI resign: tx = ', tx);
   const rc = await tx.wait();
-  console.log('rc', rc);
+  console.log('GameAPI resign: rc = ', rc);
   const gameFinishedEvent = rc.events.find((event: { event: string }) => event.event === 'GameFinished');
   const PlayerResignedEvent = rc.events.find((event: { event: string }) => event.event === 'PlayerResigned');
   return FinishedGameState.fromGameFinishedArgs(gameFinishedEvent.args)
@@ -311,6 +322,7 @@ export const resign = async (
 };
 
 export const getPlayers = async (contract: ethers.Contract, gameId: BigNumber) => {
+  console.log('GameAPI getPlayers: ' , contract, gameId);
   const response = contract.getPlayers(gameId);
   return response;
 };
@@ -323,5 +335,5 @@ export default {
   disputeMove,
   checkIsValidMove,
   transition,
-  isValidGameMove
+  // isValidGameMove //seems to be unused anywhere
 };

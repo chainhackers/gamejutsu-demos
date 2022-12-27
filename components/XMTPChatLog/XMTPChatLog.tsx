@@ -12,9 +12,6 @@ export const XMTPChatLog: React.FC<XMTPChatLogPropsI> = ({ anyMessages, isLoadin
     }
   }
 
-  console.log('anyMessages', anyMessages);
-  console.log('filteredMessages', filteredMessages);
-
   function makeElements() {
     return filteredMessages.map((anyMessage: IAnyMessage) => {
       return <XMTPChatLogElement

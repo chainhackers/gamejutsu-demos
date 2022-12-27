@@ -5,16 +5,20 @@ import { gameEntitiesQuery } from 'queries';
 import { JoinGamePropsI } from './JoinGameProps';
 import styles from './JoinGame.module.scss';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getRulesContract } from "../../gameApi";
 import { TGameType } from 'types/game';
+const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 export const JoinGame: React.FC<JoinGamePropsI> = ({ acceptGameHandler }) => {
   const { t } = useTranslation();
   const router = useRouter();
 
+  const [rulesContractAddress, setRulesContractAddress] = useState<string>(ZERO_ADDRESS);
+
   const gameType = router.query.gameType as TGameType;
+  
   const { data, error, loading } = useQuery(gameEntitiesQuery, {
-    variables: { rules: getRulesContract(gameType).address },
+    variables: { rules: rulesContractAddress }, 
   });
 
   const [isAccepting, setAccepting] = useState<boolean>(false);
@@ -41,6 +45,10 @@ export const JoinGame: React.FC<JoinGamePropsI> = ({ acceptGameHandler }) => {
         setAccepting(false);
       });
   };
+
+  useEffect(() => {
+    getRulesContract(gameType).then((contract) => setRulesContractAddress(contract.address));
+  }, [gameType]);
 
   return (
     <div className={styles.container}>
