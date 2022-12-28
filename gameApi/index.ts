@@ -272,16 +272,24 @@ export const proposeGame = async (
   console.log('GameAPI proposeGame:', contract, 'rulesContractAddress: ', rulesContractAddress);
   const value = ethers.BigNumber.from(10).pow(16);
   let wallet = await getSessionWallet(await (await getSigner()).getAddress());
-  const gasEstimated = await contract.estimateGas.proposeGame(rulesContractAddress, []);
+  console.log('GameAPI acceptGame: seesionWallet = ', wallet);
 
-  const tx = await contract.proposeGame(rulesContractAddress, [wallet.address], {
+  const gasEstimated = await contract.estimateGas.proposeGame(rulesContractAddress, []);
+  console.log('GameAPI proposeGame: gasEstimated = ', gasEstimated, Number(gasEstimated));
+  const tx = contract.proposeGame(rulesContractAddress, [wallet.address], {
     gasLimit: gasEstimated.mul(2),
     value: isPaid ? value : null,
   });
+  
   console.log('GameAPI proposeGame: tx = ', tx);
-  const rc = await tx.wait();
+  const txResult = await tx;
+  console.log('GameAPI proposeGame: txResult = ', txResult);
+  const rc = txResult.wait();
   console.log('GameAPI proposeGame: rc = ', rc);
-  const event = rc.events.find((event: { event: string }) => event.event === 'GameProposed');
+  const rcResult = await rc;
+  console.log('GameAPI proposeGame: rcResult = ', rcResult);
+  const event = rcResult.events.find((event: { event: string }) => event.event === 'GameProposed');
+  console.log('GameAPI proposeGame: event = ', event, event.args);
   return event.args;
 };
 
@@ -292,16 +300,26 @@ export const acceptGame = async (
 ): Promise<GameStartedEventObject> => {
   console.log('GameAPI acceptGame:', contract, '\n gameId =', gameId, Number(gameId));
   const gasEstimated = await contract.estimateGas.acceptGame(gameId, [],
-      {value});
+    { value });
+  
+  console.log('GameAPI acceptGame: gasEstimated = ', gasEstimated, Number(gasEstimated));
   let wallet = await getSessionWallet(await (await getSigner()).getAddress());
-  const tx = await contract.acceptGame(gameId, [wallet.address], {
+
+  console.log('GameAPI acceptGame: seesionWallet = ', wallet);
+
+  const tx = contract.acceptGame(gameId, [wallet.address], {
     gasLimit: gasEstimated.mul(2),
     value,
   });
   console.log('GameAPI acceptGame: tx = ', tx);
-  const rc = await tx.wait();
+  const txResult = await tx;
+  console.log('GameAPI acceptGame: txResult = ', txResult);
+  const rc = txResult.wait();
   console.log('GameAPI acceptGame: rc = ', rc);
-  const event = rc.events.find((event: { event: string }) => event.event === 'GameStarted');
+  const rcResult = await rc;
+  console.log('GameAPI acceptGame: rcResult = ', rcResult);
+  const event = rcResult.events.find((event: { event: string }) => event.event === 'GameStarted');
+  console.log('GameAPI acceptGame: event = ', event, event.args);
   return event.args;
 };
 
