@@ -375,7 +375,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
 
   useEffect(() => {
     if (!Number.isNaN(gameId)) setGameState(getInitialState());
-  }, [gameId]);
+  }, [gameId, playerIngameId]);
 
   useEffect(() => {
     for (let i = lastMessages.length - 1; i >= 0; i--) {
