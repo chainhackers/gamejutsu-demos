@@ -1,5 +1,5 @@
 .container {
-  //position: relative;
+  position: relative;
   background-color: var(--white);
   display: flex;
   justify-content: space-between;
@@ -9,6 +9,10 @@
   padding: 53px 15px 53px;
   font-weight: bold;
   font-size: 1.6rem;
+
+  @media (max-width: 1024px) {
+    padding: 15px 0;
+  }
 
   .title {
     padding: 0 32px;
