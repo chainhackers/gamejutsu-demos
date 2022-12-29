@@ -3,42 +3,20 @@ import cn from "classnames";
 import { NavigationPropsI } from "./NavigationProps";
 import styles from "./Navigation.module.scss";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 export const Navigation: React.FC<NavigationPropsI> = ({ active }) => {
   const { t } = useTranslation();
 
   const [isBurgerActive, setBurgerState] = useState(false);
-  const [mediaWidth, setMediaWidth] = useState(1025);
-
-  function watchMediaWidth() {
-    setMediaWidth(window.innerWidth);
-    window.addEventListener("resize", () => {
-      setMediaWidth(window.innerWidth);
-    });
-  }
-
-  useEffect(() => {
-    watchMediaWidth();
-  });
 
   return (
     <div className={styles.container}>
-      {isBurgerActive && (
-        <div
-          onClick={() => setBurgerState(false)}
-          className={styles.background}
-        ></div>
-      )}
-      <nav className={styles.navigation}>
-        {mediaWidth < 1024 && (
-          <button onClick={() => setBurgerState(true)} className="burger-btn">
+          <button onClick={() => setBurgerState(!isBurgerActive)}>
             <span></span>
           </button>
-        )}
-        
-        {(mediaWidth > 1024 || isBurgerActive) && (
+      <nav onClick={() => setBurgerState(false)} className={(styles.navigation) + ' ' + cn(isBurgerActive && (styles.open))}>
             <ul>
-              <li onClick={() => setBurgerState(false)}
+              <li
                 className={cn(
                   active &&
                     (active === "games" ? styles.active : styles.inactive)
@@ -46,7 +24,7 @@ export const Navigation: React.FC<NavigationPropsI> = ({ active }) => {
               >
                 <Link href="/games">{t("navigation.gameDemo")}</Link>
               </li>
-              <li onClick={() => setBurgerState(false)}
+              <li
                 className={cn(
                   active &&
                     (active === "documents" ? styles.active : styles.inactive)
@@ -59,7 +37,7 @@ export const Navigation: React.FC<NavigationPropsI> = ({ active }) => {
                   {t("navigation.documents")}
                 </a>
               </li>
-              <li onClick={() => setBurgerState(false)}
+              <li
                 className={cn(
                   active &&
                     (active === "team" ? styles.active : styles.inactive)
@@ -67,7 +45,7 @@ export const Navigation: React.FC<NavigationPropsI> = ({ active }) => {
               >
                 <Link href="/team">{t("navigation.team")}</Link>
               </li>
-              <li onClick={() => setBurgerState(false)}
+              <li
                 style={{ position: "relative", top: "10px" }}
                 className={cn(
                   active &&
@@ -98,7 +76,6 @@ export const Navigation: React.FC<NavigationPropsI> = ({ active }) => {
                 </a>
               </li>
             </ul>
-          )}
       </nav>
     </div>
   );
