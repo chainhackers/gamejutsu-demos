@@ -305,22 +305,62 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
     }
     if (lastMessage.messageType == 'ISignedGameMove') {
       const signedMove = lastMessage.message as ISignedGameMove;
-
-      const isValid = await _isValidSignedMove(await getArbiter(), signedMove);
-
-      //TODO maybe replace with sender address
+      console.log(`[gameType] processOneMessage signedMove: nonce: ${signedMove.gameMove.nonce}`, signedMove);
       const isOpponentMove = signedMove.gameMove.player === opponentAddress;
-      const nextGameState = gameState.makeNewGameStateFromSignedMove(
-        signedMove,
-        isValid,
-        isOpponentMove);
-      setGameState(nextGameState);
-      setIsInvalidMove(!isValid);
-      if (nextGameState.getWinnerId() !== null) {
-        setFinishGameCheckResult({winner: playerIngameId === nextGameState.getWinnerId()})
-        if (playerIngameId === nextGameState.getWinnerId()) {
-          runFinishGameHandler(nextGameState);
+
+      let count = 0;
+
+      const setNewGameState = async () => {
+        try {
+          count += 1;
+          const isValid = await _isValidSignedMove(await getArbiter(), signedMove);
+          console.log(`[gameType] processOneMessage signedMove: nonce: ${signedMove.gameMove.nonce}`, signedMove);
+          console.log(`[gameType] processOneMessage isValid: nonce: ${signedMove.gameMove.nonce}`, isValid);
+          const nextGameState = gameState.makeNewGameStateFromSignedMove(
+            signedMove,
+            isValid,
+            isOpponentMove);
+          setGameState(nextGameState);
+          setIsInvalidMove(!isValid);
+          if (nextGameState.getWinnerId() !== null) {
+            setFinishGameCheckResult({winner: playerIngameId === nextGameState.getWinnerId()})
+            if (playerIngameId === nextGameState.getWinnerId()) {
+              runFinishGameHandler(nextGameState);
+            }
+          }
+          return;
+
+        } catch (error) {
+          console.error('[gameType] processOneMessage messageType: ISignedGameMove error: ', count, error);
+          if (count >= 10) return;
+          setTimeout(setNewGameState, 3000);
         }
+      }
+
+      try {
+        setNewGameState();
+
+        // const isValid = await _isValidSignedMove(await getArbiter(), signedMove);
+        // console.log(`[gameType] processOneMessage signedMove: nonce: ${signedMove.gameMove.nonce}`, signedMove);
+        // console.log(`[gameType] processOneMessage isValid: nonce: ${signedMove.gameMove.nonce}`, isValid);
+
+
+        // //TODO maybe replace with sender address
+        
+        // const nextGameState = gameState.makeNewGameStateFromSignedMove(
+        //   signedMove,
+        //   isValid,
+        //   isOpponentMove);
+        // setGameState(nextGameState);
+        // setIsInvalidMove(!isValid);
+        // if (nextGameState.getWinnerId() !== null) {
+        //   setFinishGameCheckResult({winner: playerIngameId === nextGameState.getWinnerId()})
+        //   if (playerIngameId === nextGameState.getWinnerId()) {
+        //     runFinishGameHandler(nextGameState);
+        //   }
+        // }      
+      } catch (error) {
+        console.error('[gameType] processOneMessage messageType: ISignedGameMove error: ', error);
       }
     }
     if (lastMessage.messageType === "FinishedGameState") {
@@ -341,7 +381,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
     for (let i = lastMessages.length - 1; i >= 0; i--) {
       setTimeout(function () {
         processOneMessage(i)
-      }, 100 * (lastMessages.length - i - 1));
+      }, 300 * (lastMessages.length - i - 1));
     }
   }, [lastMessages]);
 
@@ -397,7 +437,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
       BigNumber.from(gameId),
     );
     const address = account.address;
-    if (!address) {
+    if (!address || !players) {
       return;
     }
     if (!(players[0] === ZERO_ADDRESS && players[1] === ZERO_ADDRESS) && !players.includes(address)) {

@@ -18,18 +18,25 @@ export const TicTacToe: React.FC<ITicTacToeProps> = ({
 
   const clickHandler = async (i: number) => {
     if (!gameState) return;
-
+    
     const move: TTTMove = TTTMove.fromMove(i, gameState.playerType);
+    console.log('Tic-Tac-Toe clickHandler: i = ', i);
+    console.log('Tic-Tac-Toe clickHandler: playerType = ', gameState.playerType);
+    console.log('Tic-Tac-Toe clickHandler: move = ', move);
+
 
     let address = await getSignerAddress();
+    console.log('Tic-Tac-Toe clickHandler: address = ', address);
     let transitionResult = await transition(await getRulesContract('tic-tac-toe'),
       gameState.toGameStateContractParams(),
       gameState.playerId,
       move.encodedMove
     );
+    console.log('Tic-Tac-Toe clickHandler: transitionResult = ', transitionResult);
     const signedMove = await gameState.signMove(
       gameState.composeMove(move, transitionResult, true, address),
       address);
+    console.log('Tic-Tac-Toe clickHandler: signedMove = ', signedMove);
     sendSignedMove(signedMove);
   };
 

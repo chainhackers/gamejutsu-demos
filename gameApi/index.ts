@@ -214,10 +214,15 @@ export const transition = async (
   playerIngameId: number,
   encodedMove: string,
 ) => {
-  console.log(`GameAPI transition: gameState = ${gameState}, playerIngameId = ${playerIngameId}, encodedMove = ${encodedMove}`);
-  const response = await contract.transition(gameState, playerIngameId, encodedMove);
-  console.log('GameAPI transition: response =', response);
-  return response;
+  try {
+    console.log('GameAPI transition: gameState = ', gameState, 'playerIngameId = ', playerIngameId, 'encodedMove =', encodedMove);
+    const response = await contract.transition(gameState, playerIngameId, encodedMove);
+    console.log('GameAPI transition: response =', response);
+    return response;
+
+  } catch (error) {
+    console.log('GameAPI transition: error', error);
+  }
 };
 
 // seems to be unused anywhere
@@ -245,9 +250,16 @@ export const _isValidSignedMove = async (
   contract: ethers.Contract,
   signedgameMove: ISignedGameMove,
 ) => {
-  console.log(`GameAPI isValidSignedMove: contract = ${contract}, signedgameMove = ${signedgameMove}`);
-  const response = contract.isValidSignedMove(signedgameMove);
-  return response;
+  try {
+
+    console.log(`GameAPI isValidSignedMove: nonce: ${signedgameMove.gameMove.nonce}`, contract, signedgameMove);
+    const response = contract.isValidSignedMove(signedgameMove);
+    return response;
+
+  } catch (error) {
+    console.error('GameAPI isValidSignedMove', error);
+
+  }
 };
 
 export async function registerSessionAddress(
@@ -272,7 +284,7 @@ export const proposeGame = async (
   console.log('GameAPI proposeGame:', contract, 'rulesContractAddress: ', rulesContractAddress);
   const value = ethers.BigNumber.from(10).pow(16);
   let wallet = await getSessionWallet(await (await getSigner()).getAddress());
-  console.log('GameAPI acceptGame: seesionWallet = ', wallet);
+  console.log('GameAPI proposeGame: seesionWallet = ', wallet);
 
   const gasEstimated = await contract.estimateGas.proposeGame(rulesContractAddress, []);
   console.log('GameAPI proposeGame: gasEstimated = ', gasEstimated, Number(gasEstimated));
@@ -340,9 +352,17 @@ export const resign = async (
 };
 
 export const getPlayers = async (contract: ethers.Contract, gameId: BigNumber) => {
-  console.log('GameAPI getPlayers: ' , contract, gameId);
-  const response = contract.getPlayers(gameId);
-  return response;
+  const _getPlayers = async () => {
+    try {
+      console.log('GameAPI getPlayers: ', contract, gameId);
+      const response = await contract.getPlayers(gameId);
+      return response;
+    } catch (error) {
+      console.error('GameAPI getPlayers error: ', error);
+      setTimeout(_getPlayers, 2000); 
+    }
+  }
+  return _getPlayers();
 };
 
 export default {
