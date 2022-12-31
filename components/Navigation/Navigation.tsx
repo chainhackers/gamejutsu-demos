@@ -7,14 +7,14 @@ import { useState } from "react";
 export const Navigation: React.FC<NavigationPropsI> = ({ active }) => {
   const { t } = useTranslation();
 
-  const [isBurgerActive, setBurgerState] = useState(false);
+  const [isBurgerActive, toggleBurgerMenu] = useState(false);
 
   return (
     <div className={styles.container}>
-          <button onClick={() => setBurgerState(!isBurgerActive)}>
+          <button onClick={() => toggleBurgerMenu(!isBurgerActive)}>
             <span></span>
           </button>
-      <nav onClick={() => setBurgerState(false)} className={(styles.navigation) + ' ' + cn(isBurgerActive && (styles.open))}>
+      <nav onClick={() => toggleBurgerMenu(false)} className={(styles.navigation) + ' ' + cn(isBurgerActive && (styles.open))}>
             <ul>
               <li
                 className={cn(
