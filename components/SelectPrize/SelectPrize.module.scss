@@ -9,6 +9,11 @@
     font-size: 42px;
     font-weight: bold;
     margin-bottom: 20px;
+
+    @media(max-width: 576px) {
+      font-size: 34px;
+      margin-bottom: 5px;
+    }
   }
 
   .play,
@@ -19,6 +24,10 @@
   .play {
     position: relative;
     padding-top: 50px;
+
+    @media(max-width: 576px) {
+      padding-top: 0;
+    }
 
     .creating {
       position: absolute;
@@ -41,16 +50,34 @@
     height: 200px;
     background-color: var(--white);
     // background-color: rgb(141, 187, 224);
+
+    @media(max-width: 576px) {
+      height: 100%;
+    }
     .free {
+      @media(max-width: 576px) {
+        margin-bottom: 24px;
+      }
+
       .freeDescription {
         font-size: 26px;
         font-weight: normal;
         padding-bottom: 20px;
+
+        @media(max-width: 576px) {
+          font-size: 22px;
+          padding-bottom: 5px;
+        }
       }
 
       .freePrize {
         font-size: 64px;
         font-weight: normal;
+
+        @media(max-width: 576px) {
+          font-size: 54px;
+          line-height: 100%;
+        }
       }
     }
     .stake {
@@ -90,6 +117,11 @@
   .selection {
     display: flex;
     justify-content: center;
+
+    @media(max-width: 576px) {
+      flex-direction: column;
+      align-items: center;
+    }
 
     .free,
     .stake {
