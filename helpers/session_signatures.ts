@@ -4,14 +4,20 @@ import {IGameMove} from "../types/arbiter";
 export async function getSessionWallet(
   address: string,
 ): Promise<ethers.Wallet> {
-  console.log(`Waller requested for address ${address}`);
-  let localStorage = window.localStorage;
-  let privateStore = `${address}_private`;
-  let privateKey = localStorage.getItem(privateStore);
-  if (privateKey) {
+  console.log(`Wallet requested for address ${address}`);
+  const localStorage = window.localStorage;
+  
+  const privateStore = `${address}_private`;
+  
+  const privateKey = localStorage.getItem(privateStore);
+  
+  if (!privateKey) {
+    throw new Error(`No private key, key value: ${String(privateKey)}`)
+  }
+  if (!!privateKey) { 
     return new ethers.Wallet(privateKey);
   }
-  let wallet = ethers.Wallet.createRandom();
+  const wallet = ethers.Wallet.createRandom();
   localStorage.setItem(privateStore, wallet.privateKey);
   return wallet;
 }
@@ -39,8 +45,7 @@ export async function signMove(
   gameMove: IGameMove,
   wallet: ethers.Wallet,
 ): Promise<string> {
-  let signPromise = wallet._signTypedData(domain, types, gameMove);
-  console.log({signPromise});
+  const signPromise = wallet._signTypedData(domain, types, gameMove);
   return signPromise;
 }
 

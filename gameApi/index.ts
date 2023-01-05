@@ -202,6 +202,7 @@ export const checkIsValidMove = async (
   playerIngameId: number,
   encodedMove: string,
 ) => {
+  console.log('GameAPI checkIsValidMove: contract address', contract.address)
   console.log(`GameAPI checkIsValidMove: gameState = ${gameState}, playerIngameId = ${playerIngameId}, encodedMove = ${encodedMove}`);
   const response = contract.isValidMove(gameState, playerIngameId, encodedMove);
   console.log('GameAPI checkIsValidMove: response =', response);
@@ -251,14 +252,10 @@ export const _isValidSignedMove = async (
   signedgameMove: ISignedGameMove,
 ) => {
   try {
-
-    console.log(`GameAPI isValidSignedMove: nonce: ${signedgameMove.gameMove.nonce}`, contract, signedgameMove);
     const response = contract.isValidSignedMove(signedgameMove);
     return response;
-
   } catch (error) {
     console.error('GameAPI isValidSignedMove', error);
-
   }
 };
 
@@ -267,6 +264,7 @@ export async function registerSessionAddress(
   gameId: BigNumber,
   wallet: ethers.Wallet,
 ): Promise<void> {
+  console.log('GameAPI registerSessionAddress: contract:', contract, 'gameId: ', Number(gameId), 'wallet Addres: ', await wallet.getAddress()  )
   const gasEstimatedRedeem = await contract.estimateGas.registerSessionAddress(
     gameId,
     wallet.address,

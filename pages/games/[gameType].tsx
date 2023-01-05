@@ -313,9 +313,26 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
       const setNewGameState = async () => {
         try {
           count += 1;
-          const isValid = await _isValidSignedMove(await getArbiter(), signedMove);
-          console.log(`[gameType] processOneMessage signedMove: nonce: ${signedMove.gameMove.nonce}`, signedMove);
-          console.log(`[gameType] processOneMessage isValid: nonce: ${signedMove.gameMove.nonce}`, isValid);
+          const contract = await getArbiter();
+          const isValid = await _isValidSignedMove(contract, signedMove);
+          const message = {
+            contractAddress: contract.address,
+            arguments: [
+              { signedMove }
+            ],
+            result: { isValid }
+          };
+          const polygonMessage = [
+            [signedMove.gameMove.gameId,
+            signedMove.gameMove.nonce,
+            signedMove.gameMove.player,
+            signedMove.gameMove.oldState,
+            signedMove.gameMove.newState,
+            signedMove.gameMove.move],
+            signedMove.signatures
+          ];
+          console.log('Requested move validation, contract message: ', JSON.stringify(polygonMessage));
+          console.log(`Requested move validation, nonce: ${signedMove.gameMove.nonce}`, JSON.stringify(message, null, ' '));
           const nextGameState = gameState.makeNewGameStateFromSignedMove(
             signedMove,
             isValid,
@@ -339,26 +356,6 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
 
       try {
         setNewGameState();
-
-        // const isValid = await _isValidSignedMove(await getArbiter(), signedMove);
-        // console.log(`[gameType] processOneMessage signedMove: nonce: ${signedMove.gameMove.nonce}`, signedMove);
-        // console.log(`[gameType] processOneMessage isValid: nonce: ${signedMove.gameMove.nonce}`, isValid);
-
-
-        // //TODO maybe replace with sender address
-        
-        // const nextGameState = gameState.makeNewGameStateFromSignedMove(
-        //   signedMove,
-        //   isValid,
-        //   isOpponentMove);
-        // setGameState(nextGameState);
-        // setIsInvalidMove(!isValid);
-        // if (nextGameState.getWinnerId() !== null) {
-        //   setFinishGameCheckResult({winner: playerIngameId === nextGameState.getWinnerId()})
-        //   if (playerIngameId === nextGameState.getWinnerId()) {
-        //     runFinishGameHandler(nextGameState);
-        //   }
-        // }      
       } catch (error) {
         console.error('[gameType] processOneMessage messageType: ISignedGameMove error: ', error);
       }
@@ -503,10 +500,8 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
             isFinishTimeOutAllowed={isFinishTimeoutAllowed}
             finishTimeout={finishTimeoutHandler}
             isTimeoutRequested={isTimeoutRequested}
-            // isTimeoutRequested={true}
             onRunDisput={runDisputeHandler}
-            isDisputAvailable={isDisputAvailable}
-          // connectPlayer={connectPlayerHandler}
+            isDisputAvailable={isDisputAvailable}          
             gameId={gameId}
           />
           <GameField
