@@ -25,3 +25,17 @@ jobs:
     - run: npm install
     - run: npm run generate
     - run: npm run build
+
+  deploy:
+    name: Deploy
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: execute ~/dev/deploy.sh over ssh
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          script: /home/gamejutsu/dev/deploy.sh

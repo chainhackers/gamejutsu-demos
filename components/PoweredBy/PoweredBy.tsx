@@ -12,6 +12,6 @@ export const PoweredBy: React.FC<PoweredByPropsI> = ({ poweredByList }) => {
           <PoweredByUnit key={`unit.name-${index}`} {...unit} />
         ))}
       </div>
-    </div>
+</div>
   );
 };

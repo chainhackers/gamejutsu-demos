@@ -5,6 +5,10 @@
   padding: 53px 15px 33px;
   text-align: center;
 
+  @media (max-width: 1024px) {
+    order: 1;
+  }
+
   > .title {
     font-size: 42px;
     font-weight: bold;

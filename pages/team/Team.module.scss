@@ -3,6 +3,10 @@
     padding-top: 30px;
     text-align: center;
 
+    @media (max-width: 1024px) {
+        padding: 30px 15px;
+    }
+
     .dropdown {
         position: fixed;
         background-color: var(--gray);

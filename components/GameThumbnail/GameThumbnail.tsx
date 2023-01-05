@@ -7,10 +7,10 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({ name, image, url 
     <div className={styles.container}>
       <Link href={url}>
         <a>
+          <div className={styles.name}>{name}</div>
           <div className={styles.image}>
             <Image src={image} layout="fill" />
           </div>
-          <div className={styles.name}>{name}</div>
         </a>
       </Link>
     </div>
