@@ -8,9 +8,18 @@
   width: 420px;
   height: 420px;
 
+  @media (max-width: 576px) {
+    width: 310px;
+    height: 310px;
+  }
+
   .row {
     height: calc(420px / 3);
     display: flex;
+
+    @media (max-width: 576px) {
+    height:   calc(310px / 3)
+    }
   }
   .row:nth-child(2) {
     border-top: 1px solid black;
