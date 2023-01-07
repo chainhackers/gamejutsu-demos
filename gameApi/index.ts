@@ -1,5 +1,5 @@
 import { BigNumber, ethers } from 'ethers';
-import { getSessionWallet, signMove } from 'helpers/session_signatures';
+import { createSessionWallet, getSessionWallet, getStoredPrivateKey, signMove } from 'helpers/session_signatures';
 import { IGameMove, ISignedGameMove } from "../types/arbiter";
 import { TContractGameState } from 'components/Games/types';
 import {GameProposedEvent, GameProposedEventObject, GameStartedEventObject} from "../.generated/contracts/esm/types/polygon/Arbiter";
@@ -281,7 +281,12 @@ export const proposeGame = async (
 ): Promise<GameProposedEventObject> => {
   console.log('GameAPI proposeGame:', contract, 'rulesContractAddress: ', rulesContractAddress);
   const value = ethers.BigNumber.from(10).pow(16);
-  let wallet = await getSessionWallet(await (await getSigner()).getAddress());
+
+  const address = await (await getSigner()).getAddress();
+
+  let wallet = await getSessionWallet(address);
+  if (!wallet) wallet = createSessionWallet(address);
+
   console.log('GameAPI proposeGame: seesionWallet = ', wallet);
 
   const gasEstimated = await contract.estimateGas.proposeGame(rulesContractAddress, []);
@@ -313,7 +318,11 @@ export const acceptGame = async (
     { value });
   
   console.log('GameAPI acceptGame: gasEstimated = ', gasEstimated, Number(gasEstimated));
-  let wallet = await getSessionWallet(await (await getSigner()).getAddress());
+  
+  const address = await (await getSigner()).getAddress();
+
+  let wallet = await getSessionWallet(address);
+  if (!wallet) wallet = createSessionWallet(address);
 
   console.log('GameAPI acceptGame: seesionWallet = ', wallet);
 

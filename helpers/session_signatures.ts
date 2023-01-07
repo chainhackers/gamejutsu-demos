@@ -1,25 +1,27 @@
 import { ethers } from 'ethers';
 import {IGameMove} from "../types/arbiter";
 
+export const getStoredPrivateKey = (address: string): string | null => {
+  const localStorage = window.localStorage;
+  const privateStore = `${address}_private`;
+  return localStorage.getItem(privateStore);
+} 
+
 export async function getSessionWallet(
   address: string,
 ): Promise<ethers.Wallet | null> {
   console.log(`Wallet requested for address ${address}`);
-  const localStorage = window.localStorage;
-  const privateStore = `${address}_private`;
-  const privateKey = localStorage.getItem(privateStore);
-  
+  const privateKey = getStoredPrivateKey(address);
   if (!privateKey) return null;
   return new ethers.Wallet(privateKey);
 }
 
 export const createSessionWallet = (address: string): ethers.Wallet => {
-  const localStorage = window.localStorage;
-  const privateStore = `${address}_private`;
-  const privateKey = localStorage.getItem(privateStore);
-
+  const privateKey = getStoredPrivateKey(address);
   if (!!privateKey) throw new Error('Private key exists');
-
+  
+  const privateStore = `${address}_private`;
+  const localStorage = window.localStorage;
   const wallet = ethers.Wallet.createRandom();
   localStorage.setItem(privateStore, wallet.privateKey);
   return wallet;
