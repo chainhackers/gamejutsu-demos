@@ -3,6 +3,15 @@
   bottom: 10px;
   color: var(--gray);
 
+  @media (max-width: 1024px) {
+    bottom: -40px;
+    left: 10px;
+  }
+
+  @media (max-width: 576px) {
+    bottom: -35px;
+  }
+
   .active {
     color: var(--black);
     font-weight: bold;

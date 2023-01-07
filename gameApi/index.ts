@@ -20,15 +20,12 @@ export const getRulesContract = async (gameType: TGameType): Promise<ethers.Cont
 }
 
 export async function getSigner(): Promise<ethers.Signer> {
-  if (!window.ethereum) {
-    const signer = await fetchSigner();
-    return signer!;
-  }
-  const provider = new ethers.providers.Web3Provider(
-    window.ethereum as ethers.providers.ExternalProvider,
-  );
-  const signer = provider.getSigner();
-  return signer;
+  const signer = await fetchSigner();
+  return signer!;
+}
+
+export async function getSignerAddress(): Promise<string> {
+  return (await getSigner()).getAddress();
 }
 
 export function newContract(
@@ -109,9 +106,9 @@ export const finishGame = async (
   const gasEstimated = await contract.estimateGas.finishGame(signedGameMoves);
   const tx = await contract.finishGame(signedGameMoves, { gasLimit: gasEstimated.mul(2) });
   console.log('GameAPI finishGame: tx = ', tx);
-  const rc = await tx.wait();
-  console.log('GameAPI finishGame: rc = ', rc);
-  const gameFinishedEvent = rc.events.find((event: { event: string }) => event.event === 'GameFinished');
+  const receipt = await tx.wait();
+  console.log('GameAPI finishGame: receipt = ', receipt);
+  const gameFinishedEvent = receipt.events.find((event: { event: string }) => event.event === 'GameFinished');
   return FinishedGameState.fromGameFinishedArgs(gameFinishedEvent.args);
 };
 
@@ -131,9 +128,9 @@ export const initTimeout = async (
   const gasEstimated = await contract.estimateGas.initTimeout(signedGameMoves, { value });
   const tx = await contract.initTimeout(signedGameMoves, { value, gasLimit: gasEstimated.mul(2) });
   console.log('GameAPI initTimeout: tx = ', tx);
-  const rc = await tx.wait();
-  console.log('GameAPI initTimeout: rc = ', rc);
-  const event = rc.events.find((event: { event: string }) => event.event === 'TimeoutStarted');
+  const receipt = await tx.wait();
+  console.log('GameAPI initTimeout: receipt = ', receipt);
+  const event = receipt.events.find((event: { event: string }) => event.event === 'TimeoutStarted');
   return { ...event.args };
 };
 
@@ -152,9 +149,9 @@ export const resolveTimeout = async (
   const gasEstimated = await contract.estimateGas.resolveTimeout(signedGameMove);
   const tx = await contract.resolveTimeout(signedGameMove, { gasLimit: gasEstimated.mul(2) });
   console.log('GameAPI resolveTimeout: tx = ', tx);
-  const rc = await tx.wait();
-  console.log('GameAPI resolveTimeout: rc = ', rc);
-  const event = rc.events.find((event: { event: string }) => event.event === 'TimeoutResolved');
+  const receipt = await tx.wait();
+  console.log('GameAPI resolveTimeout: receipt = ', receipt);
+  const event = receipt.events.find((event: { event: string }) => event.event === 'TimeoutResolved');
   return { ...event.args };
 };
 
@@ -171,10 +168,10 @@ export const finalizeTimeout = async (
   const gasEstimated = await contract.estimateGas.finalizeTimeout(gameId);
   const tx = await contract.finalizeTimeout(gameId, { gasLimit: gasEstimated.mul(2) });
   console.log('GameAPI finalizeTimeout: tx = ', tx);
-  const rc = await tx.wait();
-  console.log('GameAPI finalizeTimeout: rc = ', rc);
-  const gameFinishedEvent = rc.events.find((event: { event: string }) => event.event === 'GameFinished');
-  const playerDisqualifiedEvent = rc.events.find((event: { event: string }) => event.event === 'PlayerDisqualified');
+  const receipt = await tx.wait();
+  console.log('GameAPI finalizeTimeout: receipt = ', receipt);
+  const gameFinishedEvent = receipt.events.find((event: { event: string }) => event.event === 'GameFinished');
+  const playerDisqualifiedEvent = receipt.events.find((event: { event: string }) => event.event === 'PlayerDisqualified');
   return FinishedGameState.fromGameFinishedArgs(gameFinishedEvent.args)
   .addPlayerDisqualified(playerDisqualifiedEvent.args);
 };
@@ -187,10 +184,10 @@ export const disputeMove = async (
   const gasEstimated = await contract.estimateGas.disputeMove(signedGameMove);
   const tx = await contract.disputeMove(signedGameMove, { gasLimit: gasEstimated.mul(2) });
   console.log('GameAPI disputeMove: tx =', tx);
-  const rc = await tx.wait();
-  console.log('GameAPI disputeMove: rc =', rc);
-  const gameFinishedEvent = rc.events.find((event: { event: string }) => event.event === 'GameFinished');
-  const playerDisqualifiedEvent = rc.events.find((event: { event: string }) => event.event === 'PlayerDisqualified');
+  const receipt = await tx.wait();
+  console.log('GameAPI disputeMove: receipt =', receipt);
+  const gameFinishedEvent = receipt.events.find((event: { event: string }) => event.event === 'GameFinished');
+  const playerDisqualifiedEvent = receipt.events.find((event: { event: string }) => event.event === 'PlayerDisqualified');
   return FinishedGameState.fromGameFinishedArgs(gameFinishedEvent.args)
   .addPlayerDisqualified(playerDisqualifiedEvent.args);
 };
@@ -235,7 +232,7 @@ export const transition = async (
 //   return response;
 // };
 
-// seems to be unused anywhere
+// might be used for debugging
 // const isValidSignedMove = async (
 //   contract: ethers.Contract,
 //   gameMove: IGameMove,
@@ -247,16 +244,13 @@ export const transition = async (
 //   return _isValidSignedMove(contract, { gameMove, signatures });
 // };
 
-export const _isValidSignedMove = async (
+export const isValidSignedMove = async (
   contract: ethers.Contract,
   signedgameMove: ISignedGameMove,
 ) => {
-  try {
-    const response = contract.isValidSignedMove(signedgameMove);
-    return response;
-  } catch (error) {
-    console.error('GameAPI isValidSignedMove', error);
-  }
+  console.log(`GameAPI isValidSignedMove: contract = ${contract}, signedgameMove = ${signedgameMove}`);
+  const response = contract.isValidSignedMove(signedgameMove);
+  return response;
 };
 
 export async function registerSessionAddress(
@@ -333,11 +327,11 @@ export const acceptGame = async (
   console.log('GameAPI acceptGame: tx = ', tx);
   const txResult = await tx;
   console.log('GameAPI acceptGame: txResult = ', txResult);
-  const rc = txResult.wait();
-  console.log('GameAPI acceptGame: rc = ', rc);
-  const rcResult = await rc;
-  console.log('GameAPI acceptGame: rcResult = ', rcResult);
-  const event = rcResult.events.find((event: { event: string }) => event.event === 'GameStarted');
+  const receipt = txResult.wait();
+  console.log('GameAPI acceptGame: receipt = ', receipt);
+  const receiptResult = await receipt;
+  console.log('GameAPI acceptGame: receiptResult = ', receiptResult);
+  const event = receiptResult.events.find((event: { event: string }) => event.event === 'GameStarted');
   console.log('GameAPI acceptGame: event = ', event, event.args);
   return event.args;
 };
@@ -350,10 +344,10 @@ export const resign = async (
   const gasEstimated = await contract.estimateGas.resign(gameId);
   const tx = await contract.resign(gameId, { gasLimit: gasEstimated.mul(2) });
   console.log('GameAPI resign: tx = ', tx);
-  const rc = await tx.wait();
-  console.log('GameAPI resign: rc = ', rc);
-  const gameFinishedEvent = rc.events.find((event: { event: string }) => event.event === 'GameFinished');
-  const PlayerResignedEvent = rc.events.find((event: { event: string }) => event.event === 'PlayerResigned');
+  const receipt = await tx.wait();
+  console.log('GameAPI resign: receipt = ', receipt);
+  const gameFinishedEvent = receipt.events.find((event: { event: string }) => event.event === 'GameFinished');
+  const PlayerResignedEvent = receipt.events.find((event: { event: string }) => event.event === 'PlayerResigned');
   return FinishedGameState.fromGameFinishedArgs(gameFinishedEvent.args)
   .addPlayerResigned(PlayerResignedEvent);
 };

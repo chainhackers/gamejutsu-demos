@@ -19,7 +19,7 @@ const Home: NextPage<IHomePageProps> = ({ partners }) => {
   const router = useRouter();
 
 return (
-    <div className={styles.container}>
+  <div className={styles.container}>
       <Head>
         <title>GameJutsu</title>
         <meta name="description" content="Framework for on chain game developers" />

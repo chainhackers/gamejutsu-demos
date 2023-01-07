@@ -26,7 +26,6 @@ export const TicTacToe: React.FC<ITicTacToeProps> = ({
     console.log('Tic-Tac-Toe clickHandler: encoded move = ', move.encodedMove);
     console.log('Tic-Tac-Toe clickHandler: gameState.toGameStateContractParams() = ', gameState.toGameStateContractParams());
 
-
     const address = await getSignerAddress();
     const transitionResult = await transition(await getRulesContract('tic-tac-toe'),
       gameState.toGameStateContractParams(),

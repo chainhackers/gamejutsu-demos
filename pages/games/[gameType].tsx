@@ -16,7 +16,7 @@ import {
 import styles from 'pages/games/gameType.module.scss';
 import { TicTacToe, PlayerType as TicTacToePlayerType } from "components/Games/Tic-Tac-Toe";
 import { TicTacToeState } from "components/Games/Tic-Tac-Toe/types";
-import gameApi, { _isValidSignedMove, getArbiter, getSigner, getRulesContract, finishGame, disputeMove, initTimeout, resolveTimeout, finalizeTimeout, FinishedGameState } from "../../gameApi";
+import gameApi, { isValidSignedMove, getArbiter, getSigner, getRulesContract, finishGame, disputeMove, initTimeout, resolveTimeout, finalizeTimeout, FinishedGameState } from "../../gameApi";
 import { ISignedGameMove, SignedGameMove } from "../../types/arbiter";
 import { signMoveWithAddress } from 'helpers/session_signatures';
 import { useAccount } from 'wagmi';
@@ -128,10 +128,10 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
       throw 'no lastMove'
     }
 
-    let address = await (await getSigner()).getAddress();
+    const address = await (await getSigner()).getAddress();
     const signature = await signMoveWithAddress(nextGameState.lastOpponentMove.gameMove, address);
     const signatures = [...nextGameState.lastOpponentMove.signatures, signature];
-    let lastOpponentMoveSignedByAll = new SignedGameMove(
+    const lastOpponentMoveSignedByAll = new SignedGameMove(
       nextGameState.lastOpponentMove.gameMove,
       signatures,
     );
@@ -161,10 +161,10 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
     setIsFinishTimeoutAllowed(true);
     setIsResolveTimeOutAllowed(false);
     try {
-      let address = await (await getSigner()).getAddress();
+      const address = await (await getSigner()).getAddress();
       const signature = await signMoveWithAddress(gameState.lastOpponentMove.gameMove, address);
       const signatures = [...gameState.lastOpponentMove.signatures, signature];
-      let lastOpponentMoveSignedByAll = new SignedGameMove(
+      const lastOpponentMoveSignedByAll = new SignedGameMove(
         gameState.lastOpponentMove.gameMove,
         signatures,
       );
@@ -314,7 +314,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
         try {
           count += 1;
           const contract = await getArbiter();
-          const isValid = await _isValidSignedMove(contract, signedMove);
+          const isValid = await isValidSignedMove(contract, signedMove);
           const message = {
             contractAddress: contract.address,
             arguments: [
