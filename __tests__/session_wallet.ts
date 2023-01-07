@@ -1,10 +1,8 @@
 import { describe, expect, test } from '@jest/globals';
-import exp from 'constants';
 import { ethers } from 'ethers';
 import { getSessionWallet, signMoveWithAddress, createSessionWallet } from 'helpers/session_signatures';
-import { IGameMove } from 'types/arbiter';
+import { testGameMove0, TEST_ADDRESS_0 } from '__fixtures__/testGame';
 
-const TEST_ADDRESS_0 = '0x0000000000000000000000000000000000000000';
 const localStorage = window.localStorage;
 const privateStore = `${TEST_ADDRESS_0}_private`;
 
@@ -29,18 +27,10 @@ describe('session wallet', () => {
 })
 
 describe('sign move with address', () => {
-  const gameMove: IGameMove = { 
-    gameId: 0, 
-    nonce: 0, 
-    player: TEST_ADDRESS_0, 
-    newState: '0x0000000000000000000000000000000000000000',
-    oldState: '0x0000000000000000000000000000000000000000',
-    move: '0x0000000000000000000000000000000000000000'
-  }
   test('exception if no private key for session wallet', async () => {
     const privateKey = localStorage.getItem(privateStore);
     expect(privateKey).toBeNull();
-    expect(async () => await signMoveWithAddress(gameMove, TEST_ADDRESS_0)).rejects.toThrow('Can not get wallet: no private key');
+    expect(async () => await signMoveWithAddress(testGameMove0, TEST_ADDRESS_0)).rejects.toThrow('Can not get wallet: no private key');
   })
   
   test('get signed move', async () => {
@@ -49,7 +39,7 @@ describe('sign move with address', () => {
     const privateKey = localStorage.getItem(privateStore);
 
     expect(privateKey).not.toBeNull();
-    expect(typeof (await signMoveWithAddress(gameMove, TEST_ADDRESS_0) )).toBe('string');
+    expect(typeof (await signMoveWithAddress(testGameMove0, TEST_ADDRESS_0) )).toBe('string');
   })
 });
 

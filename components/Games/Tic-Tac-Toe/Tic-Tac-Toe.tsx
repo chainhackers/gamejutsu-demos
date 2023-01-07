@@ -23,7 +23,7 @@ export const TicTacToe: React.FC<ITicTacToeProps> = ({
     console.log('Tic-Tac-Toe clickHandler: i = ', i);
     console.log('Tic-Tac-Toe clickHandler: playerType = ', gameState.playerType);
     console.log('Tic-Tac-Toe clickHandler: move = ', move);
-    console.log('Tic-Tac-Toe clickHandler: move = ', move.encodedMove);
+    console.log('Tic-Tac-Toe clickHandler: encoded move = ', move.encodedMove);
     console.log('Tic-Tac-Toe clickHandler: gameState.toGameStateContractParams() = ', gameState.toGameStateContractParams());
 
 
