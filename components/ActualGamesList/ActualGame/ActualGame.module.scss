@@ -7,6 +7,12 @@
   padding: 5px 10px;
   cursor: pointer;
 
+  @media (max-width: 992px) {
+    padding: 5px 0;
+    display: flex;
+    margin: 2px 5px;
+  }
+
   &.header {
     font-weight: bold;
     &:hover {
@@ -22,21 +28,47 @@
     display: inline-block;
     width: 50px;
     text-align: center;
+
+    @media (max-width: 768px) {
+      width: 10%;
+    }
   }
   .stake {
     display: inline-block;
     width: 50px;
     text-align: center;
+
+    @media (max-width: 768px) {
+      width: 10%;
+    }
   }
   .proposer {
     display: inline-block;
     width: 430px;
     text-align: center;
+    word-break: break-word;
+
+    @media (max-width: 992px) {
+      width: 100%;
+    }
+
+    @media (max-width: 768px) {
+      width: 55%;
+    }
   }
   .rules {
     display: inline-block;
     width: 430px;
     text-align: center;
+    word-break: break-word;
+
+    @media (max-width: 992px) {
+      width: 45%;
+    }
+
+    @media (max-width: 768px) {
+      width: 25%;
+    }
   }
   .winner {
     display: inline-block;
