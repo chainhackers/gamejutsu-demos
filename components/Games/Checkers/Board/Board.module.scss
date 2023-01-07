@@ -9,6 +9,12 @@
   background-repeat: no-repeat;
   background-size: contain;
 
+  @media (max-width: 576px) {
+    margin: 0;
+    width: 280px;
+    height: 280px;
+  }
+
   &.finished {
     background-color: lightgray;
   }
