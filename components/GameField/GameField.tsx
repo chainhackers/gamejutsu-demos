@@ -82,6 +82,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
     if (!rivalPlayerAddress) {
       setShowShade(true);
       setIsWaiting(true);
+      return;
     }
     if (!!rivalPlayerAddress) {
       setIsWaiting(false);
