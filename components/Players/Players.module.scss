@@ -14,6 +14,13 @@
     padding-top: 2rem;
     display: flex;
     flex-direction: column;
+
+    @media (max-width: 992px) {
+      padding-top: 1.4rem;
+      flex: 0.7 0;
+      min-width: 205px;
+      order: 3;
+    }
     // overflow: hidden;
     > *:not(:last-child) {
       margin-bottom: 5px;

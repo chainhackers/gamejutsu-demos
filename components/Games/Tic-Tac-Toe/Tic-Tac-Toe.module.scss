@@ -7,6 +7,10 @@
   flex-wrap: wrap;
   padding: 100px 20px;
 
+  @media (max-width: 576px) {
+    padding: 50px 10px;
+  }
+
   h2 {
     padding: 10px;
   }

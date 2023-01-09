@@ -5,6 +5,9 @@
   flex-wrap: wrap;
   padding: 20px;
   position: relative;
+  @media (max-width: 576px) {
+    padding: 10px;
+  }
 
   h2 {
     padding: 10px;

@@ -1,17 +1,28 @@
 import { ethers } from 'ethers';
 import {IGameMove} from "../types/arbiter";
 
+export const getStoredPrivateKey = (address: string): string | null => {
+  const localStorage = window.localStorage;
+  const privateStore = `${address}_private`;
+  return localStorage.getItem(privateStore);
+} 
+
 export async function getSessionWallet(
   address: string,
-): Promise<ethers.Wallet> {
-  console.log(`Waller requested for address ${address}`);
-  let localStorage = window.localStorage;
-  let privateStore = `${address}_private`;
-  let privateKey = localStorage.getItem(privateStore);
-  if (privateKey) {
-    return new ethers.Wallet(privateKey);
-  }
-  let wallet = ethers.Wallet.createRandom();
+): Promise<ethers.Wallet | null> {
+  console.log(`Wallet requested for address ${address}`);
+  const privateKey = getStoredPrivateKey(address);
+  if (!privateKey) return null;
+  return new ethers.Wallet(privateKey);
+}
+
+export const createSessionWallet = (address: string): ethers.Wallet => {
+  const privateKey = getStoredPrivateKey(address);
+  if (!!privateKey) throw new Error(`Private key for address ${address} exists`);
+  
+  const privateStore = `${address}_private`;
+  const localStorage = window.localStorage;
+  const wallet = ethers.Wallet.createRandom();
   localStorage.setItem(privateStore, wallet.privateKey);
   return wallet;
 }
@@ -39,8 +50,7 @@ export async function signMove(
   gameMove: IGameMove,
   wallet: ethers.Wallet,
 ): Promise<string> {
-  let signPromise = wallet._signTypedData(domain, types, gameMove);
-  console.log({signPromise});
+  const signPromise = wallet._signTypedData(domain, types, gameMove);
   return signPromise;
 }
 
@@ -48,5 +58,8 @@ export async function signMoveWithAddress(
     gameMove: IGameMove,
     address: string,
 ): Promise<string> {
-  return signMove(gameMove, await getSessionWallet(address));
+  const wallet = await getSessionWallet(address);
+  if (!wallet) throw new Error('SignMove: no private key in local storage')
+  
+  return signMove(gameMove, wallet);
 }

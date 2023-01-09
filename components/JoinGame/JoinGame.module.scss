@@ -6,10 +6,21 @@
   padding: 53px 15px 33px;
   text-align: center;
 
+  @media (max-width: 768px) {
+    margin-top: 45px;
+    padding: 10px 5px;
+    font-size: 32px;
+  }
+
   > .title {
     font-size: 42px;
     font-weight: bold;
     margin-bottom: 20px;
+
+    @media (max-width: 768px) {
+      font-size: 30px;
+      margin-bottom: 6px;
+    }
   }
 
   > .description,
@@ -18,6 +29,12 @@
     font-size: 26px;
     font-weight: normal;
     margin-bottom: 42px;
+
+    @media (max-width: 768px) {
+      font-size: 21px;
+      margin-bottom: 6
+    ;
+    }
   }
 
   .error {
