@@ -1,5 +1,5 @@
 import { BigNumber, ethers } from 'ethers';
-import { getSessionWallet, signMove } from 'helpers/session_signatures';
+import { createSessionWallet, getSessionWallet, getStoredPrivateKey, signMove } from 'helpers/session_signatures';
 import { IGameMove, ISignedGameMove } from "../types/arbiter";
 import { TContractGameState } from 'components/Games/types';
 import {GameProposedEvent, GameProposedEventObject, GameStartedEventObject} from "../.generated/contracts/esm/types/polygon/Arbiter";
@@ -199,6 +199,7 @@ export const checkIsValidMove = async (
   playerIngameId: number,
   encodedMove: string,
 ) => {
+  console.log('GameAPI checkIsValidMove: contract address', contract.address)
   console.log(`GameAPI checkIsValidMove: gameState = ${gameState}, playerIngameId = ${playerIngameId}, encodedMove = ${encodedMove}`);
   const response = contract.isValidMove(gameState, playerIngameId, encodedMove);
   console.log('GameAPI checkIsValidMove: response =', response);
@@ -211,10 +212,15 @@ export const transition = async (
   playerIngameId: number,
   encodedMove: string,
 ) => {
-  console.log(`GameAPI transition: gameState = ${gameState}, playerIngameId = ${playerIngameId}, encodedMove = ${encodedMove}`);
-  const response = await contract.transition(gameState, playerIngameId, encodedMove);
-  console.log('GameAPI transition: response =', response);
-  return response;
+  try {
+    console.log('GameAPI transition: gameState = ', gameState, 'playerIngameId = ', playerIngameId, 'encodedMove =', encodedMove);
+    const response = await contract.transition(gameState, playerIngameId, encodedMove);
+    console.log('GameAPI transition: response =', response);
+    return response;
+
+  } catch (error) {
+    console.log('GameAPI transition: error', error);
+  }
 };
 
 // seems to be unused anywhere
@@ -252,6 +258,7 @@ export async function registerSessionAddress(
   gameId: BigNumber,
   wallet: ethers.Wallet,
 ): Promise<void> {
+  console.log('GameAPI registerSessionAddress: contract:', contract, 'gameId: ', Number(gameId), 'wallet Addres: ', await wallet.getAddress()  )
   const gasEstimatedRedeem = await contract.estimateGas.registerSessionAddress(
     gameId,
     wallet.address,
@@ -268,8 +275,13 @@ export const proposeGame = async (
 ): Promise<GameProposedEventObject> => {
   console.log('GameAPI proposeGame:', contract, 'rulesContractAddress: ', rulesContractAddress);
   const value = ethers.BigNumber.from(10).pow(16);
-  const wallet = await getSessionWallet(await getSignerAddress());
-  console.log('GameAPI acceptGame: seesionWallet = ', wallet);
+
+  const address = await (await getSigner()).getAddress();
+
+  let wallet = await getSessionWallet(address);
+  if (!wallet) wallet = createSessionWallet(address);
+
+  console.log('GameAPI proposeGame: seesionWallet = ', wallet);
 
   const gasEstimated = await contract.estimateGas.proposeGame(rulesContractAddress, []);
   console.log('GameAPI proposeGame: gasEstimated = ', gasEstimated, Number(gasEstimated));
@@ -281,11 +293,11 @@ export const proposeGame = async (
   console.log('GameAPI proposeGame: tx = ', tx);
   const txResult = await tx;
   console.log('GameAPI proposeGame: txResult = ', txResult);
-  const receipt = txResult.wait();
-  console.log('GameAPI proposeGame: receipt = ', receipt);
-  const receiptResult = await receipt;
-  console.log('GameAPI proposeGame: receiptResult = ', receiptResult);
-  const event = receiptResult.events.find((event: { event: string }) => event.event === 'GameProposed');
+  const rc = txResult.wait();
+  console.log('GameAPI proposeGame: rc = ', rc);
+  const rcResult = await rc;
+  console.log('GameAPI proposeGame: rcResult = ', rcResult);
+  const event = rcResult.events.find((event: { event: string }) => event.event === 'GameProposed');
   console.log('GameAPI proposeGame: event = ', event, event.args);
   return event.args;
 };
@@ -300,7 +312,11 @@ export const acceptGame = async (
     { value });
   
   console.log('GameAPI acceptGame: gasEstimated = ', gasEstimated, Number(gasEstimated));
-  const wallet = await getSessionWallet(await getSignerAddress());
+  
+  const address = await (await getSigner()).getAddress();
+
+  let wallet = await getSessionWallet(address);
+  if (!wallet) wallet = createSessionWallet(address);
 
   console.log('GameAPI acceptGame: seesionWallet = ', wallet);
 
@@ -337,9 +353,17 @@ export const resign = async (
 };
 
 export const getPlayers = async (contract: ethers.Contract, gameId: BigNumber) => {
-  console.log('GameAPI getPlayers: ' , contract, gameId);
-  const response = contract.getPlayers(gameId);
-  return response;
+  const _getPlayers = async () => {
+    try {
+      console.log('GameAPI getPlayers: ', contract, gameId);
+      const response = await contract.getPlayers(gameId);
+      return response;
+    } catch (error) {
+      console.error('GameAPI getPlayers error: ', error);
+      setTimeout(_getPlayers, 2000); 
+    }
+  }
+  return _getPlayers();
 };
 
 export default {

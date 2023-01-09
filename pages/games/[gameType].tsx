@@ -305,22 +305,59 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
     }
     if (lastMessage.messageType == 'ISignedGameMove') {
       const signedMove = lastMessage.message as ISignedGameMove;
-
-      const isValid = await isValidSignedMove(await getArbiter(), signedMove);
-
-      //TODO maybe replace with sender address
+      console.log(`[gameType] processOneMessage signedMove: nonce: ${signedMove.gameMove.nonce}`, signedMove);
       const isOpponentMove = signedMove.gameMove.player === opponentAddress;
-      const nextGameState = gameState.makeNewGameStateFromSignedMove(
-        signedMove,
-        isValid,
-        isOpponentMove);
-      setGameState(nextGameState);
-      setIsInvalidMove(!isValid);
-      if (nextGameState.getWinnerId() !== null) {
-        setFinishGameCheckResult({winner: playerIngameId === nextGameState.getWinnerId()})
-        if (playerIngameId === nextGameState.getWinnerId()) {
-          runFinishGameHandler(nextGameState);
+
+      let count = 0;
+
+      const setNewGameState = async () => {
+        try {
+          count += 1;
+          const contract = await getArbiter();
+          const isValid = await isValidSignedMove(contract, signedMove);
+          const message = {
+            contractAddress: contract.address,
+            arguments: [
+              { signedMove }
+            ],
+            result: { isValid }
+          };
+          const polygonMessage = [
+            [signedMove.gameMove.gameId,
+            signedMove.gameMove.nonce,
+            signedMove.gameMove.player,
+            signedMove.gameMove.oldState,
+            signedMove.gameMove.newState,
+            signedMove.gameMove.move],
+            signedMove.signatures
+          ];
+          console.log('Requested move validation, contract message: ', JSON.stringify(polygonMessage));
+          console.log(`Requested move validation, nonce: ${signedMove.gameMove.nonce}`, JSON.stringify(message, null, ' '));
+          const nextGameState = gameState.makeNewGameStateFromSignedMove(
+            signedMove,
+            isValid,
+            isOpponentMove);
+          setGameState(nextGameState);
+          setIsInvalidMove(!isValid);
+          if (nextGameState.getWinnerId() !== null) {
+            setFinishGameCheckResult({winner: playerIngameId === nextGameState.getWinnerId()})
+            if (playerIngameId === nextGameState.getWinnerId()) {
+              runFinishGameHandler(nextGameState);
+            }
+          }
+          return;
+
+        } catch (error) {
+          console.error('[gameType] processOneMessage messageType: ISignedGameMove error: ', count, error);
+          if (count >= 10) return;
+          setTimeout(setNewGameState, 3000);
         }
+      }
+
+      try {
+        setNewGameState();
+      } catch (error) {
+        console.error('[gameType] processOneMessage messageType: ISignedGameMove error: ', error);
       }
     }
     if (lastMessage.messageType === "FinishedGameState") {
@@ -335,13 +372,13 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
 
   useEffect(() => {
     if (!Number.isNaN(gameId)) setGameState(getInitialState());
-  }, [gameId]);
+  }, [gameId, playerIngameId]);
 
   useEffect(() => {
     for (let i = lastMessages.length - 1; i >= 0; i--) {
       setTimeout(function () {
         processOneMessage(i)
-      }, 100 * (lastMessages.length - i - 1));
+      }, 300 * (lastMessages.length - i - 1));
     }
   }, [lastMessages]);
 
@@ -397,7 +434,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
       BigNumber.from(gameId),
     );
     const address = account.address;
-    if (!address) {
+    if (!address || !players) {
       return;
     }
     if (!(players[0] === ZERO_ADDRESS && players[1] === ZERO_ADDRESS) && !players.includes(address)) {
@@ -463,10 +500,8 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
             isFinishTimeOutAllowed={isFinishTimeoutAllowed}
             finishTimeout={finishTimeoutHandler}
             isTimeoutRequested={isTimeoutRequested}
-            // isTimeoutRequested={true}
             onRunDisput={runDisputeHandler}
-            isDisputAvailable={isDisputAvailable}
-          // connectPlayer={connectPlayerHandler}
+            isDisputAvailable={isDisputAvailable}          
             gameId={gameId}
           />
           <GameField
