@@ -5,4 +5,13 @@
   max-width: 85%;
   margin: auto;
   font-size: 1.6rem;
+
+  @media (max-width: 768px) {
+    padding: 0;
+    max-width: 98%;
+    width: 98%;
+    font-size: 1.3rem;
+    display: flex;
+    flex-direction: column;
+  }
 }

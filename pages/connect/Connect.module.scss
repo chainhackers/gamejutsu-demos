@@ -13,12 +13,22 @@
     font-size: 42px;
     font-weight: bold;
     margin-bottom: 20px;
+
+    @media (max-width: 576px) {
+      font-size: 34px;
+      margin-bottom: 10px;
+    }
   }
 
   > .description {
     font-size: 26px;
     font-weight: normal;
     margin-bottom: 42px;
+
+    @media (max-width: 576px) {
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
   }
 
   .wallets {
@@ -29,5 +39,9 @@
     display: flex;
     justify-content: center;
     padding: 40px;
+
+    @media (max-width: 576px) {
+      padding: 20px;
+    }
   }
 }
