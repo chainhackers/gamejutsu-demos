@@ -38,7 +38,7 @@
 
       @media (max-width: 768px) {
         top: -36px;
-        font-size: 24px;
+        font-size: 18px;
       }
     }
     .error {
@@ -50,8 +50,8 @@
       color: red;
 
       @media (max-width: 768px) {
-        top: -36px;
-        font-size: 24px;
+        top: -32px;
+        font-size: 18px;
       }
     }
   }
@@ -184,7 +184,7 @@
       .image {
         padding: 37px 27px 35.1px 27px;
         @media (max-width: 768px) {
-          padding: 12px 7.5px;
+          padding: 15px 0 0 11.5px;
         }
       }
       svg {
