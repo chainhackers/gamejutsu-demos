@@ -18,7 +18,7 @@ export async function getSessionWallet(
 
 export const createSessionWallet = (address: string): ethers.Wallet => {
   const privateKey = getStoredPrivateKey(address);
-  if (!!privateKey) throw new Error('Private key exists');
+  if (!!privateKey) throw new Error(`Private key for address ${address} exists`);
   
   const privateStore = `${address}_private`;
   const localStorage = window.localStorage;
@@ -59,7 +59,7 @@ export async function signMoveWithAddress(
     address: string,
 ): Promise<string> {
   const wallet = await getSessionWallet(address);
-  if (!wallet) throw new Error('Can not get wallet: no private key')
+  if (!wallet) throw new Error('SignMove: no private key in local storage')
   
   return signMove(gameMove, wallet);
 }

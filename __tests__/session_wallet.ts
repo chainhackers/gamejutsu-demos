@@ -30,7 +30,7 @@ describe('sign move with address', () => {
   test('exception if no private key for session wallet', async () => {
     const privateKey = localStorage.getItem(privateStore);
     expect(privateKey).toBeNull();
-    expect(async () => await signMoveWithAddress(testGameMove0, TEST_ADDRESS_0)).rejects.toThrow('Can not get wallet: no private key');
+    expect(async () => await signMoveWithAddress(testGameMove0, TEST_ADDRESS_0)).rejects.toThrow('SignMove: no private key in local storage');
   })
   
   test('get signed move', async () => {
@@ -49,7 +49,7 @@ describe('create session wallet', () => {
     localStorage.setItem(privateStore, wallet.privateKey);
     const privateKey = localStorage.getItem(privateStore);
     expect(privateKey).not.toBeNull();
-    expect( () => createSessionWallet(TEST_ADDRESS_0)).toThrow('Private key exists');
+    expect( () => createSessionWallet(TEST_ADDRESS_0)).toThrow(/exist/g);
   })
 
   test('if localstorage has no private key', () => {

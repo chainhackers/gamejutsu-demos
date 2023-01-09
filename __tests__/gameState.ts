@@ -10,7 +10,7 @@ describe('game state', () => {
   test('no session private key in localStorage', async () => {
     const privateKey = localStorage.getItem(privateStore);
     expect(privateKey).toBeNull();
-    expect(async () => await testGameState.signMove(testGameMove1, TEST_ADDRESS_1)).rejects.toThrowError('Can not get wallet: no private key');
+    expect(async () => await testGameState.signMove(testGameMove1, TEST_ADDRESS_1)).rejects.toThrowError('SignMove: no private key in local storage');
     
   })
   test('with session private key in localStorage', async () => {
