@@ -26,7 +26,7 @@ import { IGameState, TPlayer } from 'components/Games/types';
 import { GameProposedEvent, GameProposedEventObject } from "../../.generated/contracts/esm/types/polygon/Arbiter";
 import { BigNumber } from 'ethers';
 import { useInterval } from 'hooks/useInterval';
-import useConversation from "../../hooks/useConversation";
+import useConversation, { IAnyMessage } from "../../hooks/useConversation";
 import { PlayerI, TGameType } from 'types/game';
 
 interface IGamePageProps {
@@ -62,7 +62,8 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
   const [isFinishTimeoutAllowed, setIsFinishTimeoutAllowed] = useState<boolean>(false);
   const [isTimeoutRequested, setIsTimeoutRequested] = useState<boolean>(false);
 
-  const [finishGameCheckResult, setFinishGameCheckResult] = useState<null | { winner: boolean}>(null)
+  const [finishGameCheckResult, setFinishGameCheckResult] = useState<null | { winner: boolean }>(null);
+  const [nextGameState, setNextGameState] = useState<IGameState<any, any> | null>(null);
 
   const { query } = useRouter();
   const account = useAccount();
@@ -120,7 +121,10 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
     })
   };
 
-  const runFinishGameHandler = async (nextGameState: IGameState<any, any>) => {
+  const runFinishGameHandler = async () => {
+    if (!nextGameState) {
+      throw 'no nextGameState';
+    }
     if (!nextGameState.lastOpponentMove) {
       throw 'no lastOpponentMove';
     }
@@ -333,17 +337,20 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
           ];
           console.log('Requested move validation, contract message: ', JSON.stringify(polygonMessage));
           console.log(`Requested move validation, nonce: ${signedMove.gameMove.nonce}`, JSON.stringify(message, null, ' '));
+          const previouseMove = i + 1 === lastMessages.length ? null : lastMessages[i + 1].message as ISignedGameMove;
           const nextGameState = gameState.makeNewGameStateFromSignedMove(
             signedMove,
             isValid,
-            isOpponentMove);
+            isOpponentMove,
+            previouseMove,
+            );
+          console.log('nextGameState', nextGameState)
           setGameState(nextGameState);
           setIsInvalidMove(!isValid);
-          if (nextGameState.getWinnerId() !== null) {
-            setFinishGameCheckResult({winner: playerIngameId === nextGameState.getWinnerId()})
-            if (playerIngameId === nextGameState.getWinnerId()) {
-              runFinishGameHandler(nextGameState);
-            }
+          const winnerId = nextGameState.getWinnerId();
+          if (winnerId !== null) {
+            setFinishGameCheckResult({ winner: playerIngameId === winnerId });
+            setNextGameState(nextGameState);
           }
           return;
 
@@ -375,11 +382,12 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
   }, [gameId, playerIngameId]);
 
   useEffect(() => {
-    for (let i = lastMessages.length - 1; i >= 0; i--) {
-      setTimeout(function () {
-        processOneMessage(i)
-      }, 300 * (lastMessages.length - i - 1));
+    const runLastMessages = async (messages: IAnyMessage[]) => {
+      if (messages.length === 0) return;
+      await processOneMessage(messages.length - 1);
+      setTimeout(() => runLastMessages(messages.slice(0, messages.length - 1)), 500);
     }
+    runLastMessages(lastMessages);
   }, [lastMessages]);
 
   useEffect(() => {
@@ -401,14 +409,14 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
         address: gameId && account.address ? account.address : null,
         avatarUrl: '/images/empty_avatar.png',
         playerType: playersTypesMap[gameType][playerIngameId],
-        moves: isPlayerMoves(gameType, gameState, playerIngameId),
+        moves: !finishedGameState && isPlayerMoves(gameType, gameState, playerIngameId),
       },
       {
         playerName: playerIngameId === 1 ? 'Player1' : 'Player2',
         address: opponentAddress,
         avatarUrl: '/images/empty_avatar.png',
         playerType: playersTypesMap[gameType][playerIngameId === 0 ? 1 : 0],
-        moves: !isPlayerMoves(gameType, gameState, playerIngameId),
+        moves: !finishedGameState && !isPlayerMoves(gameType, gameState, playerIngameId),
       },
     ]);
   }, [opponentAddress, gameId, gameType, gameState]);
@@ -514,6 +522,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
             players={players}
             finishGameCheckResult={finishGameCheckResult}
             version={version}
+            onClaimWin={runFinishGameHandler}
           >
             {gameComponent}
           </GameField>

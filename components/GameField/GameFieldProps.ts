@@ -12,4 +12,5 @@ export interface GameFieldPropsI {
   players?: PlayerI[];
   finishGameCheckResult: { winner: boolean } | null;
   version?: string;
+  onClaimWin: () => void;
 }
