@@ -56,7 +56,7 @@ export interface IGameState<IMyGameBoard, IMyGameMove> {
 
     toGameStateContractParams(): TContractGameState
 
-    makeNewGameStateFromSignedMove(signedMove: ISignedGameMove, valid: boolean, isOpponentMove: boolean): IGameState<IMyGameBoard, IMyGameMove>
+    makeNewGameStateFromSignedMove(signedMove: ISignedGameMove, valid: boolean, isOpponentMove: boolean, lastOpponentMove?: ISignedGameMove | null): IGameState<IMyGameBoard, IMyGameMove>
 }
 
 export abstract class BaseGameState<T1 extends IMyGameBoard<T2>, T2 extends IMyGameMove> implements IGameState<IMyGameBoard<IMyGameMove>, IMyGameMove> {
@@ -140,15 +140,17 @@ export abstract class BaseGameState<T1 extends IMyGameBoard<T2>, T2 extends IMyG
         }, valid);
     }
 
-    makeNewGameStateFromSignedMove(signedMove: ISignedGameMove, valid: boolean, isOpponentMove: boolean): this {
+    makeNewGameStateFromSignedMove(signedMove: ISignedGameMove, valid: boolean, isOpponentMove: boolean, lastOpponentMove?: ISignedGameMove): this {
         if (isOpponentMove) {
             const nextState = this._makeNewGameStateFromSignedMove(signedMove, valid);
             nextState.lastOpponentMove = signedMove;
+            if (!!lastOpponentMove) nextState.lastMove = lastOpponentMove;
             this._updateMoveHistory(nextState, this.fromEncodedMove(signedMove.gameMove.move, true), valid);
             return Object.freeze(nextState);
         }
         const nextState = this._makeNewGameStateFromSignedMove(signedMove, valid);
         nextState.lastMove = signedMove;
+        if (!!lastOpponentMove) nextState.lastOpponentMove = lastOpponentMove;
         this._updateMoveHistory(nextState, this.fromEncodedMove(signedMove.gameMove.move, false), valid);
         return Object.freeze(nextState);
     }
