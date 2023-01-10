@@ -13,7 +13,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   children,
   rivalPlayerAddress,
   isConnected,
-  isInDispute,
+  disputeMode,
   finishedGameState,
   onConnect,
   players,
@@ -38,6 +38,8 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   const { data, error, loading } = useQuery(badgesQuery, {
     variables: { id: account.address?.toLowerCase() },
   });
+
+  console.log('dispute mode', disputeMode, account.address)
 
   function isOpponentAddress(address: string): boolean {
     return address === rivalPlayerAddress;
@@ -99,13 +101,13 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   }, [rivalPlayerAddress, isConnected]);
 
   useEffect(() => {
-    if (isInDispute) {
+    if (disputeMode.isInDispute) {
       setShowShade(true);
       setIsWaiting(false);
       setIsConnecting(false);
       setShowDispute(true);
     }
-  }, [isInDispute]);
+  }, [disputeMode.isInDispute]);
 
   useEffect(() => {
     if (!!finishedGameState) {
@@ -291,8 +293,8 @@ export const GameField: React.FC<GameFieldPropsI> = ({
           )}
           {isShowDispute && (
             <div className={styles.appeal}>
-              <div className={styles.madeAppeal}>{`\${disputeAppealPlayer} ${t(
-                'shade.madeAppeal',
+              <div className={styles.madeAppeal}>{disputeMode.disputeRunner === account.address ? `${t('shade.madeAppeal.runner')}` : `Opponent ${t(
+                'shade.madeAppeal.cheater',
               )}`}</div>
               <div className={styles.notice}>{t('shade.notice')}</div>
             </div>

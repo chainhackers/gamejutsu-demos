@@ -55,7 +55,15 @@ type TGameFinished = { gameId: number, winner: string, loser: string, isDraw: bo
 type TPlayerDisqualified = { gameId: number, player: string };
 type TPlayerResigned = { gameId: number, player: string };
 
+export class RunDisputeState {
+  gameId: number;
+  disputeRunner: string;
 
+  constructor(gameId: number, disputeRunner: string) {
+    this.gameId = gameId;
+    this.disputeRunner = disputeRunner;
+  }
+}
 export class FinishedGameState {
   gameId: number;
   winner: string | null;
