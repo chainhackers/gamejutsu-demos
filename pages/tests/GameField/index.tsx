@@ -72,6 +72,7 @@ const TestGameFieldPage: NextPage = () => {
       isConnected: true,
       finishGameCheckResult: null,
       onClaimWin: () => undefined,
+      disputeMode: { isInDispute: false, disputeRunner: null },
       
     }
   }
