@@ -426,14 +426,14 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
         address: gameId && account.address ? account.address : null,
         avatarUrl: '/images/empty_avatar.png',
         playerType: playersTypesMap[gameType][playerIngameId],
-        moves: !finishedGameState && isPlayerMoves(gameType, gameState, playerIngameId),
+        moves: !finishedGameState && !isInDispute && isPlayerMoves(gameType, gameState, playerIngameId),
       },
       {
         playerName: playerIngameId === 1 ? 'Player1' : 'Player2',
         address: opponentAddress,
         avatarUrl: '/images/empty_avatar.png',
         playerType: playersTypesMap[gameType][playerIngameId === 0 ? 1 : 0],
-        moves: !finishedGameState && !isPlayerMoves(gameType, gameState, playerIngameId),
+        moves: !finishedGameState && !isInDispute && !isPlayerMoves(gameType, gameState, playerIngameId),
       },
     ]);
   }, [opponentAddress, gameId, gameType, gameState]);
