@@ -8,6 +8,7 @@
   z-index: 1000;
 
   @media (max-width: 992px) {
+    overflow-y: auto;
     width: 95%;
     height: 100%;
     padding-top: 40px;
@@ -170,6 +171,10 @@
       opacity: 1;
       top: 15%;
 
+      @media (max-width: 768px) {
+        top: 5%;
+      }
+
       .small {
         font-size: 16px;
       }
@@ -184,6 +189,10 @@
       opacity: 1;
       top: 20%;
 
+      @media (max-width: 768px) {
+        top: 10%;
+      }
+
       .badges {
         .text {
           color: var(--black);
@@ -196,6 +205,11 @@
         margin: auto;
         width: 80%;
         border-radius: 20px;
+
+        @media (max-width: 768px) {
+          padding: 5px;
+          width: 95%;
+        }
 
         .row {
           .badge {
@@ -231,6 +245,12 @@
               width: 90px;
               height: 90px;
               filter: sepia(1);
+
+              @media (max-width: 768px) {
+                margin: 5px;
+                width: 75px;
+                height: 75px;
+              }
             }
 
             &.available {
