@@ -121,6 +121,15 @@ const en = {
     leftpanel: {
       'gameId': 'Game ID'
     },
+    games: {
+      checkers: {
+        disclaimer: {
+          notice: 'Checkers rules notice',
+          s1: 'This protocol demo shows the Arbiter using',
+          l1: 'Checkers rules',
+          s2: 'to judge if the game is played fair and square.The twist here is that a single move contains only one checker position change, i.e.when a player jumps multiple times, that is recorded as a sequence of separate moves, each containing one jump and a flag indicating who\'s to move next. This may not be the smoothest UX, it is done to demonstrate ways of encoding game rules on-chain that don\'t require complicated programming.'}
+      }
+    }
   },
 };
 

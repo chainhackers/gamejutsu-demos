@@ -18,3 +18,6 @@ export * from 'components/LeftPanel';
 export * from 'components/RightPanel';
 export * from 'components/Players';
 export * from 'components/TeamMember';
+export * from 'components/Disclaimer';
+export * from 'components/DisclaimerNotice';
+export * from 'components/GamePanel';
