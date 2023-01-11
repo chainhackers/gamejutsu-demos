@@ -18,7 +18,9 @@ import XmtpProvider from '../contexts/XmtpProvider';
 
 const { chains, provider, webSocketProvider } = configureChains(
   [polygon],
-  [publicProvider()]
+  [
+    publicProvider(),
+  ],
 );
 
 const { connectors } = getDefaultWallets({
