@@ -2,7 +2,7 @@ import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { RainbowKitProvider, getDefaultWallets } from '@rainbow-me/rainbowkit';
 import { Chain, configureChains, createClient, WagmiConfig } from 'wagmi';
-import { avalanche, bsc, mainnet, polygon, goerli } from 'wagmi/chains';
+import {  polygon} from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
 
@@ -13,7 +13,6 @@ import 'i18n/index';
 
 import '@rainbow-me/rainbowkit/styles.css';
 import 'styles/globals.css';
-import XmtpProvider from '../contexts/XmtpProvider';
 import XmtpProvider from '../contexts/XmtpProvider';
 
 const { chains, provider, webSocketProvider } = configureChains(
