@@ -11,7 +11,6 @@ import cn from 'classnames';
 import { FinishedGameState } from 'gameApi';
 export const GameField: React.FC<GameFieldPropsI> = ({
   children,
-  gameId,
   rivalPlayerAddress,
   isConnected,
   isInDispute,
@@ -19,6 +18,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   onConnect,
   players,
   finishGameCheckResult,
+  onClaimWin,
   version,
 }) => {
   const [isShowShade, setShowShade] = useState<boolean>(true);
@@ -82,6 +82,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
     if (!rivalPlayerAddress) {
       setShowShade(true);
       setIsWaiting(true);
+      return;
     }
     if (!!rivalPlayerAddress) {
       setIsWaiting(false);
@@ -298,9 +299,15 @@ export const GameField: React.FC<GameFieldPropsI> = ({
           )}
           {!!finishGameCheckResult &&
             <div className={styles.checking_results}>
-              {finishGameCheckResult && finishGameCheckResult.winner &&<p className={styles.message}>{t('shade.checking.winner')}</p>}
-              {finishGameCheckResult && !finishGameCheckResult.winner && <p className={styles.message}>{t('shade.checking.loser')}</p>}
-              <p className={styles.message}>{t('shade.checking.checking')}</p>
+              {finishGameCheckResult && finishGameCheckResult.winner && 
+                <>
+                  <p className={styles.message}>{t('shade.checking.winner')}</p>
+                  <Button title={t('shade.checking.checkingWinner')} onClick={onClaimWin} />
+                </>
+              }
+              {finishGameCheckResult && !finishGameCheckResult.winner &&
+                <p className={styles.message}>{t('shade.checking.loser')} {t('shade.checking.checkingLoser')}</p>
+              }
               </div>}
           {finishedGameState && (            
               <div className={styles.win}>

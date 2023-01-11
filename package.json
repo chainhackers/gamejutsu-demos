@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.6.9",
-    "@rainbow-me/rainbowkit": "^0.5.1",
+    "@rainbow-me/rainbowkit": "^0.8.1",
     "@walletconnect/web3-provider": "^1.8.0",
     "@xmtp/xmtp-js": "^7.7.2",
     "autoprefixer": "^10.4.12",
@@ -33,7 +33,7 @@
     "sass": "^1.54.9",
     "tailwindcss": "^3.1.8",
     "tictactoe-ai": "^1.0.4",
-    "wagmi": "^0.6.0"
+    "wagmi": "^0.9.6"
   },
   "devDependencies": {
     "@dethcrypto/eth-sdk": "^0.3.3",
