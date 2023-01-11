@@ -67,15 +67,19 @@
   transition: all 0.5s;
   cursor: pointer;
 
+  
   &.disabled {
     cursor: not-allowed;
     background-color: var(--gray-darker);
   }
-
-
+  
+  
   &:hover {
     transform: scale(1.1);
     box-shadow: 0 0 5px rgb(40 61 44);
+    @media (max-width: 992px) {
+      transform: none;
+    }
   }
 
   &:hover > .hint {
@@ -88,6 +92,9 @@
   &:active {
     // background-color: aqua;
     transform: scale(1.06);
+    @media (max-width: 992px) {
+      transform: none;
+    }
     box-shadow: 0 0 1px rgb(40 61 44);
   }
 }
