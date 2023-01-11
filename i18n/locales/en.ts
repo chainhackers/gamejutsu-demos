@@ -99,7 +99,7 @@ const en = {
       whatToReport: 'What do you want to report?',
       cheating: 'Cheating',
       inactive: 'Inactive',
-      madeAppeal: 'made an appeal to the Game Master you cheated',
+      madeAppeal: { cheater: 'Opponent made an appeal to the Game Master you cheated.', runner: 'You appealed cheating to the Game Master.'},
       notice: 'Pending decision from Game Master',
       checking: {checkingWinner: 'Claim win', checkingLoser: 'Please wait for winner\'s confirmation.', winner: 'You seem to be a winner.', loser: 'You seem to have lost this game.'},
     },

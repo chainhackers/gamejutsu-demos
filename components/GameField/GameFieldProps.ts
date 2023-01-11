@@ -7,6 +7,7 @@ export interface GameFieldPropsI {
   rivalPlayerAddress: string | null;
   isConnected: boolean;
   isInDispute?: boolean;
+  disputeMode: { isInDispute: boolean, disputeRunner: string | null };
   finishedGameState: FinishedGameState | null;
   onConnect: (opponent: string) => Promise<void>;
   players?: PlayerI[];

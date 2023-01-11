@@ -11,7 +11,7 @@ import {
     TimeoutResolvedEventObject,
     TimeoutStartedEventObject
 } from "../.generated/contracts/esm/types/polygon/Arbiter";
-import { FinishedGameState } from "../gameApi";
+import { FinishedGameState, RunDisputeState } from "../gameApi";
 import { TGameType } from 'types/game'
 
 export const MESSAGES_PER_PAGE = 20;
@@ -20,17 +20,17 @@ let stream: Stream<Message>
 
 export type TMessageType = ISignedGameMove |
     GameProposedEventObject | GameStartedEventObject | GameFinishedEventObject |
-    TimeoutStartedEventObject | TimeoutResolvedEventObject | FinishedGameState
+    TimeoutStartedEventObject | TimeoutResolvedEventObject | FinishedGameState | RunDisputeState;
 
 const allMessageTypes = ["ISignedGameMove",
     "GameProposedEvent", "GameStartedEvent", "GameFinishedEvent",
     "TimeoutStartedEvent", "TimeoutResolvedEvent",
-    "FinishedGameState"]
+    "FinishedGameState", "RunDisputeState"]
 
 export interface IGameMessage {
     gameType: TGameType,
     gameId: number;
-    messageType: "ISignedGameMove" | "GameProposedEvent" | "GameStartedEvent" | "GameFinishedEvent" | "TimeoutStartedEvent" | "TimeoutResolvedEvent" | "FinishedGameState",
+    messageType: "ISignedGameMove" | "GameProposedEvent" | "GameStartedEvent" | "GameFinishedEvent" | "TimeoutStartedEvent" | "TimeoutResolvedEvent" | "FinishedGameState" | "RunDisputeState",
     message: TMessageType,
 }
 

@@ -16,7 +16,7 @@ import {
 import styles from 'pages/games/gameType.module.scss';
 import { TicTacToe, PlayerType as TicTacToePlayerType } from "components/Games/Tic-Tac-Toe";
 import { TicTacToeState } from "components/Games/Tic-Tac-Toe/types";
-import gameApi, { isValidSignedMove, getArbiter, getSigner, getRulesContract, finishGame, disputeMove, initTimeout, resolveTimeout, finalizeTimeout, FinishedGameState } from "../../gameApi";
+import gameApi, { isValidSignedMove, getArbiter, getSigner, getRulesContract, finishGame, disputeMove, initTimeout, resolveTimeout, finalizeTimeout, FinishedGameState, RunDisputeState } from "../../gameApi";
 import { ISignedGameMove, SignedGameMove } from "../../types/arbiter";
 import { signMoveWithAddress } from 'helpers/session_signatures';
 import { useAccount } from 'wagmi';
@@ -46,6 +46,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
 
   const [playerIngameId, setPlayerIngameId] = useState<0 | 1>(0);
   const [isInDispute, setIsInDispute] = useState<boolean>(false);
+  const [disputeRunner, setDisputeRunner] = useState<string | null>(null);
   const [finishedGameState, setFinishedGameState] = useState<FinishedGameState | null>(null);
 
   const [isDisputAvailable, setIsDisputeAvailavle] = useState<boolean>(false);
@@ -281,7 +282,17 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
 
     setIsInDispute(true);
 
+    setDisputeRunner(account.address!)
+
+    sendMessage({
+      gameId: gameId,
+      messageType: 'RunDisputeState',
+      gameType,
+      message: { gameId, disputeRunner: account.address! }
+    })
+
     const finishedGameResult = await disputeMove(await getArbiter(), gameState.lastOpponentMove);
+    console.log('finishedGameResult dispute move', finishedGameResult)
     sendMessage({
       gameId: gameId,
       message: finishedGameResult,
@@ -307,7 +318,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
       setIsFinishTimeoutAllowed(false);
       setIsTimeoutRequested(false); //TODO consider one state instead of 4
     }
-    if (lastMessage.messageType == 'ISignedGameMove') {
+    if (lastMessage.messageType === 'ISignedGameMove') {
       const signedMove = lastMessage.message as ISignedGameMove;
       console.log(`[gameType] processOneMessage signedMove: nonce: ${signedMove.gameMove.nonce}`, signedMove);
       const isOpponentMove = signedMove.gameMove.player === opponentAddress;
@@ -367,8 +378,14 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
         console.error('[gameType] processOneMessage messageType: ISignedGameMove error: ', error);
       }
     }
+    if (lastMessage.messageType === 'RunDisputeState') {
+      const { disputeRunner } = lastMessage.message as RunDisputeState;
+      if (disputeRunner !== account.address) setDisputeRunner(disputeRunner);
+      setIsInDispute(true);
+    }
     if (lastMessage.messageType === "FinishedGameState") {
-      const {loser } = lastMessage.message as FinishedGameState;
+      console.log('last message proceess one message', lastMessage)
+      const { loser } = lastMessage.message as FinishedGameState;
       console.log('GOT MESSAGE');
       if (loser === account.address) { 
         setFinishGameCheckResult(null);
@@ -409,14 +426,14 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
         address: gameId && account.address ? account.address : null,
         avatarUrl: '/images/empty_avatar.png',
         playerType: playersTypesMap[gameType][playerIngameId],
-        moves: !finishedGameState && isPlayerMoves(gameType, gameState, playerIngameId),
+        moves: !finishedGameState && !isInDispute && isPlayerMoves(gameType, gameState, playerIngameId),
       },
       {
         playerName: playerIngameId === 1 ? 'Player1' : 'Player2',
         address: opponentAddress,
         avatarUrl: '/images/empty_avatar.png',
         playerType: playersTypesMap[gameType][playerIngameId === 0 ? 1 : 0],
-        moves: !finishedGameState && !isPlayerMoves(gameType, gameState, playerIngameId),
+        moves: !finishedGameState && !isInDispute && !isPlayerMoves(gameType, gameState, playerIngameId),
       },
     ]);
   }, [opponentAddress, gameId, gameType, gameState]);
@@ -517,6 +534,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
             rivalPlayerAddress={opponentAddress}
             isConnected={!!client}
             isInDispute={isInDispute}
+            disputeMode={{isInDispute, disputeRunner}}
             finishedGameState={finishedGameState}
             onConnect={setConversationHandler}
             players={players}
