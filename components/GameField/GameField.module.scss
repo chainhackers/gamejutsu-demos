@@ -8,7 +8,6 @@
   z-index: 1000;
 
   @media (max-width: 992px) {
-    overflow-y: auto;
     width: 95%;
     height: 100%;
     padding-top: 40px;
@@ -247,9 +246,9 @@
               filter: sepia(1);
 
               @media (max-width: 768px) {
-                margin: 5px;
-                width: 75px;
-                height: 75px;
+                margin: 6px;
+                width: 55px;
+                height: 55px;
               }
             }
 
