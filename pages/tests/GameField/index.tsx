@@ -71,6 +71,8 @@ const TestGameFieldPage: NextPage = () => {
       onConnect: async (opponent) => { },
       isConnected: true,
       finishGameCheckResult: null,
+      onClaimWin: () => undefined,
+      
     }
   }
 

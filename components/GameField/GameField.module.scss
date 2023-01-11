@@ -318,6 +318,10 @@
   font-size: 30px;
   letter-spacing: 2px;
 
+  .message {
+    text-align: center;
+  }
+
   .message:not(:last-child) {
     margin-bottom: 15px;
   }

@@ -1,7 +1,8 @@
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { RainbowKitProvider, getDefaultWallets } from '@rainbow-me/rainbowkit';
-import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
+import { Chain, configureChains, createClient, WagmiConfig } from 'wagmi';
+import { avalanche, bsc, mainnet, polygon, goerli } from 'wagmi/chains'
 import { publicProvider } from 'wagmi/providers/public';
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
 
@@ -14,14 +15,13 @@ import '@rainbow-me/rainbowkit/styles.css';
 import 'styles/globals.css';
 import XmtpProvider from '../contexts/XmtpProvider';
 
+
+
 const { chains, provider, webSocketProvider } = configureChains(
+  [polygon],
   [
-    chain.polygon,
-    ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === 'true'
-      ? [chain.goerli, chain.kovan, chain.rinkeby, chain.ropsten]
-      : []),
+    publicProvider(),
   ],
-  [publicProvider()]
 );
 
 const { connectors } = getDefaultWallets({
