@@ -1,7 +1,8 @@
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { RainbowKitProvider, getDefaultWallets } from '@rainbow-me/rainbowkit';
-import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
+import { Chain, configureChains, createClient, WagmiConfig } from 'wagmi';
+import { avalanche, bsc, mainnet, polygon, goerli } from 'wagmi/chains'
 import { publicProvider } from 'wagmi/providers/public';
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
 
@@ -12,15 +13,12 @@ import 'i18n/index';
 
 import '@rainbow-me/rainbowkit/styles.css';
 import 'styles/globals.css';
-import XmtpProvider from "../contexts/XmtpProvider";
+import XmtpProvider from '../contexts/XmtpProvider';
+
+
 
 const { chains, provider, webSocketProvider } = configureChains(
-  [
-    chain.polygon,
-    ...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === 'true'
-      ? [chain.goerli, chain.kovan, chain.rinkeby, chain.ropsten]
-      : []),
-  ],
+  [polygon],
   [
     publicProvider(),
   ],
@@ -44,7 +42,7 @@ const client = new ApolloClient({
   cache,
 });
 
-const version = '1.0.13'
+const version = '1.0.13';
 function MyApp({ Component, pageProps }: AppProps) {
   const props = { ...pageProps, version };
   return (
@@ -54,12 +52,15 @@ function MyApp({ Component, pageProps }: AppProps) {
           <XmtpContextProvider>
             <RainbowKitProvider chains={chains}>
               <XmtpProvider>
-              <Layout version={version}>
-                <Head>
-                  <meta name="viewport" content="width=device-width, initial-scale=1" />
-                </Head>
-                <Component {...props} />
-              </Layout>
+                <Layout version={version}>
+                  <Head>
+                    <meta
+                      name="viewport"
+                      content="width=device-width, initial-scale=1"
+                    />
+                  </Head>
+                  <Component {...props} />
+                </Layout>
               </XmtpProvider>
             </RainbowKitProvider>
           </XmtpContextProvider>
