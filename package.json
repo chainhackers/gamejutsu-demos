@@ -33,7 +33,7 @@
     "sass": "^1.54.9",
     "tailwindcss": "^3.1.8",
     "tictactoe-ai": "^1.0.4",
-    "wagmi": "^0.10.10"
+    "wagmi": "^0.9.6"
   },
   "devDependencies": {
     "@dethcrypto/eth-sdk": "^0.3.3",
