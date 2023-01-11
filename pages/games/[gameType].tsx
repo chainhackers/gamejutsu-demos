@@ -5,6 +5,8 @@ import { useRouter } from 'next/router';
 import { ParsedUrlQuery } from 'querystring';
 import { XMTPChatLog } from 'components/XMTPChatLog';
 import {
+  Disclaimer,
+  DisclaimerNotice,
   GameField,
   JoinGame,
   LeftPanel,
@@ -28,6 +30,9 @@ import { BigNumber } from 'ethers';
 import { useInterval } from 'hooks/useInterval';
 import useConversation, { IAnyMessage } from "../../hooks/useConversation";
 import { PlayerI, TGameType } from 'types/game';
+import { useTranslation } from 'react-i18next';
+import Link from 'next/link';
+
 
 interface IGamePageProps {
   gameType: TGameType,
@@ -78,6 +83,8 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
       1: <CheckersPlayerType playerIngameId={1}/>,
     }
   }
+
+  const { t } = useTranslation();
 
   const gameId = parseInt(query.game as string);
 
@@ -529,6 +536,9 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
             isDisputAvailable={isDisputAvailable}          
             gameId={gameId}
           />
+          {gameType === 'checkers' && <DisclaimerNotice><strong><Link href="#disclaimer">{t('games.checkers.disclaimer.notice')}
+          </Link></strong></DisclaimerNotice>}
+        
           <GameField
             gameId={gameId?.toString()}
             rivalPlayerAddress={opponentAddress}
@@ -547,6 +557,9 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
           <RightPanel>
             <XMTPChatLog anyMessages={collectedMessages} isLoading={loading} />
           </RightPanel>
+          {gameType === 'checkers' && <Disclaimer>{t('games.checkers.disclaimer.s1')} <strong>
+            <Link href='https://www.officialgamerules.org/checkers' target={'_blank'}>{t('games.checkers.disclaimer.l1')}</Link>
+            </strong> {t('games.checkers.disclaimer.s2')}</Disclaimer>}
         </div>
       );
     }

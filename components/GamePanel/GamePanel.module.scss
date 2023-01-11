@@ -1,0 +1,23 @@
+.container { 
+  background-color: var(--gray-lightest);  
+  // width: 250px;
+  // height: 610px;
+  font-size: 1.4rem;
+  border-radius: 10px;
+  // margin-right: 25px;
+  padding: 15px 15px;
+  overflow: hidden;
+  // text-align: center;
+
+  // display: flex;
+  // flex-direction: column;
+  // justify-content: space-between;
+  @media (max-width: 992px) {
+    // width: 95%;
+    height: auto;
+    margin-right: 0;
+    margin-bottom: 10px;
+    padding: 10px;
+    justify-content: center;
+  }
+ }
