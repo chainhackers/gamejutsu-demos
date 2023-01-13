@@ -8,6 +8,7 @@ import {
   Disclaimer,
   DisclaimerNotice,
   GameField,
+  GetHistory,
   JoinGame,
   LeftPanel,
   RightPanel,
@@ -555,6 +556,9 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
             {gameComponent}
           </GameField>
           <RightPanel>
+            <div style={{ position: 'absolute', right: '0'}}>
+              <GetHistory history={lastMessages} gameId={gameId}/>
+            </div>
             <XMTPChatLog anyMessages={collectedMessages} isLoading={loading} />
           </RightPanel>
           {gameType === 'checkers' && <Disclaimer>{t('games.checkers.disclaimer.s1')} <strong>
