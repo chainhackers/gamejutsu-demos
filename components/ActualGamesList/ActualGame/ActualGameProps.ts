@@ -8,6 +8,4 @@ export interface ActualGamePropsI {
   stake: string;
   proposer: string;
   rules: string;
-  ticTacToeAddress: string;
-  checkersAddress: string;
 }

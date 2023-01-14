@@ -1,6 +1,8 @@
 import cn from 'classnames';
 import { ActualGamePropsI } from './ActualGameProps';
 import styles from './ActualGame.module.scss';
+import { getRulesContract } from 'gameApi';
+import { useState } from 'react';
 export const ActualGame: React.FC<ActualGamePropsI> = ({
   gameId,
   winner,
@@ -10,9 +12,17 @@ export const ActualGame: React.FC<ActualGamePropsI> = ({
   stake,
   proposer,
   rules,
-  ticTacToeAddress,
-  checkersAddress
 }) => {
+  const [ticTacToeAddress, setTicTacToeAddress] = useState('')
+  const [checkersAddress, setCheckersAddress] = useState('')
+
+  getRulesContract('tic-tac-toe').then(function(response) {
+    setTicTacToeAddress(response.address.toLowerCase())
+  })
+  getRulesContract('checkers').then(function(response) {
+    setCheckersAddress(response.address.toLowerCase())
+  })
+
   return (
     <div
       className={cn(styles.container, header ? styles.header : null)}
