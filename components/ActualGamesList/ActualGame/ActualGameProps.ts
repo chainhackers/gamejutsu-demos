@@ -8,4 +8,5 @@ export interface ActualGamePropsI {
   stake: string;
   proposer: string;
   rules: string;
+  gameType: string;
 }

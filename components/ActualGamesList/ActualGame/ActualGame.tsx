@@ -1,7 +1,6 @@
 import cn from 'classnames';
 import { ActualGamePropsI } from './ActualGameProps';
 import styles from './ActualGame.module.scss';
-import { useRouter } from 'next/router';
 export const ActualGame: React.FC<ActualGamePropsI> = ({
   gameId,
   winner,
@@ -11,21 +10,8 @@ export const ActualGame: React.FC<ActualGamePropsI> = ({
   stake,
   proposer,
   rules,
+  gameType
 }) => {
-  const router = useRouter();
-  const gameType = router.query.gameType as string
-  
-  function formattedGameType() {
-    if (rules !== 'game rules') {
-      let formattedGameType = gameType.split('-')
-    let newArr = ''
-    formattedGameType.forEach(word => {
-      newArr = newArr + (word[0].toUpperCase() + word.slice(1) + ' ')  
-    });
-    return newArr.trim()
-    } else return rules
-    
-  }
   return (
     <div
       className={cn(styles.container, header ? styles.header : null)}
@@ -37,7 +23,7 @@ export const ActualGame: React.FC<ActualGamePropsI> = ({
       </div>
       <div className={styles.proposer}>{proposer}</div>
       <div className={styles.rules}>
-      {formattedGameType()}
+      {gameType}
       </div>
     </div>
   );
