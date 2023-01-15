@@ -1,8 +1,7 @@
 import cn from 'classnames';
 import { ActualGamePropsI } from './ActualGameProps';
 import styles from './ActualGame.module.scss';
-import { getRulesContract } from 'gameApi';
-import { useState } from 'react';
+import { useRouter } from 'next/router';
 export const ActualGame: React.FC<ActualGamePropsI> = ({
   gameId,
   winner,
@@ -13,16 +12,20 @@ export const ActualGame: React.FC<ActualGamePropsI> = ({
   proposer,
   rules,
 }) => {
-  const [ticTacToeAddress, setTicTacToeAddress] = useState('')
-  const [checkersAddress, setCheckersAddress] = useState('')
-
-  getRulesContract('tic-tac-toe').then(function(response) {
-    setTicTacToeAddress(response.address.toLowerCase())
-  })
-  getRulesContract('checkers').then(function(response) {
-    setCheckersAddress(response.address.toLowerCase())
-  })
-
+  const router = useRouter();
+  const gameType = router.query.gameType as string
+  
+  function formattedGameType() {
+    if (rules !== 'game rules') {
+      let formattedGameType = gameType.split('-')
+    let newArr = ''
+    formattedGameType.forEach(word => {
+      newArr = newArr + (word[0].toUpperCase() + word.slice(1) + ' ')  
+    });
+    return newArr.trim()
+    } else return rules
+    
+  }
   return (
     <div
       className={cn(styles.container, header ? styles.header : null)}
@@ -34,11 +37,7 @@ export const ActualGame: React.FC<ActualGamePropsI> = ({
       </div>
       <div className={styles.proposer}>{proposer}</div>
       <div className={styles.rules}>
-      {rules.toLowerCase() === ticTacToeAddress
-          ? 'Tic-Tac-Toe'
-          : rules.toLowerCase() === checkersAddress
-          ? 'Checkers'
-          : rules}
+      {formattedGameType()}
       </div>
     </div>
   );
