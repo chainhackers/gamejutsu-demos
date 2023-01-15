@@ -26,7 +26,7 @@
 
   .id {
     display: inline-block;
-    width: 50px;
+    width: 15%;
     text-align: center;
 
     @media (max-width: 768px) {
@@ -35,7 +35,7 @@
   }
   .stake {
     display: inline-block;
-    width: 50px;
+    width: 15%;
     text-align: center;
 
     @media (max-width: 768px) {
@@ -44,7 +44,7 @@
   }
   .proposer {
     display: inline-block;
-    width: 430px;
+    width: 50%;
     text-align: center;
     word-break: break-word;
 
@@ -53,12 +53,12 @@
     }
 
     @media (max-width: 768px) {
-      width: 55%;
+      width: 60%;
     }
   }
   .rules {
     display: inline-block;
-    width: 430px;
+    width: 20%;
     text-align: center;
     word-break: break-word;
 
@@ -67,7 +67,7 @@
     }
 
     @media (max-width: 768px) {
-      width: 25%;
+      width: 20%;
     }
   }
   .winner {
