@@ -18,13 +18,12 @@ export const ActualGamesList: React.FC<ActualGamesListPropsI> = ({ gamesList, on
         proposer="proposer"
         rules="game rules"
         header
-        gameType="game rules"
       />
       {gamesList
         .slice()
         .sort((a, b) => b.id - a.id)
         .map((game) => (
-          <ActualGame key={game.gameId} gameType={gameType} {...game} onClick={onClick} />
+          <ActualGame key={game.gameId} {...game} rules={gameType}  onClick={onClick} />
         ))}
     </div>
   );

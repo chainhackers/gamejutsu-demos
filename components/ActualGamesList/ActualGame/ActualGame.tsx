@@ -10,7 +10,6 @@ export const ActualGame: React.FC<ActualGamePropsI> = ({
   stake,
   proposer,
   rules,
-  gameType
 }) => {
   return (
     <div
@@ -23,7 +22,7 @@ export const ActualGame: React.FC<ActualGamePropsI> = ({
       </div>
       <div className={styles.proposer}>{proposer}</div>
       <div className={styles.rules}>
-      {gameType}
+      {rules}
       </div>
     </div>
   );
