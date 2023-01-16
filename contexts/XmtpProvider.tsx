@@ -95,6 +95,7 @@ export const XmtpProvider: React.FC<{ children: React.ReactNode }> = ({children}
         conversations,
         convoMessages,
         setConvoMessages,
+        disconnect,
     })
 
     useEffect(() => {
@@ -105,6 +106,7 @@ export const XmtpProvider: React.FC<{ children: React.ReactNode }> = ({children}
             conversations,
             convoMessages,
             setConvoMessages,
+            disconnect,
         })
     }, [client, initClient, loadingConversations, conversations, convoMessages])
 

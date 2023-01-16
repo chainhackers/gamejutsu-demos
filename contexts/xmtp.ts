@@ -17,6 +17,7 @@ export type XmtpContextType = {
     initClient: (wallet: Signer) => void
     convoMessages: MessageStore
     setConvoMessages: React.Dispatch<React.SetStateAction<MessageStore>>
+    disconnect: () => void;
 }
 
 export const XmtpContext = createContext<XmtpContextType>({
@@ -26,6 +27,7 @@ export const XmtpContext = createContext<XmtpContextType>({
     initClient: () => undefined,
     convoMessages: new Map(),
     setConvoMessages: () => undefined,
+    disconnect: () => undefined,
 })
 
 export const useXmtpContext = () => {

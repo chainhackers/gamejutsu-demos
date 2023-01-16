@@ -96,12 +96,16 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
     return new CheckersState({ gameId, playerType })
   }
 
-  let gameState: IGameState<any, any>;
-  let setGameState: ((arg0: any) => void);
+  const [gameState, setGameState] = useState<IGameState<any, any>>(getInitialState());
 
-  [gameState, setGameState] = useState<IGameState<any, any>>(getInitialState());
-
-  let { loading, collectedMessages, sendMessage, lastMessages, initClient, client } = useConversation(
+  const {
+    loading,
+    collectedMessages,
+    sendMessage,
+    lastMessages,
+    initClient,
+    client,
+    disconnect } = useConversation(
     opponentAddress!,
     gameId,
     true
@@ -403,6 +407,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
 
   useEffect(() => {
     if (!Number.isNaN(gameId)) setGameState(getInitialState());
+    return () => disconnect();
   }, [gameId, playerIngameId]);
 
   useEffect(() => {
