@@ -122,7 +122,7 @@ const useConversation = (
     gameId: number,
     stopOnFirstMove: boolean,
 ) => {
-    const { client, initClient } = useContext(XmtpContext);
+    const { client, initClient, disconnect } = useContext(XmtpContext);
     const [conversation, setConversation] = useState<Conversation | null>(null);
     const [loading] = useState<boolean>(false);
     const [collectedMessages, setCollectedMessages] = useState<IAnyMessage[]>([]);
@@ -185,7 +185,8 @@ const useConversation = (
         collectedMessages,
         lastMessages,
         initClient,
-        client
+        client,
+        disconnect
     }
 }
 
