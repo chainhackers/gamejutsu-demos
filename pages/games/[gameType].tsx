@@ -518,7 +518,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
         playerIngameId={playerIngameId}
       />
   }
-  if (gameComponent) {
+  if (gameComponent && gameId) {
     if (gameType === 'checkers' || gameType === 'tic-tac-toe') {
       return (
         <div className={styles.container}>
@@ -564,7 +564,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
       );
     }
   }
-  return <div>No Games Available</div>;
+  return <div>Loading...</div>;
 };
 
 export const getStaticProps: GetStaticProps<IGamePageProps, IParams> = (context) => {
