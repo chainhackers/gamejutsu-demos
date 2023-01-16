@@ -22,11 +22,7 @@ export const ActualGame: React.FC<ActualGamePropsI> = ({
       </div>
       <div className={styles.proposer}>{proposer}</div>
       <div className={styles.rules}>
-        {rules.toLowerCase() === '0xc6f81d6610a0b1bcb8cc11d50602d490b7624a96'
-          ? 'Tic-Tac-Toe'
-          : '0x6ede6f6f1aca5e7a3bdc403ea0ca9889e2095486'
-          ? 'Checkers'
-          : rules}
+      {rules}
       </div>
     </div>
   );
