@@ -8,8 +8,10 @@
   padding-top: 5px;
   padding-left: 15px;
   padding-right: 15px;
+  margin-top: 20px;
 
   @media (max-width: 992px) {
+    margin-top: 0;
     width: 95%;
     height: auto;
     margin-left: 0;
