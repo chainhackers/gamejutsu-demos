@@ -1,7 +1,13 @@
 .container { 
-  display: none;
+  display: flex;
+  width: 100%;
+  margin-bottom: 20px;
+  order: -1;
+  padding: 0 15px;
   @media (max-width: 992px) {
-    display: block;
+    width: 95%;
     position: relative;
+    order: 4;
+    padding: 0;
   }
  }
