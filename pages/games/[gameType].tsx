@@ -84,6 +84,8 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
   const [finishGameCheckResult, setFinishGameCheckResult] = useState<null | { winner: boolean }>(null);
   const [nextGameState, setNextGameState] = useState<IGameState<any, any> | null>(null);
 
+  const [messageHistory, setMessageHistory] = useState<{[id: string]: any}[]>([]) 
+
   const { query } = useRouter();
   const account = useAccount();
 
@@ -353,6 +355,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
         try {
           count += 1;
           const contract = await getArbiter();
+          const frontIsValidMove = true; //TODO: set up checking move validity on front
           const isValidMove = await isValidGameMove(contract, signedMove.gameMove);
           console.log('isValidMove', isValidMove);
           const isValid = await isValidSignedMove(contract, signedMove);
@@ -363,19 +366,29 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
             arguments: [
               { signedMove }
             ],
-            result: { isValid }
+            validity: { isValidFront: frontIsValidMove, isValidMove, isValidSignedMove: isValid }
           };
-          const polygonMessage = [
-            [signedMove.gameMove.gameId,
-            signedMove.gameMove.nonce,
-            signedMove.gameMove.player,
-            signedMove.gameMove.oldState,
-            signedMove.gameMove.newState,
-            signedMove.gameMove.move],
+          const polygonMessageGameMove = [signedMove.gameMove.gameId,
+          signedMove.gameMove.nonce,
+          signedMove.gameMove.player,
+          signedMove.gameMove.oldState,
+          signedMove.gameMove.newState,
+          signedMove.gameMove.move];
+          const polygonMessageSignedMove = [
+            polygonMessageGameMove,
             signedMove.signatures
           ];
-          console.log('Requested move validation, contract message: ', JSON.stringify(polygonMessage));
+          console.log('Requested move validation, contract message: ', JSON.stringify(polygonMessageSignedMove));
           console.log(`Requested move validation, nonce: ${signedMove.gameMove.nonce}\n`, JSON.stringify(message, null, ' '));
+
+          setMessageHistory((prev) => [
+            ...prev,
+            {
+              nonce: String(signedMove.gameMove.nonce),
+              message,
+              polygonMessageGameMove: JSON.stringify(polygonMessageGameMove),
+              polygonMessageSignedMove: JSON.stringify(polygonMessageSignedMove),
+            }])
 
           if (isValidMove !== isValid) {
             throw new Error(`isValidGameMove: ${isValidMove} is not equal to isValidSignedMove: ${isValid}`);
@@ -400,7 +413,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
 
         } catch (error) {
           console.error('[gameType] processOneMessage messageType: ISignedGameMove error: ', count, error);
-          if (count >= 10) return;
+          if (count >= 100) return;
           setTimeout(setNewGameState, 3000);
         }
       }
