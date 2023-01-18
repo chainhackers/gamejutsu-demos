@@ -18,7 +18,20 @@ import {
 import styles from 'pages/games/gameType.module.scss';
 import { TicTacToe, PlayerType as TicTacToePlayerType } from "components/Games/Tic-Tac-Toe";
 import { TicTacToeState } from "components/Games/Tic-Tac-Toe/types";
-import gameApi, { isValidSignedMove, getArbiter, getSigner, getRulesContract, finishGame, disputeMove, initTimeout, resolveTimeout, finalizeTimeout, FinishedGameState, RunDisputeState } from "../../gameApi";
+import gameApi, {
+  isValidGameMove,
+  isValidSignedMove,
+  getArbiter,
+  getSigner,
+  getRulesContract,
+  finishGame,
+  disputeMove,
+  initTimeout,
+  resolveTimeout,
+  finalizeTimeout,
+  FinishedGameState,
+  RunDisputeState,
+} from "../../gameApi";
 import { ISignedGameMove, SignedGameMove } from "../../types/arbiter";
 import { signMoveWithAddress } from 'helpers/session_signatures';
 import { useAccount } from 'wagmi';
@@ -340,7 +353,11 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
         try {
           count += 1;
           const contract = await getArbiter();
+          const isValidMove = await isValidGameMove(contract, signedMove.gameMove);
+          console.log('isValidMove', isValidMove);
           const isValid = await isValidSignedMove(contract, signedMove);
+          
+
           const message = {
             contractAddress: contract.address,
             arguments: [
@@ -358,7 +375,12 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
             signedMove.signatures
           ];
           console.log('Requested move validation, contract message: ', JSON.stringify(polygonMessage));
-          console.log(`Requested move validation, nonce: ${signedMove.gameMove.nonce}`, JSON.stringify(message, null, ' '));
+          console.log(`Requested move validation, nonce: ${signedMove.gameMove.nonce}\n`, JSON.stringify(message, null, ' '));
+
+          if (isValidMove !== isValid) {
+            throw new Error(`isValidGameMove: ${isValidMove} is not equal to isValidSignedMove: ${isValid}`);
+          }
+
           const previouseMove = i + 1 === lastMessages.length ? null : lastMessages[i + 1].message as ISignedGameMove;
           const nextGameState = gameState.makeNewGameStateFromSignedMove(
             signedMove,
@@ -366,7 +388,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
             isOpponentMove,
             previouseMove,
             );
-          console.log('nextGameState', nextGameState)
+          
           setGameState(nextGameState);
           setIsInvalidMove(!isValid);
           const winnerId = nextGameState.getWinnerId();

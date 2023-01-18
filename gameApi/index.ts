@@ -231,14 +231,13 @@ export const transition = async (
   }
 };
 
-// seems to be unused anywhere
-// export const isValidGameMove = async (contract: ethers.Contract, gameMove: IGameMove) => {
-//   console.log(`GameAPI isValidGameMove: contract = ${contract}, gameMove = ${gameMove}`);
+export const isValidGameMove = async (contract: ethers.Contract, gameMove: IGameMove) => {
+  console.log('GameAPI isValidGameMove: contract =', contract, 'gameMove =', gameMove);
   
-//   const response = contract.isValidGameMove(gameMove);
-//   console.log('GameAPI isValidGameMove: response =', await response);
-//   return response;
-// };
+  const response = contract.isValidGameMove(gameMove);
+  console.log('GameAPI isValidGameMove: response =', await response);
+  return response;
+};
 
 // might be used for debugging
 // const isValidSignedMove = async (
@@ -256,7 +255,7 @@ export const isValidSignedMove = async (
   contract: ethers.Contract,
   signedgameMove: ISignedGameMove,
 ) => {
-  console.log(`GameAPI isValidSignedMove: contract = ${contract}, signedgameMove = ${signedgameMove}`);
+  console.log('GameAPI isValidSignedMove: contract = ', contract, 'signedgameMove =', signedgameMove);
   const response = contract.isValidSignedMove(signedgameMove);
   return response;
 };
@@ -382,5 +381,5 @@ export default {
   disputeMove,
   checkIsValidMove,
   transition,
-  // isValidGameMove //seems to be unused anywhere
+  isValidGameMove,
 };
