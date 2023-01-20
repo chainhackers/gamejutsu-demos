@@ -360,7 +360,6 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
           console.log('isValidMove', isValidMove);
           const isValid = await isValidSignedMove(contract, signedMove);
           
-
           const message = {
             contractAddress: contract.address,
             arguments: [
@@ -380,12 +379,22 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
           ];
           console.log('Requested move validation, contract message: ', JSON.stringify(polygonMessageSignedMove));
           console.log(`Requested move validation, nonce: ${signedMove.gameMove.nonce}\n`, JSON.stringify(message, null, ' '));
+          
+          // START *****FOR DEBUG PURPOSE ONLY. TODO: REMOVE ON PROD****** 
+          const storedSignatures = localStorage.getItem('signatures');
+          const parsedStoredSignatures = !storedSignatures ? null : JSON.parse(storedSignatures);
+          const signatureInfo = parsedStoredSignatures[signedMove.signatures[0]];
+          console.log('Requested move validation, signature data:', !signatureInfo ? 'not available' : signatureInfo)
+          // END *****FOR DEBUG PURPOSE ONLY. TODO: REMOVE ON PROD****** 
 
           setMessageHistory((prev) => [
             ...prev,
             {
               nonce: String(signedMove.gameMove.nonce),
               message,
+              // START *****FOR DEBUG PURPOSE ONLY. TODO: REMOVE ON PROD****** 
+              signatureInfo: !signatureInfo ? 'not available' : signatureInfo,
+              // END *****FOR DEBUG PURPOSE ONLY. TODO: REMOVE ON PROD****** 
               polygonMessageGameMove: JSON.stringify(polygonMessageGameMove),
               polygonMessageSignedMove: JSON.stringify(polygonMessageSignedMove),
             }])

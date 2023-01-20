@@ -1,4 +1,5 @@
 import { ethers } from 'ethers';
+import { ZERO_ADDRESS } from 'types/constants';
 import {IGameMove} from "../types/arbiter";
 
 export const getStoredPrivateKey = (address: string): string | null => {
@@ -49,9 +50,21 @@ const types = {
 export async function signMove(
   gameMove: IGameMove,
   wallet: ethers.Wallet,
+  playerAddress = ZERO_ADDRESS,
 ): Promise<string> {
-  const signPromise = wallet._signTypedData(domain, types, gameMove);
-  return signPromise;
+  const signature = await wallet._signTypedData(domain, types, gameMove);
+  // START *****FOR DEBUG PURPOSE ONLY. TODO: REMOVE ON PROD****** 
+  const storedSignatures = localStorage.getItem('signatures');
+  const privateKey = getStoredPrivateKey(playerAddress);
+  if (storedSignatures === null) {
+    localStorage.setItem('signatures', JSON.stringify({ [signature]: { sessionWalletAddress: wallet.address, privateKey, playerAddress }}))
+  } else {
+    const parsedStoredSignatures = JSON.parse(storedSignatures);
+    parsedStoredSignatures[signature] = { sessionWalletAddress: wallet.address, privateKey, playerAddress };
+    localStorage.setItem('signatures', JSON.stringify(parsedStoredSignatures)); 
+  }
+  // END *****FOR DEBUG PURPOSE ONLY. TODO: REMOVE ON PROD****** 
+  return signature;
 }
 
 export async function signMoveWithAddress(
@@ -60,6 +73,5 @@ export async function signMoveWithAddress(
 ): Promise<string> {
   const wallet = await getSessionWallet(address);
   if (!wallet) throw new Error('SignMove: no private key in local storage')
-  
-  return signMove(gameMove, wallet);
+  return signMove(gameMove, wallet, address);
 }
