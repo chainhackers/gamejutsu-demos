@@ -18,7 +18,7 @@ import {
 import styles from 'pages/games/gameType.module.scss';
 import { TicTacToe, PlayerType as TicTacToePlayerType } from "components/Games/Tic-Tac-Toe";
 import { TicTacToeState } from "components/Games/Tic-Tac-Toe/types";
-import gameApi, { isValidSignedMove, getArbiter, getSigner, getRulesContract, finishGame, disputeMove, initTimeout, resolveTimeout, finalizeTimeout, FinishedGameState, RunDisputeState } from "../../gameApi";
+import gameApi, { isValidSignedMove, getArbiter, getSigner, getRulesContract, finishGame, disputeMove, initTimeout, resolveTimeout, finalizeTimeout, FinishedGameState, RunDisputeState, getArbiterRead } from "../../gameApi";
 import { ISignedGameMove, SignedGameMove } from "../../types/arbiter";
 import { signMoveWithAddress } from 'helpers/session_signatures';
 import { useAccount } from 'wagmi';
@@ -339,7 +339,8 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
       const setNewGameState = async () => {
         try {
           count += 1;
-          const contract = await getArbiter();
+          // const contract = await getArbiter(); //TEMP
+          const contract = await getArbiterRead();
           const isValid = await isValidSignedMove(contract, signedMove);
           const message = {
             contractAddress: contract.address,
@@ -467,7 +468,8 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
     }
     console.log('polling for opponent address, gameId=', gameId);
     let players: [string, string] = await gameApi.getPlayers(
-      await getArbiter(),
+      // const contract = await getArbiter(); //TEMP
+      await getArbiterRead(),
       BigNumber.from(gameId),
     );
     const address = account.address;

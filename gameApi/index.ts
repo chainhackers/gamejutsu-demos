@@ -10,7 +10,9 @@ import { fetchSigner } from '@wagmi/core';
 const provider = new ethers.providers.AlchemyProvider('matic', 'Mz4PxJrs78Ud3oRJ3FlAcaPyvhLST_bw');
 const getSdk = async () => getPolygonSdk(await getSigner())
 const getSdkRead = () => getPolygonSdk(provider);
-export const getArbiter = async () => getSdkRead().arbiter;
+export const getArbiter = async () => (await getSdk()).arbiter;
+export const getArbiterRead = async () => getSdkRead().arbiter;
+
 export const getRulesContract = async (gameType: TGameType): Promise<ethers.Contract> => {
   if (gameType == 'checkers') {
     return getSdkRead().checkersRules;
