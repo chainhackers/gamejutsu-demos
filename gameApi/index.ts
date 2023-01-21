@@ -7,14 +7,16 @@ import {getPolygonSdk} from "../.generated/contracts";
 import { TGameType } from 'types/game';
 import { fetchSigner } from '@wagmi/core';
 
+const provider = new ethers.providers.AlchemyProvider('matic', 'Mz4PxJrs78Ud3oRJ3FlAcaPyvhLST_bw');
 const getSdk = async () => getPolygonSdk(await getSigner())
-export const getArbiter = async () => (await getSdk()).arbiter
+const getSdkRead = () => getPolygonSdk(provider);
+export const getArbiter = async () => getSdkRead().arbiter;
 export const getRulesContract = async (gameType: TGameType): Promise<ethers.Contract> => {
   if (gameType == 'checkers') {
-    return (await getSdk()).checkersRules
+    return getSdkRead().checkersRules;
   }
   if (gameType == 'tic-tac-toe') {
-    return (await getSdk()).ticTacToeRules
+    return getSdkRead().ticTacToeRules;
   }
   throw "Unknown gameType: " + gameType;
 }
