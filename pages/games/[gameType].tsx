@@ -18,7 +18,7 @@ import {
 import styles from 'pages/games/gameType.module.scss';
 import { TicTacToe, PlayerType as TicTacToePlayerType } from "components/Games/Tic-Tac-Toe";
 import { TicTacToeState } from "components/Games/Tic-Tac-Toe/types";
-import gameApi, { isValidSignedMove, getArbiter, getSigner, getRulesContract, finishGame, disputeMove, initTimeout, resolveTimeout, finalizeTimeout, FinishedGameState, RunDisputeState, getArbiterRead } from "../../gameApi";
+import gameApi, { isValidSignedMove, getArbiter, getSigner, getRulesContract, finishGame, disputeMove, initTimeout, resolveTimeout, finalizeTimeout, FinishedGameState, RunDisputeState, getArbiterRead, isValidGameMove } from "../../gameApi";
 import { ISignedGameMove, SignedGameMove } from "../../types/arbiter";
 import { signMoveWithAddress } from 'helpers/session_signatures';
 import { useAccount } from 'wagmi';
@@ -70,6 +70,8 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
 
   const [finishGameCheckResult, setFinishGameCheckResult] = useState<null | { winner: boolean }>(null);
   const [nextGameState, setNextGameState] = useState<IGameState<any, any> | null>(null);
+
+  const [messageHistory, setMessageHistory] = useState<{[id: string]: any}[]>([]) 
 
   const { query } = useRouter();
   const account = useAccount();
@@ -340,26 +342,55 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
         try {
           count += 1;
           // const contract = await getArbiter(); //TEMP
-          const contract = await getArbiterRead();
+          const contract = await getArbiterRead();          
+          const frontIsValidMove = true; //TODO: set up checking move validity on front
+          const isValidMove = await isValidGameMove(contract, signedMove.gameMove);
+          console.log('isValidMove', isValidMove);
           const isValid = await isValidSignedMove(contract, signedMove);
+          
           const message = {
             contractAddress: contract.address,
             arguments: [
               { signedMove }
             ],
-            result: { isValid }
+            validity: { isValidFront: frontIsValidMove, isValidMove, isValidSignedMove: isValid }
           };
-          const polygonMessage = [
-            [signedMove.gameMove.gameId,
-            signedMove.gameMove.nonce,
-            signedMove.gameMove.player,
-            signedMove.gameMove.oldState,
-            signedMove.gameMove.newState,
-            signedMove.gameMove.move],
+          const polygonMessageGameMove = [signedMove.gameMove.gameId,
+          signedMove.gameMove.nonce,
+          signedMove.gameMove.player,
+          signedMove.gameMove.oldState,
+          signedMove.gameMove.newState,
+          signedMove.gameMove.move];
+          const polygonMessageSignedMove = [
+            polygonMessageGameMove,
             signedMove.signatures
           ];
-          console.log('Requested move validation, contract message: ', JSON.stringify(polygonMessage));
-          console.log(`Requested move validation, nonce: ${signedMove.gameMove.nonce}`, JSON.stringify(message, null, ' '));
+          console.log('Requested move validation, contract message: ', JSON.stringify(polygonMessageSignedMove));
+          console.log(`Requested move validation, nonce: ${signedMove.gameMove.nonce}\n`, JSON.stringify(message, null, ' '));
+          
+          // START *****FOR DEBUG PURPOSE ONLY. TODO: REMOVE ON PROD****** 
+          const storedSignatures = localStorage.getItem('signatures');
+          const parsedStoredSignatures = !storedSignatures ? null : JSON.parse(storedSignatures);
+          const signatureInfo = parsedStoredSignatures[signedMove.signatures[0]];
+          console.log('Requested move validation, signature data:', !signatureInfo ? 'not available' : signatureInfo)
+          // END *****FOR DEBUG PURPOSE ONLY. TODO: REMOVE ON PROD****** 
+
+          setMessageHistory((prev) => [
+            ...prev,
+            {
+              nonce: String(signedMove.gameMove.nonce),
+              message,
+              // START *****FOR DEBUG PURPOSE ONLY. TODO: REMOVE ON PROD****** 
+              signatureInfo: !signatureInfo ? 'not available' : signatureInfo,
+              // END *****FOR DEBUG PURPOSE ONLY. TODO: REMOVE ON PROD****** 
+              polygonMessageGameMove: JSON.stringify(polygonMessageGameMove),
+              polygonMessageSignedMove: JSON.stringify(polygonMessageSignedMove),
+            }])
+
+          if (isValidMove !== isValid) {
+            throw new Error(`isValidGameMove: ${isValidMove} is not equal to isValidSignedMove: ${isValid}`);
+          }
+
           const previouseMove = i + 1 === lastMessages.length ? null : lastMessages[i + 1].message as ISignedGameMove;
           const nextGameState = gameState.makeNewGameStateFromSignedMove(
             signedMove,
@@ -367,7 +398,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
             isOpponentMove,
             previouseMove,
             );
-          console.log('nextGameState', nextGameState)
+          
           setGameState(nextGameState);
           setIsInvalidMove(!isValid);
           const winnerId = nextGameState.getWinnerId();
@@ -379,7 +410,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
 
         } catch (error) {
           console.error('[gameType] processOneMessage messageType: ISignedGameMove error: ', count, error);
-          if (count >= 10) return;
+          if (count >= 100) return;
           setTimeout(setNewGameState, 3000);
         }
       }
