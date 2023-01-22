@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 
@@ -18,20 +18,7 @@ import {
 import styles from 'pages/games/gameType.module.scss';
 import { TicTacToe, PlayerType as TicTacToePlayerType } from "components/Games/Tic-Tac-Toe";
 import { TicTacToeState } from "components/Games/Tic-Tac-Toe/types";
-import gameApi, {
-  isValidGameMove,
-  isValidSignedMove,
-  getArbiter,
-  getSigner,
-  getRulesContract,
-  finishGame,
-  disputeMove,
-  initTimeout,
-  resolveTimeout,
-  finalizeTimeout,
-  FinishedGameState,
-  RunDisputeState,
-} from "../../gameApi";
+import gameApi, { isValidSignedMove, getArbiter, getSigner, getRulesContract, finishGame, disputeMove, initTimeout, resolveTimeout, finalizeTimeout, FinishedGameState, RunDisputeState, getArbiterRead, isValidGameMove } from "../../gameApi";
 import { ISignedGameMove, SignedGameMove } from "../../types/arbiter";
 import { signMoveWithAddress } from 'helpers/session_signatures';
 import { useAccount } from 'wagmi';
@@ -84,7 +71,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
   const [finishGameCheckResult, setFinishGameCheckResult] = useState<null | { winner: boolean }>(null);
   const [nextGameState, setNextGameState] = useState<IGameState<any, any> | null>(null);
 
-  const [messageHistory, setMessageHistory] = useState<{[id: string]: any}[]>([]) 
+  const [messageHistory, setMessageHistory] = useState<{[id: string]: any}[]>([])
 
   const { query } = useRouter();
   const account = useAccount();
@@ -140,7 +127,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
   };
 
   const sendSignedMoveHandler = async (signedMove: ISignedGameMove) => {
-    sendMessage({
+    await sendMessage({
       gameId: gameId,
       message: signedMove,
       messageType: 'ISignedGameMove',
@@ -354,10 +341,9 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
       const setNewGameState = async () => {
         try {
           count += 1;
-          const contract = await getArbiter();
+          const contract = await getArbiterRead();          
           const frontIsValidMove = true; //TODO: set up checking move validity on front
           const isValidMove = await isValidGameMove(contract, signedMove.gameMove);
-          console.log('isValidMove', isValidMove);
           const isValid = await isValidSignedMove(contract, signedMove);
           
           const message = {
@@ -380,21 +366,21 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
           console.log('Requested move validation, contract message: ', JSON.stringify(polygonMessageSignedMove));
           console.log(`Requested move validation, nonce: ${signedMove.gameMove.nonce}\n`, JSON.stringify(message, null, ' '));
           
-          // START *****FOR DEBUG PURPOSE ONLY. TODO: REMOVE ON PROD****** 
+          // START ***** DEBUG AND DEMO PURPOSE ONLY. TODO: DON'T DO THIS IN NON-DEMO APPS ******
           const storedSignatures = localStorage.getItem('signatures');
           const parsedStoredSignatures = !storedSignatures ? null : JSON.parse(storedSignatures);
           const signatureInfo = parsedStoredSignatures[signedMove.signatures[0]];
           console.log('Requested move validation, signature data:', !signatureInfo ? 'not available' : signatureInfo)
-          // END *****FOR DEBUG PURPOSE ONLY. TODO: REMOVE ON PROD****** 
+          // END ******* DEBUG AND DEMO PURPOSE ONLY. TODO: DON'T DO THIS IN NON-DEMO APPS ******
 
           setMessageHistory((prev) => [
             ...prev,
             {
               nonce: String(signedMove.gameMove.nonce),
               message,
-              // START *****FOR DEBUG PURPOSE ONLY. TODO: REMOVE ON PROD****** 
+              // START ***** DEBUG AND DEMO PURPOSE ONLY. TODO: DON'T DO THIS IN NON-DEMO APPS ******
               signatureInfo: !signatureInfo ? 'not available' : signatureInfo,
-              // END *****FOR DEBUG PURPOSE ONLY. TODO: REMOVE ON PROD****** 
+              // END ******* DEBUG AND DEMO PURPOSE ONLY. TODO: DON'T DO THIS IN NON-DEMO APPS ******
               polygonMessageGameMove: JSON.stringify(polygonMessageGameMove),
               polygonMessageSignedMove: JSON.stringify(polygonMessageSignedMove),
             }])
@@ -422,7 +408,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
 
         } catch (error) {
           console.error('[gameType] processOneMessage messageType: ISignedGameMove error: ', count, error);
-          if (count >= 100) return;
+          if (count >= 10) return;
           setTimeout(setNewGameState, 3000);
         }
       }
@@ -511,7 +497,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
     }
     console.log('polling for opponent address, gameId=', gameId);
     let players: [string, string] = await gameApi.getPlayers(
-      await getArbiter(),
+      await getArbiterRead(),
       BigNumber.from(gameId),
     );
     const address = account.address;

@@ -1,9 +1,8 @@
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { RainbowKitProvider, getDefaultWallets } from '@rainbow-me/rainbowkit';
-import { Chain, configureChains, createClient, WagmiConfig } from 'wagmi';
-import {  polygon} from 'wagmi/chains';
-import { publicProvider } from 'wagmi/providers/public';
+import { configureChains, createClient, WagmiConfig } from 'wagmi';
+import { polygon } from 'wagmi/chains';
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
 
 import { Layout } from 'components';
@@ -15,11 +14,11 @@ import '@rainbow-me/rainbowkit/styles.css';
 import 'styles/globals.css';
 import XmtpProvider from '../contexts/XmtpProvider';
 
+import { alchemyProvider } from 'wagmi/providers/alchemy'
+
 const { chains, provider, webSocketProvider } = configureChains(
   [polygon],
-  [
-    publicProvider(),
-  ],
+    [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY! })],
 );
 
 const { connectors } = getDefaultWallets({
@@ -40,7 +39,7 @@ const client = new ApolloClient({
   cache,
 });
 
-const version = '1.1.2-debug';
+const version = '1.1.5';
 function MyApp({ Component, pageProps }: AppProps) {
   const props = { ...pageProps, version };
   return (

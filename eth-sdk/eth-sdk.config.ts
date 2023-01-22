@@ -4,7 +4,7 @@ const config: EthSdkConfig = {
   contracts: {
     polygon: {
       arbiter: '0x1f0b6DB015198028d57Eb89785Fc81637f1e72F5',
-      checkersRules: '0xC942355F56571A4C12f27fD0d183420C4b851791',
+      checkersRules: '0xEc27c5B570e6ddFfaEb6c33b4A6959c9aE97295a',
       ticTacToeRules: '0xC6F81d6610A0b1bcb8cC11d50602D490b7624a96'
     },
   },

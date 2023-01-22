@@ -1,20 +1,24 @@
 import { BigNumber, ethers } from 'ethers';
-import { createSessionWallet, getSessionWallet, getStoredPrivateKey, signMove } from 'helpers/session_signatures';
+import { createSessionWallet, getSessionWallet } from 'helpers/session_signatures';
 import { IGameMove, ISignedGameMove } from "../types/arbiter";
 import { TContractGameState } from 'components/Games/types';
-import {GameProposedEvent, GameProposedEventObject, GameStartedEventObject} from "../.generated/contracts/esm/types/polygon/Arbiter";
-import {getPolygonSdk} from "../.generated/contracts";
+import { GameProposedEventObject, GameStartedEventObject } from "../.generated/contracts/esm/types/polygon/Arbiter";
+import { getPolygonSdk} from "../.generated/contracts";
 import { TGameType } from 'types/game';
 import { fetchSigner } from '@wagmi/core';
 
+const provider = new ethers.providers.AlchemyProvider('matic', process.env.NEXT_PUBLIC_ALCHEMY_API_KEY!);
 const getSdk = async () => getPolygonSdk(await getSigner())
-export const getArbiter = async () => (await getSdk()).arbiter
+const getSdkRead = () => getPolygonSdk(provider);
+export const getArbiter = async () => (await getSdk()).arbiter;
+export const getArbiterRead = async () => getSdkRead().arbiter;
+
 export const getRulesContract = async (gameType: TGameType): Promise<ethers.Contract> => {
   if (gameType == 'checkers') {
-    return (await getSdk()).checkersRules
+    return getSdkRead().checkersRules;
   }
   if (gameType == 'tic-tac-toe') {
-    return (await getSdk()).ticTacToeRules
+    return getSdkRead().ticTacToeRules;
   }
   throw "Unknown gameType: " + gameType;
 }
@@ -27,29 +31,6 @@ export async function getSigner(): Promise<ethers.Signer> {
 export async function getSignerAddress(): Promise<string> {
   return (await getSigner()).getAddress();
 }
-
-export function newContract(
-  addressOrName: string,
-  contractInterface: ethers.ContractInterface,
-  signerOrProvider?: ethers.Signer | ethers.providers.Provider,
-): ethers.Contract {
-  const contract = new ethers.Contract(addressOrName, contractInterface, signerOrProvider);
-  return contract;
-}
-
-
-// event GameProposed(address indexed rules, uint256 gameId, uint256 stake, address indexed proposer);
-// event GameStarted(address indexed rules, uint256 gameId, uint256 stake, address[2] players);
-
-
-// event GameFinished(uint256 gameId, address winner, address loser, bool isDraw);
-// event PlayerDisqualified(uint256 gameId, address player);
-// event PlayerResigned(uint256 gameId, address player);
-
-
-// event SessionAddressRegistered(uint256 gameId, address player, address sessionAddress);
-// event TimeoutStarted(uint256 gameId, address player, uint256 nonce, uint256 timeout);
-// event TimeoutResolved(uint256 gameId, address player, uint256 nonce);
 
 type TGameFinished = { gameId: number, winner: string, loser: string, isDraw: boolean };
 type TPlayerDisqualified = { gameId: number, player: string };
@@ -233,23 +214,10 @@ export const transition = async (
 
 export const isValidGameMove = async (contract: ethers.Contract, gameMove: IGameMove) => {
   console.log('GameAPI isValidGameMove: contract =', contract, 'gameMove =', gameMove);
-  
   const response = contract.isValidGameMove(gameMove);
   console.log('GameAPI isValidGameMove: response =', await response);
   return response;
 };
-
-// might be used for debugging
-// const isValidSignedMove = async (
-//   contract: ethers.Contract,
-//   gameMove: IGameMove,
-//   signatures: string[] = [],
-// ) => {
-//   let wallet = await getSessionWallet(await getSigner().getAddress());
-//   let signature: string = await signMove(gameMove, wallet);
-//   signatures.push(signature);
-//   return _isValidSignedMove(contract, { gameMove, signatures });
-// };
 
 export const isValidSignedMove = async (
   contract: ethers.Contract,
@@ -296,7 +264,7 @@ export const proposeGame = async (
     gasLimit: gasEstimated.mul(2),
     value: isPaid ? value : null,
   });
-  
+
   console.log('GameAPI proposeGame: tx = ', tx);
   const txResult = await tx;
   console.log('GameAPI proposeGame: txResult = ', txResult);
@@ -317,9 +285,9 @@ export const acceptGame = async (
   console.log('GameAPI acceptGame:', contract, '\n gameId =', gameId, Number(gameId));
   const gasEstimated = await contract.estimateGas.acceptGame(gameId, [],
     { value });
-  
+
   console.log('GameAPI acceptGame: gasEstimated = ', gasEstimated, Number(gasEstimated));
-  
+
   const address = await (await getSigner()).getAddress();
 
   let wallet = await getSessionWallet(address);
@@ -367,7 +335,7 @@ export const getPlayers = async (contract: ethers.Contract, gameId: BigNumber) =
       return response;
     } catch (error) {
       console.error('GameAPI getPlayers error: ', error);
-      setTimeout(_getPlayers, 2000); 
+      setTimeout(_getPlayers, 2000);
     }
   }
   return _getPlayers();
