@@ -577,8 +577,8 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
             isDisputAvailable={isDisputAvailable}          
             gameId={gameId}
           />
-          {gameType === 'checkers' && <DisclaimerNotice><strong><Link href="#disclaimer">{t('games.checkers.disclaimer.notice')}
-          </Link></strong></DisclaimerNotice>}
+          {gameType === 'checkers' && <Link href="#disclaimer"><div className={styles.disclaimerLink}><DisclaimerNotice><strong>{t('games.checkers.disclaimer.notice')}
+          </strong></DisclaimerNotice></div></Link>}
         
           <GameField
             gameId={gameId?.toString()}
