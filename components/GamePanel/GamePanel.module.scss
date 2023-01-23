@@ -8,7 +8,7 @@
   padding: 15px 15px;
   overflow: hidden;
   // text-align: center;
-
+  
   // display: flex;
   // flex-direction: column;
   // justify-content: space-between;
@@ -16,8 +16,9 @@
     margin: 0 auto;
     width: 884px;
   }
-
+  
   @media (max-width: 992px) {
+    width: 100%;
     // width: 95%;
     height: auto;
     margin: 0 0 10px;
