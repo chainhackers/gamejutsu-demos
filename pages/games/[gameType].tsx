@@ -158,7 +158,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
       lastOpponentMoveSignedByAll,
       nextGameState.lastMove,
     ]);
-    sendMessage({
+    await sendMessage({
       gameId: gameId,
       message: finishedGameResult,
       messageType: 'FinishedGameState',
@@ -193,7 +193,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
         gameState.lastMove,
       ]);
 
-      sendMessage({
+      await sendMessage({
         gameId: gameId,
         message: initTimeoutResult,
         messageType: 'TimeoutStartedEvent',
@@ -213,7 +213,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
     }
     const resolveTimeoutResult = await resolveTimeout(await getArbiter(), gameState.lastMove);
     console.log('resolveTimeoutResult', resolveTimeoutResult);
-    sendMessage({
+    await sendMessage({
       gameId: gameId,
       message: resolveTimeoutResult,
       messageType: 'TimeoutResolvedEvent',
@@ -233,7 +233,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
       isPaid,
     );
 
-    sendMessage({
+    await sendMessage({
       gameId: proposeGameResult.gameId.toNumber(),
       message: proposeGameResult,
       messageType: 'GameProposedEvent',
@@ -257,7 +257,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
       stake,
     );
 
-    sendMessage({
+    await sendMessage({
       gameId: acceptGameResult.gameId.toNumber(),
       message: acceptGameResult,
       messageType: 'GameStartedEvent',
@@ -272,7 +272,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
   const finishTimeoutHandler = async () => {
     try {
       const finishedGameResult = await finalizeTimeout(await getArbiter(), BigNumber.from(gameId));
-      sendMessage({
+      await sendMessage({
         gameId: gameId,
         message: finishedGameResult,
         messageType: 'FinishedGameState',
@@ -297,7 +297,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
 
     setDisputeRunner(account.address!)
 
-    sendMessage({
+    await sendMessage({
       gameId: gameId,
       messageType: 'RunDisputeState',
       gameType,
@@ -306,7 +306,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
 
     const finishedGameResult = await disputeMove(await getArbiter(), gameState.lastOpponentMove);
     console.log('finishedGameResult dispute move', finishedGameResult)
-    sendMessage({
+    await sendMessage({
       gameId: gameId,
       message: finishedGameResult,
       messageType: 'FinishedGameState',
@@ -319,7 +319,10 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
 
 
   async function processOneMessage(i: number) {//TODO
+    console.log(lastMessages);
+    
     const lastMessage = lastMessages[i];
+    console.log(lastMessage);
     if (lastMessage.messageType === 'TimeoutStartedEvent') {
       setIsTimeoutInited(true);
       setIsResolveTimeOutAllowed(true);
@@ -332,6 +335,9 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
       setIsTimeoutRequested(false); //TODO consider one state instead of 4
     }
     if (lastMessage.messageType === 'ISignedGameMove') {
+      console.log('ISignedGameMove ISignedGameMove', lastMessage);
+
+
       const signedMove = lastMessage.message as ISignedGameMove;
       console.log(`[gameType] processOneMessage signedMove: nonce: ${signedMove.gameMove.nonce}`, signedMove);
       const isOpponentMove = signedMove.gameMove.player === opponentAddress;
@@ -369,8 +375,8 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
           // START ***** DEBUG AND DEMO PURPOSE ONLY. TODO: DON'T DO THIS IN NON-DEMO APPS ******
           const storedSignatures = localStorage.getItem('signatures');
           const parsedStoredSignatures = !storedSignatures ? null : JSON.parse(storedSignatures);
-          const signatureInfo = parsedStoredSignatures[signedMove.signatures[0]];
-          console.log('Requested move validation, signature data:', !signatureInfo ? 'not available' : signatureInfo)
+          const signatureInfo = !parsedStoredSignatures ? null : parsedStoredSignatures[signedMove.signatures[0]];
+          console.log('Requested move validation, signature data:', !parsedStoredSignatures ? 'not available' : signatureInfo)
           // END ******* DEBUG AND DEMO PURPOSE ONLY. TODO: DON'T DO THIS IN NON-DEMO APPS ******
 
           setMessageHistory((prev) => [
