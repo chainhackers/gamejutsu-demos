@@ -4,11 +4,12 @@ import styles from './GetHistory.module.scss';
 import { ISignedGameMove } from 'types/arbiter';
 import { IAnyMessage } from 'hooks/useConversation';
 import {CheckersBoard, CHECKERS_MOVE_TYPES} from 'components/Games/Checkers/types';
+import YAML from 'yaml'
 
 export const GetHistory: React.FC<IGetHistoryProps> = ({ history }) => {
   const submitHandler: React.FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
-    console.log('history', history)
+    // console.log('history', history)
     const { gameId, gameType } = history[0];
 
     const messages = history.map((message) => {
@@ -36,46 +37,22 @@ export const GetHistory: React.FC<IGetHistoryProps> = ({ history }) => {
       
       return { senderAddress, sent: sent.toISOString(), id, messageType, }
     })
+
+    const formattedMessages = Object.assign(messages[0])
+    formattedMessages.oldState.cells = formattedMessages.oldState.cells.map((cell :string) => String(cell)).join()
+    formattedMessages.newState.cells = formattedMessages.newState.cells.map((cell :string) => String(cell)).join()
     
     const historyData = {
       gameId,
       gameType,
       
-      messages,
+      formattedMessages,
     }
 
-    console.log(historyData);
-    console.log(messages[0])
-
-    const stringgified = messages.reduce<string[]>((acc, val) => {
-      const nonce = val.nonce;
-      const move = val.move;
-      const oldState = val.oldState;
-      const newState = val.newState;    
-
-      acc.push(`
-      nonce: ${nonce}
-      move: ${move}\n
-      oldstate:
-      \twinner: ${oldState?.winner}
-      \tredmoves: ${oldState?.redMoves}
-      \tdisputableMoves: ${JSON.stringify(oldState?.disputableMoves)}
-      \tcell: ${oldState?.cells.map((cell) => !cell ? 'null' : cell)}\n
-      newstate:
-      \twinner: ${newState?.winner}
-      \tredmoves: ${newState?.redMoves}
-      \tdisputableMoves: ${JSON.stringify(newState?.disputableMoves)}
-      \tcell: ${newState?.cells.map((cell) => !cell ? 'null' : cell)}
-      `)
-;     return acc
-    }, []);
-    console.log('history result', stringgified.join('\n'));
-    const result = `gameId: ${gameId}\ngameType: ${gameType}\nmoves: ${stringgified.join('\n')}`;
-
-    console.log('history result', result);
+    const historyDataYaml = YAML.stringify([historyData])
 
     const a = document.createElement("a")
-    const file = new Blob([result], {type: 'text/plain'});
+    const file = new Blob([historyDataYaml], {type: 'text/plain'});
     a.href = URL.createObjectURL(file);
     a.download = 'myfilename.txt';
     a.click();
