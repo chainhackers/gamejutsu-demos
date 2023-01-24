@@ -97,6 +97,10 @@ export const GetHistory: React.FC<IGetHistoryProps> = ({ history, messageHistory
       return {newState, oldState, formattedMove, nonce, polygonMessageGameMove, polygonMessageSignedMove, signatureInfo}
     }
     })
+
+    const formattedMessages = Object.assign(messages[0])
+    formattedMessages.oldState.cells = formattedMessages.oldState.cells.map((cell :string) => String(cell)).join()
+    formattedMessages.newState.cells = formattedMessages.newState.cells.map((cell :string) => String(cell)).join()
     
     const historyData = {
       gameId,
