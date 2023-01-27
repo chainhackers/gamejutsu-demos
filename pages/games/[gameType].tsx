@@ -598,7 +598,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
           </GameField>
           <RightPanel>
             <div style={{ position: 'absolute', right: '0'}}>
-              <GetHistory history={lastMessages} gameId={gameId}/>
+              <GetHistory history={lastMessages} messageHistory={messageHistory} gameId={gameId}/>
             </div>
             <XMTPChatLog anyMessages={collectedMessages} isLoading={loading} />
           </RightPanel>
