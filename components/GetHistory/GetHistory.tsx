@@ -11,6 +11,7 @@ export const GetHistory: React.FC<IGetHistoryProps> = ({ history, messageHistory
   const submitHandler: React.FormEventHandler<HTMLFormElement> = (event) => {
     console.log('messageHistory', messageHistory);
     
+    
     event.preventDefault();
     const { gameId, gameType } = history[0];
     function toInt(arr :any) {
@@ -25,6 +26,8 @@ export const GetHistory: React.FC<IGetHistoryProps> = ({ history, messageHistory
     }
     
     const messages = history.map((message) => {
+      console.log(gameType);
+      
       const { messageType } = message as IAnyMessage;
       const { senderAddress, sent, id } = message.underlyingMessage;
       
@@ -97,7 +100,6 @@ export const GetHistory: React.FC<IGetHistoryProps> = ({ history, messageHistory
       return {newState, oldState, formattedMove, nonce, polygonMessageGameMove, polygonMessageSignedMove, signatureInfo}
     }
     })
-    console.log(historyMessages);
     
     const historyData = {
       gameId,
