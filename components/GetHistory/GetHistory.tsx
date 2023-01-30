@@ -4,11 +4,13 @@ import styles from './GetHistory.module.scss';
 import { ISignedGameMove } from 'types/arbiter';
 import { IAnyMessage } from 'hooks/useConversation';
 import {CheckersBoard, CHECKERS_MOVE_TYPES} from 'components/Games/Checkers/types';
+import {TicTacToeBoard, TIC_TAC_TOE_MOVE_TYPES} from 'components/Games/Tic-Tac-Toe/types';
 import YAML from 'yaml'
 
 export const GetHistory: React.FC<IGetHistoryProps> = ({ history, messageHistory }) => {
   const submitHandler: React.FormEventHandler<HTMLFormElement> = (event) => {
     console.log('messageHistory', messageHistory);
+    
     
     event.preventDefault();
     const { gameId, gameType } = history[0];
@@ -17,14 +19,27 @@ export const GetHistory: React.FC<IGetHistoryProps> = ({ history, messageHistory
     }
     
     const messages = history.map((message) => {
+      console.log(gameType);
+      
       const { messageType } = message as IAnyMessage;
       const { senderAddress, sent, id } = message.underlyingMessage;
       
       if (messageType === 'ISignedGameMove') {
         const { gameMove, signatures } = message.message as ISignedGameMove;
+
         if (gameType === 'tic-tac-toe') {
+          const oldState = TicTacToeBoard.fromEncoded(gameMove.oldState);
+          const newState = TicTacToeBoard.fromEncoded(gameMove.newState);
+          oldState.cells = arrayToString(oldState.cells)
+          newState.cells = arrayToString(newState.cells)
+          const move = defaultAbiCoder.decode(TIC_TAC_TOE_MOVE_TYPES, gameMove.move);
+          const formattedMove = arrayToString(move)
           
+          return {
+            senderAddress, sent: sent.toISOString(), id, messageType, nonce: gameMove.nonce, 
+            oldState, newState, formattedMove, signatures }
         }
+
         if (gameType === 'checkers') {
           const oldState = CheckersBoard.fromEncoded(gameMove.oldState);
           const newState = CheckersBoard.fromEncoded(gameMove.newState);
@@ -44,6 +59,24 @@ export const GetHistory: React.FC<IGetHistoryProps> = ({ history, messageHistory
     console.log('history',messages);
       
     const historyMessages = messageHistory.map((message)=> {
+      if (gameType === 'tic-tac-toe') {
+        const argument = message.message.arguments[0]
+        
+        const newState = TicTacToeBoard.fromEncoded(argument.signedMove.gameMove.newState)
+        const oldState = TicTacToeBoard.fromEncoded(argument.signedMove.gameMove.oldState)
+        const move = defaultAbiCoder.decode(TIC_TAC_TOE_MOVE_TYPES, argument.signedMove.gameMove.move)
+        oldState.cells = arrayToString(oldState.cells)
+        newState.cells = arrayToString(newState.cells)
+        const formattedMove = arrayToString(move)
+  
+        const nonce = message.nonce
+        const polygonMessageGameMove = message.polygonMessageGameMove
+        const polygonMessageSignedMove = message.polygonMessageSignedMove
+        const signatureInfo = message.signatureInfo
+        return {newState, oldState, formattedMove, nonce, polygonMessageGameMove, polygonMessageSignedMove, signatureInfo}
+      }
+
+     if (gameType === 'checkers') {
       const argument = message.message.arguments[0]
       
       const newState = CheckersBoard.fromEncoded(argument.signedMove.gameMove.newState)
@@ -57,10 +90,9 @@ export const GetHistory: React.FC<IGetHistoryProps> = ({ history, messageHistory
       const polygonMessageGameMove = message.polygonMessageGameMove
       const polygonMessageSignedMove = message.polygonMessageSignedMove
       const signatureInfo = message.signatureInfo
-      
       return {newState, oldState, formattedMove, nonce, polygonMessageGameMove, polygonMessageSignedMove, signatureInfo}
+    }
     })
-    console.log(historyMessages);
     
     const historyData = {
       gameId,
