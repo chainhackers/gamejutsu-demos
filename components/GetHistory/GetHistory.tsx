@@ -97,21 +97,7 @@ export const GetHistory: React.FC<IGetHistoryProps> = ({ history, messageHistory
       return {newState, oldState, formattedMove, nonce, polygonMessageGameMove, polygonMessageSignedMove, signatureInfo}
     }
     })
-
-    const formattedMessageHistory = messageHistory.map((message)=> {
-      message.message.arguments[0].signedMove.gameMove.move = defaultAbiCoder.decode(CHECKERS_MOVE_TYPES, message.message.arguments[0].signedMove.gameMove.move) 
-      message.message.arguments[0].signedMove.gameMove.newState = CheckersBoard.fromEncoded(message.message.arguments[0].signedMove.gameMove.newState)
-      message.message.arguments[0].signedMove.gameMove.oldState = CheckersBoard.fromEncoded(message.message.arguments[0].signedMove.gameMove.oldState)
-
-      return message
-    })
-    console.log(formattedMessageHistory);
-
-
-    const formattedMessages = Object.assign(messages[0])
-    
-    formattedMessages.oldState.cells = arrayToString(formattedMessages.oldState.cells)
-    formattedMessages.newState.cells = arrayToString(formattedMessages.newState.cells)
+    console.log(historyMessages);
     
     const historyData = {
       gameId,
