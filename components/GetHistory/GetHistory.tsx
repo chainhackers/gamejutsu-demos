@@ -8,57 +8,65 @@ import YAML from 'yaml'
 
 export const GetHistory: React.FC<IGetHistoryProps> = ({ history, messageHistory }) => {
   const submitHandler: React.FormEventHandler<HTMLFormElement> = (event) => {
-    console.log(history);
+    console.log('messageHistory', messageHistory);
+    
     event.preventDefault();
     const { gameId, gameType } = history[0];
     function arrayToString(arr :any) {
       return arr.map((item :any) => String(item)).join()
-  }
-
+    }
+    
     const messages = history.map((message) => {
       const { messageType } = message as IAnyMessage;
       const { senderAddress, sent, id } = message.underlyingMessage;
-
+      
       if (messageType === 'ISignedGameMove') {
         const { gameMove, signatures } = message.message as ISignedGameMove;
         if (gameType === 'tic-tac-toe') {
-
+          
         }
         if (gameType === 'checkers') {
           const oldState = CheckersBoard.fromEncoded(gameMove.oldState);
           const newState = CheckersBoard.fromEncoded(gameMove.newState);
+          oldState.cells = arrayToString(oldState.cells)
+          newState.cells = arrayToString(newState.cells)
           const move = defaultAbiCoder.decode(CHECKERS_MOVE_TYPES, gameMove.move);
           const formattedMove = arrayToString(move)
           
           return {
             senderAddress, sent: sent.toISOString(), id, messageType, nonce: gameMove.nonce, 
             oldState, newState, formattedMove, signatures }
+          }
+          return { senderAddress, sent: sent.toISOString(), id, messageType, nonce: gameMove.nonce, gameMove, signatures }
         }
-        return { senderAddress, sent: sent.toISOString(), id, messageType, nonce: gameMove.nonce, gameMove, signatures }
-      }
-      return { senderAddress, sent: sent.toISOString(), id, messageType, }
+        return { senderAddress, sent: sent.toISOString(), id, messageType, }
+      })
+    console.log('history',messages);
+      
+    const historyMessages = messageHistory.map((message)=> {
+      const argument = message.message.arguments[0]
+      
+      const newState = CheckersBoard.fromEncoded(argument.signedMove.gameMove.newState)
+      const oldState = CheckersBoard.fromEncoded(argument.signedMove.gameMove.oldState)
+      const move = defaultAbiCoder.decode(CHECKERS_MOVE_TYPES, argument.signedMove.gameMove.move)
+      oldState.cells = arrayToString(oldState.cells)
+      newState.cells = arrayToString(newState.cells)
+      const formattedMove = arrayToString(move)
+
+      const nonce = message.nonce
+      const polygonMessageGameMove = message.polygonMessageGameMove
+      const polygonMessageSignedMove = message.polygonMessageSignedMove
+      const signatureInfo = message.signatureInfo
+      
+      return {newState, oldState, formattedMove, nonce, polygonMessageGameMove, polygonMessageSignedMove, signatureInfo}
     })
-
-    const formattedMessageHistory = messageHistory.map((message)=> {
-      message.message.arguments[0].signedMove.gameMove.move = defaultAbiCoder.decode(CHECKERS_MOVE_TYPES, message.message.arguments[0].signedMove.gameMove.move) 
-      message.message.arguments[0].signedMove.gameMove.newState = CheckersBoard.fromEncoded(message.message.arguments[0].signedMove.gameMove.newState)
-      message.message.arguments[0].signedMove.gameMove.oldState = CheckersBoard.fromEncoded(message.message.arguments[0].signedMove.gameMove.oldState)
-
-      return message
-    })
-    console.log(formattedMessageHistory);
-
-
-    const formattedMessages = Object.assign(messages[0])
-    
-    formattedMessages.oldState.cells = arrayToString(formattedMessages.oldState.cells)
-    formattedMessages.newState.cells = arrayToString(formattedMessages.newState.cells)
+    console.log(historyMessages);
     
     const historyData = {
       gameId,
       gameType,
-      formattedMessages,
-      formattedMessageHistory,
+      messages,
+      historyMessages,
     }
 
     const currentDate = new Date();
