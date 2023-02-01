@@ -109,7 +109,7 @@ export const GetHistory: React.FC<IGetHistoryProps> = ({ history, messageHistory
     const formattedDate = currentDate.getDate() + "." + (currentDate.getMonth() + 1) + "." + currentDate.getFullYear()
      + "_" + currentDate.getHours() + "." + currentDate.getMinutes();
 
-    const historyDataYaml = YAML.stringify(historyData, {collectionStyle: 'flow'})
+    const historyDataYaml = YAML.stringify(historyData)
 
     const a = document.createElement("a")
     const file = new Blob([historyDataYaml], {type: 'text/plain'});
