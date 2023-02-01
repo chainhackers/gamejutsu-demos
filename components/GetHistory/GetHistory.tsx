@@ -11,22 +11,26 @@ export const GetHistory: React.FC<IGetHistoryProps> = ({ history, messageHistory
   const submitHandler: React.FormEventHandler<HTMLFormElement> = (event) => {
     console.log('messageHistory', messageHistory);
     
-    
     event.preventDefault();
     const { gameId, gameType } = history[0];
+    function toInt(arr :any) {
+      return arr.map((item :any) => {
+        if (item === null) return 0
+        if (item === 'X') return 1
+        if (item === 'O') return 2
+      })
+    }
     function arrayToString(arr :any) {
-      return arr.map((item :any) => String(item)).join()
+      return toInt(arr).map((item :any) => String(item)).join('')
     }
     
     const messages = history.map((message) => {
-      console.log(gameType);
-      
       const { messageType } = message as IAnyMessage;
       const { senderAddress, sent, id } = message.underlyingMessage;
       
       if (messageType === 'ISignedGameMove') {
         const { gameMove, signatures } = message.message as ISignedGameMove;
-
+        
         if (gameType === 'tic-tac-toe') {
           const oldState = TicTacToeBoard.fromEncoded(gameMove.oldState);
           const newState = TicTacToeBoard.fromEncoded(gameMove.newState);
@@ -38,16 +42,16 @@ export const GetHistory: React.FC<IGetHistoryProps> = ({ history, messageHistory
           return {
             senderAddress, sent: sent.toISOString(), id, messageType, nonce: gameMove.nonce, 
             oldState, newState, formattedMove, signatures }
-        }
-
-        if (gameType === 'checkers') {
-          const oldState = CheckersBoard.fromEncoded(gameMove.oldState);
-          const newState = CheckersBoard.fromEncoded(gameMove.newState);
-          oldState.cells = arrayToString(oldState.cells)
-          newState.cells = arrayToString(newState.cells)
-          const move = defaultAbiCoder.decode(CHECKERS_MOVE_TYPES, gameMove.move);
-          const formattedMove = arrayToString(move)
+          }
           
+          if (gameType === 'checkers') {
+            const oldState = CheckersBoard.fromEncoded(gameMove.oldState);  
+            const newState = CheckersBoard.fromEncoded(gameMove.newState);          
+            oldState.cells = arrayToString(oldState.cells)
+            newState.cells = arrayToString(newState.cells)
+            const move = defaultAbiCoder.decode(CHECKERS_MOVE_TYPES, gameMove.move);
+            const formattedMove = arrayToString(move)
+            
           return {
             senderAddress, sent: sent.toISOString(), id, messageType, nonce: gameMove.nonce, 
             oldState, newState, formattedMove, signatures }
@@ -105,12 +109,12 @@ export const GetHistory: React.FC<IGetHistoryProps> = ({ history, messageHistory
     const formattedDate = currentDate.getDate() + "." + (currentDate.getMonth() + 1) + "." + currentDate.getFullYear()
      + "_" + currentDate.getHours() + "." + currentDate.getMinutes();
 
-    const historyDataYaml = YAML.stringify([historyData])
+    const historyDataYaml = YAML.stringify(historyData, {collectionStyle: 'flow'})
 
     const a = document.createElement("a")
     const file = new Blob([historyDataYaml], {type: 'text/plain'});
     a.href = URL.createObjectURL(file);
-    a.download = `game record ${formattedDate}.txt`;
+    a.download = `gamerecord_${formattedDate}.txt`;
     a.click();
   }
   return (
