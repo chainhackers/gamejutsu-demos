@@ -21,3 +21,4 @@ export * from 'components/TeamMember';
 export * from 'components/Disclaimer';
 export * from 'components/DisclaimerNotice';
 export * from 'components/GamePanel';
+export * from 'components/GetHistory';
