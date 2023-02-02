@@ -66,7 +66,6 @@ export const GetHistory: React.FC<IGetHistoryProps> = ({ history, messageHistory
             newState.cells = arrayToString(toInt(newState.cells))
             const move = defaultAbiCoder.decode(CHECKERS_MOVE_TYPES, gameMove.move);
             const formattedMove = formatMoves(move)
-            console.log(oldState);
             
           return {
             senderAddress, sent: sent.toISOString(), id, messageType, nonce: gameMove.nonce, 
@@ -104,9 +103,6 @@ export const GetHistory: React.FC<IGetHistoryProps> = ({ history, messageHistory
 
      if (gameType === 'checkers') {
       const argument = message.message.arguments[0]
-      console.log(TicTacToeBoard.fromEncoded(argument.gameMove));
-      
-      
       const oldState :any = {}
       oldState.cells = CheckersBoard.fromEncoded(argument.gameMove.oldState).cells
       oldState.winner = CheckersBoard.fromEncoded(argument.gameMove.oldState).winner
