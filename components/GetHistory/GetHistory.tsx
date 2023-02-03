@@ -145,7 +145,7 @@ export const GetHistory: React.FC<IGetHistoryProps> = ({ history, messageHistory
     const currentMonth :any = addZeroToDate(currentDate.getMonth() + 1)
     const currentHour: any = addZeroToDate(currentDate.getHours())
     const currentMinutes :any = addZeroToDate(currentDate.getMinutes())
-    const formattedDate = currentDate.getFullYear() + "." + currentMonth + "." + currentDay + "_" + currentHour + "." + currentMinutes;
+    const formattedDate = currentDate.getFullYear() + "-" + currentMonth + "-" + currentDay + "_" + currentHour + "-" + currentMinutes;
 
     const historyDataYaml = YAML.stringify(historyData)
     
