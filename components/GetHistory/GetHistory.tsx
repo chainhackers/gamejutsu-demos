@@ -5,11 +5,15 @@ import { ISignedGameMove } from 'types/arbiter';
 import { IAnyMessage } from 'hooks/useConversation';
 import {CheckersBoard, CHECKERS_MOVE_TYPES} from 'components/Games/Checkers/types';
 import {TicTacToeBoard, TIC_TAC_TOE_MOVE_TYPES} from 'components/Games/Tic-Tac-Toe/types';
+import gameApi, {getArbiter, getArbiterRead} from "../../gameApi";
+import { BigNumber } from 'ethers';
 import YAML from 'yaml'
 
 export const GetHistory: React.FC<IGetHistoryProps> = ({ history, messageHistory }) => {
   const submitHandler: React.FormEventHandler<HTMLFormElement> = (event) => {
-    console.log('messageHistory', messageHistory);
+    // const player1 = 
+    // const player2 =
+    
     
     event.preventDefault();
     const { gameId, gameType } = history[0];
@@ -75,7 +79,6 @@ export const GetHistory: React.FC<IGetHistoryProps> = ({ history, messageHistory
         }
         return { senderAddress, sent: sent.toISOString(), id, messageType, }
       })
-    console.log('history',messages);
       
     const historyMessages = messageHistory.map((message)=> {
       if (gameType === 'tic-tac-toe') {
@@ -131,17 +134,32 @@ export const GetHistory: React.FC<IGetHistoryProps> = ({ history, messageHistory
       historyMessages,
     }
 
+    function addZeroToDate(date :any) {
+      if (date < 10) {
+        date = '0' + date
+      }
+      return date
+    }
     const currentDate = new Date();
-    const formattedDate = currentDate.getDate() + "." + (currentDate.getMonth() + 1) + "." + currentDate.getFullYear()
-     + "_" + currentDate.getHours() + "." + currentDate.getMinutes();
+    const currentDay :any = addZeroToDate(currentDate.getDate())
+    const currentMonth :any = addZeroToDate(currentDate.getMonth() + 1)
+    const currentHour: any = addZeroToDate(currentDate.getHours())
+    const currentMinutes :any = addZeroToDate(currentDate.getMinutes())
+    const formattedDate = currentDate.getFullYear() + "." + currentMonth + "." + currentDay + "_" + currentHour + "." + currentMinutes;
 
     const historyDataYaml = YAML.stringify(historyData)
-
-    const a = document.createElement("a")
-    const file = new Blob([historyDataYaml], {type: 'text/plain'});
-    a.href = URL.createObjectURL(file);
-    a.download = `gamerecord_${formattedDate}.txt`;
-    a.click();
+    
+    async function downloadGameRecord() {
+      const arbiter = (await getArbiter()).address.slice(0, 6);
+      const players = (await gameApi.getPlayers(await getArbiterRead(), BigNumber.from(gameId))).map((p :any) => p.slice(0, 6));
+    
+      const a = document.createElement("a");
+      const file = new Blob([historyDataYaml], {type: 'text/plain'});
+      a.href = URL.createObjectURL(file);
+      a.download = `gamerecord_${arbiter}_${gameType}_${gameId}_${players[0]}_${players[1]}_${formattedDate}.yaml`;
+      a.click();
+    }
+    downloadGameRecord()
   }
   return (
     <div className={styles.container}>
