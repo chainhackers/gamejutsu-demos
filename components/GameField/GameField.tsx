@@ -299,7 +299,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
               <div className={styles.notice}>{t('shade.notice')}</div>
             </div>
           )}
-          {!!finishGameCheckResult &&
+          {(!!finishGameCheckResult) &&
             <div className={styles.checking_results}>
               {finishGameCheckResult && finishGameCheckResult.winner && 
                 <>
@@ -307,11 +307,17 @@ export const GameField: React.FC<GameFieldPropsI> = ({
                   <Button title={t('shade.checking.checkingWinner')} onClick={onClaimWin} />
                 </>
               }
-              {finishGameCheckResult && !finishGameCheckResult.winner &&
+              {finishGameCheckResult && finishGameCheckResult.isDraw && !finishGameCheckResult.winner && 
+                <>
+                  <p className={styles.message}>{t('shade.checking.draw')}</p>
+                  <Button title={t('shade.checking.checkingDraw')} onClick={onClaimWin} />
+                </>
+              }
+              {finishGameCheckResult && !finishGameCheckResult.isDraw && !finishGameCheckResult.winner &&
                 <p className={styles.message}>{t('shade.checking.loser')} {t('shade.checking.checkingLoser')}</p>
               }
               </div>}
-          {finishedGameState && (            
+          {!!finishedGameState && (            
               <div className={styles.win}>
                 {makeFinishedGameDescription(finishedGameState)}
                 <div className={styles.small}>
@@ -319,7 +325,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
                 </div>
               </div>
           )}
-          {finishedGameState && (
+          {!!finishedGameState && (
             <div className={styles.link}>
               <div className={styles.badges}>
                 <div className={styles.text}>Issue your ZK Badge</div>
