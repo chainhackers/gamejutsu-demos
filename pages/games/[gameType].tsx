@@ -409,7 +409,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
           if (winnerId !== null) {
             setFinishGameCheckResult({ winner: playerIngameId === winnerId, isDraw: false });
             setNextGameState(nextGameState);
-          } else if (signedMove.gameMove.nonce === 8) {
+          } else if (gameType === 'tic-tac-toe' && signedMove.gameMove.nonce  === 8) {
             setFinishGameCheckResult({ winner: false, isDraw: true });
             setNextGameState(nextGameState);
           }
