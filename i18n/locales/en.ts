@@ -101,7 +101,7 @@ const en = {
       inactive: 'Inactive',
       madeAppeal: { cheater: 'Opponent made an appeal to the Game Master you cheated.', runner: 'You appealed cheating to the Game Master.'},
       notice: 'Pending decision from Game Master',
-      checking: {checkingWinner: 'Claim win', checkingLoser: 'Please wait for winner\'s confirmation.', winner: 'You seem to be a winner.', loser: 'You seem to have lost this game.', checkingDraw: 'Confirm draw', draw: 'It seem\'s to be a draw'},
+      checking: {checkingWinner: 'Claim win', checkingLoser: 'Please wait for winner\'s confirmation.', checkingDraw: 'Confirm draw', checkingCheat: 'Finish game', winner: 'You seem to be a winner.', loser: 'You seem to have lost this game.',  draw: 'It seem\'s to be a draw',  cheatLoser: 'The game ended with a cheat move', cheatWinner: 'Please wait for opponent\'s confirmation.'},
     },
     wins: 'wins!',
     players: {
