@@ -173,6 +173,9 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
     if (error.reason.includes('invalid game move')) {
       setFinishGameCheckResult({winner: false, isDraw: false, cheatWin: true})
       }
+    if (error.reason.includes('moves are not in sequence')) {
+      console.log('moves are not in sequence');
+      }
     }
   };
 
@@ -446,7 +449,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
       console.log('last message proceess one message', lastMessage)
       const { loser } = lastMessage.message as FinishedGameState;
       console.log('GOT MESSAGE');
-      if (loser === account.address) { 
+      if (finishedGameState === null) { 
         setFinishGameCheckResult(null);
         setFinishedGameState(lastMessage.message as FinishedGameState);
       }
