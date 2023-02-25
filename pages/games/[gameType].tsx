@@ -8,6 +8,7 @@ import {
   Disclaimer,
   DisclaimerNotice,
   GameField,
+  GetHistory,
   JoinGame,
   LeftPanel,
   RightPanel,
@@ -68,7 +69,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
   const [isFinishTimeoutAllowed, setIsFinishTimeoutAllowed] = useState<boolean>(false);
   const [isTimeoutRequested, setIsTimeoutRequested] = useState<boolean>(false);
 
-  const [finishGameCheckResult, setFinishGameCheckResult] = useState<null | { winner: boolean }>(null);
+  const [finishGameCheckResult, setFinishGameCheckResult] = useState<null | { winner: boolean , isDraw: boolean, cheatWin: boolean} >(null);
   const [nextGameState, setNextGameState] = useState<IGameState<any, any> | null>(null);
 
   const [messageHistory, setMessageHistory] = useState<{[id: string]: any}[]>([])
@@ -147,25 +148,32 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
     }
 
     const address = await (await getSigner()).getAddress();
-    const signature = await signMoveWithAddress(nextGameState.lastOpponentMove.gameMove, address);
-    const signatures = [...nextGameState.lastOpponentMove.signatures, signature];
-    const lastOpponentMoveSignedByAll = new SignedGameMove(
-      nextGameState.lastOpponentMove.gameMove,
-      signatures,
-    );
-
-    const finishedGameResult = await finishGame(await getArbiter(), [
+      const signature = await signMoveWithAddress(nextGameState.lastOpponentMove.gameMove, address);
+      const signatures = [...nextGameState.lastOpponentMove.signatures, signature];
+      const lastOpponentMoveSignedByAll = new SignedGameMove(
+        nextGameState.lastOpponentMove.gameMove,
+        signatures,
+      );
+      
+      try {
+      const finishedGameResult = await finishGame(await getArbiter(), [
       lastOpponentMoveSignedByAll,
       nextGameState.lastMove,
-    ]);
+      ])
+
     await sendMessage({
       gameId: gameId,
       message: finishedGameResult,
       messageType: 'FinishedGameState',
       gameType
-    })
+    });
     setFinishGameCheckResult(null);
     setFinishedGameState(finishedGameResult);
+  } catch(error :any) {
+    if (error.reason.includes('invalid game move')) {
+      setFinishGameCheckResult({winner: false, isDraw: false, cheatWin: true})
+      }
+    }
   };
 
   const initTimeoutHandler = async () => {
@@ -315,6 +323,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
 
     setFinishedGameState(finishedGameResult);
     setIsInDispute(false);
+    setFinishGameCheckResult(null)
   };
 
 
@@ -407,7 +416,10 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
           setIsInvalidMove(!isValid);
           const winnerId = nextGameState.getWinnerId();
           if (winnerId !== null) {
-            setFinishGameCheckResult({ winner: playerIngameId === winnerId });
+            setFinishGameCheckResult({ winner: playerIngameId === winnerId, isDraw: false, cheatWin: isValid });
+            setNextGameState(nextGameState);
+          } else if (gameType === 'tic-tac-toe' && signedMove.gameMove.nonce  === 8) {
+            setFinishGameCheckResult({ winner: false, isDraw: true, cheatWin: isValid});
             setNextGameState(nextGameState);
           }
           return;
@@ -592,10 +604,15 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
             finishGameCheckResult={finishGameCheckResult}
             version={version}
             onClaimWin={runFinishGameHandler}
+            onRunDisput={runDisputeHandler}
+            isInvalidMove={isInvalidMove}
           >
             {gameComponent}
           </GameField>
           <RightPanel>
+          <div style={{ position: 'absolute', right: '0'}}>
+              <GetHistory history={lastMessages} messageHistory={messageHistory} gameId={gameId}/>
+            </div>
             <XMTPChatLog anyMessages={collectedMessages} isLoading={loading} />
           </RightPanel>
           {gameType === 'checkers' && <Disclaimer>{t('games.checkers.disclaimer.s1')} <strong>

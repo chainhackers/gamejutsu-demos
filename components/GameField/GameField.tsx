@@ -20,6 +20,8 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   finishGameCheckResult,
   onClaimWin,
   version,
+  isInvalidMove,
+  onRunDisput,
 }) => {
   const [isShowShade, setShowShade] = useState<boolean>(true);
   const [isShowExplainMove, SetShowExplainMove] = useState<boolean>(false);
@@ -299,19 +301,36 @@ export const GameField: React.FC<GameFieldPropsI> = ({
               <div className={styles.notice}>{t('shade.notice')}</div>
             </div>
           )}
-          {!!finishGameCheckResult &&
+          {(!!finishGameCheckResult) &&
             <div className={styles.checking_results}>
-              {finishGameCheckResult && finishGameCheckResult.winner && 
+              {finishGameCheckResult && finishGameCheckResult.winner && !isInvalidMove && !finishGameCheckResult.isDraw && 
                 <>
                   <p className={styles.message}>{t('shade.checking.winner')}</p>
                   <Button title={t('shade.checking.checkingWinner')} onClick={onClaimWin} />
                 </>
               }
-              {finishGameCheckResult && !finishGameCheckResult.winner &&
+              {finishGameCheckResult && !finishGameCheckResult.winner && !isInvalidMove && !finishGameCheckResult.isDraw && 
                 <p className={styles.message}>{t('shade.checking.loser')} {t('shade.checking.checkingLoser')}</p>
               }
+              {finishGameCheckResult && finishGameCheckResult.isDraw && !finishGameCheckResult.winner && 
+                <>
+                  <p className={styles.message}>{t('shade.checking.draw')}</p>
+                  <Button title={t('shade.checking.checkingDraw')} onClick={onClaimWin} />
+                </>
+              }
+              {finishGameCheckResult && finishGameCheckResult.winner && isInvalidMove &&
+              <>
+               <p className={styles.message}>{t('shade.checking.cheatWinner')}</p>
+              </> 
+              }
+              {finishGameCheckResult && !finishGameCheckResult.winner && isInvalidMove &&
+              <>
+               <p className={styles.message}>{t('shade.checking.cheatLoser')}</p>
+               <Button title={t('shade.checking.checkingCheat')} onClick={onRunDisput} />
+              </> 
+              }
               </div>}
-          {finishedGameState && (            
+          {!!finishedGameState && (            
               <div className={styles.win}>
                 {makeFinishedGameDescription(finishedGameState)}
                 <div className={styles.small}>
@@ -319,7 +338,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
                 </div>
               </div>
           )}
-          {finishedGameState && (
+          {!!finishedGameState && (
             <div className={styles.link}>
               <div className={styles.badges}>
                 <div className={styles.text}>Issue your ZK Badge</div>
