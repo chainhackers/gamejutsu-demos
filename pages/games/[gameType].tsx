@@ -156,10 +156,11 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
       );
       
       try {
-      const finishedGameResult = await finishGame(await getArbiter(), [
-      lastOpponentMoveSignedByAll,
-      nextGameState.lastMove,
-      ])
+        const moves: [ISignedGameMove, ISignedGameMove] = playerIngameId === 0 ? 
+        [lastOpponentMoveSignedByAll, nextGameState.lastMove] :
+        [nextGameState.lastMove, lastOpponentMoveSignedByAll];
+      const finishedGameResult = await finishGame(await getArbiter(), moves)
+        
 
     await sendMessage({
       gameId: gameId,
