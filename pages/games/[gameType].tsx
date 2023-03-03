@@ -448,7 +448,6 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
     }
     if (lastMessage.messageType === "FinishedGameState") {
       console.log('last message proceess one message', lastMessage)
-      const { loser } = lastMessage.message as FinishedGameState;
       console.log('GOT MESSAGE');
       if (finishedGameState === null) { 
         setFinishGameCheckResult(null);
