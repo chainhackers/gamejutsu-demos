@@ -156,10 +156,11 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
       );
       
       try {
-      const finishedGameResult = await finishGame(await getArbiter(), [
-      lastOpponentMoveSignedByAll,
-      nextGameState.lastMove,
-      ])
+        const moves: [ISignedGameMove, ISignedGameMove] = playerIngameId === 0 ? 
+        [lastOpponentMoveSignedByAll, nextGameState.lastMove] :
+        [nextGameState.lastMove, lastOpponentMoveSignedByAll];
+      const finishedGameResult = await finishGame(await getArbiter(), moves)
+        
 
     await sendMessage({
       gameId: gameId,
@@ -172,6 +173,9 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
   } catch(error :any) {
     if (error.reason.includes('invalid game move')) {
       setFinishGameCheckResult({winner: false, isDraw: false, cheatWin: true})
+      }
+    if (error.reason.includes('moves are not in sequence')) {
+      console.log('moves are not in sequence');
       }
     }
   };
@@ -444,9 +448,8 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
     }
     if (lastMessage.messageType === "FinishedGameState") {
       console.log('last message proceess one message', lastMessage)
-      const { loser } = lastMessage.message as FinishedGameState;
       console.log('GOT MESSAGE');
-      if (loser === account.address) { 
+      if (finishedGameState === null) { 
         setFinishGameCheckResult(null);
         setFinishedGameState(lastMessage.message as FinishedGameState);
       }
