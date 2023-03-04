@@ -303,7 +303,6 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
   };
 
   const runDisputeHandler = async () => {
-    console.log('прикол', gameState);
     if (!gameState.lastOpponentMove) {
       throw 'no lastOpponentMove';
     }
