@@ -320,12 +320,13 @@ export const GameField: React.FC<GameFieldPropsI> = ({
               }
               {finishGameCheckResult && finishGameCheckResult.winner && isInvalidMove &&
               <>
-               <p className={styles.message}>{t('shade.checking.cheatWinner')}</p>
+               <p className={styles.message}>{t('shade.checking.cheatGame')}</p>
+               <Button title={t('shade.checking.checkingCheat')} onClick={onRunDisput} />
               </> 
               }
               {finishGameCheckResult && !finishGameCheckResult.winner && isInvalidMove &&
               <>
-               <p className={styles.message}>{t('shade.checking.cheatLoser')}</p>
+               <p className={styles.message}>{t('shade.checking.cheatGame')}</p>
                <Button title={t('shade.checking.checkingCheat')} onClick={onRunDisput} />
               </> 
               }

@@ -74,6 +74,8 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
 
   const [messageHistory, setMessageHistory] = useState<{[id: string]: any}[]>([])
 
+  const [isValid, setIsValid] = useState(null)
+
   const { query } = useRouter();
   const account = useAccount();
 
@@ -301,6 +303,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
   };
 
   const runDisputeHandler = async () => {
+    console.log('прикол', gameState);
     if (!gameState.lastOpponentMove) {
       throw 'no lastOpponentMove';
     }
@@ -316,7 +319,14 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
       message: { gameId, disputeRunner: account.address! }
     })
 
-    const finishedGameResult = await disputeMove(await getArbiter(), gameState.lastOpponentMove);
+    let lastMove = gameState.lastOpponentMove;
+    const lastNonce = gameState.lastMove?.gameMove?.nonce ?? -Infinity;
+    const lastOpponentNonce = gameState.lastOpponentMove.gameMove.nonce;
+    if (lastNonce > lastOpponentNonce && gameState.lastMove !== null) {
+      lastMove = gameState.lastMove
+    }
+
+    const finishedGameResult = await disputeMove(await getArbiter(), lastMove);
     console.log('finishedGameResult dispute move', finishedGameResult)
     await sendMessage({
       gameId: gameId,
