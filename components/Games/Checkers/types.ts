@@ -34,6 +34,7 @@ export function decodeEncodedBoardState(encodedBoardState: string) {
 //     uint8 from;
 //     uint8 to;
 //     bool isJump;
+    // TODO @ghUserrrr #144 Delete 'isJump' field
 //     bool passMoveToOpponent;
 // }
 
