@@ -318,14 +318,12 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
       message: { gameId, disputeRunner: account.address! }
     })
 
-    let lastMove = gameState.lastOpponentMove;
     const lastNonce = gameState.lastMove?.gameMove?.nonce ?? -Infinity;
     const lastOpponentNonce = gameState.lastOpponentMove.gameMove.nonce;
-    if (lastNonce > lastOpponentNonce && gameState.lastMove !== null) {
-      lastMove = gameState.lastMove
-    }
+    const lastMoveOrLastOpponentMove = lastNonce > lastOpponentNonce && gameState.lastMove !== null
+    const lastMove = lastMoveOrLastOpponentMove ? gameState.lastMove : gameState.lastOpponentMove;
 
-    const finishedGameResult = await disputeMove(await getArbiter(), lastMove);
+    const finishedGameResult = await disputeMove(await getArbiter(), lastMove!);
     console.log('finishedGameResult dispute move', finishedGameResult)
     await sendMessage({
       gameId: gameId,
