@@ -1,6 +1,6 @@
 import { describe, expect, test } from '@jest/globals';
 import { TLastMove } from 'types/game';
-
+// TODO @ghUserrrr #144 Delete 'isJump' field
 import { isJumpMove } from 'helpers/utils';
 
 const bottomLeftCornerMoves: TLastMove[] = [{ from: 3, to: 7 }]
@@ -41,7 +41,7 @@ const topRightCornerJumpMoves: TLastMove[] = [
   {from: 28, to: 20},  
 ];
 
-
+// TODO @ghUserrrr #144 Delete 'isJump' field
 describe('isJumpMove', () => {
   test('bottom left corner, not jump moves', () => {
     bottomLeftCornerMoves.map(move => {
