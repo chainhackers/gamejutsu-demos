@@ -1,7 +1,7 @@
 import { describe, expect, test } from '@jest/globals';
 import { TLastMove } from 'types/game';
 // TODO @ghUserrrr #144 Delete 'isJump' field
-import { isJumpMove } from 'helpers/utils';
+// import { isJumpMove } from 'helpers/utils';
 
 const bottomLeftCornerMoves: TLastMove[] = [{ from: 3, to: 7 }]
 const bottomLeftCornerJumpMoves: TLastMove[] = [
@@ -42,45 +42,45 @@ const topRightCornerJumpMoves: TLastMove[] = [
 ];
 
 // TODO @ghUserrrr #144 Delete 'isJump' field
-describe('isJumpMove', () => {
-  test('bottom left corner, not jump moves', () => {
-    bottomLeftCornerMoves.map(move => {
-      expect(isJumpMove(move)).toBe(false);
-    })
-  })
-  test('bottom left corner, jump moves', () => {
-    bottomLeftCornerJumpMoves.map(move => {
-      expect(isJumpMove(move)).toBe(true);
-    })
-  })
-  test('bottom right corner, not jump moves', () => {
-    bottomRightCornerMoves.map(move => {
-      expect(isJumpMove(move)).toBe(false);
-    })
-  })
-  test('bottom right corner, jump moves', () => {
-    bottomRightCornerJumpMoves.map(move => {
-      expect(isJumpMove(move)).toBe(true);
-    })
-  })
-  test('top left corner, not jump moves', () => {
-    topLeftCornerMoves.map(move => {
-      expect(isJumpMove(move)).toBe(false);
-    })
-  })
-  test('top left corner, jump moves', () => {
-    topLeftCornerJumpMoves.map(move => {
-      expect(isJumpMove(move)).toBe(true);
-    })
-  })
-  test('top right corner, not jump moves', () => {
-    topRightCornerMoves.map(move => {
-      expect(isJumpMove(move)).toBe(false);
-    })
-  })
-  test('top right corner, jump moves', () => {
-    topRightCornerJumpMoves.map(move => {
-      expect(isJumpMove(move)).toBe(true);
-    })
-  })
-});
+// describe('isJumpMove', () => {
+//   test('bottom left corner, not jump moves', () => {
+//     bottomLeftCornerMoves.map(move => {
+//       expect(isJumpMove(move)).toBe(false);
+//     })
+//   })
+//   test('bottom left corner, jump moves', () => {
+//     bottomLeftCornerJumpMoves.map(move => {
+//       expect(isJumpMove(move)).toBe(true);
+//     })
+//   })
+//   test('bottom right corner, not jump moves', () => {
+//     bottomRightCornerMoves.map(move => {
+//       expect(isJumpMove(move)).toBe(false);
+//     })
+//   })
+//   test('bottom right corner, jump moves', () => {
+//     bottomRightCornerJumpMoves.map(move => {
+//       expect(isJumpMove(move)).toBe(true);
+//     })
+//   })
+//   test('top left corner, not jump moves', () => {
+//     topLeftCornerMoves.map(move => {
+//       expect(isJumpMove(move)).toBe(false);
+//     })
+//   })
+//   test('top left corner, jump moves', () => {
+//     topLeftCornerJumpMoves.map(move => {
+//       expect(isJumpMove(move)).toBe(true);
+//     })
+//   })
+//   test('top right corner, not jump moves', () => {
+//     topRightCornerMoves.map(move => {
+//       expect(isJumpMove(move)).toBe(false);
+//     })
+//   })
+//   test('top right corner, jump moves', () => {
+//     topRightCornerJumpMoves.map(move => {
+//       expect(isJumpMove(move)).toBe(true);
+//     })
+//   })
+// });

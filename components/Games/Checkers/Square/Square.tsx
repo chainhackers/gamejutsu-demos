@@ -1,6 +1,6 @@
 import cn from 'classnames';
 // TODO @ghUserrrr #144 Delete 'isJump' field
-import { isJumpMove } from 'helpers/utils';
+// import { isJumpMove } from 'helpers/utils';
 import {SquarePropsI} from './SquareProps';
 import styles from './Square.module.scss';
 import React from "react";
@@ -9,12 +9,12 @@ import React from "react";
 export const Square: React.FC<SquarePropsI> = (
     {value, selected, onClick, disputable, number, flip, lastMove, onHandleMove}
 ) => {
-    const controlButtonClickHandler = (undo: boolean, jump: boolean, passMove: boolean): React.MouseEventHandler<HTMLDivElement> => (event) => {
+    const controlButtonClickHandler = (undo: boolean, passMove: boolean): React.MouseEventHandler<HTMLDivElement> => (event) => {
         event.stopPropagation();
-        onHandleMove(undo, jump, passMove)
+        onHandleMove(undo, passMove)
     };
     // TODO @ghUserrrr #144 Delete 'isJump' field
-    const isJump = !!lastMove ? isJumpMove(lastMove) : false;
+    const isJump =  false;
 
     return (
         <div
@@ -31,22 +31,22 @@ export const Square: React.FC<SquarePropsI> = (
         >
             {lastMove && lastMove.to === number && !!selected && <div className={cn(styles.controls, flip ? styles.flip : null)}>
                 <div className={styles.row}>
-                    <div className={cn(styles.button, styles.undo)} onClick={controlButtonClickHandler(true, false, false)}>
+                    <div className={cn(styles.button, styles.undo)} onClick={controlButtonClickHandler(true, false)}>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
                             <line x1="200" y1="56" x2="56" y2="200" strokeLinecap="round" strokeLinejoin="round" strokeWidth="40"></line>
                             <line x1="200" y1="200" x2="56" y2="56" strokeLinecap="round" strokeLinejoin="round" strokeWidth="40"></line>
                         </svg>
                     </div>
-                    // TODO @ghUserrrr #144 Delete 'isJump' field
-                    <div className={cn(styles.button, styles.confirm)} onClick={controlButtonClickHandler(false, isJump, true)}>
+                    {/* // TODO @ghUserrrr #144 Delete 'isJump' field */}
+                    <div className={cn(styles.button, styles.confirm)} onClick={controlButtonClickHandler(false, true)}>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
                             <polyline points="176 152 224 104 176 56" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="40"></polyline>
                             <path d="M32,200a96,96,0,0,1,96-96h96" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="40"></path>
                         </svg>
                     </div>
                 </div>
-                <div className={styles.row} onClick={controlButtonClickHandler(false, true, false)}>
-                // TODO @ghUserrrr #144 Delete 'isJump' field
+                <div className={styles.row} onClick={controlButtonClickHandler(false, false)}>
+                {/* // TODO @ghUserrrr #144 Delete 'isJump' field */}
                     {isJump && <div className={cn(styles.button, styles.jump)}>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
                             <polyline points="163.9 148.1 227.9 148.1 227.9 84.1" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="40"></polyline>

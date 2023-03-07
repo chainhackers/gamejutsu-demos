@@ -9,5 +9,5 @@ export interface IBoardProps {
     lastMove: TLastMove;
     selectedCell: number | null;
     flip?: boolean;
-    onHandleMove: (undo: boolean, jump: boolean, passMove: boolean) => Promise<void>;
+    onHandleMove: (undo: boolean, passMove: boolean) => Promise<void>;
 }
