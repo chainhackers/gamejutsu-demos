@@ -9,7 +9,7 @@ import { Button } from 'components/shared';
 import { t } from 'i18next';
 import cn from 'classnames';
 // TODO @ghUserrrr #144 Delete 'isJump' field
-import { isJumpMove } from 'helpers/utils';
+// import { isJumpMove } from 'helpers/utils';
 export type TLastMove = {
     from: number;
     to: number;
@@ -31,7 +31,7 @@ export const Checkers: React.FC<ICheckersProps> = ({
     const boardState = gameState?.currentBoard || CheckersBoard.empty();
 
 
-    async function onButtonClickHandler(undo: boolean, jump: boolean, passMove: boolean): Promise<void> {
+    async function onButtonClickHandler(undo: boolean, passMove: boolean): Promise<void> {
         if (undo) {
             setLastMove(null);
             return;
@@ -43,8 +43,8 @@ export const Checkers: React.FC<ICheckersProps> = ({
             return;
         }
 
-        const move: CHECKERSMove = CHECKERSMove.fromMove([lastMove.from, lastMove.to, jump, passMove], gameState.playerType);
-        console.log('move', lastMove.from, lastMove.to, jump, passMove);
+        const move: CHECKERSMove = CHECKERSMove.fromMove([lastMove.from, lastMove.to, passMove], gameState.playerType);
+        console.log('move', lastMove.from, lastMove.to,  passMove);
         setLastMove(null);
 
         const address = await getSignerAddress();
@@ -74,7 +74,7 @@ export const Checkers: React.FC<ICheckersProps> = ({
         setSelectedCell(null);
     }
 
-    function makeButton(title: string, style: string, undo: boolean, jump: boolean, passMove: boolean) {
+    function makeButton(title: string, style: string, undo: boolean, passMove: boolean) {
         return <div className={styles[style]}>
             <Button
                 borderless
@@ -82,7 +82,7 @@ export const Checkers: React.FC<ICheckersProps> = ({
                 size="sm"
                 title={title}
                 onClick={() => {
-                    onButtonClickHandler(undo, jump, passMove);
+                    onButtonClickHandler(undo, passMove);
                 }}
             />
         </div>
