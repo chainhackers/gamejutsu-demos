@@ -74,8 +74,6 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
 
   const [messageHistory, setMessageHistory] = useState<{[id: string]: any}[]>([])
 
-  const [isValid, setIsValid] = useState(null)
-
   const { query } = useRouter();
   const account = useAccount();
 
@@ -320,7 +318,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
 
     const lastNonce = gameState.lastMove?.gameMove?.nonce ?? -Infinity;
     const lastOpponentNonce = gameState.lastOpponentMove.gameMove.nonce;
-    const lastMoveOrLastOpponentMove = lastNonce > lastOpponentNonce && gameState.lastMove !== null
+    const lastMoveOrLastOpponentMove = lastNonce > lastOpponentNonce && gameState.lastMove !== null;
     const lastMove = lastMoveOrLastOpponentMove ? gameState.lastMove : gameState.lastOpponentMove;
 
     const finishedGameResult = await disputeMove(await getArbiter(), lastMove!);
