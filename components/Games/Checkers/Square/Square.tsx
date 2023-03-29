@@ -14,7 +14,7 @@ export const Square: React.FC<SquarePropsI> = (
         onHandleMove(undo, passMove)
     };
     // TODO @ghUserrrr #144 Delete 'isJump' field
-    const isJump =  false;
+    // const isJump =  false;
 
     return (
         <div
@@ -47,7 +47,9 @@ export const Square: React.FC<SquarePropsI> = (
                 </div>
                 <div className={styles.row} onClick={controlButtonClickHandler(false, false)}>
                 {/* // TODO @ghUserrrr #144 Delete 'isJump' field */}
-                    {isJump && <div className={cn(styles.button, styles.jump)}>
+                    {
+                    // isJump && 
+                    <div className={cn(styles.button, styles.jump)}>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
                             <polyline points="163.9 148.1 227.9 148.1 227.9 84.1" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="40"></polyline>
                             <path d="M32,184a96,96,0,0,1,163.9-67.9l32,32" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="40"></path>
