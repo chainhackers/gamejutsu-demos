@@ -127,18 +127,19 @@ const Home: NextPage<IHomePageProps> = ({ partners }) => {
             </p>
           </div>
           <div className={styles.gameBlock}>
-            <div className='item_block'>
+            <img src='/images/game.png' />
+            {/* <div className='item_block'>
               <h3>Game events</h3>
               <Image src='/images/game1.svg' width='123px' height='625px' alt='' />
-            </div>
-            <div className='item_block'>
+            </div> */}
+            {/* <div className='item_block'>
               <h3>Extra clicks</h3>
               <Image src='/images/game2.svg' width='77px' height='421px' alt='' />
-            </div>
-            <div className='item_block'>
+            </div> */}
+            {/* <div className='item_block'>
               <h3>Users’ vibe</h3>
               <Image src='/images/game3.svg' width='142px' height='521px' alt='' />
-            </div>
+            </div> */}
           </div>
           <div className={styles.gameTitle}>
             <h3>
