@@ -11,10 +11,7 @@ export const Navigation: React.FC<NavigationPropsI> = ({ active }) => {
 
   return (
     <div className={styles.container}>
-          <button onClick={() => toggleBurgerMenu(!isBurgerActive)}>
-            <span></span>
-          </button>
-      <nav onClick={() => toggleBurgerMenu(false)} className={(styles.navigation) + ' ' + cn(isBurgerActive && (styles.open))}>
+      <nav>
             <ul>
               <li
                 className={cn(

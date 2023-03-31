@@ -26,7 +26,7 @@ export const Header: React.FC<HeaderPropsI> = ({version}) => {
         <div className={styles.version}>{`Ver.${version}`}</div>
       </div>
       <div className={styles.right}>
-        {currentPath?.split('?')[0] !== 'connect' && <Navigation active={currentPath} />}
+        {/* {currentPath?.split('?')[0] !== 'connect' && <Navigation active={currentPath} />} */}
         {currentPath?.split('?')[0] !== 'connect' && <ConnectButton.Custom>
       {({
         account,

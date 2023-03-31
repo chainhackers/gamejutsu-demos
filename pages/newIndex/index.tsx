@@ -48,7 +48,9 @@ const Home: NextPage<IHomePageProps> = ({ partners }) => {
               keep most of the communication off-chain, while keeping the
               guarantees provided by smart contracts
             </p>
-            <a href="#">
+            <button
+              onClick={() => router.push('/games')}
+            >
               {' '}
               <Image
                 src="/images/dices.png"
@@ -56,8 +58,8 @@ const Home: NextPage<IHomePageProps> = ({ partners }) => {
                 width="25px"
                 height="24px"
               />{' '}
-              Try Dem /o
-            </a>
+              Try Demo
+            </button>
 
             <span>
               GameJutsu is a gaming framework to take care of the on-chain /
@@ -75,8 +77,8 @@ const Home: NextPage<IHomePageProps> = ({ partners }) => {
                 <div className={styles.itemSlid}>
                   <Image
                     src="/images/slider1.png"
-                    width="166px"
-                    height="190px"
+                    width="84px"
+                    height="83px"
                     alt=""
                   />
                   <p>To improve UX of your game services</p>
@@ -86,8 +88,8 @@ const Home: NextPage<IHomePageProps> = ({ partners }) => {
                 <div className={styles.itemSlid}>
                   <Image
                     src="/images/slider2.png"
-                    width="166px"
-                    height="190px"
+                    width="51px"
+                    height="92px"
                     alt=""
                   />
                   <p>Make crypto games with clean UI</p>
@@ -97,22 +99,11 @@ const Home: NextPage<IHomePageProps> = ({ partners }) => {
                 <div className={styles.itemSlid}>
                   <Image
                     src="/images/slider3.png"
-                    width="166px"
-                    height="190px"
+                    width="88px"
+                    height="86px"
                     alt=""
                   />
                   <p>Spare on server infrastructure and maintenance</p>
-                </div>
-              </div>
-              <div className={styles.swiperSlide}>
-                <div className={styles.itemSlid}>
-                  <Image
-                    src="/images/slider1.png"
-                    width="166px"
-                    height="190px"
-                    alt=""
-                  />
-                  <p>To improve UX of your game services</p>
                 </div>
               </div>
             </div>
@@ -227,17 +218,82 @@ const Home: NextPage<IHomePageProps> = ({ partners }) => {
             </div>
           </div>
         </div>
-        <div className={styles.sponsorBlock}>
-          <div className={styles.logo}>
-            <Image
-              src="/logo/front-ninja.png"
-              alt="GameJutsu Logo"
-              width="600px"
-              height="400px"
-              // layout="fill"
-            />
+        <div className={styles.blockMes}>
+          <div className={styles.messenBlock}>
+            <div className={styles.itemMes}>
+              <Image
+                src="/images/xmtp-logo.png"
+                alt=""
+                width="40px"
+                height="40px"
+              />
+              <a href="#">XMTP</a>
+            </div>
+            <div className={styles.itemMes}>
+              <Image
+                src="/images/the-graph-logo.png"
+                alt=""
+                width="40px"
+                height="40px"
+              />
+              <a href="#">The graph</a>
+            </div>
+            <div className={styles.itemMes}>
+              <Image
+                src="/images/polygon-logo.png"
+                alt=""
+                width="40px"
+                height="40px"
+              />
+              <a href="#">Polygon</a>
+            </div>
+            <div className={styles.itemMes}>
+              <Image
+                src="/images/sismo-logo.png"
+                alt=""
+                width="40px"
+                height="40px"
+              />
+              <a href="#">Sismo</a>
+            </div>
           </div>
-          <PoweredBy poweredByList={partners} />
+          <div className={styles.buttonMes}>
+            <button
+              onClick={() => router.push('/games')}
+            >
+              {' '}
+              <Image
+                src="/images/dices.png"
+                alt=""
+                width="25px"
+                height="24px"
+              />{' '}
+              Try Demo
+            </button>
+          </div>
+          <div className={styles.infoBlock}>
+            <div className={styles.infoTitle}>
+              <h2>Need more info?</h2>
+            </div>
+            <div className={styles.buttonInfo}>
+              <a href="https://github.com/ChainHackers/GameJutsu#readme">GitHub Documentation</a>
+              <button onClick={() => router.push('/team')}>Meet our team</button>
+            </div>
+          </div>
+          {/* <div className={styles.socialSet}>
+            <a href="#">
+              <Image src="/images/discord.svg" alt="" />
+            </a>
+            <a href="#">
+              <Image src="/images/githab.svg" alt="" />
+            </a>
+            <a href="#">
+              <Image src="/images/twitter.svg" alt="" />
+            </a>
+            <a href="#">
+              <Image src="/images/youtube.svg" alt="" />
+            </a>
+          </div> */}
         </div>
       </main>
     </div>
