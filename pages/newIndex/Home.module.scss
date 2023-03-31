@@ -9,7 +9,7 @@
 
 .mainImg {
   margin: 5rem auto 0;
-  
+
   img {
     margin: 0 auto;
     width: 80%;
@@ -85,16 +85,15 @@
   .mySwiper1 {
     .swiperSlide {
       &:not(:last-child) {
-          margin-bottom: 10px;
-        }
-        
+        margin-bottom: 10px;
+      }
+
       .itemSlid {
         background: #ffffff;
         border: 1px solid #e8e8e8;
         border-radius: 10px;
         text-align: center;
         padding: 17px 10px 10px 10px;
-        
 
         p {
           font-family: 'Inter';
@@ -177,7 +176,7 @@
     }
   }
   .gameBlock {
-    margin-bottom: 20px;
+    margin: 20px 0;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -324,6 +323,7 @@
       line-height: 130%;
       color: #2e303d;
       text-align: center;
+      padding: 2rem 0;
     }
   }
   .buttonInfo {
@@ -342,7 +342,6 @@
       padding: 16px 22px 14px 32px;
       margin-bottom: 10px;
 
-      
       &:first-child {
         // background-image: url(../img/BracketsCurly.svg);
         background-repeat: no-repeat;
@@ -358,18 +357,18 @@
     button {
       width: 100%;
       font-family: 'Inter';
-    font-style: normal;
-    font-weight: 600;
-    font-size: 20px;
-    line-height: 130%;
-    text-decoration: none;
-    display: block;
-    border-radius: 10px;
-    border: 1px solid #8dc8e9;
-    color: #8777da;
-    text-align: center;
-    padding: 16px 22px 14px 32px;
-    } 
+      font-style: normal;
+      font-weight: 600;
+      font-size: 20px;
+      line-height: 130%;
+      text-decoration: none;
+      display: block;
+      border-radius: 10px;
+      border: 1px solid #8dc8e9;
+      color: #8777da;
+      text-align: center;
+      padding: 16px 22px 14px 32px;
+    }
   }
   .socialSet {
     display: flex;
