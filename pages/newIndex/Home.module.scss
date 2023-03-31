@@ -331,7 +331,9 @@
       color: #8777da;
       text-align: center;
       padding: 16px 22px 14px 32px;
+      margin-bottom: 10px;
 
+      
       &:first-child {
         // background-image: url(../img/BracketsCurly.svg);
         background-repeat: no-repeat;
@@ -344,6 +346,21 @@
         background-position: calc(100% - 81%);
       }
     }
+    button {
+      width: 100%;
+      font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 130%;
+    text-decoration: none;
+    display: block;
+    border-radius: 10px;
+    border: 1px solid #8dc8e9;
+    color: #8777da;
+    text-align: center;
+    padding: 16px 22px 14px 32px;
+    } 
   }
   .socialSet {
     display: flex;
