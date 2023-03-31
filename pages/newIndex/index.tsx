@@ -31,11 +31,11 @@ const Home: NextPage<IHomePageProps> = ({ partners }) => {
       <main className={styles.main}>
         <div className={styles.wrapper}>
           <div className={styles.mainImg}>
-            <Image
+            <img
               src="/images/serveless-communication.png"
               alt="serverless communication"
-              width="344px"
-              height="362px"
+              width="342px"
+              height="330px"
             />
           </div>
           <div className={styles.mainTitle}>

@@ -9,7 +9,11 @@
 
 .mainImg {
   margin: 5rem auto 0;
-  width: 100%;
+  
+  img {
+    margin: 0 auto;
+    width: 80%;
+  }
 }
 
 .mainTitle {
@@ -80,12 +84,17 @@
   }
   .mySwiper1 {
     .swiperSlide {
+      &:not(:last-child) {
+          margin-bottom: 10px;
+        }
+        
       .itemSlid {
         background: #ffffff;
         border: 1px solid #e8e8e8;
         border-radius: 10px;
         text-align: center;
         padding: 17px 10px 10px 10px;
+        
 
         p {
           font-family: 'Inter';
