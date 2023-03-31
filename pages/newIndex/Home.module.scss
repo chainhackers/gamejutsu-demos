@@ -32,7 +32,8 @@
     color: #9c9eab;
     margin-bottom: 30px;
   }
-  a {
+  button {
+    width: 100%;
     font-family: 'Inter';
     font-style: normal;
     font-weight: 700;
@@ -44,7 +45,10 @@
     border-radius: 60px;
     color: #ffffff;
     padding: 10px 84px 10px 93px;
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
     text-align: center;
     margin-bottom: 40px;
   }
@@ -252,6 +256,105 @@
     .imgGame {
       img {
         width: 100%;
+      }
+    }
+  }
+}
+
+.blockMes {
+  .messenBlock {
+    display: flex;
+    justify-content: space-around;
+    .itemMes {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      img {
+        margin-bottom: 4px;
+      }
+      a {
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 600;
+        text-decoration: none;
+        font-size: 12px;
+        line-height: 130%;
+        color: #9c9eab;
+      }
+    }
+  }
+  .buttonMes {
+    button {
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 700;
+      font-size: 20px;
+      line-height: 130%;
+      background-repeat: no-repeat;
+      text-decoration: none;
+      background: linear-gradient(225.67deg, #8dc8e9 3.57%, #8c5ae3 115.97%);
+      border-radius: 60px;
+      color: #ffffff;
+      padding: 10px 84px 10px 93px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      margin-bottom: 40px;
+      margin-top: 20px;
+      gap: 10px;
+      width: 100%;
+    }
+  }
+  .infoBlock {
+    h2 {
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 600;
+      font-size: 20px;
+      line-height: 130%;
+      color: #2e303d;
+      text-align: center;
+    }
+  }
+  .buttonInfo {
+    a {
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 600;
+      font-size: 20px;
+      line-height: 130%;
+      text-decoration: none;
+      display: block;
+      border-radius: 10px;
+      border: 1px solid #8dc8e9;
+      color: #8777da;
+      text-align: center;
+      padding: 16px 22px 14px 32px;
+
+      &:first-child {
+        // background-image: url(../img/BracketsCurly.svg);
+        background-repeat: no-repeat;
+        background-position: calc(100% - 95%);
+      }
+      &:last-child {
+        margin-top: 20px;
+        // background-image: url(../img/Users.svg);
+        background-repeat: no-repeat;
+        background-position: calc(100% - 81%);
+      }
+    }
+  }
+  .socialSet {
+    display: flex;
+    margin-top: 25px;
+    justify-content: center;
+    margin-bottom: 40px;
+
+    a {
+      margin-right: 10px;
+      &:last-child {
+        margin-right: 0;
       }
     }
   }
