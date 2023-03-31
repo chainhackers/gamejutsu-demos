@@ -6,8 +6,6 @@ import { useTranslation } from 'react-i18next';
 // import styles from '../../styles/Home.module.scss';
 import styles from './/Home.module.scss';
 // import 'i18n/index';
-import { Button } from 'components';
-import { PoweredBy } from 'components/PoweredBy';
 
 import companies from 'data/partners.json';
 import { useRouter } from 'next/router';
@@ -280,20 +278,20 @@ const Home: NextPage<IHomePageProps> = ({ partners }) => {
               <button onClick={() => router.push('/team')}>Meet our team</button>
             </div>
           </div>
-          {/* <div className={styles.socialSet}>
-            <a href="#">
-              <Image src="/images/discord.svg" alt="" />
+          <div className={styles.socialSet}>
+            <a href="https://discord.gg/a5E9vWbp9R">
+              <Image src="/images/discord.png" alt="" width='40px' height='40px' />
             </a>
-            <a href="#">
-              <Image src="/images/githab.svg" alt="" />
+            <a href="https://github.com/ChainHackers">
+              <Image src="/images/github.png" alt="" width='40px' height='40px' />
             </a>
-            <a href="#">
-              <Image src="/images/twitter.svg" alt="" />
+            <a href="https://twitter.com/ChainHackerClan">
+              <Image src="/images/twitter.png" alt="" width='40px' height='40px' />
             </a>
-            <a href="#">
-              <Image src="/images/youtube.svg" alt="" />
+            <a href="https://www.youtube.com/@UtgardaLoki">
+              <Image src="/images/youtube.png" alt="" width='40px' height='40px' />
             </a>
-          </div> */}
+          </div>
         </div>
       </main>
     </div>
