@@ -1,4 +1,4 @@
 [
-  { "name": "checkers", "image": "/images/checkers.png", "url": "checkers" },
-  { "name": "ticTacToe", "image": "/images/tictaktoe.png", "url": "tic-tac-toe" }
+  { "name": "checkers", "image": "/images/checkers.png", "url": "checkers", "description":  "Classic board game for a visual demonstration of the protocol"},
+  { "name": "ticTacToe", "image": "/images/tictaktoe.png", "url": "tic-tac-toe", "description": "Fast game for fast demonstration of protocol"}
 ]

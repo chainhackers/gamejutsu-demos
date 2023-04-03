@@ -24,8 +24,8 @@ const en = {
       },
     },
     gameTypePage: {
-      title: 'Choose a game demo',
-      description: 'Experience the protocol yourself. It just works. ✨',
+      title: 'Try it yourself!',
+      description: 'Experience the protocol. It just works. ✨',
       games: {
         ticTacToe: 'Tic-Tac-Toe',
         checkers: 'Checkers',

@@ -28,10 +28,12 @@ const GamesPage: NextPage<IGamesPageProps> = ({ games }) => {
                 {...game}
                 name={t(`gameTypePage.games.${game.name}`)}
                 url={address ? `/games/${game.url}?select=true` : `/connect?game=${game.url}`}
+                description='1'
               />
             );
           })}
       </div>
+      <div className={styles.description}>To start or join the game, you will need to make a transaction</div>
     </div>
   );
 };

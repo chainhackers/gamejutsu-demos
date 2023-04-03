@@ -1,39 +1,90 @@
 .container {
-  // background-color: aqua;
+  width: 100%;
+  height: 184px;
   position: relative;
+  background-color: #ffffff;
+  border: 1px solid #E8E8E8;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1.6rem;
+  &:not(:last-child) {
+    margin-bottom: 1.2rem;
+  }
 
-  margin: 40px;
+  .row {
+    display: flex;
+    width: 100%;
+  }
 
-  @media (max-width: 576px) {
-    //display: flex;
-    margin: 20px 0 70px;
-    width: 290px;
-    height: 290px;
+  .cardInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
   }
 
   .image {
     position: relative;
     width: 181px;
     height: 181px;
+    margin-right: 1rem;
 
-    // margin: 0 0 20px;
-    padding: 78px 59px 77px 58px;
+    // padding: 78px 59px 77px 58px;
     border-radius: 10px;
     overflow: hidden;
-    // background-color: var(--gray-lightest);
 
-    @media (max-width: 576px) {
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      //height: auto;
+    @media (max-width: 768px) {
+      width: 64px;
+      height: 64px;
     }
   }
 
   .name {
-    font-size: 26px;
-    font-weight: bold;
-    padding: 20px 0;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 2rem;
+  color: #2E303D;
+  }
 
+  .buttons {
+    display: flex;
+    gap: 6px;
+    margin-top: auto;
+
+    button {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      padding: 4px 14px 4px 14px;
+      
+
+      background: linear-gradient(225.67deg, #8DC8E9 3.57%, #8C5AE3 115.97%);
+      border-radius: 60px;
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 600;
+      font-size: 1.5rem;
+      color: #FFFFFF;
+
+      .users {
+        margin-left: 9px;
+        background-image: url(../../public/images/users.png);
+        background-repeat: no-repeat;
+        margin-top: -1px;
+        width: 17px;
+        height: 11px;
+      }
+
+      .play {
+        margin-left: 9px;
+        background-image: url(../../public/images/play.png);
+        background-repeat: no-repeat;
+        width: 10px;
+        height: 10px;
+      }
+    }
   }
 }

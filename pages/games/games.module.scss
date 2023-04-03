@@ -1,42 +1,28 @@
 .container {
-  padding: 100px;
-  text-align: center;
-
-  @media (max-width: 576px) {
-    padding: 40px 10px;
-  }
+  padding: 50px 10px;
 
   .title {
-    font-size: 42px;
-    font-weight: bold;
-
-    @media (max-width: 576px) {
-      font-size: 33px;
-    }
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    color: #2E303D;
   }
   .description {
-    font-size: 26px;
-    font-weight: normal;
-    padding-left: 10px;
-    padding-top: 20px;
-
-    @media (max-width: 576px) {
-      font-size: 22px;
-      padding-left: 0 ;
-      padding-top: 10px;
-    }
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 130%;
+    color: #9C9EAB;
+    margin-bottom: 10px;
   }
 
   .gamelist {
     display: flex;
     justify-content: center;
-
-    padding: 20px;
-
-    @media (max-width: 576px) {
-      padding: 0 20px 20px;
-      align-items: center;
-      flex-direction: column;
-    }
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 10px;
   }
 }
