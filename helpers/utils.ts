@@ -8,7 +8,7 @@ export function shallowClone<T extends Object>(source: T): T {
 
 const isFirstColumn = (a: number): boolean => (a - 3) % 8 === 0;
 const isLastColumn = (a: number): boolean => (a - 4) % 8 === 0
-const isEvenRow = (a: number) => Math.floor(a / 4) % 2 === 0;
+export const isEvenRow = (a: number) => Math.floor(a / 4) % 2 === 0;
 
 // TODO @ghUserrrr #144 Delete 'isJump' field
 // export const isJumpMove = (lastMove: TLastMove) => {
