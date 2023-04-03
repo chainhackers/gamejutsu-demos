@@ -2,7 +2,9 @@ import { GameThumbnailPropsI } from './GameThumbnailProps';
 import Image from 'next/image';
 import styles from './GameThumbnail.module.scss';
 import Link from 'next/link';
+import { useAccount } from 'wagmi';
 export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({ name, image, url, description }) => {
+  const { address } = useAccount();
   return (
     <div className={styles.container}>
       <div className={styles.row}>
@@ -15,10 +17,10 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({ name, image, url,
         </div>
       </div>
       <div className={styles.buttons}>
-      <Link href={'/games/' + url +'?join=true'}>
+      <Link href={address ? '/games/' + url +'?join=true' : `/connect?game=${url}`}>
         <button>Join <div className={styles.users}></div></button>
       </Link>
-      <Link href={'/games/' + url + '?prize=true'}>
+      <Link href={address ? '/games/' + url + '?prize=true' : `/connect?game=${url}`}>
         <button>Start new game <div className={styles.play}></div> </button>
       </Link>
       </div>
