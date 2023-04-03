@@ -14,15 +14,13 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({ name, image, url,
         <div className={styles.description}>{description}</div>
         </div>
       </div>
-      {/* <Link href={url}>
-        <a>
-          
-          
-        </a>
-      </Link> */}
       <div className={styles.buttons}>
+      <Link href={'/games/' + url +'?join=true'}>
         <button>Join <div className={styles.users}></div></button>
-        <button>Start new game <div className={styles.play}></div></button>
+      </Link>
+      <Link href={'/games/' + url + '?prize=true'}>
+        <button>Start new game <div className={styles.play}></div> </button>
+      </Link>
       </div>
     </div>
   );

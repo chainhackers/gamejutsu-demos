@@ -8,7 +8,7 @@ import styles from 'pages/games/games.module.scss';
 import games from 'data/games.json';
 
 interface IGamesPageProps {
-  games: { name: string; image: string; url: string }[];
+  games: { name: string; image: string; url: string; description: string }[];
 }
 
 const GamesPage: NextPage<IGamesPageProps> = ({ games }) => {
@@ -28,7 +28,7 @@ const GamesPage: NextPage<IGamesPageProps> = ({ games }) => {
                 {...game}
                 name={t(`gameTypePage.games.${game.name}`)}
                 url={address ? `/games/${game.url}?select=true` : `/connect?game=${game.url}`}
-                description='1'
+                description={game.description}
               />
             );
           })}
