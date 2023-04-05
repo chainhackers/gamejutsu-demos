@@ -8,8 +8,6 @@ import { getRulesContract, transition } from 'gameApi';
 import { Button } from 'components/shared';
 import { t } from 'i18next';
 import cn from 'classnames';
-// TODO @ghUserrrr #144 Delete 'isJump' field
-// import { isJumpMove } from 'helpers/utils';
 export type TLastMove = {
     from: number;
     to: number;
