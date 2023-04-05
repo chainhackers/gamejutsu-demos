@@ -1,6 +1,4 @@
 import cn from 'classnames';
-// TODO @ghUserrrr #144 Delete 'isJump' field
-// import { isJumpMove } from 'helpers/utils';
 import {SquarePropsI} from './SquareProps';
 import styles from './Square.module.scss';
 import React from "react";
@@ -13,8 +11,6 @@ export const Square: React.FC<SquarePropsI> = (
         event.stopPropagation();
         onHandleMove(undo, passMove)
     };
-    // TODO @ghUserrrr #144 Delete 'isJump' field
-    // const isJump =  false;
 
     return (
         <div
@@ -37,7 +33,6 @@ export const Square: React.FC<SquarePropsI> = (
                             <line x1="200" y1="200" x2="56" y2="56" strokeLinecap="round" strokeLinejoin="round" strokeWidth="40"></line>
                         </svg>
                     </div>
-                    {/* // TODO @ghUserrrr #144 Delete 'isJump' field */}
                     <div className={cn(styles.button, styles.confirm)} onClick={controlButtonClickHandler(false, true)}>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
                             <polyline points="176 152 224 104 176 56" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="40"></polyline>
@@ -46,9 +41,7 @@ export const Square: React.FC<SquarePropsI> = (
                     </div>
                 </div>
                 <div className={styles.row} onClick={controlButtonClickHandler(false, false)}>
-                {/* // TODO @ghUserrrr #144 Delete 'isJump' field */}
                     {
-                    // isJump && 
                     <div className={cn(styles.button, styles.jump)}>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
                             <polyline points="163.9 148.1 227.9 148.1 227.9 84.1" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="40"></polyline>

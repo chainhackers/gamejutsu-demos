@@ -27,15 +27,11 @@ export function decodeEncodedBoardState(encodedBoardState: string) {
 
 // @custom from 1-based index of the cell to move from
 //     @custom to 1-based index of the cell to move to
-// TODO @ghUserrrr #144 Delete 'isJump' field
-//     @custom isJump declares if the move is a jump
 //     @custom passMoveToOpponent declares explicitly if the next move is to be done by the opponent
 
 // struct Move {
 //     uint8 from;
 //     uint8 to;
-//     bool isJump;
-    // TODO @ghUserrrr #144 Delete 'isJump' field
 //     bool passMoveToOpponent;
 // }
 
@@ -61,14 +57,11 @@ export class CHECKERSMove implements IMyGameMove {
     encodedMove: string;
     from: number;
     to: number;
-    // TODO @ghUserrrr #144 Delete 'isJump' field
-    // isJump: boolean;
     passMoveToOpponent: boolean
     player: TPlayer
 
     private constructor(encodedMove: string, player: TPlayer) {
         this.encodedMove = encodedMove;
-        // TODO @ghUserrrr #144 Delete 'isJump' field
         [this.from, this.to, this.passMoveToOpponent] = defaultAbiCoder.decode(CHECKERS_MOVE_TYPES, encodedMove);
         this.player = player;
     }
@@ -76,7 +69,6 @@ export class CHECKERSMove implements IMyGameMove {
     static fromEncoded(encodedMove: string, player: TPlayer): CHECKERSMove {
         return Object.seal(new CHECKERSMove(encodedMove, player));
     }
-    // TODO @ghUserrrr #144 Delete 'isJump' field
     static fromMove([from, to, passMoveToOpponent]: TCheckersContractMove, player: TPlayer): CHECKERSMove {
         const encodedMove = defaultAbiCoder.encode(CHECKERS_MOVE_TYPES, [from, to, passMoveToOpponent]);
         return Object.seal(new CHECKERSMove(encodedMove, player));
