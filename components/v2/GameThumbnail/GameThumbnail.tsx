@@ -24,8 +24,8 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({ name, image, url,
       <Link href={address ? '/games/' + url +'?join=true' : `/connect?game=${url}`}>
         <button>Join <div className={styles.users}></div></button>
       </Link>
-      <Link href={address ? '/games/' + url + '?prize=true' : `/connect?game=${url}`}>
-      </Link>
+      {/* <Link href={address ? '/games/' + url + '?prize=true' : `/connect?game=${url}`}>
+      </Link> */}
         <button>Start new game <div className={styles.play}></div> </button>
       </div>
     </div>
