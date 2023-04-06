@@ -1,0 +1,28 @@
+.container {
+  padding: 50px 10px;
+
+  .title {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    color: #2E303D;
+  }
+  .description {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 130%;
+    color: #9C9EAB;
+    margin-bottom: 10px;
+  }
+
+  .gamelist {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 10px;
+  }
+}
