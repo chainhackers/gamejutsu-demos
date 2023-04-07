@@ -16,19 +16,19 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
 }) => {
   const { t } = useTranslation();
   const [rulesState, setRulesState] = useState('');
+  const [startButtonState, setStartButtonState] = useState(false);
 
   const gameName = t(`gameTypePage.games.${name}`);
-  const { address } = useAccount();
-  // const [startButtonState, setStartButtonState] = useState(false);
   const game = url as TGameType;
+  const { address } = useAccount();
 
   function shortenAddress(str: string) {
     return str.slice(0, 5) + '...' + str.slice(-4);
   }
 
-  getRulesContract(game).then((response) => {
-    setRulesState(shortenAddress(response.address));
-  });
+  // getRulesContract(game).then((response) => {
+  //   setRulesState(shortenAddress(response.address));
+  // });
 
   return (
     <div className={styles.container}>
@@ -54,10 +54,20 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
         </Link>
         {/* <Link href={address ? '/games/' + url + '?prize=true' : `/connect?game=${url}`}>
       </Link> */}
-        <button>
+        <button onClick={() => setStartButtonState(!startButtonState)}>
           Start new game <div className={styles.play}></div>{' '}
         </button>
       </div>
+      {startButtonState && (
+        <div className={styles.chooseStake}>
+          <div className={styles.gradientBorder}>
+            <button className={styles.stakeButton}>No stake</button>
+          </div>
+          <div className={styles.gradientBorder}>
+            <button className={styles.stakeButton}>Stake</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
