@@ -1,4 +1,4 @@
-import { GetStaticProps, NextPage } from 'next';
+// import { GetStaticProps, NextPage } from 'next';
 import { useTranslation } from 'react-i18next';
 import { GameThumbnail } from 'components/v2/GameThumbnail';
 import styles from 'pages/v2/games/games.module.scss';
@@ -24,7 +24,8 @@ export const GameDemo: React.FC<GameDemoPropsI> = ({ games }) => {
               <GameThumbnail
                 key={game.name + index}
                 {...game}
-                name={t(`gameTypePage.games.${game.name}`)}
+                // name={t(`gameTypePage.games.${game.name}`)}
+                name={game.name}
                 url={game.url}
                 description={game.description}
               />
