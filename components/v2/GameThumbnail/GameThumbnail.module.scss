@@ -3,7 +3,7 @@
   height: 184px;
   position: relative;
   background-color: #ffffff;
-  border: 1px solid #E8E8E8;
+  border: 1px solid #e8e8e8;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
@@ -41,11 +41,21 @@
   }
 
   .name {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 600;
-  font-size: 2rem;
-  color: #2E303D;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 2rem;
+    color: #2e303d;
+  }
+
+  .description {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 130%;
+    color: #9c9eab;
+    text-align: left;
   }
 
   .address {
@@ -54,7 +64,7 @@
     font-weight: 500;
     font-size: 15px;
     line-height: 130%;
-    color: #8777DA;
+    color: #8777da;
   }
 
   .buttons {
@@ -68,15 +78,14 @@
       justify-content: center;
       align-items: center;
       padding: 4px 14px 4px 14px;
-      
 
-      background: linear-gradient(225.67deg, #8DC8E9 3.57%, #8C5AE3 115.97%);
+      background: linear-gradient(225.67deg, #8dc8e9 3.57%, #8c5ae3 115.97%);
       border-radius: 60px;
       font-family: 'Inter';
       font-style: normal;
       font-weight: 600;
       font-size: 1.5rem;
-      color: #FFFFFF;
+      color: #ffffff;
 
       .users {
         margin-left: 9px;

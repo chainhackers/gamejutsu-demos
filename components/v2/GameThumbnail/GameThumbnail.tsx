@@ -8,46 +8,55 @@ import { getRulesContract } from 'gameApi';
 import { TGameType } from 'types/game';
 import { useTranslation } from 'react-i18next';
 
-export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({ name, image, url, description }) => {
+export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
+  name,
+  image,
+  url,
+  description,
+}) => {
   const { t } = useTranslation();
-  const gameName = t(`gameTypePage.games.${name}`)
-  const { address } = useAccount();
-  // const [startButtonState, setStartButtonState] = useState(false);
-
-  const game = url as TGameType
   const [rulesState, setRulesState] = useState('');
 
+  const gameName = t(`gameTypePage.games.${name}`);
+  const { address } = useAccount();
+  // const [startButtonState, setStartButtonState] = useState(false);
+  const game = url as TGameType;
+
   function shortenAddress(str: string) {
-    return str.slice(0, 5) + '...' + str.slice(-4)
+    return str.slice(0, 5) + '...' + str.slice(-4);
   }
-  
-  getRulesContract(game).then(response => {
-    setRulesState(shortenAddress(response.address))
-  })
 
-
-  
-  
+  getRulesContract(game).then((response) => {
+    setRulesState(shortenAddress(response.address));
+  });
 
   return (
     <div className={styles.container}>
       <div className={styles.row}>
         <div className={styles.image}>
-            <Image src={image} layout="fill" />
+          <Image src={image} layout="fill" />
         </div>
         <div className={styles.cardInfo}>
-        <div className={styles.name}>{gameName}</div>
-        <div className={styles.address}>{rulesState}</div>
-        <div className={styles.description}>{description}</div>
+          <div className={styles.name}>{gameName}</div>
+          <div className={styles.address}>{rulesState}</div>
+          <div className={styles.description}>{description}</div>
         </div>
       </div>
       <div className={styles.buttons}>
-      <Link href={address ? '/games/' + url +'?join=true' : `/connect?game=${url}`}>
-        <button>Join <div className={styles.users}></div></button>
-      </Link>
-      {/* <Link href={address ? '/games/' + url + '?prize=true' : `/connect?game=${url}`}>
+        <Link
+          href={
+            address ? '/games/' + url + '?join=true' : `/connect?game=${url}`
+          }
+        >
+          <button>
+            Join <div className={styles.users}></div>
+          </button>
+        </Link>
+        {/* <Link href={address ? '/games/' + url + '?prize=true' : `/connect?game=${url}`}>
       </Link> */}
-        <button>Start new game <div className={styles.play}></div> </button>
+        <button>
+          Start new game <div className={styles.play}></div>{' '}
+        </button>
       </div>
     </div>
   );
