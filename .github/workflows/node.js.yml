@@ -28,12 +28,14 @@ jobs:
       - run: npm run generate
       - run: npm run test
       - run: npm run build
+      - run: ls -l
+      - run: ls -l ./build
       - name: Save Build Cache
         id: cache-build-save
         uses: actions/upload-artifact@v3
         with:
           name: my-artifact
-          path: build
+          path: .
 
   deploy:
     name: Deploy
