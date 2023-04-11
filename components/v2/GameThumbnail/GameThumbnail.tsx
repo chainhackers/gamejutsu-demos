@@ -3,7 +3,7 @@ import Image from 'next/image';
 import styles from './GameThumbnail.module.scss';
 import Link from 'next/link';
 import { useAccount } from 'wagmi';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getRulesContract } from 'gameApi';
 import { TGameType } from 'types/game';
 import { useTranslation } from 'react-i18next';
@@ -26,9 +26,11 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
     return str.slice(0, 5) + '...' + str.slice(-4);
   }
 
-  // getRulesContract(game).then((response) => {
-  //   setRulesState(shortenAddress(response.address));
-  // });
+  useEffect(() => {
+    getRulesContract(game).then((response) => {
+      setRulesState(shortenAddress(response.address));
+    });
+  }, []);
 
   return (
     <div className={styles.container}>
