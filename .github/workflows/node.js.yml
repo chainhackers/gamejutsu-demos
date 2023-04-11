@@ -43,6 +43,8 @@ jobs:
     steps:
       - name: Download all workflow run artifacts
         uses: actions/download-artifact@v3
+      - run: ls -l
+      - run: ls -l ./gamejutsu-frontend-build-${{ github.run_id }}
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
         with:
@@ -50,4 +52,4 @@ jobs:
           name: id_rsa
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
       - name: Copy artifact to server
-        run: scp gamejutsu-frontend-build-${{ github.run_id }} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null gamejutsu@${{secrets.HOST}}:/home/gamejutsu/dev/build
+        run: scp -r ./gamejutsu-frontend-build-${{ github.run_id }} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null gamejutsu@${{secrets.HOST}}:/home/gamejutsu/dev/build
