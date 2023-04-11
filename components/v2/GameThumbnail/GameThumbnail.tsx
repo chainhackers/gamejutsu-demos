@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { getRulesContract } from 'gameApi';
 import { TGameType } from 'types/game';
 import { useTranslation } from 'react-i18next';
+import { SelectPrize } from '../SelectPrize';
 
 export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
   name,
@@ -60,16 +61,7 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
           Start new game <div className={styles.play}></div>{' '}
         </button>
       </div>
-      {startButtonState && (
-        <div className={styles.chooseStake}>
-          <div className={styles.gradientBorder}>
-            <button className={styles.stakeButton}>No stake</button>
-          </div>
-          <div className={styles.gradientBorder}>
-            <button className={styles.stakeButton}>Stake</button>
-          </div>
-        </div>
-      )}
+      {startButtonState && <SelectPrize gameType={game} />}
     </div>
   );
 };

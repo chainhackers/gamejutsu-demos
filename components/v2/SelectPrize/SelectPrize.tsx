@@ -16,30 +16,30 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({ gameType }) => {
     return proposeGameResult.gameId.toNumber();
   };
 
-  const clickHandler =
-    async (stake = undefined || 'stake') =>
-    () => {
-      console.log(1);
-
-      createNewGameHandler(!!stake)
-        .then((gameId) => {
-          router.push(`/games/${router.query.gameType}?game=${gameId}`);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    };
+  const clickHandler = async (stake: false | 'stake') => {
+    console.log(1);
+    createNewGameHandler(!!stake)
+      .then((gameId) => {
+        router.push(`/games/${gameType}?game=${gameId}`);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
   return (
     <div className={styles.chooseStake}>
       <div className={styles.gradientBorder}>
-        <button className={styles.stakeButton} onClick={clickHandler()}>
+        <button
+          className={styles.stakeButton}
+          onClick={async (event) => clickHandler(false)}
+        >
           No stake
         </button>
       </div>
       <div className={styles.gradientBorder}>
         <button
           className={styles.stakeButton}
-          onClick={(e: any) => clickHandler('stake')}
+          onClick={async (event) => clickHandler('stake')}
         >
           Stake 1
         </button>
