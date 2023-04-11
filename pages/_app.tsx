@@ -14,11 +14,11 @@ import '@rainbow-me/rainbowkit/styles.css';
 import 'styles/globals.css';
 import XmtpProvider from '../contexts/XmtpProvider';
 
-import { alchemyProvider } from 'wagmi/providers/alchemy'
+import { alchemyProvider } from 'wagmi/providers/alchemy';
 
 const { chains, provider, webSocketProvider } = configureChains(
   [polygon],
-    [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY! })],
+  [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY! })]
 );
 
 const { connectors } = getDefaultWallets({
@@ -39,7 +39,7 @@ const client = new ApolloClient({
   cache,
 });
 
-const version = '1.1.12';
+const version = '1.1.14';
 function MyApp({ Component, pageProps }: AppProps) {
   const props = { ...pageProps, version };
   return (
