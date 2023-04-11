@@ -15,7 +15,6 @@ jobs:
     strategy:
       matrix:
         node-version: [18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
       - uses: actions/checkout@v3
@@ -38,14 +37,17 @@ jobs:
 
   deploy:
     name: Deploy
-    needs: build
-    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+    needs: build
     steps:
-      - name: execute ~/dev/deploy.sh over ssh
-        uses: appleboy/ssh-action@v0.1.6
+      - name: Download all workflow run artifacts
+        uses: actions/download-artifact@v3
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
-          script: /home/gamejutsu/dev/deploy.sh
+          name: id_rsa
+          known_hosts: ${{ secrets.HOST }}
+      - name: Copy artifact to server
+        run: scp gamejutsu-frontend-build-${{ github.run_id }} gamejutsu@gamejutsu.app:/home/gamejutsu/dev/build
