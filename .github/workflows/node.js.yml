@@ -2,11 +2,11 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "**" ]
+    branches: ['**']
     tags:
       - v*
   pull_request:
-    branches: [ "**" ]
+    branches: ['**']
 
 jobs:
   build:
@@ -18,16 +18,22 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm install
-    - run: npm run generate
-    - run: npm run test
-    - run: npm run build
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm install
+      - run: npm run generate
+      - run: npm run test
+      - run: npm run build
+      - name: Save Build Cache
+        id: cache-build-save
+        uses: actions/upload-artifact@v3
+        with:
+          name: my-artifact
+          path: build
 
   deploy:
     name: Deploy
