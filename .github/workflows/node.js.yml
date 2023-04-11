@@ -48,6 +48,6 @@ jobs:
         with:
           key: ${{ secrets.KEY }}
           name: id_rsa
-          known_hosts: ${{ secrets.HOST }}
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
       - name: Copy artifact to server
-        run: scp gamejutsu-frontend-build-${{ github.run_id }} gamejutsu@gamejutsu.app:/home/gamejutsu/dev/build
+        run: scp gamejutsu-frontend-build-${{ github.run_id }} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null gamejutsu@${{secrets.HOST}}:/home/gamejutsu/dev/build
