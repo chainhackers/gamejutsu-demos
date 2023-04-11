@@ -4,6 +4,7 @@ import { RainbowKitProvider, getDefaultWallets } from '@rainbow-me/rainbowkit';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { polygon } from 'wagmi/chains';
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
+import { publicProvider } from 'wagmi/providers/public';
 
 import { Layout } from 'components';
 import { WalletContextProvider } from 'contexts/WalltetContext';
@@ -14,11 +15,16 @@ import '@rainbow-me/rainbowkit/styles.css';
 import 'styles/globals.css';
 import XmtpProvider from '../contexts/XmtpProvider';
 
-import { alchemyProvider } from 'wagmi/providers/alchemy'
+// import { alchemyProvider } from 'wagmi/providers/alchemy';
+
+// const { chains, provider, webSocketProvider } = configureChains(
+//   [polygon],
+//     [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY! })],
+// );
 
 const { chains, provider, webSocketProvider } = configureChains(
   [polygon],
-    [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY! })],
+  [publicProvider()]
 );
 
 const { connectors } = getDefaultWallets({
