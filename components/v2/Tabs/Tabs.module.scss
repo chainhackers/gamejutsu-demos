@@ -2,6 +2,34 @@
   display: flex;
   ul {
     display: flex;
-    gap: 10px;
+    gap: 20px;
+  }
+
+  li {
+    position: relative;
+
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 130%;
+    color: #2e303d;
+
+    cursor: pointer;
+
+    &:not(:last-child) {
+      &::after {
+        content: '';
+        position: absolute;
+        height: 20px;
+        width: 1px;
+        background-color: #2e303d;
+        right: -10px;
+      }
+    }
+  }
+
+  .selected {
+    color: #8777da;
   }
 }

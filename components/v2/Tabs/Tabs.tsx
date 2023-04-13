@@ -3,18 +3,22 @@ import { useState } from 'react';
 import { TabsPropsI } from './TabsProps';
 import styles from './Tabs.module.scss';
 
-export const Tabs: React.FC<TabsPropsI> = () => {
-  const [selectedTab, setSelectedTab] = useState<
-    'Game demo' | 'Join game' | 'My games'
-  >('Game demo');
-
-  const tabsList = ['Game demo', 'Join game', 'My games'];
-
+export const Tabs: React.FC<TabsPropsI> = ({
+  tabsList,
+  selectedTab,
+  onClick,
+}) => {
   return (
     <div className={styles.tabs}>
       <ul className={styles.q}>
         {tabsList.map((tab) => (
-          <li key={tab}>{tab}</li>
+          <li
+            className={selectedTab === tab ? styles.selected : ''}
+            key={tab}
+            onClick={() => onClick(tab)}
+          >
+            {tab}
+          </li>
         ))}
       </ul>
     </div>
