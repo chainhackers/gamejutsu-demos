@@ -8,6 +8,6 @@ export interface SquarePropsI {
     selected: boolean;
     number?: number;
     flip?: boolean;
-    onHandleMove: (undo: boolean, jump: boolean, passMove: boolean) => Promise<void>;
+    onHandleMove: (undo: boolean, passMove: boolean) => Promise<void>;
     lastMove?: TLastMove;
 }
