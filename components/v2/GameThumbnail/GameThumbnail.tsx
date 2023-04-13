@@ -16,8 +16,8 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
   description,
 }) => {
   const { t } = useTranslation();
-  const [rulesState, setRulesState] = useState('');
-  const [startButtonState, setStartButtonState] = useState(false);
+  const [rulesAddress, setRulesAddress] = useState('');
+  const [isStartButtonOpen, setIsStartButtonOpen] = useState(false);
 
   const gameName = t(`gameTypePage.games.${name}`);
   const game = url as TGameType;
@@ -29,7 +29,7 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
 
   useEffect(() => {
     getRulesContract(game).then((response) => {
-      setRulesState(shortenAddress(response.address));
+      setRulesAddress(shortenAddress(response.address));
     });
   }, []);
 
@@ -41,7 +41,7 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
         </div>
         <div className={styles.cardInfo}>
           <div className={styles.name}>{gameName}</div>
-          <div className={styles.address}>{rulesState}</div>
+          <div className={styles.address}>{rulesAddress}</div>
           <div className={styles.description}>{description}</div>
         </div>
       </div>
@@ -57,16 +57,16 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
         </Link>
         {/* <Link href={address ? '/games/' + url + '?prize=true' : `/connect?game=${url}`}>
       </Link> */}
-        <button onClick={() => setStartButtonState(!startButtonState)}>
+        <button onClick={() => setIsStartButtonOpen(!isStartButtonOpen)}>
           Start new game
           <div
             className={
-              styles.play + ' ' + (startButtonState ? styles.active : '')
+              styles.play + ' ' + (isStartButtonOpen ? styles.active : '')
             }
           ></div>
         </button>
       </div>
-      {startButtonState && <SelectPrize gameType={game} />}
+      {isStartButtonOpen && <SelectPrize gameType={game} />}
     </div>
   );
 };
