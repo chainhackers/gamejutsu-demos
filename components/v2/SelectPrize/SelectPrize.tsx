@@ -34,6 +34,9 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({ gameType }) => {
           onClick={async (event) => clickHandler(false)}
         >
           No stake
+          <div className={styles.imageWrapper}>
+            <img src="/images/handshake.png" alt="handshake" />
+          </div>
         </button>
       </div>
       <div className={styles.gradientBorder}>
@@ -42,6 +45,9 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({ gameType }) => {
           onClick={async (event) => clickHandler('stake')}
         >
           Stake 1
+          <div className={styles.imageWrapper}>
+            <img src="/images/matic.png" alt="matic" />
+          </div>
         </button>
       </div>
     </div>
