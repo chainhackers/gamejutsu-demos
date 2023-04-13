@@ -58,7 +58,12 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
         {/* <Link href={address ? '/games/' + url + '?prize=true' : `/connect?game=${url}`}>
       </Link> */}
         <button onClick={() => setStartButtonState(!startButtonState)}>
-          Start new game <div className={styles.play}></div>{' '}
+          Start new game
+          <div
+            className={
+              styles.play + ' ' + (startButtonState ? styles.active : '')
+            }
+          ></div>
         </button>
       </div>
       {startButtonState && <SelectPrize gameType={game} />}
