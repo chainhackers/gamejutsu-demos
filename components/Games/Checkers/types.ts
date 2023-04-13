@@ -3,7 +3,7 @@ import { IGameMove, ISignedGameMove } from "../../../types/arbiter";
 import { defaultAbiCoder } from 'ethers/lib/utils';
 
 export const CHECKERS_STATE_TYPES = ["uint8[32]", "bool", "uint8"]
-export const CHECKERS_MOVE_TYPES = ["uint8", "uint8", "bool", "bool"]
+export const CHECKERS_MOVE_TYPES = ["uint8", "uint8", "bool"]
 
 export function decodeEncodedBoardState(encodedBoardState: string) {
     return defaultAbiCoder.decode(CHECKERS_STATE_TYPES, encodedBoardState);
@@ -27,13 +27,11 @@ export function decodeEncodedBoardState(encodedBoardState: string) {
 
 // @custom from 1-based index of the cell to move from
 //     @custom to 1-based index of the cell to move to
-//     @custom isJump declares if the move is a jump
 //     @custom passMoveToOpponent declares explicitly if the next move is to be done by the opponent
 
 // struct Move {
 //     uint8 from;
 //     uint8 to;
-//     bool isJump;
 //     bool passMoveToOpponent;
 // }
 
@@ -52,29 +50,27 @@ export type TCells = [
     TCellData, TCellData, TCellData, TCellData,
 ];
 
-export type TCheckersContractMove = [number, number, boolean, boolean];
+export type TCheckersContractMove = [number, number, boolean];
 export type TCheckersContractStateAkaBoard = [number[], boolean, number];
 
 export class CHECKERSMove implements IMyGameMove {
     encodedMove: string;
     from: number;
     to: number;
-    isJump: boolean;
     passMoveToOpponent: boolean
     player: TPlayer
 
     private constructor(encodedMove: string, player: TPlayer) {
         this.encodedMove = encodedMove;
-        [this.from, this.to, this.isJump, this.passMoveToOpponent] = defaultAbiCoder.decode(CHECKERS_MOVE_TYPES, encodedMove);
+        [this.from, this.to, this.passMoveToOpponent] = defaultAbiCoder.decode(CHECKERS_MOVE_TYPES, encodedMove);
         this.player = player;
     }
 
     static fromEncoded(encodedMove: string, player: TPlayer): CHECKERSMove {
         return Object.seal(new CHECKERSMove(encodedMove, player));
     }
-
-    static fromMove([from, to, isJump, passMoveToOpponent]: TCheckersContractMove, player: TPlayer): CHECKERSMove {
-        const encodedMove = defaultAbiCoder.encode(CHECKERS_MOVE_TYPES, [from, to, isJump, passMoveToOpponent]);
+    static fromMove([from, to, passMoveToOpponent]: TCheckersContractMove, player: TPlayer): CHECKERSMove {
+        const encodedMove = defaultAbiCoder.encode(CHECKERS_MOVE_TYPES, [from, to, passMoveToOpponent]);
         return Object.seal(new CHECKERSMove(encodedMove, player));
     }
 }
