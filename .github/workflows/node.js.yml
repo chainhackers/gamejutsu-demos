@@ -52,4 +52,4 @@ jobs:
           name: id_rsa
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
       - name: Copy artifact to server
-        run: scp -r ./gamejutsu-frontend-build-${{ github.run_id }} gamejutsu@${{secrets.HOST}}:/home/gamejutsu/dev/build
+        run: scp -r ./gamejutsu-frontend-build-${{ github.run_id }} gamejutsu@${{secrets.HOST}}:/home/gamejutsu/dev/actionsBuilds
