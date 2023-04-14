@@ -17,7 +17,6 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({ gameType }) => {
   };
 
   const clickHandler = async (stake: false | 'stake') => {
-    console.log(1);
     createNewGameHandler(!!stake)
       .then((gameId) => {
         router.push(`/games/${gameType}?game=${gameId}`);
