@@ -58,5 +58,5 @@ jobs:
         with:
           # host: ${{ secrets.HOST }}
           # username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
+          # key: ${{ secrets.KEY }}
           script: /home/gamejutsu/dev/pm2-start-dev.sh ${{ github.run_id }}
