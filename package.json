@@ -6,6 +6,7 @@
     "dev": "next dev",
     "dev-3344": "next dev -p 3344",
     "build": "next build",
+    "export": "next export",
     "start": "next start",
     "start-dev": "next start -p 3355",
     "lint": "next lint",

@@ -27,13 +27,13 @@ jobs:
       - run: npm run generate
       - run: npm run test
       - run: npm run build
-      - run: rm -r ./.next/cache
+      - run: npm run export
       - name: Gamejutsu Frontend Build
         id: gamejutsu-frontend-build
         uses: actions/upload-artifact@v3
         with:
           name: gamejutsu-frontend-build-${{ github.run_id }}
-          path: ./.next
+          path: ./out
 
   deploy:
     name: Deploy
