@@ -54,4 +54,9 @@ jobs:
       - name: Copy artifact to server
         run: scp -r ./gamejutsu-frontend-build-${{ github.run_id }} gamejutsu@${{secrets.HOST}}:/home/gamejutsu/dev/actionsBuilds
       - name: restart deployed build
-        run: ssh gamejutsu@gamejutsu.app "/home/gamejutsu/dev/pm2-start-dev.sh ${{ github.run_id }}"
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          # host: ${{ secrets.HOST }}
+          # username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          script: /home/gamejutsu/dev/pm2-start-dev.sh ${{ github.run_id }}
