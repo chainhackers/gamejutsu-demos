@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './SelectPrize.module.scss';
 import { SelectPrizePropsI } from './SelectPrizeProps';
 import gameApi, { getArbiter, getRulesContract } from 'gameApi';
@@ -10,6 +10,7 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({
   url,
 }) => {
   const router = useRouter();
+  const [isTransactionSending, setIsTransactionSending] = useState(false);
 
   const createNewGameHandler = async (isPaid: boolean = false) => {
     let proposeGameResult: GameProposedEventObject = await gameApi.proposeGame(
@@ -23,11 +24,14 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({
   };
 
   const clickHandler = async (stake: false | 'stake') => {
+    setIsTransactionSending(true);
     createNewGameHandler(!!stake)
       .then((gameId) => {
+        setIsTransactionSending(false);
         router.push(`/games/${gameType}?game=${gameId}`);
       })
       .catch((error) => {
+        setIsTransactionSending(false);
         console.error(error);
       });
   };
