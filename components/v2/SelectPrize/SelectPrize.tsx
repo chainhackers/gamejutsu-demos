@@ -3,8 +3,14 @@ import styles from './SelectPrize.module.scss';
 import { SelectPrizePropsI } from './SelectPrizeProps';
 import gameApi, { getArbiter, getRulesContract } from 'gameApi';
 import { GameProposedEventObject } from '.generated/contracts/esm/types/polygon/Arbiter';
-import router from 'next/router';
-export const SelectPrize: React.FC<SelectPrizePropsI> = ({ gameType }) => {
+import { useRouter } from 'next/router';
+export const SelectPrize: React.FC<SelectPrizePropsI> = ({
+  gameType,
+  address,
+  url,
+}) => {
+  const router = useRouter();
+
   const createNewGameHandler = async (isPaid: boolean = false) => {
     let proposeGameResult: GameProposedEventObject = await gameApi.proposeGame(
       await getArbiter(),
@@ -30,7 +36,9 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({ gameType }) => {
       <div className={styles.gradientBorder}>
         <button
           className={styles.stakeButton}
-          onClick={async (event) => clickHandler(false)}
+          onClick={async (event) =>
+            address ? clickHandler(false) : router.push(`/connect?game=${url}`)
+          }
         >
           No stake
           <div className={styles.imageWrapper}>
@@ -41,7 +49,11 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({ gameType }) => {
       <div className={styles.gradientBorder}>
         <button
           className={styles.stakeButton}
-          onClick={async (event) => clickHandler('stake')}
+          onClick={async (event) =>
+            address
+              ? clickHandler('stake')
+              : router.push(`/connect?game=${url}`)
+          }
         >
           Stake 1
           <div className={styles.imageWrapper}>

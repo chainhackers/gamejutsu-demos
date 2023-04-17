@@ -56,8 +56,6 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
             Join <div className={styles.users}></div>
           </button>
         </Link>
-        {/* <Link href={address ? '/games/' + url + '?prize=true' : `/connect?game=${url}`}>
-      </Link> */}
         <button onClick={() => setIsStartButtonOpen(!isStartButtonOpen)}>
           Start new game
           <div
@@ -67,7 +65,9 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
           ></div>
         </button>
       </div>
-      {isStartButtonOpen && <SelectPrize gameType={game} />}
+      {isStartButtonOpen && (
+        <SelectPrize gameType={game} address={!!address} url={url} />
+      )}
     </div>
   );
 };

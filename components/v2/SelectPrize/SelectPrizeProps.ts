@@ -2,5 +2,7 @@ import { TGameType } from 'types/game';
 
 export interface SelectPrizePropsI {
   children?: React.ReactNode;
-  gameType: TGameType
+  gameType: TGameType;
+  address: boolean;
+  url: string;
 }
