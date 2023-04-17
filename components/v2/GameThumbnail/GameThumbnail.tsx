@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { GameThumbnailPropsI } from './GameThumbnailProps';
 import Image from 'next/image';
 import styles from './GameThumbnail.module.scss';
@@ -37,7 +38,7 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
     <div className={styles.container}>
       <div className={styles.row}>
         <div className={styles.image}>
-          <Image src={image} layout="fill" />
+          <img src={image} alt="game icon" />
         </div>
         <div className={styles.cardInfo}>
           <div className={styles.name}>{gameName}</div>

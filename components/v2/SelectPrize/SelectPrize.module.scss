@@ -2,18 +2,20 @@
   margin-top: 2rem;
   display: flex;
   gap: 10px;
+  width: 100%;
 
   .gradientBorder {
     padding: 2px;
     background: linear-gradient(to left, #8dc8e9, #8c5ae3);
     border-radius: 6px;
+    width: 49%;
 
     .stakeButton {
+      width: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 4px 10px;
-      width: 150px;
       height: 48px;
       background: #ffffff;
       border-radius: 4px;

@@ -26,18 +26,10 @@
 
   .image {
     position: relative;
-    width: 181px;
-    height: 181px;
+    min-width: 64px;
+    min-height: 64px;
     margin-right: 1rem;
-
-    // padding: 78px 59px 77px 58px;
     border-radius: 10px;
-    overflow: hidden;
-
-    @media (max-width: 768px) {
-      width: 64px;
-      height: 64px;
-    }
   }
 
   .name {
@@ -46,6 +38,8 @@
     font-weight: 600;
     font-size: 2rem;
     color: #2e303d;
+    margin-bottom: 2px;
+    line-height: 1;
   }
 
   .description {
@@ -53,9 +47,10 @@
     font-style: normal;
     font-weight: 400;
     font-size: 15px;
-    line-height: 130%;
+    line-height: 1;
     color: #9c9eab;
     text-align: left;
+    margin-bottom: 8px;
   }
 
   .address {
@@ -86,6 +81,11 @@
       font-weight: 600;
       font-size: 1.5rem;
       color: #ffffff;
+      white-space: nowrap;
+
+      @media (max-width: 420px) {
+        font-size: 1.3rem;
+      }
 
       .users {
         margin-left: 9px;

@@ -19,11 +19,12 @@
     font-weight: 400;
     font-size: 15px;
     line-height: 130%;
-    color: #9C9EAB;
+    color: #9c9eab;
+    margin-bottom: 13px;
 
     @media (max-width: 576px) {
       font-size: 22px;
-      padding-left: 0 ;
+      padding-left: 0;
       padding-top: 10px;
     }
   }
