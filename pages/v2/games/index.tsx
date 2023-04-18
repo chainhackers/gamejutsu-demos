@@ -19,7 +19,7 @@ const GamesPage = () => {
         onClick={setSelectedTab}
       />
       {selectedTab === 'Game demo' && <GameDemo games={games} />}
-      {selectedTab === 'My games' && <MyGames />}
+      {selectedTab === 'My games' && <MyGames games={games} />}
       <div className={styles.description}>
         To start or join the game, you will need to make a transaction
       </div>
