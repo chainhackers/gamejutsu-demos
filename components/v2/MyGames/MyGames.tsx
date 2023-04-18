@@ -2,7 +2,7 @@ import React from 'react';
 import { MyGamesPropsI } from './MyGamesProps';
 import styles from './MyGames.module.scss';
 import { GameInfo } from '../GameInfo';
-import { MyGamesList } from '../MyGamesList';
+import { MyGameCard } from '../MyGameCard';
 
 export const MyGames: React.FC<MyGamesPropsI> = ({ games }) => {
   return (
@@ -17,7 +17,7 @@ export const MyGames: React.FC<MyGamesPropsI> = ({ games }) => {
                 name={game.name}
                 url={game.url}
               />
-              <MyGamesList key={game.name + index} />
+              <MyGameCard key={game.name + index} />
             </div>
           );
         })}
