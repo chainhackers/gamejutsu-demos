@@ -46,7 +46,7 @@ const Home: NextPage<IHomePageProps> = () => {
               keep most of the communication off-chain, while keeping the
               guarantees provided by smart contracts
             </p>
-            <button onClick={() => router.push('/games')}>
+            <button onClick={() => router.push('/v2/games')}>
               {' '}
               <Image
                 src="/images/dices.png"
@@ -217,7 +217,7 @@ const Home: NextPage<IHomePageProps> = () => {
             </div>
           </div>
           <div className={styles.buttonMes}>
-            <button onClick={() => router.push('/games')}>
+            <button onClick={() => router.push('/v2/games')}>
               {' '}
               <Image
                 src="/images/dices.png"
