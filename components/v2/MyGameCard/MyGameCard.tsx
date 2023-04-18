@@ -42,7 +42,8 @@ export const MyGameCard: React.FC<MyGameCardPropsI> = () => {
       </div>
       <div className={styles.status}>
         <p className={styles.statusTitle}>{statusTitle}</p>
-        <div className={styles.statusImage}></div>
+        <div className={styles.loader}></div>
+        {/* <div className={styles.statusImage}></div> */}
       </div>
     </div>
   );
