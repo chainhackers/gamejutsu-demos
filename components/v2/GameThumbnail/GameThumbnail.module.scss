@@ -53,13 +53,19 @@
     margin-bottom: 8px;
   }
 
-  .address {
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 15px;
-    line-height: 130%;
-    color: #8777da;
+  .rulesAddress {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 8px;
+
+    .address {
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 500;
+      font-size: 15px;
+      line-height: 130%;
+      color: #8777da;
+    }
   }
 
   .buttons {

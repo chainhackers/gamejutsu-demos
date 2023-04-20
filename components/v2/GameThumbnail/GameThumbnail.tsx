@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { GameThumbnailPropsI } from './GameThumbnailProps';
-import Image from 'next/image';
+
 import styles from './GameThumbnail.module.scss';
 import Link from 'next/link';
 import { useAccount } from 'wagmi';
@@ -9,6 +9,7 @@ import { getRulesContract } from 'gameApi';
 import { TGameType } from 'types/game';
 import { useTranslation } from 'react-i18next';
 import { SelectPrize } from '../SelectPrize';
+import Blockies from 'react-blockies';
 
 export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
   name,
@@ -42,7 +43,14 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
         </div>
         <div className={styles.cardInfo}>
           <div className={styles.name}>{gameName}</div>
-          <div className={styles.address}>{rulesAddress}</div>
+          <div className={styles.rulesAddress}>
+            <Blockies
+              seed={!!address ? address : '0x00000000000'}
+              size={5}
+              className="rounded-full"
+            />
+            <div className={styles.address}>{rulesAddress}</div>
+          </div>
           <div className={styles.description}>{description}</div>
         </div>
       </div>
