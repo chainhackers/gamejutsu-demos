@@ -3,11 +3,13 @@ import React from 'react';
 import { MyGameCardPropsI } from './MyGameCardProps';
 import styles from './MyGameCard.module.scss';
 
-export const MyGameCard: React.FC<MyGameCardPropsI> = () => {
-  const gameId = 742;
-  const proposer = '123';
+export const MyGameCard: React.FC<MyGameCardPropsI> = ({
+  id,
+  stake,
+  proposer,
+  rules,
+}) => {
   const statusTitle = 'Waiting for players';
-  const isFree = true;
   const freeImg = '/images/handshake.png';
   const paidImg = '/images/matic.png';
 
@@ -15,9 +17,9 @@ export const MyGameCard: React.FC<MyGameCardPropsI> = () => {
     <div className={styles.card}>
       <div className={styles.left}>
         <div className={styles.row}>
-          <p className={styles.gameId}>{gameId}</p>
+          <p className={styles.gameId}>{id}</p>
 
-          {isFree ? (
+          {stake === 0 ? (
             <div className={styles.stake}>
               <div className={styles.stakeFrame}>
                 <img src={freeImg} />
