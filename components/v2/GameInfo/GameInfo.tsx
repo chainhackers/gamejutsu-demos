@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { TGameType } from 'types/game';
 import { GameInfoPropsI } from './GameInfoProps';
 import styles from './GameInfo.module.scss';
+import Blockies from 'react-blockies';
 
 export const GameInfo: React.FC<GameInfoPropsI> = ({ name, image, url }) => {
   const { t } = useTranslation();
@@ -18,7 +19,7 @@ export const GameInfo: React.FC<GameInfoPropsI> = ({ name, image, url }) => {
 
   useEffect(() => {
     getRulesContract(game).then((response) => {
-      setRulesAddress(shortenAddress(response.address));
+      setRulesAddress(response.address);
     });
   }, []);
   return (
@@ -28,7 +29,16 @@ export const GameInfo: React.FC<GameInfoPropsI> = ({ name, image, url }) => {
       </div>
       <div className={styles.cardInfo}>
         <div className={styles.name}>{gameName}</div>
-        <div className={styles.address}>{rulesAddress}</div>
+        <div className={styles.address}>
+          <Blockies
+            seed={!!rulesAddress ? rulesAddress : '0x00000000000'}
+            size={5}
+            className="rounded-full"
+          />
+          <div className={styles.rulesAddress}>
+            {shortenAddress(rulesAddress)}
+          </div>
+        </div>
       </div>
     </div>
   );

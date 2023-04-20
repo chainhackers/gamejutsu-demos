@@ -44,6 +44,11 @@
   }
 
   .address {
+    display: flex;
+    gap: 6px;
+  }
+
+  .rulesAddress {
     font-family: 'Inter';
     font-style: normal;
     font-weight: 500;
