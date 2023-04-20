@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { MyGamesListPropsI } from './MyGamesListProps';
-import styles from './MyGames.module.scss';
+import styles from './MyGamesList.module.scss';
 import { MyGameCard } from '../../MyGameCard';
 import gameList from '../../../../data/gameList.json';
 import { getRulesContract } from 'gameApi';
@@ -18,7 +18,7 @@ export const MyGamesList: React.FC<MyGamesListPropsI> = ({ gameType }) => {
   }, []);
 
   return (
-    <div>
+    <div className={styles.gamesList}>
       {myFilteredGames.map((game) => (
         <MyGameCard
           key={game.id}
