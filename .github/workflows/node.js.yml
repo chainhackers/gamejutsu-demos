@@ -2,11 +2,11 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "**" ]
+    branches: ['**']
     tags:
       - v*
   pull_request:
-    branches: [ "**" ]
+    branches: ['**']
 
 jobs:
   build:
@@ -15,30 +15,41 @@ jobs:
     strategy:
       matrix:
         node-version: [18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm install
-    - run: npm run generate
-    - run: npm run test
-    - run: npm run build
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm install
+      - run: npm run generate
+      - run: npm run test
+      - run: npm run build
+      - run: npm run export
+      - name: Gamejutsu Frontend Build
+        id: gamejutsu-frontend-build
+        uses: actions/upload-artifact@v3
+        with:
+          name: gamejutsu-frontend-build-${{ github.run_id }}
+          path: ./out
 
   deploy:
     name: Deploy
-    needs: build
-    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+    needs: build
     steps:
-      - name: execute ~/dev/deploy.sh over ssh
-        uses: appleboy/ssh-action@v0.1.6
+      - name: Download all workflow run artifacts
+        uses: actions/download-artifact@v3
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
-          script: /home/gamejutsu/dev/deploy.sh
+          name: id_rsa
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+      - name: Copy artifact to server
+        run: scp -r ./gamejutsu-frontend-build-${{ github.run_id }} gamejutsu@${{secrets.HOST}}:/home/gamejutsu/dev/actionsBuilds
+      - name: restart deployed build
+        run: ssh gamejutsu@${{secrets.HOST}} "/home/gamejutsu/dev/pm2-start-dev.sh ${{ github.run_id }}"
