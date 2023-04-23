@@ -31,7 +31,7 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
 
   useEffect(() => {
     getRulesContract(game).then((response) => {
-      setRulesAddress(shortenAddress(response.address));
+      setRulesAddress(response.address);
     });
   }, []);
 
@@ -45,11 +45,11 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
           <div className={styles.name}>{gameName}</div>
           <div className={styles.rulesAddress}>
             <Blockies
-              seed={!!address ? address : '0x00000000000'}
+              seed={!!rulesAddress ? rulesAddress : '0x00000000000'}
               size={5}
               className="rounded-full"
             />
-            <div className={styles.address}>{rulesAddress}</div>
+            <div className={styles.address}>{shortenAddress(rulesAddress)}</div>
           </div>
           <div className={styles.description}>{description}</div>
         </div>
