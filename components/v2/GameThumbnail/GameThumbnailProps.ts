@@ -4,4 +4,8 @@ export interface GameThumbnailPropsI {
   image: string;
   url: string;
   description: string;
+  isTransactionPending: boolean;
+  setIsTransactionPending: Function;
+  isRequestConfirmed: boolean;
+  setIsRequestConfirmed: Function;
 }

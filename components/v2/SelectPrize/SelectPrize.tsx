@@ -8,9 +8,12 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({
   gameType,
   address,
   url,
+  isTransactionPending,
+  setIsTransactionPending,
+  isRequestConfirmed,
+  setIsRequestConfirmed,
 }) => {
   const router = useRouter();
-  const [isTransactionSending, setIsTransactionSending] = useState(false);
 
   const createNewGameHandler = async (isPaid: boolean = false) => {
     let proposeGameResult: GameProposedEventObject = await gameApi.proposeGame(
@@ -24,14 +27,16 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({
   };
 
   const clickHandler = async (stake: false | 'stake') => {
-    setIsTransactionSending(true);
+    setIsTransactionPending(true);
     createNewGameHandler(!!stake)
       .then((gameId) => {
-        setIsTransactionSending(false);
+        setIsTransactionPending(false);
+        setIsRequestConfirmed(true);
         router.push(`/games/${gameType}?game=${gameId}`);
       })
       .catch((error) => {
-        setIsTransactionSending(false);
+        setIsTransactionPending(false);
+        setIsRequestConfirmed(false);
         console.error(error);
       });
   };

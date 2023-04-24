@@ -16,6 +16,10 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
   image,
   url,
   description,
+  isTransactionPending,
+  setIsTransactionPending,
+  isRequestConfirmed,
+  setIsRequestConfirmed,
 }) => {
   const { t } = useTranslation();
   const [rulesAddress, setRulesAddress] = useState('');
@@ -74,7 +78,15 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
         </button>
       </div>
       {isStartButtonOpen && (
-        <SelectPrize gameType={game} address={!!address} url={url} />
+        <SelectPrize
+          gameType={game}
+          address={!!address}
+          url={url}
+          isTransactionPending={isTransactionPending}
+          setIsTransactionPending={setIsTransactionPending}
+          isRequestConfirmed={isRequestConfirmed}
+          setIsRequestConfirmed={setIsRequestConfirmed}
+        />
       )}
     </div>
   );
