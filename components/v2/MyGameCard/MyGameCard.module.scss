@@ -130,4 +130,14 @@
       }
     }
   }
+
+  .checkCircle {
+    height: 30px;
+    width: 30px;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+    }
+  }
 }

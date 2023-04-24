@@ -9,9 +9,9 @@ export const MyGameCard: React.FC<MyGameCardPropsI> = ({
   proposer,
   rules,
 }) => {
-  const statusTitle = 'Waiting for players';
-  const freeImg = '/images/handshake.png';
-  const paidImg = '/images/matic.png';
+  const freeImg: string = '/images/handshake.png';
+  const paidImg: string = '/images/matic.png';
+  const isConnected: boolean = false;
 
   return (
     <div className={styles.card}>
@@ -22,14 +22,14 @@ export const MyGameCard: React.FC<MyGameCardPropsI> = ({
           {stake === 0 ? (
             <div className={styles.stake}>
               <div className={styles.stakeFrame}>
-                <img src={freeImg} />
+                <img src={freeImg} alt="handshake" />
               </div>
             </div>
           ) : (
             <div className={styles.stake}>
               <p className={styles.qqq}>1</p>{' '}
               <div className={styles.stakeFrame}>
-                <img src={paidImg} alt="" />
+                <img src={paidImg} alt="matic" />
               </div>
             </div>
           )}
@@ -37,16 +37,26 @@ export const MyGameCard: React.FC<MyGameCardPropsI> = ({
         </div>
         <div className={styles.row}>
           <button className={styles.btn}>Back to game</button>
-          <div className={styles.gradientBorder}>
-            <button className={styles.gradientBtn}>Cancel</button>
-          </div>
+          {!isConnected && (
+            <div className={styles.gradientBorder}>
+              <button className={styles.gradientBtn}>Cancel</button>
+            </div>
+          )}
         </div>
       </div>
-      <div className={styles.status}>
-        <p className={styles.statusTitle}>{statusTitle}</p>
-        <div className={styles.loader}></div>
-        {/* <div className={styles.statusImage}></div> */}
-      </div>
+      {isConnected ? (
+        <div className={styles.status}>
+          <p className={styles.statusTitle}>Connected to game!</p>
+          <div className={styles.checkCircle}>
+            <img src="/images/check-circle.png" alt="" />
+          </div>
+        </div>
+      ) : (
+        <div className={styles.status}>
+          <p className={styles.statusTitle}>Waiting for players</p>
+          <div className={styles.loader}></div>
+        </div>
+      )}
     </div>
   );
 };
