@@ -17,7 +17,10 @@ const en = {
       connect: 'Press to connect',
     },
     frontpage: {
-      introduction: { l1: 'Say goodbye 👋🏼', l2: 'to signing transactions on every game move' },
+      introduction: {
+        l1: 'Say goodbye 👋🏼',
+        l2: 'to signing transactions on every game move',
+      },
       description: {
         l1: 'GameJutsu is a gaming framework to take care of the on-chain / off-chain communication on Web3.',
         l2: 'Launch your awesome game on Web3 with us.',
@@ -29,6 +32,20 @@ const en = {
       games: {
         ticTacToe: 'Tic-Tac-Toe',
         checkers: 'Checkers',
+      },
+    },
+    gamesPage: {
+      gameDemo: {
+        title: 'Try it yourself!',
+        description: 'Experience the protocol. It just works. ✨',
+      },
+      joinGame: {
+        title: 'Join a Game',
+        description: 'Select from one of the sessions to join',
+      },
+      myGames: {
+        title: 'My Games',
+        description: 'You can track and manage your games',
       },
     },
     selectGame: {
@@ -99,9 +116,21 @@ const en = {
       whatToReport: 'What do you want to report?',
       cheating: 'Cheating',
       inactive: 'Inactive',
-      madeAppeal: { cheater: 'Opponent made an appeal to the Game Master you cheated.', runner: 'You appealed cheating to the Game Master.'},
+      madeAppeal: {
+        cheater: 'Opponent made an appeal to the Game Master you cheated.',
+        runner: 'You appealed cheating to the Game Master.',
+      },
       notice: 'Pending decision from Game Master',
-      checking: {checkingWinner: 'Claim win', checkingLoser: 'Please wait for the winner\'s confirmation', checkingDraw: 'Confirm draw', checkingCheat: 'Finish game', winner: 'You win', loser: 'You lose',  draw: 'It\'s a draw',  cheatGame: 'The game ended with a cheat move',},
+      checking: {
+        checkingWinner: 'Claim win',
+        checkingLoser: "Please wait for the winner's confirmation",
+        checkingDraw: 'Confirm draw',
+        checkingCheat: 'Finish game',
+        winner: 'You win',
+        loser: 'You lose',
+        draw: "It's a draw",
+        cheatGame: 'The game ended with a cheat move',
+      },
     },
     wins: 'wins!',
     players: {
@@ -113,13 +142,15 @@ const en = {
         init: 'Init timeout',
       },
       legend: {
-        finish: 'You can finish timeout if you decide to stop forcing you opponent fo move.',
-        resolve: 'You can reslove timeout after you make a move if timeout is requested',
+        finish:
+          'You can finish timeout if you decide to stop forcing you opponent fo move.',
+        resolve:
+          'You can reslove timeout after you make a move if timeout is requested',
         init: 'You can initiate timeout to force your opponent to make a new move.',
-      }
+      },
     },
     leftpanel: {
-      'gameId': 'Game ID'
+      gameId: 'Game ID',
     },
     games: {
       checkers: {
@@ -127,9 +158,10 @@ const en = {
           notice: 'Checkers rules notice',
           s1: 'This protocol demo shows the Arbiter using',
           l1: 'Checkers rules',
-          s2: 'to judge if the game is played fair and square.The twist here is that a single move contains only one checker position change, i.e.when a player jumps multiple times, that is recorded as a sequence of separate moves, each containing one jump and a flag indicating who\'s to move next. This may not be the smoothest UX, it is done to demonstrate ways of encoding game rules on-chain that don\'t require complicated programming.'}
-      }
-    }
+          s2: "to judge if the game is played fair and square.The twist here is that a single move contains only one checker position change, i.e.when a player jumps multiple times, that is recorded as a sequence of separate moves, each containing one jump and a flag indicating who's to move next. This may not be the smoothest UX, it is done to demonstrate ways of encoding game rules on-chain that don't require complicated programming.",
+        },
+      },
+    },
   },
 };
 

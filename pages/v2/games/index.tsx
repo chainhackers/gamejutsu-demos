@@ -13,8 +13,31 @@ const GamesPage = () => {
   const tabsList = ['Game demo', 'Join game', 'My games'];
   return (
     <div className={styles.container}>
-      <h3 className={styles.title}>{t('gameTypePage.title')}</h3>
-      <div className={styles.description}>{t('gameTypePage.description')}</div>
+      {selectedTab === 'Game demo' && (
+        <>
+          <h3 className={styles.title}>{t('gamesPage.gameDemo.title')}</h3>
+          <div className={styles.description}>
+            {t('gamesPage.gameDemo.description')}
+          </div>
+        </>
+      )}
+      {selectedTab === 'Join game' && (
+        <>
+          <h3 className={styles.title}>{t('gamesPage.joinGame.title')}</h3>
+          <div className={styles.description}>
+            {t('gamesPage.joinGame.description')}
+          </div>
+        </>
+      )}
+
+      {selectedTab === 'My games' && (
+        <>
+          <h3 className={styles.title}>{t('gamesPage.myGames.title')}</h3>
+          <div className={styles.description}>
+            {t('gamesPage.myGames.description')}
+          </div>
+        </>
+      )}
       <Tabs
         tabsList={tabsList}
         selectedTab={selectedTab}
