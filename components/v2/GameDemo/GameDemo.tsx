@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { Modal } from '../Modal/Modal';
 
 export const GameDemo: React.FC<GameDemoPropsI> = ({ games }) => {
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
   const [isTransactionPending, setIsTransactionPending] =
     useState<boolean>(false);
   const [isRequestConfirmed, setIsRequestConfirmed] = useState<boolean>(false);
@@ -37,8 +37,8 @@ export const GameDemo: React.FC<GameDemoPropsI> = ({ games }) => {
           </div>
         </Modal>
       )}
-      <h3 className={styles.title}>{t('gameTypePage.title')}</h3>
-      <div className={styles.description}>{t('gameTypePage.description')}</div>
+      {/* <h3 className={styles.title}>{t('gameTypePage.title')}</h3>
+      <div className={styles.description}>{t('gameTypePage.description')}</div> */}
 
       <div className={styles.gamelist}>
         {games &&
