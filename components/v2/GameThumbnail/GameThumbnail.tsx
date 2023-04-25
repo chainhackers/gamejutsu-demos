@@ -65,7 +65,10 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
           }
         >
           <button>
-            Join <div className={styles.users}></div>
+            Join{' '}
+            <div className={styles.users}>
+              <img src="/images/users.svg" alt="" />
+            </div>
           </button>
         </Link>
         <button onClick={() => setIsStartButtonOpen(!isStartButtonOpen)}>
@@ -74,7 +77,9 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
             className={
               styles.play + ' ' + (isStartButtonOpen ? styles.active : '')
             }
-          ></div>
+          >
+            <img src="/images/play.svg" alt="" />
+          </div>
         </button>
       </div>
       {isStartButtonOpen && (

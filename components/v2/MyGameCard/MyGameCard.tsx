@@ -9,8 +9,8 @@ export const MyGameCard: React.FC<MyGameCardPropsI> = ({
   proposer,
   rules,
 }) => {
-  const freeImg: string = '/images/handshake.png';
-  const paidImg: string = '/images/matic.png';
+  const freeImg: string = '/images/handshake.svg';
+  const paidImg: string = '/images/matic.svg';
   const isConnected: boolean = false;
 
   return (
@@ -27,7 +27,7 @@ export const MyGameCard: React.FC<MyGameCardPropsI> = ({
             </div>
           ) : (
             <div className={styles.stake}>
-              <p className={styles.qqq}>1</p>{' '}
+              <p className={styles.stakeAmount}>1</p>{' '}
               <div className={styles.stakeFrame}>
                 <img src={paidImg} alt="matic" />
               </div>

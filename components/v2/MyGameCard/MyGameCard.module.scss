@@ -16,6 +16,7 @@
 .row {
   display: flex;
   flex-direction: row;
+  align-items: center;
 
   &:not(:last-child) {
     margin-bottom: 12px;
@@ -41,11 +42,24 @@
   color: #2e303d;
 }
 
-.stakeFrame {
-  margin-right: 15px;
-  width: 30px;
-  img {
-    margin-top: -3px;
+.stake {
+  display: flex;
+  width: 50px;
+
+  .stakeAmount {
+    margin-right: 3px;
+    margin-left: -3px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 15px;
+    color: #2e303d;
+  }
+
+  .stakeFrame {
+    img {
+      margin-top: -1px;
+    }
   }
 }
 
