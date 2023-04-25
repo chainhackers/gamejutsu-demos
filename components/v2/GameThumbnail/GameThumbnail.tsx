@@ -60,9 +60,7 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
       </div>
       <div className={styles.buttons}>
         <Link
-          href={
-            address ? '/games/' + url + '?join=true' : `/connect?game=${url}`
-          }
+          href={address ? `/games/${url}?join=true` : `/connect?game=${url}`}
         >
           <button>
             Join{' '}
