@@ -33,6 +33,10 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
     return str.slice(0, 5) + '...' + str.slice(-4);
   }
 
+  function toggleStartButton() {
+    setIsStartButtonOpen(!isStartButtonOpen);
+  }
+
   useEffect(() => {
     getRulesContract(game).then((response) => {
       setRulesAddress(response.address);
@@ -69,7 +73,7 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
             </div>
           </button>
         </Link>
-        <button onClick={() => setIsStartButtonOpen(!isStartButtonOpen)}>
+        <button onClick={toggleStartButton}>
           Start new game
           <div
             className={
