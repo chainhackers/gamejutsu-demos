@@ -2,10 +2,7 @@
 import type { GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
-import { useTranslation } from 'react-i18next';
 import styles from '../styles/Home.module.scss';
-// import styles from './/Home.module.scss';
-// import 'i18n/index';
 
 import companies from 'data/partners.json';
 import { useRouter } from 'next/router';
@@ -14,8 +11,6 @@ interface IHomePageProps {
   partners: { image: string; name: string; href: string }[];
 }
 const Home: NextPage<IHomePageProps> = () => {
-  const { t } = useTranslation();
-
   const router = useRouter();
 
   return (
