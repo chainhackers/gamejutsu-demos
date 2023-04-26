@@ -48,15 +48,19 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({
         console.error(error);
       });
   };
+
+  const createFreeGameHandler = async () => {
+    address ? clickHandler(false) : router.push(`/connect?game=${url}`);
+  };
+
+  const createPaidGameHandler = async () => {
+    address ? clickHandler('stake') : router.push(`/connect?game=${url}`);
+  };
+
   return (
     <div className={styles.chooseStake}>
       <div className={styles.gradientBorder}>
-        <button
-          className={styles.stakeButton}
-          onClick={async (event) =>
-            address ? clickHandler(false) : router.push(`/connect?game=${url}`)
-          }
-        >
+        <button className={styles.stakeButton} onClick={createFreeGameHandler}>
           No stake
           <div className={styles.imageWrapper}>
             <img src="/images/handshake.svg" alt="handshake" />
@@ -64,14 +68,7 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({
         </button>
       </div>
       <div className={styles.gradientBorder}>
-        <button
-          className={styles.stakeButton}
-          onClick={async (event) =>
-            address
-              ? clickHandler('stake')
-              : router.push(`/connect?game=${url}`)
-          }
-        >
+        <button className={styles.stakeButton} onClick={createPaidGameHandler}>
           Stake 1
           <div className={styles.imageWrapper}>
             <img src="/images/matic.svg" alt="matic" />
