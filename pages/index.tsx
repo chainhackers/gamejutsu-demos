@@ -14,7 +14,7 @@ const Home: NextPage<IHomePageProps> = () => {
   const router = useRouter();
 
   function redirectToGamesPage() {
-    router.push('/games');
+    router.push('/v2/games');
   }
 
   function redirectToTeamPage() {
