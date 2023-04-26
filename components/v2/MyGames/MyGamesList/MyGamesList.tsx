@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { MyGamesListPropsI } from './MyGamesListProps';
 import styles from './MyGamesList.module.scss';
 import { MyGameCard } from '../../MyGameCard';
-import gameList from '../../../../data/gameList.json';
+import gameList from '../../../../__fixtures__/gameList.json';
 import { getRulesContract } from 'gameApi';
 
 export const MyGamesList: React.FC<MyGamesListPropsI> = ({ gameType }) => {
