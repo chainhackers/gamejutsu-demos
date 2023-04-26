@@ -13,6 +13,14 @@ interface IHomePageProps {
 const Home: NextPage<IHomePageProps> = () => {
   const router = useRouter();
 
+  function redirectToGamesPage() {
+    router.push('/games');
+  }
+
+  function redirectToTeamPage() {
+    router.push('/team');
+  }
+
   return (
     <div className={styles.container}>
       <Head>
@@ -41,7 +49,7 @@ const Home: NextPage<IHomePageProps> = () => {
               keep most of the communication off-chain, while keeping the
               guarantees provided by smart contracts
             </p>
-            <button onClick={() => router.push('/v2/games')}>
+            <button onClick={redirectToGamesPage}>
               {' '}
               <Image
                 src="/images/dices.png"
@@ -212,7 +220,7 @@ const Home: NextPage<IHomePageProps> = () => {
             </div>
           </div>
           <div className={styles.buttonMes}>
-            <button onClick={() => router.push('/v2/games')}>
+            <button onClick={redirectToGamesPage}>
               {' '}
               <Image
                 src="/images/dices.png"
@@ -231,9 +239,7 @@ const Home: NextPage<IHomePageProps> = () => {
               <a href="https://github.com/ChainHackers/GameJutsu#readme">
                 GitHub Documentation
               </a>
-              <button onClick={() => router.push('/team')}>
-                Meet our team
-              </button>
+              <button onClick={redirectToTeamPage}>Meet our team</button>
             </div>
           </div>
           <div className={styles.socialSet}>
