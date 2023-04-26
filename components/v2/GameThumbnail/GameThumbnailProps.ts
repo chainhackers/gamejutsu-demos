@@ -8,4 +8,6 @@ export interface GameThumbnailPropsI {
   setIsTransactionPending: Function;
   isRequestConfirmed: boolean;
   setIsRequestConfirmed: Function;
+  transactionLink: string;
+  setTransactionLink: Function;
 }

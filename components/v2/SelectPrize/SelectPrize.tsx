@@ -12,16 +12,26 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({
   setIsTransactionPending,
   isRequestConfirmed,
   setIsRequestConfirmed,
+  transactionLink,
+  setTransatctionLink,
 }) => {
   const router = useRouter();
 
+  async function test(hash: any) {
+    console.log('test optional callback function');
+    setIsTransactionPending(false);
+    setIsRequestConfirmed(true);
+    const address = await hash;
+    setTransatctionLink(address.hash);
+  }
   const createNewGameHandler = async (isPaid: boolean = false) => {
     let proposeGameResult: GameProposedEventObject = await gameApi.proposeGame(
       await getArbiter(),
       (
         await getRulesContract(gameType)
       ).address,
-      isPaid
+      isPaid,
+      test
     );
     return proposeGameResult.gameId.toNumber();
   };
@@ -30,8 +40,6 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({
     setIsTransactionPending(true);
     createNewGameHandler(!!stake)
       .then((gameId) => {
-        setIsTransactionPending(false);
-        setIsRequestConfirmed(true);
         router.push(`/games/${gameType}?game=${gameId}`);
       })
       .catch((error) => {
@@ -51,7 +59,7 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({
         >
           No stake
           <div className={styles.imageWrapper}>
-            <img src="/images/handshake.png" alt="handshake" />
+            <img src="/images/handshake.svg" alt="handshake" />
           </div>
         </button>
       </div>
@@ -66,7 +74,7 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({
         >
           Stake 1
           <div className={styles.imageWrapper}>
-            <img src="/images/matic.png" alt="matic" />
+            <img src="/images/matic.svg" alt="matic" />
           </div>
         </button>
       </div>

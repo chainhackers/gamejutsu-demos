@@ -2,7 +2,7 @@ import { BigNumber, ethers } from 'ethers';
 import { createSessionWallet, getSessionWallet } from 'helpers/session_signatures';
 import { IGameMove, ISignedGameMove } from "../types/arbiter";
 import { TContractGameState } from 'components/Games/types';
-import { GameProposedEventObject, GameStartedEventObject } from "../.generated/contracts/esm/types/polygon/Arbiter";
+import { Arbiter, GameProposedEventObject, GameStartedEventObject } from "../.generated/contracts/esm/types/polygon/Arbiter";
 import { getPolygonSdk} from "../.generated/contracts";
 import { TGameType } from 'types/game';
 import { fetchSigner } from '@wagmi/core';
@@ -10,7 +10,7 @@ import { fetchSigner } from '@wagmi/core';
 const provider = new ethers.providers.AlchemyProvider('matic', process.env.NEXT_PUBLIC_ALCHEMY_API_KEY!);
 const getSdk = async () => getPolygonSdk(await getSigner())
 const getSdkRead = () => getPolygonSdk(provider);
-export const getArbiter = async () => (await getSdk()).arbiter;
+export const getArbiter: ()=>Promise<Arbiter> = async () => (await getSdk()).arbiter;
 export const getArbiterRead = async () => getSdkRead().arbiter;
 
 export const getRulesContract = async (gameType: TGameType): Promise<ethers.Contract> => {
@@ -247,9 +247,10 @@ export const proposeGame = async (
   contract: ethers.Contract,
   rulesContractAddress: string,
   isPaid?: boolean,
+  txCreatedCallback?: (hash: string) => void,
 ): Promise<GameProposedEventObject> => {
   console.log('GameAPI proposeGame:', contract, 'rulesContractAddress: ', rulesContractAddress);
-  const value = ethers.BigNumber.from(10).pow(16);
+  const value = ethers.BigNumber.from(10).pow(16); // 0.01
 
   const address = await (await getSigner()).getAddress();
 
@@ -264,10 +265,10 @@ export const proposeGame = async (
     gasLimit: gasEstimated.mul(2),
     value: isPaid ? value : null,
   });
-
   console.log('GameAPI proposeGame: tx = ', tx);
   const txResult = await tx;
   console.log('GameAPI proposeGame: txResult = ', txResult);
+  txCreatedCallback && txCreatedCallback(tx);
   const rc = txResult.wait();
   console.log('GameAPI proposeGame: rc = ', rc);
   const rcResult = await rc;

@@ -4,12 +4,13 @@ import styles from './GameDemo.module.scss';
 import { GameDemoPropsI } from './GameDemoProps';
 import { useState } from 'react';
 import { Modal } from '../Modal/Modal';
+import Link from 'next/link';
 
 export const GameDemo: React.FC<GameDemoPropsI> = ({ games }) => {
-  // const { t } = useTranslation();
   const [isTransactionPending, setIsTransactionPending] =
     useState<boolean>(false);
   const [isRequestConfirmed, setIsRequestConfirmed] = useState<boolean>(false);
+  const [transactionLink, setTransactionLink] = useState<string>('');
   return (
     <div className={styles.container}>
       {isTransactionPending && (
@@ -31,14 +32,16 @@ export const GameDemo: React.FC<GameDemoPropsI> = ({ games }) => {
             <h4 className={styles.modalTitle}>Pending Transaction</h4>
             <p className={styles.modalSubtitle}>Game Creation</p>
             <div className={styles.loader}></div>
-            <p className={styles.modalDescriptionGradient}>
+            <a
+              href={`https://polygonscan.com/tx/${transactionLink}`}
+              target="_blank"
+              className={styles.modalDescriptionGradient}
+            >
               See in blockchain explorer
-            </p>
+            </a>
           </div>
         </Modal>
       )}
-      {/* <h3 className={styles.title}>{t('gameTypePage.title')}</h3>
-      <div className={styles.description}>{t('gameTypePage.description')}</div> */}
 
       <div className={styles.gamelist}>
         {games &&
@@ -54,6 +57,8 @@ export const GameDemo: React.FC<GameDemoPropsI> = ({ games }) => {
                 setIsTransactionPending={setIsTransactionPending}
                 isRequestConfirmed={isRequestConfirmed}
                 setIsRequestConfirmed={setIsRequestConfirmed}
+                transactionLink={transactionLink}
+                setTransactionLink={setTransactionLink}
               />
             );
           })}
