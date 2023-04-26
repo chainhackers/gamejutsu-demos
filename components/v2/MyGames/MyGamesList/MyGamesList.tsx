@@ -4,6 +4,7 @@ import styles from './MyGamesList.module.scss';
 import { MyGameCard } from '../../MyGameCard';
 import gameList from '../../../../__fixtures__/gameList.json';
 import { getRulesContract } from 'gameApi';
+import {shortenAddress} from 'helpers/utils';
 
 export const MyGamesList: React.FC<MyGamesListPropsI> = ({ gameType }) => {
   const myAddress = '0xdC5f32DEc4253Bd61092294B45AfB834C0BD2938';
@@ -16,9 +17,6 @@ export const MyGamesList: React.FC<MyGamesListPropsI> = ({ gameType }) => {
       setRulesAddress(response.address);
     });
   }, []);
-  function shortenAddress(str: string) {
-    return `${str.slice(0, 5)}...${str.slice(-4)}`;
-  }
 
   return (
     <div className={styles.gamesList}>

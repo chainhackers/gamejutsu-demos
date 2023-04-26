@@ -5,6 +5,7 @@ import { TGameType } from 'types/game';
 import { GameInfoPropsI } from './GameInfoProps';
 import styles from './GameInfo.module.scss';
 import Blockies from 'react-blockies';
+import {shortenAddress} from 'helpers/utils';
 
 export const GameInfo: React.FC<GameInfoPropsI> = ({ name, image, url }) => {
   const { t } = useTranslation();
@@ -13,9 +14,6 @@ export const GameInfo: React.FC<GameInfoPropsI> = ({ name, image, url }) => {
   const gameName = t(`gameTypePage.games.${name}`);
   const game = url as TGameType;
 
-  function shortenAddress(str: string) {
-    return str.slice(0, 5) + '...' + str.slice(-4);
-  }
 
   useEffect(() => {
     getRulesContract(game).then((response) => {

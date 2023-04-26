@@ -10,6 +10,7 @@ import { TGameType } from 'types/game';
 import { useTranslation } from 'react-i18next';
 import { SelectPrize } from '../SelectPrize';
 import Blockies from 'react-blockies';
+import {shortenAddress} from 'helpers/utils';
 
 export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
   name,
@@ -30,10 +31,6 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
   const gameName = t(`gameTypePage.games.${name}`);
   const game = url as TGameType;
   const { address } = useAccount();
-
-  function shortenAddress(str: string) {
-    return str.slice(0, 5) + '...' + str.slice(-4);
-  }
 
   function toggleStartButton() {
     setIsStartButtonOpen(!isStartButtonOpen);
