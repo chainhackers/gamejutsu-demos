@@ -1,0 +1,115 @@
+.container {
+  width: 100%;
+  position: relative;
+  background-color: #ffffff;
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1.6rem;
+  margin-bottom: 1.2rem;
+
+  .row {
+    display: flex;
+    width: 100%;
+  }
+
+  .cardInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .image {
+    position: relative;
+    min-width: 64px;
+    min-height: 64px;
+    margin-right: 1rem;
+    border-radius: 10px;
+  }
+
+  .name {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 2rem;
+    color: #2e303d;
+    margin-bottom: 2px;
+    line-height: 1;
+  }
+
+  .description {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1;
+    color: #9c9eab;
+    text-align: left;
+    margin-bottom: 8px;
+  }
+
+  .rulesAddress {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 8px;
+
+    .address {
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 500;
+      font-size: 15px;
+      line-height: 130%;
+      color: #8777da;
+    }
+  }
+
+  .buttons {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 2rem;
+
+    button {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      padding: 4px 14px 4px 14px;
+
+      background: linear-gradient(225.67deg, #8dc8e9 3.57%, #8c5ae3 115.97%);
+      border-radius: 60px;
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 600;
+      font-size: 1.5rem;
+      color: #ffffff;
+      white-space: nowrap;
+
+      @media (max-width: 420px) {
+        font-size: 1.3rem;
+      }
+
+      .users {
+        margin-left: 5px;
+        width: 24px;
+        height: 24px;
+      }
+
+      .play {
+        margin-left: 9px;
+        margin-top: 2px;
+        width: 14px;
+        height: 14px;
+        img {
+          transition: transform 0.1s ease-in-out;
+        }
+      }
+      .active {
+        img {
+          transform: rotate(90deg);
+        }
+      }
+    }
+  }
+}

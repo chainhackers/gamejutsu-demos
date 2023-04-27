@@ -1,0 +1,157 @@
+.card {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  gap: 10px;
+
+  width: 100%;
+
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  &:not(:last-child) {
+    margin-bottom: 12px;
+  }
+}
+
+.left {
+  margin-right: auto;
+}
+
+.load {
+  margin-left: auto;
+}
+
+.gameId {
+  margin-right: 15px;
+
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 130%;
+  color: #2e303d;
+}
+
+.stake {
+  display: flex;
+  width: 50px;
+
+  .stakeAmount {
+    margin-right: 3px;
+    margin-left: -3px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 15px;
+    color: #2e303d;
+  }
+
+  .stakeFrame {
+    img {
+      margin-top: -1px;
+    }
+  }
+}
+
+.proposer {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 130%;
+  color: #2e303d;
+}
+
+.btn {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 12px 4px 14px;
+  margin-right: 10px;
+  background: linear-gradient(225.67deg, #8dc8e9 3.57%, #8c5ae3 115.97%);
+  border-radius: 60px;
+
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 130%;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+.gradientBorder {
+  padding: 2px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(to left, #8dc8e9, #8c5ae3);
+  border-radius: 60px;
+
+  .gradientBtn {
+    padding: 4px 12px 4px 14px;
+    background-color: #ffffff;
+    border-radius: 60px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 130%;
+    color: #8777da;
+  }
+}
+
+.status {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  .statusTitle {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 10px;
+    line-height: 130%;
+    text-align: center;
+    color: #9c9eab;
+  }
+
+  .loader {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #8dc8e9;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 2s linear infinite;
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(720deg);
+      }
+    }
+  }
+
+  .checkCircle {
+    height: 30px;
+    width: 30px;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+    }
+  }
+}
