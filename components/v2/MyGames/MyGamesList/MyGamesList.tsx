@@ -4,7 +4,7 @@ import styles from './MyGamesList.module.scss';
 import { MyGameCard } from '../../MyGameCard';
 import gameList from '../../../../__fixtures__/gameList.json';
 import { getRulesContract } from 'gameApi';
-import {shortenAddress} from 'helpers/utils';
+import { shortenAddress } from 'helpers/utils';
 
 export const MyGamesList: React.FC<MyGamesListPropsI> = ({ gameType }) => {
   const myAddress = '0xdC5f32DEc4253Bd61092294B45AfB834C0BD2938';
@@ -20,15 +20,19 @@ export const MyGamesList: React.FC<MyGamesListPropsI> = ({ gameType }) => {
 
   return (
     <div className={styles.gamesList}>
-      {myFilteredGames.map((game) => (
-        <MyGameCard
-          key={game.id}
-          id={game.id}
-          stake={game.stake}
-          proposer={shortenAddress(game.proposer)}
-          rules={game.rules}
-        />
-      ))}
+      {myFilteredGames.length > 0 ? (
+        myFilteredGames.map((game) => (
+          <MyGameCard
+            key={game.id}
+            id={game.id}
+            stake={game.stake}
+            proposer={shortenAddress(game.proposer)}
+            rules={game.rules}
+          />
+        ))
+      ) : (
+        <p className={styles.noGames}>You have no games in this section</p>
+      )}
     </div>
   );
 };
