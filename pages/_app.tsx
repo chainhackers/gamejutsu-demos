@@ -15,16 +15,11 @@ import '@rainbow-me/rainbowkit/styles.css';
 import 'styles/globals.css';
 import XmtpProvider from '../contexts/XmtpProvider';
 
-// import { alchemyProvider } from 'wagmi/providers/alchemy';
-
-// const { chains, provider, webSocketProvider } = configureChains(
-//   [polygon],
-//     [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY! })],
-// );
+import { alchemyProvider } from 'wagmi/providers/alchemy';
 
 const { chains, provider, webSocketProvider } = configureChains(
   [polygon],
-  [publicProvider()]
+  [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY! })]
 );
 
 const { connectors } = getDefaultWallets({
