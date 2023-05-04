@@ -11,7 +11,7 @@
   margin-bottom: 10px;
 
   @media (max-width: 370px) {
-    grid-template-columns: 8% 16% 50% 26%;
+    grid-template-columns: 14% 16% 46% 23%;
   }
 
   .gameId {
@@ -84,6 +84,9 @@
 
     img {
       margin-left: 2px;
+      @media (max-width: 370px) {
+        display: none;
+      }
     }
   }
 }
