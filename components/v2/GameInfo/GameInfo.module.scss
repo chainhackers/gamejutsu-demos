@@ -1,0 +1,59 @@
+.container {
+  width: 100%;
+  position: relative;
+  background-color: #ffffff;
+  display: flex;
+  align-items: flex-start;
+  &:not(:last-child) {
+    margin-bottom: 1.2rem;
+  }
+
+  .cardInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .image {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    margin-right: 1rem;
+    border-radius: 10px;
+  }
+
+  .name {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 2rem;
+    color: #2e303d;
+    margin-bottom: 2px;
+    line-height: 1;
+  }
+
+  .description {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1;
+    color: #9c9eab;
+    text-align: left;
+    margin-bottom: 8px;
+  }
+
+  .address {
+    display: flex;
+    gap: 6px;
+  }
+
+  .rulesAddress {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 130%;
+    color: #8777da;
+  }
+}

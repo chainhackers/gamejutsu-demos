@@ -29,7 +29,7 @@ const ConnectPage = () => {
             title={t('buttons.play')}
             color="black"
             borderless
-            onClick={() => router.push(`games/${router.query.game}?select=true`)}
+            onClick={() => router.push(`/v2/games`)}
           />
         </div>
       )}

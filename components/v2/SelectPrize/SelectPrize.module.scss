@@ -1,0 +1,43 @@
+.chooseStake {
+  margin-top: 2rem;
+  display: flex;
+  gap: 10px;
+  width: 100%;
+
+  .gradientBorder {
+    padding: 2px;
+    background: linear-gradient(to left, #8dc8e9, #8c5ae3);
+    border-radius: 6px;
+    width: 49%;
+
+    .stakeButton {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 4px 10px;
+      height: 48px;
+      background: #ffffff;
+      border-radius: 4px;
+      border-radius: 4px;
+
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 600;
+      font-size: 15px;
+      line-height: 130%;
+      color: #8777da;
+
+      .imageWrapper {
+        overflow: hidden;
+        height: 24px;
+        width: 24px;
+        margin-left: 4px;
+
+        img {
+          width: 100%;
+        }
+      }
+    }
+  }
+}

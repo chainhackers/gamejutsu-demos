@@ -2,10 +2,7 @@
 import type { GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
-import { useTranslation } from 'react-i18next';
 import styles from '../styles/Home.module.scss';
-// import styles from './/Home.module.scss';
-// import 'i18n/index';
 
 import companies from 'data/partners.json';
 import { useRouter } from 'next/router';
@@ -14,9 +11,15 @@ interface IHomePageProps {
   partners: { image: string; name: string; href: string }[];
 }
 const Home: NextPage<IHomePageProps> = () => {
-  const { t } = useTranslation();
-
   const router = useRouter();
+
+  function redirectToGamesPage() {
+    router.push('/v2/games');
+  }
+
+  function redirectToTeamPage() {
+    router.push('/team');
+  }
 
   return (
     <div className={styles.container}>
@@ -46,7 +49,7 @@ const Home: NextPage<IHomePageProps> = () => {
               keep most of the communication off-chain, while keeping the
               guarantees provided by smart contracts
             </p>
-            <button onClick={() => router.push('/games')}>
+            <button onClick={redirectToGamesPage}>
               {' '}
               <Image
                 src="/images/dices.png"
@@ -217,7 +220,7 @@ const Home: NextPage<IHomePageProps> = () => {
             </div>
           </div>
           <div className={styles.buttonMes}>
-            <button onClick={() => router.push('/games')}>
+            <button onClick={redirectToGamesPage}>
               {' '}
               <Image
                 src="/images/dices.png"
@@ -236,9 +239,7 @@ const Home: NextPage<IHomePageProps> = () => {
               <a href="https://github.com/ChainHackers/GameJutsu#readme">
                 GitHub Documentation
               </a>
-              <button onClick={() => router.push('/team')}>
-                Meet our team
-              </button>
+              <button onClick={redirectToTeamPage}>Meet our team</button>
             </div>
           </div>
           <div className={styles.socialSet}>

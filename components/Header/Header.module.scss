@@ -39,8 +39,23 @@
 
 .customConnect {
   padding: 1rem 1.6rem;
-  color: #FFFFFF;
-  background:  linear-gradient(225.67deg, #8DC8E9 3.57%, #8C5AE3 115.97%), #5F5AFA;
+  color: #ffffff;
+  background: linear-gradient(225.67deg, #8dc8e9 3.57%, #8c5ae3 115.97%),
+    #5f5afa;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 14px;
+  margin-right: 10px;
+
+  @media (max-width: 576px) {
+    font-size: 12px;
+  }
+}
+
+.customConnect {
+  padding: 1rem 1.6rem;
+  color: #ffffff;
+  background: linear-gradient(225.67deg, #8dc8e9 3.57%, #8c5ae3 115.97%),
+    #5f5afa;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
   border-radius: 14px;
   margin-right: 10px;
