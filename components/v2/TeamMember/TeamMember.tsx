@@ -30,12 +30,7 @@ export const TeamMember: React.FC<TeamMemberPropsI> = ({
               <a target="_blank">
                 <div className={styles.contactsElement}>
                   <p className={styles.contactText}>{contact.type}</p>
-                  <Image
-                    // className={styles.contactImg}
-                    src={contact.image}
-                    width="24px"
-                    height="24px"
-                  />
+                  <Image src={contact.image} width="24px" height="24px" />
                 </div>
               </a>
             </Link>
