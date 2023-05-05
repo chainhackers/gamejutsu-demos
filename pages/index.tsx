@@ -200,6 +200,7 @@ const Home: NextPage<IHomePageProps> = () => {
               <a href="https://xmtp.org/">
                 <Image
                   src="/images/xmtp-logo.png"
+                  style={{ borderRadius: '5px' }}
                   alt=""
                   width="40px"
                   height="40px"
@@ -210,7 +211,7 @@ const Home: NextPage<IHomePageProps> = () => {
             <div className={styles.itemMes}>
               <a href="https://thegraph.com/en/">
                 <Image
-                  src="/images/the-graph-logo.png"
+                  src="/images/graph.svg"
                   alt=""
                   width="40px"
                   height="40px"
@@ -221,7 +222,7 @@ const Home: NextPage<IHomePageProps> = () => {
             <div className={styles.itemMes}>
               <a href="https://polygon.technology/">
                 <Image
-                  src="/images/polygon-logo.png"
+                  src="/images/polygon.svg"
                   alt=""
                   width="40px"
                   height="40px"
@@ -232,7 +233,8 @@ const Home: NextPage<IHomePageProps> = () => {
             <div className={styles.itemMes}>
               <a href="https://www.sismo.io/">
                 <Image
-                  src="/images/sismo-logo.png"
+                  src="/images/sismo.jpg"
+                  style={{ borderRadius: '5px' }}
                   alt=""
                   width="40px"
                   height="40px"
