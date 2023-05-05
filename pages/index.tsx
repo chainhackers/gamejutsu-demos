@@ -18,7 +18,7 @@ const Home: NextPage<IHomePageProps> = () => {
   }
 
   function redirectToTeamPage() {
-    router.push('/team');
+    router.push('/v2/team');
   }
 
   return (

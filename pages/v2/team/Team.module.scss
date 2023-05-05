@@ -1,0 +1,51 @@
+.container {
+  margin-top: 60px;
+  padding: 0 24px;
+
+  .title {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 130%;
+    color: #9c9eab;
+    margin-bottom: 12px;
+  }
+
+  .team {
+    margin-bottom: 40px;
+  }
+
+  .contact {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 40px;
+    .title {
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 600;
+      font-size: 20px;
+      line-height: 130%;
+      text-align: center;
+      color: #2e303d;
+    }
+
+    .gradientBorder {
+      background: linear-gradient(225.67deg, #8dc8e9 3.57%, #8c5ae3 115.97%);
+      padding: 2px;
+      border-radius: 10px;
+      button {
+        padding: 16px 0 14px;
+        width: 100%;
+        background-color: #ffffff;
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 20px;
+        line-height: 130%;
+        color: #8777da;
+        border-radius: 9px;
+      }
+    }
+  }
+}
