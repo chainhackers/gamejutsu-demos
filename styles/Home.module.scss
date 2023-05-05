@@ -75,12 +75,41 @@
         height: 245px;
       }
     }
-    
   }
 }
 
-.container {
-  padding: 0 10px;
+.cons {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px 14px;
+  width: 100%;
+  margin-bottom: 12px;
+
+  background: #f9f9f9;
+  border-radius: 20px;
+  .card {
+    display: flex;
+
+    &:not(:last-child) {
+      margin-bottom: 12px;
+    }
+    img {
+      margin-top: -1px;
+      margin-right: 6px;
+      height: 24px;
+      width: 24px;
+    }
+    .cardText {
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 400;
+      font-size: 15px;
+      line-height: 130%;
+      color: #2e303d;
+      margin-bottom: 0;
+    }
+  }
 }
 
 .wrapper {
@@ -92,8 +121,7 @@
   margin: 0 auto;
 
   img {
-    margin: 0 auto;
-    width: 90%;
+    width: 100%;
   }
 }
 
@@ -137,56 +165,66 @@
     text-align: center;
     margin-bottom: 40px;
   }
-  span {
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 18px;
-    line-height: 130%;
-    color: #2e303d;
-    margin-bottom: 40px;
-  }
 }
 
-.sliderCan {
+.usingBlock {
   margin-bottom: 40px;
-  .sliderTitle {
+  .usingTitle {
     h2 {
       font-family: 'Inter';
       font-style: normal;
       font-weight: 600;
       font-size: 20px;
       line-height: 130%;
-      margin-top: 40px;
       margin-bottom: 12px;
       text-align: center;
       color: #2e303d;
     }
+    span {
+      display: block;
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 130%;
+      color: #2e303d;
+      margin-bottom: 12px;
+    }
   }
-  .mySwiper1 {
-    .swiperSlide {
-      &:not(:last-child) {
-        margin-bottom: 10px;
+  .cards {
+    .card {
+      display: grid;
+      grid-template-columns: 23% 77%;
+      align-items: center;
+      padding: 10px;
+
+      width: 100%;
+      height: 90px;
+
+      background: #f9f9f9;
+      border-radius: 10px;
+
+      img {
+        height: 60px;
+        align-self: center;
+        margin: 0 auto;
       }
 
-      .itemSlid {
-        background: #ffffff;
-        border: 1px solid #e8e8e8;
-        border-radius: 10px;
-        text-align: center;
-        padding: 17px 10px 10px 10px;
-
-        p {
-          font-family: 'Inter';
-          font-style: normal;
-          font-weight: 500;
-          font-size: 15px;
-          line-height: 130%;
-          margin-top: 19px;
-          text-align: center;
-          color: #9c9eab;
-        }
+      p {
+        font-family: 'Inter';
+        margin-left: 15px;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 15px;
+        line-height: 130%;
+        text-align: left;
+        color: #9c9eab;
       }
+    }
+  }
+  .card {
+    &:not(:last-child) {
+      margin-bottom: 10px;
     }
   }
 }
@@ -196,12 +234,11 @@
     h2 {
       font-family: 'Inter';
       font-style: normal;
-      font-weight: 600;
-      text-align: center;
-      font-size: 20px;
+      font-weight: 700;
+      font-size: 23px;
       line-height: 130%;
-      color: #2e303d;
-      margin-bottom: 12px;
+      color: #8777da;
+      margin-bottom: 10px;
     }
     h3 {
       font-family: 'Inter';
@@ -224,12 +261,22 @@
   }
   .workSec {
     background: #ffffff;
-    border: 1px solid #e8e8e8;
-    border-radius: 10px;
     padding: 12px;
+    img {
+      width: 100%;
+    }
   }
   .workTitle2 {
     margin-top: 20px;
+    h2 {
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 700;
+      font-size: 23px;
+      line-height: 130%;
+      color: #8777da;
+      margin-bottom: 10px;
+    }
     h3 {
       font-family: 'Inter';
       font-style: normal;
@@ -246,6 +293,7 @@
       font-size: 15px;
       line-height: 130%;
       color: #9c9eab;
+      margin-bottom: 12px;
     }
   }
   .gameBlock {
@@ -253,9 +301,10 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
-    border: 1px solid #e8e8e8;
-    border-radius: 10px;
     padding: 11px 5px 22px 5px;
+    img {
+      width: 100%;
+    }
     .item_block {
       position: relative;
       &:nth-child(2) {
@@ -283,20 +332,25 @@
         text-align: center;
         color: #2e303d;
       }
-      img {
-        width: 100%;
-      }
     }
   }
   .gameTitle {
+    h2 {
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 700;
+      font-size: 23px;
+      line-height: 130%;
+      color: #8777da;
+      margin-bottom: 10px;
+    }
     h3 {
       font-family: 'Inter';
       font-style: normal;
-      font-weight: 500;
+      font-weight: 600;
       font-size: 15px;
-      line-height: 130%;
-      margin-bottom: 10px;
       color: #2e303d;
+      margin-bottom: 8px;
     }
     p {
       font-family: 'Inter';
@@ -310,7 +364,6 @@
   }
   .gameBlock2 {
     margin-bottom: 12px;
-    border: 1px solid #e8e8e8;
     padding: 7px 17px 9px 17px;
     .itemTitle {
       display: flex;
@@ -335,6 +388,7 @@
       }
     }
     .imgGame {
+      margin-bottom: 40px;
       img {
         width: 100%;
       }
@@ -354,6 +408,10 @@
         margin-bottom: 4px;
       }
       a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
         font-family: 'Inter';
         font-style: normal;
         font-weight: 600;
@@ -367,24 +425,24 @@
   .buttonMes {
     button {
       width: 100%;
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 700;
-    font-size: 20px;
-    line-height: 130%;
-    background-repeat: no-repeat;
-    text-decoration: none;
-    background: linear-gradient(225.67deg, #8dc8e9 3.57%, #8c5ae3 115.97%);
-    border-radius: 60px;
-    color: #ffffff;
-    padding: 10px 70px 10px 70px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    justify-content: center;
-    text-align: center;
-    margin-bottom: 40px;
-    margin-top: 40px;
+      font-family: 'Inter';
+      font-style: normal;
+      font-weight: 700;
+      font-size: 20px;
+      line-height: 130%;
+      background-repeat: no-repeat;
+      text-decoration: none;
+      background: linear-gradient(225.67deg, #8dc8e9 3.57%, #8c5ae3 115.97%);
+      border-radius: 60px;
+      color: #ffffff;
+      padding: 10px 70px 10px 70px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-content: center;
+      text-align: center;
+      margin-bottom: 40px;
+      margin-top: 40px;
     }
   }
   .infoBlock {
@@ -401,33 +459,28 @@
   }
   .buttonInfo {
     a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
       font-family: 'Inter';
       font-style: normal;
       font-weight: 600;
       font-size: 20px;
       line-height: 130%;
       text-decoration: none;
-      display: block;
       border-radius: 10px;
       border: 1px solid #8dc8e9;
       color: #8777da;
       text-align: center;
       padding: 16px 22px 14px 32px;
       margin-bottom: 10px;
-
-      &:first-child {
-        // background-image: url(../img/BracketsCurly.svg);
-        background-repeat: no-repeat;
-        background-position: calc(100% - 95%);
-      }
-      &:last-child {
-        margin-top: 20px;
-        // background-image: url(../img/Users.svg);
-        background-repeat: no-repeat;
-        background-position: calc(100% - 81%);
-      }
     }
     button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
       width: 100%;
       font-family: 'Inter';
       font-style: normal;
@@ -435,12 +488,14 @@
       font-size: 20px;
       line-height: 130%;
       text-decoration: none;
-      display: block;
       border-radius: 10px;
       border: 1px solid #8dc8e9;
       color: #8777da;
       text-align: center;
       padding: 16px 22px 14px 32px;
+      img {
+        margin: 0;
+      }
     }
   }
   .socialSet {
@@ -457,4 +512,3 @@
     }
   }
 }
-
