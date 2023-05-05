@@ -6,7 +6,8 @@ import styles from './Team.module.scss';
 const Team: NextPage = () => {
   return (
     <div className={styles.container}>
-      <p className={styles.title}>Enthusiasts of making products better</p>
+      <h1 className={styles.title}>Meet Our Team</h1>
+      <p className={styles.subTitle}>Enthusiasts of making products better</p>
       <div className={styles.team}>
         {team && team.map((teamMember) => <TeamMember {...teamMember} />)}
       </div>
