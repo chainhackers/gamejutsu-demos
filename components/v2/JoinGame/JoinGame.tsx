@@ -17,10 +17,10 @@ export const JoinGame: React.FC<JoinGamePropsI> = ({ games }) => {
     stake: string
   ): Promise<void> => {
     if (!account) {
-      throw new Error(`No wallet`);
+      throw new Error(`JoinGame: no wallet`);
     }
     if (!acceptedGameId) {
-      throw new Error(`No game id`);
+      throw new Error(`JoinGame: no game id`);
     }
     const acceptGameResult = await gameApi.acceptGame(
       await getArbiter(),

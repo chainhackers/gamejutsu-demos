@@ -5,7 +5,7 @@ import { getRulesContract } from 'gameApi';
 import { JoinGameCard } from '../JoinGameCard';
 import { gameEntitiesQuery } from 'queries';
 import { useQuery } from '@apollo/client';
-const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+import { ZERO_ADDRESS } from 'types/constants';
 
 export const JoinGameList: React.FC<JoinGameListPropsI> = ({
   gameType,
@@ -40,7 +40,7 @@ export const JoinGameList: React.FC<JoinGameListPropsI> = ({
             <JoinGameCard key={game.gameId} {...game} onClick={onClick} />
           ))
       ) : (
-        <p className={styles.noGames}>No games in this section</p>
+        <p className={styles.noGames}>No games to join</p>
       )}
     </div>
   );
