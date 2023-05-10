@@ -1,5 +1,6 @@
 import { Tabs } from 'components/v2/Tabs';
 import { GameDemo } from 'components/v2/GameDemo/GameDemo';
+import { JoinGame } from 'components/v2/JoinGame';
 import { MyGames } from 'components/v2/MyGames';
 import styles from './games.module.scss';
 import games from 'data/games.json';
@@ -44,6 +45,7 @@ const GamesPage = () => {
         onClick={setSelectedTab}
       />
       {selectedTab === 'Game demo' && <GameDemo games={games} />}
+      {selectedTab === 'Join game' && <JoinGame games={games} />}
       {selectedTab === 'My games' && <MyGames games={games} />}
       <div className={styles.description}>
         To start or join the game, you will need to make a transaction

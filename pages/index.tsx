@@ -18,7 +18,7 @@ const Home: NextPage<IHomePageProps> = () => {
   }
 
   function redirectToTeamPage() {
-    router.push('/team');
+    router.push('/v2/team');
   }
 
   return (
@@ -35,10 +35,8 @@ const Home: NextPage<IHomePageProps> = () => {
         <div className={styles.wrapper}>
           <div className={styles.mainImg}>
             <img
-              src="/images/serveless-communication.png"
+              src="/images/serveless-communication.svg"
               alt="serverless communication"
-              width="342px"
-              height="330px"
             />
           </div>
           <div className={styles.mainTitle}>
@@ -59,58 +57,37 @@ const Home: NextPage<IHomePageProps> = () => {
               />{' '}
               Try Demo
             </button>
-
+          </div>
+        </div>
+        <div className={styles.usingBlock}>
+          <div className={styles.usingTitle}>
+            <h2>How can I use it?</h2>
             <span>
               GameJutsu is a gaming framework to take care of the on-chain /
               off-chain communication on Web3.
             </span>
           </div>
-        </div>
-        <div className={styles.sliderCan}>
-          <div className={styles.sliderTitle}>
-            <h2>How can I use it?</h2>
-          </div>
-          <div className={styles.swiper + ' ' + styles.mySwiper1}>
-            <div className={styles.swiperWrapper}>
-              <div className={styles.swiperSlide}>
-                <div className={styles.itemSlid}>
-                  <Image
-                    src="/images/slider1.png"
-                    width="84px"
-                    height="83px"
-                    alt=""
-                  />
-                  <p>To improve UX of your game services</p>
-                </div>
-              </div>
-              <div className={styles.swiperSlide}>
-                <div className={styles.itemSlid}>
-                  <Image
-                    src="/images/slider2.png"
-                    width="51px"
-                    height="92px"
-                    alt=""
-                  />
-                  <p>Make crypto games with clean UI</p>
-                </div>
-              </div>
-              <div className={styles.swiperSlide}>
-                <div className={styles.itemSlid}>
-                  <Image
-                    src="/images/slider3.png"
-                    width="88px"
-                    height="86px"
-                    alt=""
-                  />
-                  <p>Spare on server infrastructure and maintenance</p>
-                </div>
-              </div>
+          <div className={styles.cards}>
+            <div className={styles.card}>
+              <img src="/images/slider1.png" alt="" />
+              <p>To improve UX of your game services</p>
+            </div>
+            <div className={styles.card}>
+              <img src="/images/slider2.png" alt="" />
+              <p>Make crypto games with clean UI</p>
+            </div>
+            <div className={styles.card}>
+              <img src="/images/slider3.png" alt="" />
+              <p>Spare on server infrastructure and maintenance</p>
             </div>
           </div>
         </div>
         <div className={styles.workBlock}>
           <div className={styles.titleWork}>
-            <h2>How it works?</h2>
+            <h2>
+              The Limitations of Centralized Gaming: The Case for Reimagining
+              Client-Server
+            </h2>
             <h3>
               What does a typical flow look like for a turn-based online game
               with two players?
@@ -126,11 +103,38 @@ const Home: NextPage<IHomePageProps> = () => {
               choice for game development. However, players must trust the game
               server to maintain fair play and not abuse their power
             </p>
+            <div className={styles.cons}>
+              <div className={styles.card}>
+                <img src="/images/x-img.svg" alt="cross" />
+                <p className={styles.cardText}>
+                  Central point of failure, as the server is the single point of
+                  control
+                </p>
+              </div>
+              <div className={styles.card}>
+                <img src="/images/x-img.svg" alt="cross" />
+                <p className={styles.cardText}>
+                  Requires trust from client users, as they have to trust the
+                  server to process the game logic and not cheat
+                </p>
+              </div>
+              <div className={styles.card}>
+                <img src="/images/x-img.svg" alt="cross" />
+                <p className={styles.cardText}>
+                  Non-transparent, as the server can manipulate game data
+                  without users knowing
+                </p>
+              </div>
+            </div>
           </div>
           <div className={styles.workSec}>
-            <img src="/images/work.png"></img>
+            <img src="/images/game.svg"></img>
           </div>
           <div className={styles.workTitle2}>
+            <h2>
+              Blockchain Gaming: The Pitfalls of Porting Server Logic to
+              Contracts
+            </h2>
             <h3>
               Designing a trustless decentralized game by shifting from a server
               to an on-chain contract to handle all game logic seems like an
@@ -147,11 +151,30 @@ const Home: NextPage<IHomePageProps> = () => {
               checkers. This approach simply isn't feasible, particularly for
               fast-paced games.
             </p>
+            <div className={styles.cons}>
+              <div className={styles.card}>
+                <img src="/images/x-img.svg" alt="cross" />
+                <p className={styles.cardText}>
+                  Transaction fees and delays: Can cause gameplay interruptions
+                  and lag
+                </p>
+              </div>
+              <div className={styles.card}>
+                <img src="/images/x-img.svg" alt="cross" />
+                <p className={styles.cardText}>
+                  Public game state and actions: Privacy and complexity may be
+                  compromised
+                </p>
+              </div>
+            </div>
           </div>
           <div className={styles.gameBlock}>
-            <img src="/images/game.png" />
+            <img src="/images/game2.svg" />
           </div>
           <div className={styles.gameTitle}>
+            <h2>
+              Next-Gen Gaming: How GameJutsu Reworks Server Logic for Blockchain
+            </h2>
             <h3>
               GameJutsu eliminates the need to involve other parties apart from
               the players themselves and their client software in most of the
@@ -162,61 +185,62 @@ const Home: NextPage<IHomePageProps> = () => {
               transaction per multiple games, the rest of in-game communication
               is off-chain. This includes the technical possibility of sending
               less than one transaction per game, for example, for account
-              creation or to establish a payment channel between two players.
+              creation or to establish a payment channel between two players
             </p>
           </div>
           <div className={styles.gameBlock2}>
-            <div className={styles.itemTitle}>
-              <h3>Game events</h3>
-              <h3>Extra clicks</h3>
-            </div>
             <div className={styles.imgGame}>
-              <Image
-                src="/images/game4.svg"
-                width="373px"
-                height="936px"
-                alt=""
-              />
+              <img src="/images/game3.svg" alt="" />
             </div>
           </div>
         </div>
         <div className={styles.blockMes}>
           <div className={styles.messenBlock}>
             <div className={styles.itemMes}>
-              <Image
-                src="/images/xmtp-logo.png"
-                alt=""
-                width="40px"
-                height="40px"
-              />
-              <a href="#">XMTP</a>
+              <a href="https://xmtp.org/">
+                <Image
+                  src="/images/xmtp-logo.png"
+                  style={{ borderRadius: '5px' }}
+                  alt=""
+                  width="40px"
+                  height="40px"
+                />
+                XMTP
+              </a>
             </div>
             <div className={styles.itemMes}>
-              <Image
-                src="/images/the-graph-logo.png"
-                alt=""
-                width="40px"
-                height="40px"
-              />
-              <a href="#">The graph</a>
+              <a href="https://thegraph.com/en/">
+                <Image
+                  src="/images/graph.svg"
+                  alt=""
+                  width="40px"
+                  height="40px"
+                />
+                The graph
+              </a>
             </div>
             <div className={styles.itemMes}>
-              <Image
-                src="/images/polygon-logo.png"
-                alt=""
-                width="40px"
-                height="40px"
-              />
-              <a href="#">Polygon</a>
+              <a href="https://polygon.technology/">
+                <Image
+                  src="/images/polygon.svg"
+                  alt=""
+                  width="40px"
+                  height="40px"
+                />
+                Polygon
+              </a>
             </div>
             <div className={styles.itemMes}>
-              <Image
-                src="/images/sismo-logo.png"
-                alt=""
-                width="40px"
-                height="40px"
-              />
-              <a href="#">Sismo</a>
+              <a href="https://www.sismo.io/">
+                <Image
+                  src="/images/sismo.jpg"
+                  style={{ borderRadius: '5px' }}
+                  alt=""
+                  width="40px"
+                  height="40px"
+                />
+                Sismo
+              </a>
             </div>
           </div>
           <div className={styles.buttonMes}>
@@ -237,15 +261,18 @@ const Home: NextPage<IHomePageProps> = () => {
             </div>
             <div className={styles.buttonInfo}>
               <a href="https://github.com/ChainHackers/GameJutsu#readme">
+                <img src="/images/BracketsCurly.svg" alt="brackets curly" />
                 GitHub Documentation
               </a>
-              <button onClick={redirectToTeamPage}>Meet our team</button>
+              <button onClick={redirectToTeamPage}>
+                <img src="/images/dices-purple.svg" alt="dices" /> Meet our team
+              </button>
             </div>
           </div>
           <div className={styles.socialSet}>
             <a href="https://discord.gg/a5E9vWbp9R">
               <Image
-                src="/images/discord.png"
+                src="/images/discord.svg"
                 alt=""
                 width="40px"
                 height="40px"
@@ -253,7 +280,7 @@ const Home: NextPage<IHomePageProps> = () => {
             </a>
             <a href="https://github.com/ChainHackers">
               <Image
-                src="/images/github.png"
+                src="/images/github.svg"
                 alt=""
                 width="40px"
                 height="40px"
@@ -261,7 +288,7 @@ const Home: NextPage<IHomePageProps> = () => {
             </a>
             <a href="https://twitter.com/ChainHackerClan">
               <Image
-                src="/images/twitter.png"
+                src="/images/twitter.svg"
                 alt=""
                 width="40px"
                 height="40px"
@@ -269,7 +296,7 @@ const Home: NextPage<IHomePageProps> = () => {
             </a>
             <a href="https://www.youtube.com/@UtgardaLoki">
               <Image
-                src="/images/youtube.png"
+                src="/images/youtube.svg"
                 alt=""
                 width="40px"
                 height="40px"

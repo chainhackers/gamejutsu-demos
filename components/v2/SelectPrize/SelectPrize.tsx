@@ -13,16 +13,15 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({
   isRequestConfirmed,
   setIsRequestConfirmed,
   transactionLink,
-  setTransatctionLink,
+  setTransactionLink,
 }) => {
   const router = useRouter();
 
-  async function test(hash: any) {
-    console.log('test optional callback function');
+  async function setModalInfo(hash: any) {
     setIsTransactionPending(false);
     setIsRequestConfirmed(true);
     const address = await hash;
-    setTransatctionLink(address.hash);
+    setTransactionLink(address.hash);
   }
   const createNewGameHandler = async (isPaid: boolean = false) => {
     let proposeGameResult: GameProposedEventObject = await gameApi.proposeGame(
@@ -31,7 +30,7 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({
         await getRulesContract(gameType)
       ).address,
       isPaid,
-      test
+      setModalInfo
     );
     return proposeGameResult.gameId.toNumber();
   };
