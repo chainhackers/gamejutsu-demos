@@ -37,7 +37,12 @@ export const JoinGameList: React.FC<JoinGameListPropsI> = ({
           .slice()
           .sort((a: any, b: any) => b.gameId - a.gameId)
           .map((game: any) => (
-            <JoinGameCard key={game.gameId} {...game} onClick={onClick} />
+            <JoinGameCard
+              key={game.gameId}
+              {...game}
+              onClick={onClick}
+              gameType={gameType}
+            />
           ))
       ) : (
         <p className={styles.noGames}>No games to join</p>

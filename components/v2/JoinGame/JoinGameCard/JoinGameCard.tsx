@@ -14,6 +14,7 @@ export const JoinGameCard: React.FC<JoinGameCardPropsI> = ({
   stake,
   proposer,
   rules,
+  gameType,
 }) => {
   const freeImg: string = '/images/handshake.svg';
   const paidImg: string = '/images/matic.svg';
@@ -44,7 +45,7 @@ export const JoinGameCard: React.FC<JoinGameCardPropsI> = ({
         <p className={styles.proposer}>{shortenAddress(proposer)}</p>
       </div>
       <button
-        onClick={() => onClick!(gameId, stake)}
+        onClick={() => onClick!(gameId, stake, gameType)}
         className={styles.gradientBtn}
       >
         Join{' '}

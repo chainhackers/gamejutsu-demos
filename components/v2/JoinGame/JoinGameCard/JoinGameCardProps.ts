@@ -1,3 +1,5 @@
+import { TGameType } from 'types/game';
+
 export interface JoinGameCardPropsI {
   children?: React.ReactNode;
   gameId: string;
@@ -7,5 +9,6 @@ export interface JoinGameCardPropsI {
   stake: string;
   proposer: string;
   rules: string;
-  onClick?: (id: string, stake: string) => void;
+  gameType: TGameType;
+  onClick?: (id: string, stake: string, gameType: string) => void;
 }
