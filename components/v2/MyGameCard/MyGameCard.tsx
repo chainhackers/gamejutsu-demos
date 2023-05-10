@@ -2,24 +2,36 @@
 import React from 'react';
 import { MyGameCardPropsI } from './MyGameCardProps';
 import styles from './MyGameCard.module.scss';
+import { shortenAddress } from 'helpers/utils';
+import Blockies from 'react-blockies';
+import router from 'next/router';
 
 export const MyGameCard: React.FC<MyGameCardPropsI> = ({
-  id,
+  gameId,
+  winner,
+  loser,
+  header,
   stake,
   proposer,
   rules,
+  gameType,
+  started,
+  accepter,
 }) => {
+  const backToGame = () => {
+    router.push(`/games/${gameType}?game=${gameId}`);
+  };
+
   const freeImg: string = '/images/handshake.svg';
   const paidImg: string = '/images/matic.svg';
-  const isConnected: boolean = false;
 
   return (
     <div className={styles.card}>
       <div className={styles.left}>
         <div className={styles.row}>
-          <p className={styles.gameId}>{id}</p>
+          <p className={styles.gameId}>{gameId}</p>
 
-          {stake === 0 ? (
+          {Number(stake) === 0 ? (
             <div className={styles.stake}>
               <div className={styles.stakeFrame}>
                 <img src={freeImg} alt="handshake" />
@@ -33,18 +45,29 @@ export const MyGameCard: React.FC<MyGameCardPropsI> = ({
               </div>
             </div>
           )}
-          <p className={styles.proposer}>{proposer}</p>
+          <div className={styles.row}>
+            <Blockies
+              className={`${styles.proposerPseudographic} rounded-full`}
+              seed={proposer}
+              size={5}
+            />
+            <p className={styles.proposer}>{shortenAddress(proposer)}</p>
+          </div>
         </div>
         <div className={styles.row}>
-          <button className={styles.btn}>Back to game</button>
-          {!isConnected && (
+          <button className={styles.btn} onClick={backToGame}>
+            Back to game
+          </button>
+          {/* //todo: add cancel game functional to contract
+          https://github.com/orgs/chainhackers/projects/3?pane=issue&itemId=27807113 */}
+          {/* {!started && (
             <div className={styles.gradientBorder}>
               <button className={styles.gradientBtn}>Cancel</button>
             </div>
-          )}
+          )} */}
         </div>
       </div>
-      {isConnected ? (
+      {started ? (
         <div className={styles.status}>
           <p className={styles.statusTitle}>Connected to game!</p>
           <div className={styles.checkCircle}>
