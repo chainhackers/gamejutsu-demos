@@ -10,4 +10,5 @@ export interface GameThumbnailPropsI {
   setIsRequestConfirmed: Function;
   transactionLink: string;
   setTransactionLink: Function;
+  setSelectedTab: Function;
 }

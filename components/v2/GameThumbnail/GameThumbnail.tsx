@@ -10,7 +10,7 @@ import { TGameType } from 'types/game';
 import { useTranslation } from 'react-i18next';
 import { SelectPrize } from '../SelectPrize';
 import Blockies from 'react-blockies';
-import {shortenAddress} from 'helpers/utils';
+import { shortenAddress } from 'helpers/utils';
 
 export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
   name,
@@ -23,6 +23,7 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
   setIsRequestConfirmed,
   transactionLink,
   setTransactionLink,
+  setSelectedTab,
 }) => {
   const { t } = useTranslation();
   const [rulesAddress, setRulesAddress] = useState('');
@@ -62,16 +63,12 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
         </div>
       </div>
       <div className={styles.buttons}>
-        <Link
-          href={address ? `/games/${url}?join=true` : `/connect?game=${url}`}
-        >
-          <button>
-            Join{' '}
-            <div className={styles.users}>
-              <img src="/images/users.svg" alt="" />
-            </div>
-          </button>
-        </Link>
+        <button onClick={() => setSelectedTab('Join game')}>
+          Join{' '}
+          <div className={styles.users}>
+            <img src="/images/users.svg" alt="" />
+          </div>
+        </button>
         <button onClick={toggleStartButton}>
           Start new game
           <div

@@ -44,7 +44,9 @@ const GamesPage = () => {
         selectedTab={selectedTab}
         onClick={setSelectedTab}
       />
-      {selectedTab === 'Game demo' && <GameDemo games={games} />}
+      {selectedTab === 'Game demo' && (
+        <GameDemo games={games} setSelectedTab={setSelectedTab} />
+      )}
       {selectedTab === 'Join game' && <JoinGame games={games} />}
       {selectedTab === 'My games' && <MyGames games={games} />}
       <div className={styles.description}>
