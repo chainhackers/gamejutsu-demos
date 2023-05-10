@@ -45,7 +45,7 @@ export const JoinGameCard: React.FC<JoinGameCardPropsI> = ({
         <p className={styles.proposer}>{shortenAddress(proposer)}</p>
       </div>
       <button
-        onClick={() => onClick!(gameId, stake, gameType)}
+        onClick={() => onClick!(gameId, stake, gameType, proposer)}
         className={styles.gradientBtn}
       >
         Join{' '}

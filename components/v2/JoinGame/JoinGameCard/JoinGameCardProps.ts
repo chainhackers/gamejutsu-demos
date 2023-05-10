@@ -10,5 +10,10 @@ export interface JoinGameCardPropsI {
   proposer: string;
   rules: string;
   gameType: TGameType;
-  onClick?: (id: string, stake: string, gameType: string) => void;
+  onClick?: (
+    gameId: string,
+    stake: string,
+    gameType: string,
+    proposer: string
+  ) => void;
 }

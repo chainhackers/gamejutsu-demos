@@ -32,8 +32,13 @@ export const JoinGame: React.FC<JoinGamePropsI> = ({ games }) => {
   const clickHandler = async (
     gameId: string,
     stake: string,
-    gameType: string
+    gameType: string,
+    proposer: string
   ) => {
+    if (account.address!.toLowerCase() === proposer) {
+      router.push(`/games/${gameType}?game=${gameId}`);
+      return;
+    }
     acceptGameHandler(parseInt(gameId), stake)
       .then(() => {
         router.push(`/games/${gameType}?game=${gameId}`);
