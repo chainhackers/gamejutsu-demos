@@ -282,7 +282,6 @@ export const acceptGame = async (
     contract: ethers.Contract,
     gameId: BigNumber,
     value: string | null = null,
-    txCreatedCallback?: (hash: string) => void,
 ): Promise<GameStartedEventObject> => {
   console.log('GameAPI acceptGame:', contract, '\n gameId =', gameId, Number(gameId));
   const gasEstimated = await contract.estimateGas.acceptGame(gameId, [],
@@ -304,7 +303,6 @@ export const acceptGame = async (
   console.log('GameAPI acceptGame: tx = ', tx);
   const txResult = await tx;
   console.log('GameAPI acceptGame: txResult = ', txResult);
-  txCreatedCallback && txCreatedCallback(tx);
   const receipt = txResult.wait();
   console.log('GameAPI acceptGame: receipt = ', receipt);
   const receiptResult = await receipt;

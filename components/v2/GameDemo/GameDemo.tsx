@@ -4,7 +4,7 @@ import styles from './GameDemo.module.scss';
 import { GameDemoPropsI } from './GameDemoProps';
 import { useState } from 'react';
 import { Modal } from '../Modal/Modal';
-import modalStyles from '../Modal/Modal.module.scss'
+import Link from 'next/link';
 
 export const GameDemo: React.FC<GameDemoPropsI> = ({ games }) => {
   const [isTransactionPending, setIsTransactionPending] =
@@ -15,11 +15,11 @@ export const GameDemo: React.FC<GameDemoPropsI> = ({ games }) => {
     <div className={styles.container}>
       {isTransactionPending && (
         <Modal>
-          <div className={modalStyles.modal}>
-            <h4 className={modalStyles.modalTitle}>Pending Transaction</h4>
-            <p className={modalStyles.modalSubtitle}>Game Creation</p>
-            <div className={modalStyles.padding}></div>
-            <p className={modalStyles.modalDescription}>
+          <div className={styles.modal}>
+            <h4 className={styles.modalTitle}>Pending Transaction</h4>
+            <p className={styles.modalSubtitle}>Game Creation</p>
+            <div className={styles.padding}></div>
+            <p className={styles.modalDescription}>
               Confirm the request that's just appeared. If you can't see a
               request, open your wallet extension.
             </p>
@@ -28,14 +28,14 @@ export const GameDemo: React.FC<GameDemoPropsI> = ({ games }) => {
       )}
       {isRequestConfirmed && (
         <Modal>
-          <div className={modalStyles.modal}>
-            <h4 className={modalStyles.modalTitle}>Pending Transaction</h4>
-            <p className={modalStyles.modalSubtitle}>Game Creation</p>
-            <div className={modalStyles.loader}></div>
+          <div className={styles.modal}>
+            <h4 className={styles.modalTitle}>Pending Transaction</h4>
+            <p className={styles.modalSubtitle}>Game Creation</p>
+            <div className={styles.loader}></div>
             <a
               href={`https://polygonscan.com/tx/${transactionLink}`}
               target="_blank"
-              className={modalStyles.modalDescriptionGradient}
+              className={styles.modalDescriptionGradient}
             >
               See in blockchain explorer
             </a>

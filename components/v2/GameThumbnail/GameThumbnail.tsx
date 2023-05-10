@@ -93,7 +93,7 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
           isRequestConfirmed={isRequestConfirmed}
           setIsRequestConfirmed={setIsRequestConfirmed}
           transactionLink={transactionLink}
-          setTransactionLink={setTransactionLink}
+          setTransatctionLink={setTransactionLink}
         />
       )}
     </div>

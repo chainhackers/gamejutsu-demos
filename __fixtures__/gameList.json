@@ -2,7 +2,7 @@
     {
         "id": 0,
         "stake": 0,
-        "proposer":"0xd4928171a52f420855bf59bcaf3c7077f42298d5",
+        "proposer":"0xdC5f32DEc4253Bd61092294B45AfB834C0BD2938",
         "rules": "0xDcA61577312eb61f7Ee815085040A165c6F28bAf"
     },
     {
@@ -14,7 +14,7 @@
     {
         "id": 2,
         "stake": 1,
-        "proposer":"0xd4928171a52f420855bf59bcaf3c7077f42298d5",
+        "proposer":"0xdC5f32DEc4253Bd61092294B45AfB834C0BD2938",
         "rules": "0xDcA61577312eb61f7Ee815085040A165c6F28bAf"
     },
     {
@@ -24,9 +24,9 @@
         "rules": "0xDcA61577312eb61f7Ee815085040A165c6F28bAf"
     },
     {
-        "id": 84,
+        "id": 4,
         "stake": 0,
-        "proposer":"0xdc5f32dec4253bd61092294b45afb834c0bd2937",
+        "proposer":"0xdC5f32DEc4253Bd61092294B45AfB834C0BD2938",
         "rules": "0xC6F81d6610A0b1bcb8cC11d50602D490b7624a96"
     },
     {
@@ -38,7 +38,7 @@
     {
         "id": 6,
         "stake": 1,
-        "proposer":"0xd4928171a52f420855bf59bcaf3c7077f42298d5",
+        "proposer":"0xdC5f32DEc4253Bd61092294B45AfB834C0BD2938",
         "rules": "0xC6F81d6610A0b1bcb8cC11d50602D490b7624a96"
     },
     {

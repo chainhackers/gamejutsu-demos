@@ -2,47 +2,34 @@ import React, { useEffect, useState } from 'react';
 import { MyGamesListPropsI } from './MyGamesListProps';
 import styles from './MyGamesList.module.scss';
 import { MyGameCard } from '../../MyGameCard';
+import gameList from '../../../../__fixtures__/gameList.json';
 import { getRulesContract } from 'gameApi';
-import { useQuery } from '@apollo/client';
-import { gameEntitiesQuery } from 'queries';
-import { ZERO_ADDRESS } from 'types/constants';
-import { useAccount } from 'wagmi';
+import { shortenAddress } from 'helpers/utils';
 
 export const MyGamesList: React.FC<MyGamesListPropsI> = ({ gameType }) => {
-  const account = useAccount();
-  const [rulesContractAddress, setRulesContractAddress] =
-    useState<string>(ZERO_ADDRESS);
-  const { data, error, loading } = useQuery(gameEntitiesQuery, {
-    variables: { rules: rulesContractAddress },
-  });
-  const gameEntities = data?.gameEntities as {
-    started: boolean | null;
-    rules: string;
-  }[];
+  const myAddress = '0xdC5f32DEc4253Bd61092294B45AfB834C0BD2938';
+  const myGames = gameList.filter((game) => game.proposer === myAddress);
 
-  const dataToShow = !!gameEntities ? gameEntities : [];
+  const [rulesAddress, setRulesAddress] = useState('');
+  const myFilteredGames = myGames.filter((game) => game.rules === rulesAddress);
   useEffect(() => {
     getRulesContract(gameType).then((response) => {
-      setRulesContractAddress(response.address);
+      setRulesAddress(response.address);
     });
-  }, [gameType]);
-
-  const filteredGames = dataToShow.filter((game: any) => {
-    return (
-      game.proposer === account.address!.toLowerCase() ||
-      game.accepter === account.address!.toLowerCase()
-    );
-  });
+  }, []);
 
   return (
     <div className={styles.gamesList}>
-      {filteredGames.length > 0 ? (
-        filteredGames
-          .slice()
-          .sort((a: any, b: any) => b.gameId - a.gameId)
-          .map((game: any) => (
-            <MyGameCard key={game.gameId} {...game} gameType={gameType} />
-          ))
+      {myFilteredGames.length > 0 ? (
+        myFilteredGames.map((game) => (
+          <MyGameCard
+            key={game.id}
+            id={game.id}
+            stake={game.stake}
+            proposer={shortenAddress(game.proposer)}
+            rules={game.rules}
+          />
+        ))
       ) : (
         <p className={styles.noGames}>You have no games in this section</p>
       )}

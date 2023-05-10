@@ -3,23 +3,23 @@
         "name": "Evgenii Tsvigun",
         "image": "/images/et.png",
         "role": "Architect, Backend Engineer",
-        "description": "Evgenii is an experienced back-end developer with over 20 years of expertise in blockchain and big data processing. He is known for his creative thinking and ability to come up with original ideas, which his team successfully implements. Evgenii is a professional in building distributed, scalable, and reliable software solutions, using modern technologies to effectively solve engineering and technical challenges",
+        "description": "Evgenii is a back-end developer with over 20 years of experience, specializing in blockchain based solutions and big data/fast data processing.",
         "link": "https://t.me/utgardaloki",
         "contacts": [
             {
                 "type": "telegram",
                 "ref": "https://t.me/utgardaloki",
-                "image": "/images/tg-logo.svg"
+                "image": "/images/tg-logo.png"
             },
             {
-                "type": "site",
+                "type": "ENS profile",
                 "ref": "https://utgarda.eth.xyz/",
-                "image": "/images/link-logo.svg"
+                "image": "/images/link-logo.png"
             },
             {
-                "type": "linked.in",
+                "type": "linkedIn",
                 "ref": "https://www.linkedin.com/in/evgeny-tsvigun",
-                "image": "/images/lnkdin-logo.svg"
+                "image": "/images/lnkdin-logo.png"
             }                 
         ]
     },
@@ -27,70 +27,51 @@
         "name": "Victor Larson",
         "image": "/images/vl.png",
         "role": "Fullstack Developer, DevOps",
-        "description": "Victor delivers - that's his thing, and does whatever it takes to get the product from a mere \"under construction\" web page to a working solution. DevOps engineer, frontender, first-time Solidity developer - you name it, Vic is whatever the team needs most at each particular moment, seamlessly switching his mental gear from shell scripting to web development or from chitchat to game theory crunching. Victor's summary experience consists of 10 years as DevOps, 9 years as a QA engineer, 9 years as fullstack developer, Web3 since 2021 and 4 years of community management for a cloud gaming platform",
+        "description": "Victor delivers - that's his thing, and does whatever it takes to get the product from a mere \"under construction\" web page to a working solution. DevOps engineer, frontender, first-time Solidity developer - you name it, Vic is whatever the team needs most at each particular moment, seamlessly switching his mental gear from shell scripting to web development or from chitchat to game theory crunching. Victor's summary experience consists of 10 years as DevOps, 9 years as a QA engineer, 9 years as fullstack developer, Web3 since 2021 and 4 years of community management for a cloud gaming platform.",
         "link": null,
         "contacts": [
             {
                 "type": "telegram",
                 "ref": "https://t.me/viclarson",
-                "image": "/images/tg-logo.svg"
+                "image": "/images/tg-logo.png"
             }
         ]
     },
     {
         "name": "Roman Poludnev",
-        "image": "/images/rp.png",
+        "image": "/images/pr.png",
         "role": "Frontend Developer",
-        "description": "Roman is a highly valuable member of our team, exhibiting exceptional skills in front-end development. He has successfully created front-ends for multiple hackathon projects within tight deadlines, utilizing technologies such as React and TypeScript. Moreover, his willingness to learn and explore new technologies is evident in his ability to deliver high-quality work. Roman’s passion for coding, commitment to delivering quality work, and eagerness to learn make him an indispensable asset to our team",
+        "description": "",
         "link": null,
         "contacts": [
             {
                 "type": "telegram",
                 "ref": "https://t.me/roman_poludnev",
-                "image": "/images/tg-logo.svg"
+                "image": "/images/tg-logo.png"
             },
             {
                 "type": "github",
                 "ref": "https://github.com/poludnev",
-                "image": "/images/github-logo.svg"
+                "image": "/images/gh-logo.png"
             }
         ]
     },
     {
-        "name": "Popov Alexey",
-        "image": "/images/ap.png",
-        "role": "Frontend Developer",
-        "description": "Alexey is a talented young front-end developer who has achieved remarkable results in a short span of time and has made an invaluable contribution to the development of Chainhackers' projects",
-        "link": null,
-        "contacts": [
-            {
-                "type": "telegram",
-                "ref": "https://t.me/aldev1",
-                "image": "/images/tg-logo.svg"
-            },
-            {
-                "type": "github",
-                "ref": "https://github.com/pixelPepe",
-                "image": "/images/github-logo.svg"
-            }
-        ]
-    }, 
-    {
         "name": "Sinlin Yeo",
-        "image": "/images/sy.png",
+        "image": "/images/sl.png",
         "role": "UX Designer",
-        "description": "Sinlin has over 4 years of experience in Web UIUX Design. She shipped multiple B2B and B2C products. An individual who is constantly up for the next challenge in Web3, participating in ETH Boston 2019, ETH NewYork 2022, ETHZurich 2022 and more",
+        "description": "Sinlin has over 4 years of experience in Web UIUX Design. She shipped multiple B2B and B2C products. An individual who is constantly up for the next challenge in Web3, participating in ETH Boston 2019, ETH NewYork 2022, ETHZurich 2022 and more.",
         "link": null,
         "contacts": [
             {
                 "type": "telegram",
                 "ref": "https://t.me/sinliny",
-                "image": "/images/tg-logo.svg"
+                "image": "/images/tg-logo.png"
             },
             {
-                "type": "linked.in",
+                "type": "linkedIn",
                 "ref": "https://sg.linkedin.com/in/sinlinyeo",
-                "image": "/images/lnkdin-logo.svg"
+                "image": "/images/lnkdin-logo.png"
             }
         ]
     },
@@ -98,13 +79,13 @@
         "name": "Anastasia Busygina",
         "image": "/images/ab.png",
         "role": "Project Manager",
-        "description": "Anastasia is a skilled project manager with expertise in coordinating teams, managing deadlines, and planning and tracking development progress",
+        "description": "Interested in DAO and process optimization",
         "link": null,
         "contacts": [
             {
                 "type": "telegram",
                 "ref": "https://t.me/avditte",
-                "image": "/images/tg-logo.svg"
+                "image": "/images/tg-logo.png"
             }
         ]
     }
