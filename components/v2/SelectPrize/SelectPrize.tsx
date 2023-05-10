@@ -17,8 +17,7 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({
 }) => {
   const router = useRouter();
 
-  async function test(hash: any) {
-    console.log('test optional callback function');
+  async function setModalInfo(hash: any) {
     setIsTransactionPending(false);
     setIsRequestConfirmed(true);
     const address = await hash;
@@ -31,7 +30,7 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({
         await getRulesContract(gameType)
       ).address,
       isPaid,
-      test
+      setModalInfo
     );
     return proposeGameResult.gameId.toNumber();
   };
