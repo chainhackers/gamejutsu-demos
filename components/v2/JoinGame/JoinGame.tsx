@@ -8,9 +8,22 @@ import router from 'next/router';
 import { useAccount } from 'wagmi';
 import { BigNumber } from 'ethers';
 import gameApi, { getArbiter } from 'gameApi';
+import { Modal } from '../Modal';
 
 export const JoinGame: React.FC<JoinGamePropsI> = ({ games }) => {
   const account = useAccount();
+
+  const [isTransactionPending, setIsTransactionPending] =
+    useState<boolean>(false);
+  const [isRequestConfirmed, setIsRequestConfirmed] = useState<boolean>(false);
+  const [transactionLink, setTransactionLink] = useState<string>('');
+
+  async function setModalInfo(hash: any) {
+    setIsTransactionPending(false);
+    setIsRequestConfirmed(true);
+    const address = await hash;
+    setTransactionLink(address.hash);
+  }
 
   const acceptGameHandler = async (
     acceptedGameId: number,
@@ -25,7 +38,8 @@ export const JoinGame: React.FC<JoinGamePropsI> = ({ games }) => {
     const acceptGameResult = await gameApi.acceptGame(
       await getArbiter(),
       BigNumber.from(acceptedGameId),
-      stake
+      stake,
+      setModalInfo
     );
   };
 
@@ -39,17 +53,49 @@ export const JoinGame: React.FC<JoinGamePropsI> = ({ games }) => {
       router.push(`/games/${gameType}?game=${gameId}`);
       return;
     }
+    setIsTransactionPending(true);
     acceptGameHandler(parseInt(gameId), stake)
       .then(() => {
         router.push(`/games/${gameType}?game=${gameId}`);
       })
       .catch((error) => {
+        setIsTransactionPending(false);
+        setIsRequestConfirmed(false);
         console.error('Accepting game failed', error);
       });
   };
 
   return (
     <div>
+      {isTransactionPending && (
+        <Modal>
+          <div className={styles.modal}>
+            <h4 className={styles.modalTitle}>Pending Transaction</h4>
+            <p className={styles.modalSubtitle}>Game Creation</p>
+            <div className={styles.padding}></div>
+            <p className={styles.modalDescription}>
+              Confirm the request that's just appeared. If you can't see a
+              request, open your wallet extension.
+            </p>
+          </div>
+        </Modal>
+      )}
+      {isRequestConfirmed && (
+        <Modal>
+          <div className={styles.modal}>
+            <h4 className={styles.modalTitle}>Pending Transaction</h4>
+            <p className={styles.modalSubtitle}>Game Creation</p>
+            <div className={styles.loader}></div>
+            <a
+              href={`https://polygonscan.com/tx/${transactionLink}`}
+              target="_blank"
+              className={styles.modalDescriptionGradient}
+            >
+              See in blockchain explorer
+            </a>
+          </div>
+        </Modal>
+      )}
       {games?.map((gameInfo) => {
         const gameType = gameInfo.url as TGameType;
         return (
@@ -60,7 +106,13 @@ export const JoinGame: React.FC<JoinGamePropsI> = ({ games }) => {
               <p>Stake</p>
               <p>Proposer</p>
             </div>
-            <JoinGameList onClick={clickHandler} gameType={gameType} />
+            <JoinGameList
+              onClick={clickHandler}
+              gameType={gameType}
+              // setIsTransactionPending={setIsTransactionPending}
+              // setIsRequestConfirmed={setIsRequestConfirmed}
+              // setTransactionLink={setTransactionLink}
+            />
           </div>
         );
       })}

@@ -8,4 +8,7 @@ export interface JoinGameListPropsI {
     gameType: string,
     proposer: string
   ) => void;
+  // setIsTransactionPending: Function;
+  // setIsRequestConfirmed: Function;
+  // setTransactionLink: Function;
 }
