@@ -9,6 +9,7 @@ import { useAccount } from 'wagmi';
 import { BigNumber } from 'ethers';
 import gameApi, { getArbiter } from 'gameApi';
 import { Modal } from '../Modal';
+import modalStyles from '../Modal/Modal.module.scss'
 
 export const JoinGame: React.FC<JoinGamePropsI> = ({ games }) => {
   const account = useAccount();
@@ -69,11 +70,11 @@ export const JoinGame: React.FC<JoinGamePropsI> = ({ games }) => {
     <div>
       {isTransactionPending && (
         <Modal>
-          <div className={styles.modal}>
-            <h4 className={styles.modalTitle}>Pending Transaction</h4>
-            <p className={styles.modalSubtitle}>Game Creation</p>
-            <div className={styles.padding}></div>
-            <p className={styles.modalDescription}>
+          <div className={modalStyles.modal}>
+            <h4 className={modalStyles.modalTitle}>Pending Transaction</h4>
+            <p className={modalStyles.modalSubtitle}>Game Creation</p>
+            <div className={modalStyles.padding}></div>
+            <p className={modalStyles.modalDescription}>
               Confirm the request that's just appeared. If you can't see a
               request, open your wallet extension.
             </p>
@@ -82,14 +83,14 @@ export const JoinGame: React.FC<JoinGamePropsI> = ({ games }) => {
       )}
       {isRequestConfirmed && (
         <Modal>
-          <div className={styles.modal}>
-            <h4 className={styles.modalTitle}>Pending Transaction</h4>
-            <p className={styles.modalSubtitle}>Game Creation</p>
-            <div className={styles.loader}></div>
+          <div className={modalStyles.modal}>
+            <h4 className={modalStyles.modalTitle}>Pending Transaction</h4>
+            <p className={modalStyles.modalSubtitle}>Game Creation</p>
+            <div className={modalStyles.loader}></div>
             <a
               href={`https://polygonscan.com/tx/${transactionLink}`}
               target="_blank"
-              className={styles.modalDescriptionGradient}
+              className={modalStyles.modalDescriptionGradient}
             >
               See in blockchain explorer
             </a>
