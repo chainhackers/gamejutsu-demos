@@ -13,7 +13,7 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({
   isRequestConfirmed,
   setIsRequestConfirmed,
   transactionLink,
-  setTransatctionLink,
+  setTransactionLink,
 }) => {
   const router = useRouter();
 
@@ -21,7 +21,7 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({
     setIsTransactionPending(false);
     setIsRequestConfirmed(true);
     const address = await hash;
-    setTransatctionLink(address.hash);
+    setTransactionLink(address.hash);
   }
   const createNewGameHandler = async (isPaid: boolean = false) => {
     let proposeGameResult: GameProposedEventObject = await gameApi.proposeGame(

@@ -10,5 +10,5 @@ export interface SelectPrizePropsI {
   isRequestConfirmed: boolean;
   setIsRequestConfirmed: Function;
   transactionLink: string;
-  setTransatctionLink: Function;
+  setTransactionLink: Function;
 }
