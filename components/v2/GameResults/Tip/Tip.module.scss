@@ -1,0 +1,18 @@
+.card {
+  display: flex;
+  align-items: center;
+  padding: 20px 10px;
+  gap: 10px;
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  margin-bottom: 4rem;
+
+  p {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 130%;
+    color: #2e303d;
+  }
+}

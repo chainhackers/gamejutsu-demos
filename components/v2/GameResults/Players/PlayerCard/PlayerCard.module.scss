@@ -1,0 +1,40 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  background: #ffffff;
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+
+  &.winnerCard {
+    border: 2px solid #8777da;
+    box-shadow: 0px 4px 6px rgba(135, 119, 218, 0.3);
+  }
+
+  .row {
+    display: flex;
+    align-items: center;
+  }
+
+  .address {
+    margin-left: 4px;
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 130%;
+    color: #9c9eab;
+  }
+
+  .winner {
+    margin-bottom: 0.6rem;
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 130%;
+    color: #8777da;
+  }
+}
