@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styles from './SelectPrize.module.scss';
 import { SelectPrizePropsI } from './SelectPrizeProps';
 import gameApi, { getArbiter, getRulesContract } from 'gameApi';
@@ -8,11 +8,8 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({
   gameType,
   address,
   url,
-  isTransactionPending,
   setIsTransactionPending,
-  isRequestConfirmed,
   setIsRequestConfirmed,
-  transactionLink,
   setTransactionLink,
 }) => {
   const router = useRouter();
