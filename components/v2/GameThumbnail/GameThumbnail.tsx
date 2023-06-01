@@ -2,7 +2,6 @@
 import { GameThumbnailPropsI } from './GameThumbnailProps';
 
 import styles from './GameThumbnail.module.scss';
-import Link from 'next/link';
 import { useAccount } from 'wagmi';
 import { useEffect, useState } from 'react';
 import { getRulesContract } from 'gameApi';
@@ -10,21 +9,21 @@ import { TGameType } from 'types/game';
 import { useTranslation } from 'react-i18next';
 import { SelectPrize } from '../SelectPrize';
 import Blockies from 'react-blockies';
-import {shortenAddress} from 'helpers/utils';
+import { shortenAddress } from 'helpers/utils';
+import { useRouter } from 'next/router';
 
 export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
   name,
   image,
   url,
   description,
-  isTransactionPending,
   setIsTransactionPending,
-  isRequestConfirmed,
   setIsRequestConfirmed,
-  transactionLink,
   setTransactionLink,
+  // setSelectedTab,
 }) => {
   const { t } = useTranslation();
+  const router = useRouter();
   const [rulesAddress, setRulesAddress] = useState('');
   const [isStartButtonOpen, setIsStartButtonOpen] = useState(false);
 
@@ -41,6 +40,10 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
       setRulesAddress(response.address);
     });
   }, []);
+
+  const joinGameRedirect = () => {
+    router.push(`/v2/join`);
+  };
 
   return (
     <div className={styles.container}>
@@ -62,16 +65,13 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
         </div>
       </div>
       <div className={styles.buttons}>
-        <Link
-          href={address ? `/games/${url}?join=true` : `/connect?game=${url}`}
-        >
-          <button>
-            Join{' '}
-            <div className={styles.users}>
-              <img src="/images/users.svg" alt="" />
-            </div>
-          </button>
-        </Link>
+        <button onClick={joinGameRedirect}>
+          Join{' '}
+          <div className={styles.users}>
+            <img src="/images/users.svg" alt="" />
+          </div>
+        </button>
+
         <button onClick={toggleStartButton}>
           Start new game
           <div
@@ -88,11 +88,8 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
           gameType={game}
           address={!!address}
           url={url}
-          isTransactionPending={isTransactionPending}
           setIsTransactionPending={setIsTransactionPending}
-          isRequestConfirmed={isRequestConfirmed}
           setIsRequestConfirmed={setIsRequestConfirmed}
-          transactionLink={transactionLink}
           setTransactionLink={setTransactionLink}
         />
       )}
