@@ -5,10 +5,7 @@ export interface SelectPrizePropsI {
   gameType: TGameType;
   address: boolean;
   url: string;
-  isTransactionPending: boolean;
   setIsTransactionPending: Function;
-  isRequestConfirmed: boolean;
   setIsRequestConfirmed: Function;
-  transactionLink: string;
   setTransactionLink: Function;
 }

@@ -1,12 +1,14 @@
-import { useTranslation } from 'react-i18next';
 import { GameThumbnail } from 'components/v2/GameThumbnail';
 import styles from './GameDemo.module.scss';
 import { GameDemoPropsI } from './GameDemoProps';
 import { useState } from 'react';
 import { Modal } from '../Modal/Modal';
-import modalStyles from '../Modal/Modal.module.scss'
+import modalStyles from '../Modal/Modal.module.scss';
 
-export const GameDemo: React.FC<GameDemoPropsI> = ({ games }) => {
+export const GameDemo: React.FC<GameDemoPropsI> = ({
+  games,
+  setSelectedTab,
+}) => {
   const [isTransactionPending, setIsTransactionPending] =
     useState<boolean>(false);
   const [isRequestConfirmed, setIsRequestConfirmed] = useState<boolean>(false);
@@ -53,12 +55,10 @@ export const GameDemo: React.FC<GameDemoPropsI> = ({ games }) => {
                 name={game.name}
                 url={game.url}
                 description={game.description}
-                isTransactionPending={isTransactionPending}
                 setIsTransactionPending={setIsTransactionPending}
-                isRequestConfirmed={isRequestConfirmed}
                 setIsRequestConfirmed={setIsRequestConfirmed}
-                transactionLink={transactionLink}
                 setTransactionLink={setTransactionLink}
+                // setSelectedTab={setSelectedTab}
               />
             );
           })}

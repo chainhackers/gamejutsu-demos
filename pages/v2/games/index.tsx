@@ -1,57 +1,70 @@
-import { Tabs } from 'components/v2/Tabs';
-import { GameDemo } from 'components/v2/GameDemo/GameDemo';
-import { JoinGame } from 'components/v2/JoinGame';
-import { MyGames } from 'components/v2/MyGames';
-import styles from './games.module.scss';
-import games from 'data/games.json';
+import { GameThumbnail } from 'components/v2/GameThumbnail';
+import styles from './gamedemo.module.scss';
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Modal } from 'components/v2/Modal';
+import modalStyles from 'components/v2/Modal/Modal.module.scss';
+import { NextPage } from 'next';
+import games from 'data/games.json';
+import { Tabs } from 'components/v2/Tabs';
 
-const GamesPage = () => {
-  const { t } = useTranslation();
-  const [selectedTab, setSelectedTab] = useState<string>('Game demo');
-
-  const tabsList = ['Game demo', 'Join game', 'My games'];
+const GameDemo: NextPage = () => {
+  const [isTransactionPending, setIsTransactionPending] =
+    useState<boolean>(false);
+  const [isRequestConfirmed, setIsRequestConfirmed] = useState<boolean>(false);
+  const [transactionLink, setTransactionLink] = useState<string>('');
   return (
     <div className={styles.container}>
-      {selectedTab === 'Game demo' && (
-        <>
-          <h3 className={styles.title}>{t('gamesPage.gameDemo.title')}</h3>
-          <div className={styles.description}>
-            {t('gamesPage.gameDemo.description')}
+      <Tabs />
+      {isTransactionPending && (
+        <Modal>
+          <div className={modalStyles.modal}>
+            <h4 className={modalStyles.modalTitle}>Pending Transaction</h4>
+            <p className={modalStyles.modalSubtitle}>Game Creation</p>
+            <div className={modalStyles.padding}></div>
+            <p className={modalStyles.modalDescription}>
+              Confirm the request that's just appeared. If you can't see a
+              request, open your wallet extension.
+            </p>
           </div>
-        </>
+        </Modal>
       )}
-      {selectedTab === 'Join game' && (
-        <>
-          <h3 className={styles.title}>{t('gamesPage.joinGame.title')}</h3>
-          <div className={styles.description}>
-            {t('gamesPage.joinGame.description')}
+      {isRequestConfirmed && (
+        <Modal>
+          <div className={modalStyles.modal}>
+            <h4 className={modalStyles.modalTitle}>Pending Transaction</h4>
+            <p className={modalStyles.modalSubtitle}>Game Creation</p>
+            <div className={modalStyles.loader}></div>
+            <a
+              href={`https://polygonscan.com/tx/${transactionLink}`}
+              target="_blank"
+              className={modalStyles.modalDescriptionGradient}
+            >
+              See in blockchain explorer
+            </a>
           </div>
-        </>
+        </Modal>
       )}
 
-      {selectedTab === 'My games' && (
-        <>
-          <h3 className={styles.title}>{t('gamesPage.myGames.title')}</h3>
-          <div className={styles.description}>
-            {t('gamesPage.myGames.description')}
-          </div>
-        </>
-      )}
-      <Tabs
-        tabsList={tabsList}
-        selectedTab={selectedTab}
-        onClick={setSelectedTab}
-      />
-      {selectedTab === 'Game demo' && <GameDemo games={games} />}
-      {selectedTab === 'Join game' && <JoinGame games={games} />}
-      {selectedTab === 'My games' && <MyGames games={games} />}
-      <div className={styles.description}>
-        To start or join the game, you will need to make a transaction
+      <div className={styles.gamelist}>
+        {games &&
+          games.map((game, index) => {
+            return (
+              <GameThumbnail
+                key={game.name + index}
+                {...game}
+                name={game.name}
+                url={game.url}
+                description={game.description}
+                setIsTransactionPending={setIsTransactionPending}
+                setIsRequestConfirmed={setIsRequestConfirmed}
+                setTransactionLink={setTransactionLink}
+                // setSelectedTab={setSelectedTab}
+              />
+            );
+          })}
       </div>
     </div>
   );
 };
 
-export default GamesPage;
+export default GameDemo;
