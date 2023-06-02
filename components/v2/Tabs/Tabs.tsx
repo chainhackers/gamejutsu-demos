@@ -2,30 +2,39 @@ import React from 'react';
 import { TabsPropsI } from './TabsProps';
 import styles from './Tabs.module.scss';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
+import classNames from 'classnames';
 
 export const Tabs: React.FC<TabsPropsI> = () => {
+  const cn = classNames;
   const router = useRouter();
   const { pathname } = router;
-  const pathArray = pathname.split('/');
-  const lastPathValue = pathArray[pathArray.length - 1];
-  console.log(lastPathValue);
-
-  const gameDemoRedirect = () => {
-    router.push('/v2/games');
-  };
-  const joinGameRedirect = () => {
-    router.push('/v2/join');
-  };
-  const myGamesRedirect = () => {
-    router.push('/v2/mygames');
-  };
+  const pathArray: string[] = pathname.split('/');
 
   return (
     <div className={styles.tabs}>
       <ul>
-        <li onClick={gameDemoRedirect}>Game demo</li>
-        <li onClick={joinGameRedirect}>Join game</li>
-        <li onClick={myGamesRedirect}>My games</li>
+        <Link href="/v2/games">
+          <li
+            className={cn(pathArray.includes('games') ? styles.active : null)}
+          >
+            Game demo
+          </li>
+        </Link>
+        <Link href="/v2/join">
+          <li className={cn(pathArray.includes('join') ? styles.active : null)}>
+            Join game
+          </li>
+        </Link>
+        <Link href="/v2/my-games">
+          <li
+            className={cn(
+              pathArray.includes('my-games') ? styles.active : null
+            )}
+          >
+            My games
+          </li>
+        </Link>
       </ul>
     </div>
   );
