@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { MyGamesListPropsI } from './MyGamesListProps';
 import styles from './MyGamesList.module.scss';
-import { MyGameCard } from '../../MyGameCard';
+import { MyGameCard } from '../MyGameCard';
 import { getRulesContract } from 'gameApi';
 import { useQuery } from '@apollo/client';
 import { gameEntitiesQuery } from 'queries';

@@ -2,7 +2,7 @@ import React from 'react';
 // import { MyGamesPropsI } from './MyGamesProps';
 import styles from './MyGames.module.scss';
 import { GameInfo } from 'components/v2/GameInfo';
-import { MyGamesList } from 'components/v2/MyGames/MyGamesList';
+import { MyGamesList } from 'components/v2/MyGamesList';
 import { TGameType } from 'types/game';
 import { NextPage } from 'next';
 import games from 'data/games.json';

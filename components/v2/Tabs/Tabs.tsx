@@ -9,23 +9,29 @@ export const Tabs: React.FC<TabsPropsI> = () => {
   const cn = classNames;
   const router = useRouter();
   const { pathname } = router;
+  const { gameType } = router.query;
   const pathArray: string[] = pathname.split('/');
 
   return (
     <div className={styles.tabs}>
       <ul>
-        <Link href="/v2/games">
-          <li
-            className={cn(pathArray.includes('games') ? styles.active : null)}
-          >
-            Game demo
-          </li>
-        </Link>
-        <Link href="/v2/join">
-          <li className={cn(pathArray.includes('join') ? styles.active : null)}>
-            Join game
-          </li>
-        </Link>
+        {gameType ? (
+          <Link href="/v2/join">
+            <li
+              className={cn(pathArray.includes('join') ? styles.active : null)}
+            >
+              Join game
+            </li>
+          </Link>
+        ) : (
+          <Link href="/v2/games">
+            <li
+              className={cn(pathArray.includes('games') ? styles.active : null)}
+            >
+              Game demo
+            </li>
+          </Link>
+        )}
         <Link href="/v2/my-games">
           <li
             className={cn(
