@@ -1,19 +1,25 @@
 import { GameThumbnail } from 'components/v2/GameThumbnail';
-import styles from './gamedemo.module.scss';
+import styles from './GameDemo.module.scss';
 import { useState } from 'react';
 import { Modal } from 'components/v2/Modal';
 import modalStyles from 'components/v2/Modal/Modal.module.scss';
 import { NextPage } from 'next';
 import games from 'data/games.json';
 import { Tabs } from 'components/v2/Tabs';
+import { useTranslation } from 'react-i18next';
 
 const GameDemo: NextPage = () => {
+  const { t } = useTranslation();
   const [isTransactionPending, setIsTransactionPending] =
     useState<boolean>(false);
   const [isRequestConfirmed, setIsRequestConfirmed] = useState<boolean>(false);
   const [transactionLink, setTransactionLink] = useState<string>('');
   return (
     <div className={styles.container}>
+      <h3 className={styles.title}>{t('gamesPage.gameDemo.title')}</h3>
+      <div className={styles.description}>
+        {t('gamesPage.gameDemo.description')}
+      </div>
       <Tabs />
       {isTransactionPending && (
         <Modal>
