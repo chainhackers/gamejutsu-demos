@@ -4,7 +4,7 @@ import { RainbowKitProvider, getDefaultWallets } from '@rainbow-me/rainbowkit';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { polygon } from 'wagmi/chains';
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
-import { publicProvider } from 'wagmi/providers/public';
+// import { publicProvider } from 'wagmi/providers/public';
 
 import { Layout } from 'components';
 import { WalletContextProvider } from 'contexts/WalltetContext';
@@ -40,7 +40,7 @@ const client = new ApolloClient({
   cache,
 });
 
-const version = '1.2.31';
+const version = '1.2.32';
 function MyApp({ Component, pageProps }: AppProps) {
   const props = { ...pageProps, version };
   return (
