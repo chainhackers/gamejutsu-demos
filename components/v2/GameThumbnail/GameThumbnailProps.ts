@@ -1,5 +1,3 @@
-import { Dispatch, SetStateAction } from 'react';
-
 export interface GameThumbnailPropsI {
   children?: React.ReactNode;
   name: string;
@@ -9,5 +7,4 @@ export interface GameThumbnailPropsI {
   setIsTransactionPending: Function;
   setIsRequestConfirmed: Function;
   setTransactionLink: Function;
-  // setSelectedTab: Dispatch<SetStateAction<string>>;
 }

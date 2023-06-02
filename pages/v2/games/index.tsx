@@ -7,6 +7,7 @@ import { NextPage } from 'next';
 import games from 'data/games.json';
 import { Tabs } from 'components/v2/Tabs';
 import { useTranslation } from 'react-i18next';
+import { TGameType } from 'types/game';
 
 const GameDemo: NextPage = () => {
   const { t } = useTranslation();
@@ -54,6 +55,7 @@ const GameDemo: NextPage = () => {
       <div className={styles.gamelist}>
         {games &&
           games.map((game, index) => {
+            const gameType = game.url as TGameType;
             return (
               <GameThumbnail
                 key={game.name + index}
@@ -64,7 +66,6 @@ const GameDemo: NextPage = () => {
                 setIsTransactionPending={setIsTransactionPending}
                 setIsRequestConfirmed={setIsRequestConfirmed}
                 setTransactionLink={setTransactionLink}
-                // setSelectedTab={setSelectedTab}
               />
             );
           })}

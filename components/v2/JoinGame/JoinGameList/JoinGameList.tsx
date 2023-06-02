@@ -6,6 +6,7 @@ import { JoinGameCard } from '../JoinGameCard';
 import { gameEntitiesQuery } from 'queries';
 import { useQuery } from '@apollo/client';
 import { ZERO_ADDRESS } from 'types/constants';
+import { TGameType } from 'types/game';
 
 export const JoinGameList: React.FC<JoinGameListPropsI> = ({
   gameType,
@@ -23,7 +24,7 @@ export const JoinGameList: React.FC<JoinGameListPropsI> = ({
 
   const dataToShow = !!gameEntities ? gameEntities : [];
   useEffect(() => {
-    getRulesContract(gameType).then((response) => {
+    getRulesContract(gameType as TGameType).then((response) => {
       setRulesContractAddress(response.address);
     });
   }, [gameType]);

@@ -11,6 +11,7 @@ import { SelectPrize } from '../SelectPrize';
 import Blockies from 'react-blockies';
 import { shortenAddress } from 'helpers/utils';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
   name,
@@ -20,7 +21,6 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
   setIsTransactionPending,
   setIsRequestConfirmed,
   setTransactionLink,
-  // setSelectedTab,
 }) => {
   const { t } = useTranslation();
   const router = useRouter();
@@ -28,7 +28,7 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
   const [isStartButtonOpen, setIsStartButtonOpen] = useState(false);
 
   const gameName = t(`gameTypePage.games.${name}`);
-  const game = url as TGameType;
+  const gameType = url as TGameType;
   const { address } = useAccount();
 
   function toggleStartButton() {
@@ -36,14 +36,10 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
   }
 
   useEffect(() => {
-    getRulesContract(game).then((response) => {
+    getRulesContract(gameType).then((response) => {
       setRulesAddress(response.address);
     });
   }, []);
-
-  const joinGameRedirect = () => {
-    router.push(`/v2/join`);
-  };
 
   return (
     <div className={styles.container}>
@@ -65,12 +61,14 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
         </div>
       </div>
       <div className={styles.buttons}>
-        <button onClick={joinGameRedirect}>
-          Join{' '}
-          <div className={styles.users}>
-            <img src="/images/users.svg" alt="" />
-          </div>
-        </button>
+        <Link href={`/v2/join?gameType=${gameType}`}>
+          <button>
+            Join{' '}
+            <div className={styles.users}>
+              <img src="/images/users.svg" alt="" />
+            </div>
+          </button>
+        </Link>
 
         <button onClick={toggleStartButton}>
           Start new game
@@ -85,7 +83,7 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
       </div>
       {isStartButtonOpen && (
         <SelectPrize
-          gameType={game}
+          gameType={gameType}
           address={!!address}
           url={url}
           setIsTransactionPending={setIsTransactionPending}

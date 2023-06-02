@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
-// import { JoinGamePropsI } from './JoinGameProps';
+import React, { useState } from 'react';
 import styles from './join.module.scss';
 import { TGameType } from 'types/game';
 import { GameInfo } from 'components/v2/GameInfo';
 import { JoinGameList } from 'components/v2/JoinGame/JoinGameList';
-import router from 'next/router';
+import { useRouter } from 'next/router';
 import { useAccount } from 'wagmi';
 import { BigNumber } from 'ethers';
 import gameApi, { getArbiter } from 'gameApi';
@@ -16,6 +15,8 @@ import { Tabs } from 'components/v2/Tabs';
 import { useTranslation } from 'react-i18next';
 
 const JoinGame: NextPage = () => {
+  const router = useRouter();
+  const { gameType } = router.query;
   const account = useAccount();
   const { t } = useTranslation();
 
@@ -108,24 +109,19 @@ const JoinGame: NextPage = () => {
         </Modal>
       )}
       {games?.map((gameInfo) => {
-        const gameType = gameInfo.url as TGameType;
-        return (
-          <div key={gameInfo.name}>
-            <GameInfo {...gameInfo} />
-            <div className={styles.gameListInfo}>
-              <p>Id</p>
-              <p>Stake</p>
-              <p>Proposer</p>
+        if (gameInfo.url === gameType) {
+          return (
+            <div key={gameInfo.name}>
+              <GameInfo {...gameInfo} />
+              <div className={styles.gameListInfo}>
+                <p>Id</p>
+                <p>Stake</p>
+                <p>Proposer</p>
+              </div>
+              <JoinGameList onClick={clickHandler} gameType={gameType} />
             </div>
-            <JoinGameList
-              onClick={clickHandler}
-              gameType={gameType}
-              //   setIsTransactionPending={setIsTransactionPending}
-              //   setIsRequestConfirmed={setIsRequestConfirmed}
-              //   setTransactionLink={setTransactionLink}
-            />
-          </div>
-        );
+          );
+        }
       })}
     </div>
   );

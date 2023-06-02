@@ -1,14 +1,9 @@
-import { TGameType } from 'types/game';
-
 export interface JoinGameListPropsI {
-  gameType: TGameType;
+  gameType: string;
   onClick: (
     gameId: string,
     stake: string,
     gameType: string,
     proposer: string
   ) => void;
-  // setIsTransactionPending: Function;
-  // setIsRequestConfirmed: Function;
-  // setTransactionLink: Function;
 }
