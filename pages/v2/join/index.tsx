@@ -13,9 +13,11 @@ import modalStyles from 'components/v2/Modal/Modal.module.scss';
 import { NextPage } from 'next';
 import games from 'data/games.json';
 import { Tabs } from 'components/v2/Tabs';
+import { useTranslation } from 'react-i18next';
 
 const JoinGame: NextPage = () => {
   const account = useAccount();
+  const { t } = useTranslation();
 
   const [isTransactionPending, setIsTransactionPending] =
     useState<boolean>(false);
@@ -71,6 +73,10 @@ const JoinGame: NextPage = () => {
 
   return (
     <div className={styles.container}>
+      <h3 className={styles.title}>{t('gamesPage.joinGame.title')}</h3>
+      <div className={styles.description}>
+        {t('gamesPage.joinGame.description')}
+      </div>
       <Tabs />
       {isTransactionPending && (
         <Modal>

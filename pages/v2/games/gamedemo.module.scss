@@ -4,15 +4,18 @@
   margin-top: 50px;
 
   .title {
-    font-size: 42px;
-    font-weight: bold;
-    margin-bottom: 12px;
-
-    @media (max-width: 576px) {
-      font-size: 33px;
-    }
+    text-align: start;
+    margin-bottom: 10px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 130%;
+    color: #2e303d;
   }
   .description {
+    text-align: start;
+    margin-bottom: 20px;
     font-family: 'Inter';
     font-style: normal;
     font-weight: 400;
