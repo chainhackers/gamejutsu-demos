@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from './join.module.scss';
+import styles from './Join.module.scss';
 import { GameInfo } from 'components/v2/GameInfo';
 import { JoinGameList } from 'components/v2/JoinGameList';
 import { useRouter } from 'next/router';

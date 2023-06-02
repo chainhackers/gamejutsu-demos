@@ -1,5 +1,5 @@
 import { GameThumbnail } from 'components/v2/GameThumbnail';
-import styles from './games.module.scss';
+import styles from './Games.module.scss';
 import { useState } from 'react';
 import { Modal } from 'components/v2/Modal';
 import modalStyles from 'components/v2/Modal/Modal.module.scss';
