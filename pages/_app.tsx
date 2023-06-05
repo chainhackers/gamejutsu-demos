@@ -42,7 +42,7 @@ const client = new ApolloClient({
 const key = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY;
 console.log(key);
 
-const version = '1.2.33';
+const version = '1.2.34';
 function MyApp({ Component, pageProps }: AppProps) {
   const props = { ...pageProps, version };
   return (
