@@ -7,14 +7,24 @@ import { NextPage } from 'next';
 import games from 'data/games.json';
 import { Tabs } from 'components/v2/Tabs';
 import { useTranslation } from 'react-i18next';
-import { TGameType } from 'types/game';
+import { WalletModal } from 'components/v2/WalletModal';
 
 const GameDemo: NextPage = () => {
   const { t } = useTranslation();
+
   const [isTransactionPending, setIsTransactionPending] =
     useState<boolean>(false);
   const [isRequestConfirmed, setIsRequestConfirmed] = useState<boolean>(false);
   const [transactionLink, setTransactionLink] = useState<string>('');
+
+  const [showWalletModal, setShowWalletModal] = useState<boolean>(false);
+  const openWalletModal = () => {
+    setShowWalletModal(true);
+  };
+  const closeWalletModal = () => {
+    setShowWalletModal(false);
+  };
+
   return (
     <div className={styles.container}>
       <h3 className={styles.title}>{t('gamesPage.gameDemo.title')}</h3>
@@ -22,8 +32,9 @@ const GameDemo: NextPage = () => {
         {t('gamesPage.gameDemo.description')}
       </div>
       <Tabs />
+      {showWalletModal && <WalletModal closeModal={closeWalletModal} />}
       {isTransactionPending && (
-        <Modal>
+        <Modal isClosable={false}>
           <div className={modalStyles.modal}>
             <h4 className={modalStyles.modalTitle}>Pending Transaction</h4>
             <p className={modalStyles.modalSubtitle}>Game Creation</p>
@@ -36,7 +47,7 @@ const GameDemo: NextPage = () => {
         </Modal>
       )}
       {isRequestConfirmed && (
-        <Modal>
+        <Modal isClosable={false}>
           <div className={modalStyles.modal}>
             <h4 className={modalStyles.modalTitle}>Pending Transaction</h4>
             <p className={modalStyles.modalSubtitle}>Game Creation</p>
@@ -55,7 +66,6 @@ const GameDemo: NextPage = () => {
       <div className={styles.gamelist}>
         {games &&
           games.map((game, index) => {
-            const gameType = game.url as TGameType;
             return (
               <GameThumbnail
                 key={game.name + index}
@@ -66,6 +76,7 @@ const GameDemo: NextPage = () => {
                 setIsTransactionPending={setIsTransactionPending}
                 setIsRequestConfirmed={setIsRequestConfirmed}
                 setTransactionLink={setTransactionLink}
+                openWalletModal={openWalletModal}
               />
             );
           })}

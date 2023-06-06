@@ -8,4 +8,5 @@ export interface SelectPrizePropsI {
   setIsTransactionPending: Function;
   setIsRequestConfirmed: Function;
   setTransactionLink: Function;
+  openWalletModal: () => void;
 }

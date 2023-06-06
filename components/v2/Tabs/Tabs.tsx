@@ -16,13 +16,9 @@ export const Tabs: React.FC<TabsPropsI> = () => {
     <div className={styles.tabs}>
       <ul>
         {gameType ? (
-          <Link href="/v2/join">
-            <li
-              className={cn(pathArray.includes('join') ? styles.active : null)}
-            >
-              Join game
-            </li>
-          </Link>
+          <li className={cn(pathArray.includes('join') ? styles.active : null)}>
+            Join game
+          </li>
         ) : (
           <Link href="/v2/games">
             <li

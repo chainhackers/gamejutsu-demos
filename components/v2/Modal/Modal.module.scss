@@ -13,10 +13,40 @@
 }
 
 .content {
+  position: relative;
   padding: 40px;
   border-radius: 20px;
   width: 100%;
   background-color: #fff;
+}
+
+.cross {
+  position: absolute;
+  top: 2.4rem;
+  right: 2.4rem;
+  display: flex;
+  align-items: center;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+
+  .line1 {
+    position: absolute;
+    width: 16px;
+    height: 2px;
+    background-color: #9c9eab;
+    border-radius: 2px;
+    transform: rotate(45deg);
+  }
+
+  .line2 {
+    position: absolute;
+    width: 16px;
+    height: 2px;
+    background-color: #9c9eab;
+    border-radius: 2px;
+    transform: rotate(-45deg);
+  }
 }
 
 .modal {

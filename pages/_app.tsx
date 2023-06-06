@@ -39,8 +39,6 @@ const client = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/chainhackers/gamejutsu-subgraph',
   cache,
 });
-const key = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY;
-console.log(key);
 
 const version = '1.2.34';
 function MyApp({ Component, pageProps }: AppProps) {

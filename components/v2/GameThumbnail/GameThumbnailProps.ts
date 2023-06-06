@@ -7,4 +7,5 @@ export interface GameThumbnailPropsI {
   setIsTransactionPending: Function;
   setIsRequestConfirmed: Function;
   setTransactionLink: Function;
+  openWalletModal: () => void;
 }

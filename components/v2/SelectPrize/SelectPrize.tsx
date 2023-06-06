@@ -11,14 +11,15 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({
   setIsTransactionPending,
   setIsRequestConfirmed,
   setTransactionLink,
+  openWalletModal,
 }) => {
   const router = useRouter();
 
   async function setModalInfo(hash: any) {
     setIsTransactionPending(false);
     setIsRequestConfirmed(true);
-    const address = await hash;
-    setTransactionLink(address.hash);
+    const transactionAddress = await hash;
+    setTransactionLink(transactionAddress.hash);
   }
   const createNewGameHandler = async (isPaid: boolean = false) => {
     let proposeGameResult: GameProposedEventObject = await gameApi.proposeGame(
@@ -33,6 +34,10 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({
   };
 
   const clickHandler = async (stake: false | 'stake') => {
+    if (!address) {
+      openWalletModal();
+      return;
+    }
     setIsTransactionPending(true);
     createNewGameHandler(!!stake)
       .then((gameId) => {
@@ -46,11 +51,11 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({
   };
 
   const createFreeGameHandler = async () => {
-    address ? clickHandler(false) : router.push(`/connect?game=${url}`);
+    clickHandler(false);
   };
 
   const createPaidGameHandler = async () => {
-    address ? clickHandler('stake') : router.push(`/connect?game=${url}`);
+    clickHandler('stake');
   };
 
   return (
