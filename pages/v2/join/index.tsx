@@ -12,12 +12,21 @@ import { NextPage } from 'next';
 import games from 'data/games.json';
 import { Tabs } from 'components/v2/Tabs';
 import { useTranslation } from 'react-i18next';
+import { WalletModal } from 'components/v2/WalletModal';
 
 const JoinGame: NextPage = () => {
   const router = useRouter();
   const { gameType } = router.query;
   const account = useAccount();
   const { t } = useTranslation();
+
+  const [showWalletModal, setShowWalletModal] = useState<boolean>(false);
+  const openWalletModal = () => {
+    setShowWalletModal(true);
+  };
+  const closeWalletModal = () => {
+    setShowWalletModal(false);
+  };
 
   const [isTransactionPending, setIsTransactionPending] =
     useState<boolean>(false);
@@ -55,6 +64,10 @@ const JoinGame: NextPage = () => {
     gameType: string,
     proposer: string
   ) => {
+    if (!account.address) {
+      openWalletModal();
+      return;
+    }
     if (account.address!.toLowerCase() === proposer) {
       router.push(`/games/${gameType}?game=${gameId}`);
       return;
@@ -78,8 +91,9 @@ const JoinGame: NextPage = () => {
         {t('gamesPage.joinGame.description')}
       </div>
       <Tabs />
+      {showWalletModal && <WalletModal closeModal={closeWalletModal} />}
       {isTransactionPending && (
-        <Modal>
+        <Modal isClosable={false}>
           <div className={modalStyles.modal}>
             <h4 className={modalStyles.modalTitle}>Pending Transaction</h4>
             <p className={modalStyles.modalSubtitle}>Game Creation</p>
@@ -92,7 +106,7 @@ const JoinGame: NextPage = () => {
         </Modal>
       )}
       {isRequestConfirmed && (
-        <Modal>
+        <Modal isClosable={false}>
           <div className={modalStyles.modal}>
             <h4 className={modalStyles.modalTitle}>Pending Transaction</h4>
             <p className={modalStyles.modalSubtitle}>Game Creation</p>

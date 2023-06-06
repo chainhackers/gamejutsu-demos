@@ -10,7 +10,6 @@ import { useTranslation } from 'react-i18next';
 import { SelectPrize } from '../SelectPrize';
 import Blockies from 'react-blockies';
 import { shortenAddress } from 'helpers/utils';
-import { useRouter } from 'next/router';
 import Link from 'next/link';
 
 export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
@@ -21,9 +20,9 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
   setIsTransactionPending,
   setIsRequestConfirmed,
   setTransactionLink,
+  openWalletModal,
 }) => {
   const { t } = useTranslation();
-  const router = useRouter();
   const [rulesAddress, setRulesAddress] = useState('');
   const [isStartButtonOpen, setIsStartButtonOpen] = useState(false);
 
@@ -89,6 +88,7 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
           setIsTransactionPending={setIsTransactionPending}
           setIsRequestConfirmed={setIsRequestConfirmed}
           setTransactionLink={setTransactionLink}
+          openWalletModal={openWalletModal}
         />
       )}
     </div>

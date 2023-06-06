@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 
 const MyGames: NextPage = () => {
   const { t } = useTranslation();
+
   return (
     <div className={styles.container}>
       <h3 className={styles.title}>{t('gamesPage.myGames.title')}</h3>

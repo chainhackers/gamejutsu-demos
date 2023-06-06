@@ -21,6 +21,7 @@ export const MyGamesList: React.FC<MyGamesListPropsI> = ({ gameType }) => {
   }[];
 
   const dataToShow = !!gameEntities ? gameEntities : [];
+
   useEffect(() => {
     getRulesContract(gameType).then((response) => {
       setRulesContractAddress(response.address);
@@ -28,11 +29,17 @@ export const MyGamesList: React.FC<MyGamesListPropsI> = ({ gameType }) => {
   }, [gameType]);
 
   const filteredGames = dataToShow.filter((game: any) => {
-    return (
-      game.proposer === account.address!.toLowerCase() ||
-      game.accepter === account.address!.toLowerCase()
-    );
+    if (account.address) {
+      return (
+        game.proposer === account.address!.toLowerCase() ||
+        game.accepter === account.address!.toLowerCase()
+      );
+    }
   });
+
+  if (!account.address) {
+    return <p className={styles.noGames}>You have no games in this section</p>;
+  }
 
   return (
     <div className={styles.gamesList}>
