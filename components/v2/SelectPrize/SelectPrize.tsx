@@ -28,6 +28,7 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({
         await getRulesContract(gameType)
       ).address,
       isPaid,
+      setModalInfo
     );
     return proposeGameResult.gameId.toNumber();
   };
