@@ -21,19 +21,18 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({
     const transactionAddress = await hash;
     setTransactionLink(transactionAddress.hash);
   }
-  const createNewGameHandler = async (isPaid: boolean = false) => {
+  const createNewGameHandler = async (isPaid: boolean) => {
     let proposeGameResult: GameProposedEventObject = await gameApi.proposeGame(
       await getArbiter(),
       (
         await getRulesContract(gameType)
       ).address,
       isPaid,
-      setModalInfo
     );
     return proposeGameResult.gameId.toNumber();
   };
 
-  const clickHandler = async (stake: false | 'stake') => {
+  const clickHandler = async (stake: false | true) => {
     if (!address) {
       openWalletModal();
       return;
@@ -55,7 +54,7 @@ export const SelectPrize: React.FC<SelectPrizePropsI> = ({
   };
 
   const createPaidGameHandler = async () => {
-    clickHandler('stake');
+    clickHandler(true);
   };
 
   return (
