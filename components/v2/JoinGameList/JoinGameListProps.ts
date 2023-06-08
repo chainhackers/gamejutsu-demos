@@ -6,4 +6,5 @@ export interface JoinGameListPropsI {
     gameType: string,
     proposer: string
   ) => void;
+  dataToShow: { started: boolean | null; rules: string }[];
 }

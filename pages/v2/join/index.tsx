@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './Join.module.scss';
 import { GameInfo } from 'components/v2/GameInfo';
 import { JoinGameList } from 'components/v2/JoinGameList';
@@ -13,6 +13,11 @@ import games from 'data/games.json';
 import { Tabs } from 'components/v2/Tabs';
 import { useTranslation } from 'react-i18next';
 import { WalletModal } from 'components/v2/WalletModal';
+import { gameEntitiesQuery } from 'queries';
+import { useQuery } from '@apollo/client';
+import { ZERO_ADDRESS } from 'types/constants';
+import { TGameType } from 'types/game';
+import { getRulesContract } from 'gameApi';
 
 const JoinGame: NextPage = () => {
   const router = useRouter();
@@ -84,6 +89,23 @@ const JoinGame: NextPage = () => {
       });
   };
 
+  const [rulesContractAddress, setRulesContractAddress] =
+    useState<string>(ZERO_ADDRESS);
+  const { data, error, loading } = useQuery(gameEntitiesQuery, {
+    variables: { rules: rulesContractAddress },
+  });
+  const gameEntities = data?.gameEntities as {
+    started: boolean | null;
+    rules: string;
+  }[];
+
+  const dataToShow = !!gameEntities ? gameEntities : [];
+  useEffect(() => {
+    getRulesContract(gameType as TGameType).then((response) => {
+      setRulesContractAddress(response.address);
+    });
+  }, [gameType]);
+
   return (
     <div className={styles.container}>
       <h3 className={styles.title}>{t('gamesPage.joinGame.title')}</h3>
@@ -131,7 +153,11 @@ const JoinGame: NextPage = () => {
                 <p>Stake</p>
                 <p>Proposer</p>
               </div>
-              <JoinGameList onClick={clickHandler} gameType={gameType} />
+              <JoinGameList
+                dataToShow={dataToShow}
+                onClick={clickHandler}
+                gameType={gameType}
+              />
             </div>
           );
         }
