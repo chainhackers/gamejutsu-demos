@@ -1,6 +1,7 @@
 import { TGameType } from 'types/game';
 
-export interface JoinGameListPropsI {
+export interface JoinGameWrapperPropsI {
+  children?: React.ReactNode;
   gameType: TGameType;
   onClick: (
     gameId: string,
@@ -8,5 +9,4 @@ export interface JoinGameListPropsI {
     gameType: string,
     proposer: string
   ) => void;
-  rulesContractAddress: string | null;
 }

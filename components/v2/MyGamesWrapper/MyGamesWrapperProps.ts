@@ -1,7 +1,6 @@
 import { TGameType } from 'types/game';
 
-export interface MyGamesListPropsI {
+export interface MyGamesWrapperPropsI {
   children?: React.ReactNode;
   gameType: TGameType;
-  rulesContractAddress: string | null;
 }

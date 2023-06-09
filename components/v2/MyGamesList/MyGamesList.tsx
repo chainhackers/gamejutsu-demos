@@ -1,32 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { MyGamesListPropsI } from './MyGamesListProps';
 import styles from './MyGamesList.module.scss';
 import { MyGameCard } from '../MyGameCard';
-import { getRulesContract } from 'gameApi';
 import { useQuery } from '@apollo/client';
 import { gameEntitiesQuery } from 'queries';
-import { ZERO_ADDRESS } from 'types/constants';
 import { useAccount } from 'wagmi';
 
-export const MyGamesList: React.FC<MyGamesListPropsI> = ({ gameType }) => {
+export const MyGamesList: React.FC<MyGamesListPropsI> = ({
+  rulesContractAddress,
+  gameType,
+}) => {
   const account = useAccount();
-  const [rulesContractAddress, setRulesContractAddress] =
-    useState<string>(ZERO_ADDRESS);
+
   const { data, error, loading } = useQuery(gameEntitiesQuery, {
     variables: { rules: rulesContractAddress },
   });
+
   const gameEntities = data?.gameEntities as {
     started: boolean | null;
     rules: string;
   }[];
 
   const dataToShow = !!gameEntities ? gameEntities : [];
-
-  useEffect(() => {
-    getRulesContract(gameType).then((response) => {
-      setRulesContractAddress(response.address);
-    });
-  }, [gameType]);
 
   const filteredGames = dataToShow.filter((game: any) => {
     if (account.address) {
