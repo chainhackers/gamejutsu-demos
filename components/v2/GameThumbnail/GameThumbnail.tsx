@@ -60,7 +60,7 @@ export const GameThumbnail: React.FC<GameThumbnailPropsI> = ({
         </div>
       </div>
       <div className={styles.buttons}>
-        <Link href={`/v2/join?gameType=${gameType}`}>
+        <Link href={`/v2/join?game=${gameType}`}>
           <button>
             Join{' '}
             <div className={styles.users}>
