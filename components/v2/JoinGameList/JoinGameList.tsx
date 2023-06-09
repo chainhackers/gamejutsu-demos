@@ -10,8 +10,6 @@ export const JoinGameList: React.FC<JoinGameListPropsI> = ({
   onClick,
   rulesContractAddress,
 }) => {
-  console.log('address', rulesContractAddress);
-
   const { data, error, loading } = useQuery(gameEntitiesQuery, {
     variables: { rules: rulesContractAddress },
   });
