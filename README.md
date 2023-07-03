@@ -2,6 +2,25 @@
 ETHOnline 2022 entry by ChainHackers
 https://gamejutsu.app/
 
+## Development
+
+### Build
+```shell
+yarn install
+???
+yarn build
+```
+
+### Run locally
+???
+
+### Deploy
+??? describe running actions via git tag
+
+###(up to u) Docker
+???
+
+
 ### Who we are?
 We are ChainHackers - adventurous developers and creatives who hack everything, i.e. try hands-on every technology 
 we like. One could call us blockchain generalists, though at the moment we're mostly exploring the Ethereum ecosystem.
