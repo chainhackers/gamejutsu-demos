@@ -6,22 +6,21 @@ https://gamejutsu.app/
 ```shell
 yarn install
 ```
-add the file ```.env.local``` to the root of the project and in it declare the variable ```NEXT_PUBLIC_ALCHEMY_API_KEY with the key from ALCHEMY_API```
+add the file `.env.local` to the root of the project and in it declare the variable
+```shell
+NEXT_PUBLIC_ALCHEMY_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+```
+
+`with the key from ALCHEMY_API which can be obtained here https://www.alchemy.com/`
+
 
 ```shell
 yarn generate
 yarn dev
 ```
 
-### Development
-```shell
-yarn install
-yarn dev
-```
-
 ### Build
 ```shell
-yarn install
 yarn build
 ```
 
@@ -41,10 +40,7 @@ Push origin
 ```shell
 git push origin v1.1.20
 ```
-
-###(up to u) Docker
-???
-
+---
 ### Who we are?
 We are ChainHackers - adventurous developers and creatives who hack everything, i.e. try hands-on every technology 
 we like. One could call us blockchain generalists, though at the moment we're mostly exploring the Ethereum ecosystem.
