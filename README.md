@@ -2,6 +2,48 @@
 ETHOnline 2022 entry by ChainHackers
 https://gamejutsu.app/
 
+### Run locally
+```shell
+yarn install
+```
+add the file `.env.local` to the root of the project and in it declare the variable
+```shell
+NEXT_PUBLIC_ALCHEMY_API_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+```
+
+with the key from ALCHEMY_API which can be obtained 
+using a free [Alchemy](https://www.alchemy.com/) account
+
+```shell
+yarn generate
+yarn dev
+```
+
+### Build
+```shell
+yarn build
+```
+
+### Deploy
+Deploy can be done by calling Github Actions via pushing a tag.  
+Check your existing tags:
+```shell
+git tag -l
+```
+
+Tag the version you intend to deploy - `v1.2.37 is a sample version`
+```shell
+git tag v1.2.37A
+```
+
+Push the new tag
+```shell
+git push origin v1.2.37A
+```
+See Github Actions deploying your tag:
+https://github.com/chainhackers/gamejutsu-demos/actions/runs/5226340306  
+
+---
 ### Who we are?
 We are ChainHackers - adventurous developers and creatives who hack everything, i.e. try hands-on every technology 
 we like. One could call us blockchain generalists, though at the moment we're mostly exploring the Ethereum ecosystem.
