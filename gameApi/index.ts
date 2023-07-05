@@ -250,7 +250,7 @@ export const proposeGame = async (
   txCreatedCallback?: (hash: string) => void,
 ): Promise<GameProposedEventObject> => {
   console.log('GameAPI proposeGame:', contract, 'rulesContractAddress: ', rulesContractAddress);
-  const value = ethers.BigNumber.from(10).pow(18); // 1
+  const value = ethers.BigNumber.from(10).pow(18);// 1
   console.log(value);
   
 
