@@ -7,6 +7,7 @@ import { FaChevronDown } from "react-icons/fa"
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
+import accountAvatar from "public/logo/account-avatar.png"
 
 export const Header: React.FC<HeaderPropsI> = ({ version }) => {
   const { t } = useTranslation();
@@ -43,10 +44,10 @@ export const Header: React.FC<HeaderPropsI> = ({ version }) => {
 
           if (!connected) {
             return (
-              <button onClick={openConnectModal} type="button">
-                Connect Wallet
-              </button>
-            );
+							<button onClick={openConnectModal} type="button" className={styles.customConnect}>
+								Connect Wallet
+							</button>
+						)
           }
 
           if (chain.unsupported) {
@@ -58,14 +59,17 @@ export const Header: React.FC<HeaderPropsI> = ({ version }) => {
           }
 
           return (
-						<div style={{ display: "flex", gap: 12 }}>
+						<div style={{ display: "flex", gap: 8 }}>
 							<button onClick={openChainModal} type="button" className={styles.chainName}>
-								{chain.iconUrl && <Image src={chain.iconUrl} width={20} height={20} />}
-                <FaChevronDown />
+								{chain.iconUrl && <Image src={chain.iconUrl} width={20} height={20} alt={chain.name ?? "Chain icon"} />}
+								<FaChevronDown />
 							</button>
-							<button onClick={openAccountModal} type="button">
-								{account.displayBalance ? ` (${account.displayBalance})` : ""}
+							<button onClick={openAccountModal} type="button" className={styles.walletAddress}>
+								<Image src={accountAvatar.src} width={20} height={20} alt="Account avatar" />
 								{account.displayName}
+								{/* {account.displayBalance ? ` (${account.displayBalance})` : ""}
+								{account.displayName} */}
+								<FaChevronDown />
 							</button>
 						</div>
 					)
@@ -93,7 +97,7 @@ export const Header: React.FC<HeaderPropsI> = ({ version }) => {
 			</div>
 			<div className={styles.right}>
 				{/* {currentPath?.split('?')[0] !== 'connect' && <Navigation active={currentPath} />} */}
-				{currentPath?.split("?")[0] !== "connect" && <div className={styles.customConnect}>{renderConnectButton()}</div>}
+				{currentPath?.split("?")[0] !== "connect" && <div >{renderConnectButton()}</div>}
 			</div>
 		</div>
 	)
