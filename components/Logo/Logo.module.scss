@@ -1,8 +1,10 @@
 .container {
-  width: 77px;
-  height: 77px;
-  // padding: 29px 19px;
+  width: auto;
+  height: auto;
   border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   overflow: hidden;
-  // background-color: var(--gray-lightest);
 }
+

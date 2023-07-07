@@ -64,25 +64,26 @@ export const Header: React.FC<HeaderPropsI> = ({ version }) => {
   }
 
   return (
-    <div className={styles.container}>
-      {asPath !== '/' && currentPath?.split('?')[0] !== 'connect' ? (
-        <NavPath path={asPath} />
-      ) : // <NavPath path={'Game Demo'} />
-      null}
-      <div className={styles.left}>
-        <Link href="/">
-          <a>
-            <Logo image="/logo/gj-logo.png" />
-          </a>
-        </Link>
-        <div className={styles.version}>{`Ver.${version}`}</div>
-      </div>
-      <div className={styles.right}>
-        {/* {currentPath?.split('?')[0] !== 'connect' && <Navigation active={currentPath} />} */}
-        {currentPath?.split('?')[0] !== 'connect' && (
-          <div className={styles.customConnect}>{renderConnectButton()}</div>
-        )}
-      </div>
-    </div>
-  );
+		<div className={styles.container}>
+			{asPath !== "/" && currentPath?.split("?")[0] !== "connect" ? (
+				<NavPath path={asPath} />
+			) : // <NavPath path={'Game Demo'} />
+			null}
+			<div className={styles.left}>
+				<Link href="/">
+					<a>
+						<Logo image="/logo/gj-logo-ninja.png" />
+					</a>
+				</Link>
+				<h3 className={styles.text}>
+					GAME<span className={styles.textColor}>JUTSU</span>
+				</h3>
+				<div className={styles.version}>{`ver. ${version}`}</div>
+			</div>
+			<div className={styles.right}>
+				{/* {currentPath?.split('?')[0] !== 'connect' && <Navigation active={currentPath} />} */}
+				{currentPath?.split("?")[0] !== "connect" && <div className={styles.customConnect}>{renderConnectButton()}</div>}
+			</div>
+		</div>
+	)
 };
