@@ -3,8 +3,11 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Logo, Navigation, NavPath } from 'components';
 import { HeaderPropsI } from './HeaderProps';
 import styles from './Header.module.scss';
+import { FaChevronDown } from "react-icons/fa"
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
+
 export const Header: React.FC<HeaderPropsI> = ({ version }) => {
   const { t } = useTranslation();
   const { asPath } = useRouter();
@@ -12,6 +15,8 @@ export const Header: React.FC<HeaderPropsI> = ({ version }) => {
   const currentPath = parsedPath[0];
 
   function renderConnectButton() {
+
+    
     return (
       <ConnectButton.Custom>
         {({
@@ -29,6 +34,8 @@ export const Header: React.FC<HeaderPropsI> = ({ version }) => {
             account &&
             chain &&
             (!authenticationStatus || authenticationStatus === 'authenticated');
+
+            
 
           if (currentPath?.split('?')[0] === 'connect') {
             return null;
@@ -51,13 +58,17 @@ export const Header: React.FC<HeaderPropsI> = ({ version }) => {
           }
 
           return (
-            <div style={{ display: 'flex', gap: 12 }}>
-              <button onClick={openAccountModal} type="button">
-                {account.displayBalance ? ` (${account.displayBalance})` : ''}
-                {account.displayName}
-              </button>
-            </div>
-          );
+						<div style={{ display: "flex", gap: 12 }}>
+							<button onClick={openChainModal} type="button" className={styles.chainName}>
+								{chain.iconUrl && <Image src={chain.iconUrl} width={20} height={20} />}
+                <FaChevronDown />
+							</button>
+							<button onClick={openAccountModal} type="button">
+								{account.displayBalance ? ` (${account.displayBalance})` : ""}
+								{account.displayName}
+							</button>
+						</div>
+					)
         }}
       </ConnectButton.Custom>
     );
