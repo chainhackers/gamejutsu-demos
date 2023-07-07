@@ -15,7 +15,8 @@
   }
 
   @media (max-width: 390px) {
-    padding: 15px 24px;
+    margin: 0;
+    padding: 10px 24px 20px;
     max-width: 390px;
   }
 
@@ -35,6 +36,10 @@
       flex-direction: column;
     }
   }
+}
+.containerHeader{
+display: flex;
+flex-direction: column;
 }
 
 $color1: #8DC8E9;
