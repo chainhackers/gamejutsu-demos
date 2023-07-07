@@ -13,6 +13,7 @@
   @media (max-width: 1024px) {
     padding: 15px 0;
   }
+
   @media (max-width: 390px) {
     padding: 15px 24px;
     max-width: 390px;
@@ -21,6 +22,7 @@
   .title {
     padding: 0 32px;
   }
+
   .right,
   .left {
     display: flex;
@@ -44,21 +46,24 @@ $color2: #8C5AE3;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
 // TODO: уточнить про картинку и шрифты
 .text {
   font-size: 10px;
   font-weight: 800;
   font-family: Assistant;
-  
+
 }
-.textColor{
-@include linear-gradient(0deg, $color1 0%, $color1 100%, $color2 100%, $color2 200%);
+
+.textColor {
+  @include linear-gradient(0deg, $color1 0%, $color1 100%, $color2 100%, $color2 200%);
 }
 
 .version {
   position: relative;
   align-self: center;
   top: -0.4rem;
+
   @media (max-width: 390px) {
     font-size: 10px;
     font-weight: 400;
@@ -67,15 +72,29 @@ $color2: #8C5AE3;
 }
 
 .customConnect {
-  padding: 1rem 1.6rem;
-  color: #ffffff;
-  background: linear-gradient(225.67deg, #8dc8e9 3.57%, #8c5ae3 115.97%),
-    #5f5afa;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-  border-radius: 14px;
-  margin-right: 10px;
+  // padding: 1rem 1.6rem;
+  // background: linear-gradient(225.67deg, #8dc8e9 3.57%, #8c5ae3 115.97%),
+  //   #5f5afa;
+  // box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  // border-radius: 14px;
+  // margin-right: 10px;
+
+  @media (max-width: 390px) {
+    font-size: 16px;
+  }
 
   @media (max-width: 576px) {
     font-size: 12px;
   }
+}
+
+.chainName {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  background: #fff;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem;
+  border-radius: 14px;
+  margin-right: 10px;
 }
