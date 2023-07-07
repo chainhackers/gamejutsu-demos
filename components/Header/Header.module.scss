@@ -71,20 +71,23 @@ $color2: #8C5AE3;
   }
 }
 
-.customConnect {
-  // padding: 1rem 1.6rem;
-  // background: linear-gradient(225.67deg, #8dc8e9 3.57%, #8c5ae3 115.97%),
-  //   #5f5afa;
-  // box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-  // border-radius: 14px;
-  // margin-right: 10px;
+button.customConnect {
+  padding: 8px 16px;
+  background: linear-gradient(225.67deg, #8dc8e9 3.57%, #8c5ae3 115.97%),
+    #5f5afa !important;
+  color: #FFFFFF;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 14px;
+  margin-right: 10px;
 
   @media (max-width: 390px) {
     font-size: 16px;
+    
   }
 
   @media (max-width: 576px) {
     font-size: 12px;
+    
   }
 }
 
@@ -94,7 +97,19 @@ $color2: #8C5AE3;
   align-items: center;
   background: #fff;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-  padding: 0.5rem;
-  border-radius: 14px;
-  margin-right: 10px;
+  padding: 8px;
+  border-radius: 12px;
+  font-size: 16px;
+}
+
+.walletAddress {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  background: #fff;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 8px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
 }
