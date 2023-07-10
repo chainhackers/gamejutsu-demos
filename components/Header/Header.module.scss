@@ -1,3 +1,4 @@
+@import "../../styles/colors.scss";
 .container {
   background-color: var(--white);
   display: flex;
@@ -48,9 +49,6 @@
   justify-content: space-between;
 }
 
-$color1: #8DC8E9;
-$color2: #8C5AE3;
-
 @mixin linear-gradient($direction, $colors...) {
   background: linear-gradient($direction, $colors);
   background-clip: text;
@@ -66,7 +64,7 @@ $color2: #8C5AE3;
 }
 
 .textColor {
-  @include linear-gradient(0deg, $color1 0%, $color1 100%, $color2 100%, $color2 200%);
+  @include linear-gradient(0deg, $light-blue 0%, $light-blue 100%, $medium-purple 100%, $medium-purple 200%);
 }
 
 .version {
@@ -95,12 +93,10 @@ button.customConnect {
 
   @media (max-width: 390px) {
     font-size: 16px;
-
   }
 
   @media (max-width: 576px) {
     font-size: 16px;
-
   }
 }
 
