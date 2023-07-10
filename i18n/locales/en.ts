@@ -5,9 +5,10 @@ const en = {
     },
     navigation: {
       gameDemo: 'Game Demo',
-      team: 'Meet the Team',
-      gitHub: 'GitHub',
+      team: 'Team',
+      gitHub: 'Git',
       documents: 'Documents',
+      discord: 'Discord'
     },
     buttons: {
       connectWAllet: 'Connect Wallet',
