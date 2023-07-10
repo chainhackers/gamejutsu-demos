@@ -11,6 +11,10 @@ export const NavPath: React.FC<NavPathPropsI> = ({ path }) => {
 		"tic-tac-toe": "Tic-Tac-Toe game",
 	}
   const constructPath = (path: string) => {
+    if (path === "/") {
+			return ["Main Page"]
+		}
+
     const segments = path
 			.split("?")[0]
 			.split("/")
@@ -18,9 +22,6 @@ export const NavPath: React.FC<NavPathPropsI> = ({ path }) => {
 			.map(el => {
 				return map[el] ? map[el] : el
 			})
-		if (path === "/") {
-			segments[0] = "Main Page"
-		}
 		return segments
   };
 
@@ -28,11 +29,6 @@ export const NavPath: React.FC<NavPathPropsI> = ({ path }) => {
 
   return (
     <div className={styles.container}>
-      {/* <Link href="/">
-        <a>
-          <span>GameJutsu</span>
-        </a>
-      </Link> */}
       {newPaths.map((el, index, arr) => (
         <Fragment key={el + index}>
           {' < '}
