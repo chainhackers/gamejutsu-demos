@@ -1,5 +1,4 @@
 .container {
-  position: relative;
   background-color: var(--white);
   display: flex;
   justify-content: space-between;
@@ -37,9 +36,16 @@
     }
   }
 }
-.containerHeader{
-display: flex;
-flex-direction: column;
+
+.containerHeader {
+  display: flex;
+  flex-direction: column;
+}
+
+.containerNav {
+  display: flex;
+  padding: 0 24px;
+  justify-content: space-between;
 }
 
 $color1: #8DC8E9;
@@ -52,7 +58,6 @@ $color2: #8C5AE3;
   -webkit-text-fill-color: transparent;
 }
 
-// TODO: уточнить про картинку и шрифты
 .text {
   font-size: 10px;
   font-weight: 800;
@@ -77,22 +82,25 @@ $color2: #8C5AE3;
 }
 
 button.customConnect {
-  padding: 8px 16px;
+  padding: 10px 20px;
   background: linear-gradient(225.67deg, #8dc8e9 3.57%, #8c5ae3 115.97%),
     #5f5afa !important;
   color: #FFFFFF;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
   border-radius: 14px;
-  margin-right: 10px;
+  font-weight: 700;
+  line-height: 20px;
+  letter-spacing: 0.6px;
+  font-style: normal;
 
   @media (max-width: 390px) {
     font-size: 16px;
-    
+
   }
 
   @media (max-width: 576px) {
-    font-size: 12px;
-    
+    font-size: 16px;
+
   }
 }
 

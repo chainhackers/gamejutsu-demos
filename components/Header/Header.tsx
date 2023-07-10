@@ -8,7 +8,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import accountAvatar from "public/logo/account-avatar.png"
-
 export const Header: React.FC<HeaderPropsI> = ({ version }) => {
   const { t } = useTranslation();
   const { asPath } = useRouter();
@@ -57,7 +56,7 @@ export const Header: React.FC<HeaderPropsI> = ({ version }) => {
               </button>
             );
           }
-
+// TODO: ДОБАВИТЬ АВАТАРЫ ИЗ ENS
           return (
 						<div style={{ display: "flex", gap: 8 }}>
 							<button onClick={openChainModal} type="button" className={styles.chainName}>
@@ -81,10 +80,6 @@ export const Header: React.FC<HeaderPropsI> = ({ version }) => {
   return (
 		<div className={styles.containerHeader}>
 			<div className={styles.container}>
-				{asPath !== "/" && currentPath?.split("?")[0] !== "connect" ? (
-					<NavPath path={asPath} />
-				) : // <NavPath path={'Game Demo'} />
-				null}
 				<div className={styles.left}>
 					<Link href="/">
 						<a>
@@ -98,7 +93,10 @@ export const Header: React.FC<HeaderPropsI> = ({ version }) => {
 				</div>
 				<div className={styles.right}>{currentPath?.split("?")[0] !== "connect" && <div>{renderConnectButton()}</div>}</div>
 			</div>
-			{currentPath?.split("?")[0] !== "connect" && <Navigation active={currentPath} />}
+			<div className={styles.containerNav}>
+				{currentPath?.split("?")[0] !== "connect" && <Navigation active={currentPath} />}
+				{currentPath?.split("?")[0] !== "connect" ? <NavPath path={asPath} /> : null}
+			</div>
 		</div>
 	)
 };
