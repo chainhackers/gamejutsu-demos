@@ -78,7 +78,7 @@ export const Header: React.FC<HeaderPropsI> = ({ version }) => {
 		<div className={styles.containerHeader}>
 			<div className={styles.container}>
 				<div className={styles.left}>
-					<Link href="/">
+					<Link href="/" passHref>
 							<Logo image={logoNinja} />
 					</Link>
 					<h3 className={styles.text}>
