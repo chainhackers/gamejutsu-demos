@@ -7,7 +7,9 @@ import { FaChevronDown } from "react-icons/fa"
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
-import accountAvatar from "public/logo/account-avatar.png"
+import accountAvatar from 'public/logo/account-avatar.png'
+import logoNinja from 'public/logo/gj-logo-ninja.webp'
+
 export const Header: React.FC<HeaderPropsI> = ({ version }) => {
   const { t } = useTranslation();
   const { asPath } = useRouter();
@@ -15,8 +17,6 @@ export const Header: React.FC<HeaderPropsI> = ({ version }) => {
   const currentPath = parsedPath[0];
 
   function renderConnectButton() {
-
-    
     return (
       <ConnectButton.Custom>
         {({
@@ -34,8 +34,6 @@ export const Header: React.FC<HeaderPropsI> = ({ version }) => {
             account &&
             chain &&
             (!authenticationStatus || authenticationStatus === 'authenticated');
-
-            
 
           if (currentPath?.split('?')[0] === 'connect') {
             return null;
@@ -82,9 +80,7 @@ export const Header: React.FC<HeaderPropsI> = ({ version }) => {
 			<div className={styles.container}>
 				<div className={styles.left}>
 					<Link href="/">
-						<a>
-							<Logo image="/logo/gj-logo-ninja.png" />
-						</a>
+							<Logo image={logoNinja} />
 					</Link>
 					<h3 className={styles.text}>
 						GAME<span className={styles.textColor}>JUTSU</span>
