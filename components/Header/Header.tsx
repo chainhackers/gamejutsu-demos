@@ -8,8 +8,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import accountAvatar from 'public/logo/account-avatar.png'
-import logoNinja from 'public/logo/gj-logo-ninja.webp'
-
+import logoNinja from 'public/logo/logo-ninja.webp'
 export const Header: React.FC<HeaderPropsI> = ({ version }) => {
   const { t } = useTranslation();
   const { asPath } = useRouter();
