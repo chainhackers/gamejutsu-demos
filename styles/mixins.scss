@@ -1,4 +1,10 @@
+@mixin linear-gradient($direction, $colors...) {
+  background: linear-gradient($direction, $colors);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 
 @mixin linear-gradient-button($direction, $colors...) {
-	background: linear-gradient($direction, $colors);
+  background: linear-gradient($direction, $colors);
 }
