@@ -1,4 +1,5 @@
-@import "../../styles/colors.scss";
+@import '../../styles/colors.scss';
+@import '../../styles/mixins.scss';
 .container {
   background-color: var(--white);
   display: flex;
@@ -49,13 +50,6 @@
   justify-content: space-between;
 }
 
-@mixin linear-gradient($direction, $colors...) {
-  background: linear-gradient($direction, $colors);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
 .text {
   font-size: 10px;
   font-weight: 800;
@@ -81,8 +75,7 @@
 
 button.customConnect {
   padding: 10px 20px;
-  background: linear-gradient(225.67deg, #8dc8e9 3.57%, #8c5ae3 115.97%),
-    #5f5afa !important;
+  @include linear-gradient-button(225.67deg, $light-blue 3.57%, $medium-purple 115.97%, $neon-blue);
   color: #FFFFFF;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
   border-radius: 14px;
