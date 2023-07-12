@@ -28,10 +28,7 @@ export const Header: React.FC<HeaderPropsI> = ({ version }) => {
 
           if (!connected) {
             return (
-              <button
-                onClick={openConnectModal}
-                type='button'
-                className={styles.customConnect}>
+              <button onClick={openConnectModal} type='button' className={styles.customConnect}>
                 Connect Wallet
               </button>
             );
@@ -39,39 +36,19 @@ export const Header: React.FC<HeaderPropsI> = ({ version }) => {
 
           if (chain.unsupported) {
             return (
-              <button
-                onClick={openChainModal}
-                type='button'>
+              <button onClick={openChainModal} type='button'>
                 Wrong network
               </button>
             );
           }
           return (
             <div style={{ display: 'flex', gap: 8 }}>
-              <button
-                onClick={openChainModal}
-                type='button'
-                className={styles.chainName}>
-                {chain.iconUrl && (
-                  <Image
-                    src={chain.iconUrl}
-                    width={20}
-                    height={20}
-                    alt={chain.name ?? 'Chain icon'}
-                  />
-                )}
+              <button onClick={openChainModal} type='button' className={styles.chainName}>
+                {chain.iconUrl && <Image src={chain.iconUrl} width={20} height={20} alt={chain.name ?? 'Chain icon'} />}
                 <FaChevronDown />
               </button>
-              <button
-                onClick={openAccountModal}
-                type='button'
-                className={styles.walletAddress}>
-                <Image
-                  src={accountAvatar.src}
-                  width={20}
-                  height={20}
-                  alt='Account avatar'
-                />
+              <button onClick={openAccountModal} type='button' className={styles.walletAddress}>
+                <Image src={accountAvatar.src} width={20} height={20} alt='Account avatar' />
                 {account.displayName}
                 <FaChevronDown />
               </button>
@@ -86,9 +63,7 @@ export const Header: React.FC<HeaderPropsI> = ({ version }) => {
     <div className={styles.containerHeader}>
       <div className={styles.container}>
         <div className={styles.left}>
-          <Link
-            href='/'
-            passHref>
+          <Link href='/' passHref>
             <Logo image={logoNinja} />
           </Link>
           <h3 className={styles.text}>
