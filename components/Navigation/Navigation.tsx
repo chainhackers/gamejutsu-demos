@@ -17,16 +17,12 @@ export const Navigation: React.FC<NavigationPropsI> = ({ active }) => {
             <Link href='/team'>{t('navigation.team')}</Link>
           </li>
           <li className={cn(active && (active === 'git' ? styles.active : styles.inactive))}>
-            <a
-              href='https://github.com/ChainHackers/GameJutsu#readme'
-              target='_blank'>
+            <a href='https://github.com/ChainHackers/GameJutsu#readme' target='_blank'>
               {t('navigation.gitHub')}
             </a>
           </li>
           <li className={cn(active && (active === 'discord' ? styles.active : styles.inactive))}>
-            <a
-              href='https://discord.gg/a5E9vWbp9R'
-              target='_blank'>
+            <a href='https://discord.gg/a5E9vWbp9R' target='_blank'>
               {t('navigation.discord')}
             </a>
           </li>
