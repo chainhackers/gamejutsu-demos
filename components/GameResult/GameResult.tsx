@@ -8,7 +8,7 @@ export const GameResult = (props: GameResultProps) => {
 
   return (
     <div className={styles.gameResult}>
-      <h1>HI PLAYER</h1>
+      <h1>HI PLAYER!</h1>
       {result === 'win' && <p>YOU WON!</p>}
       {result === 'lose' && <p>YOU LOSE!</p>}
       {result === 'draw' && <p>DRAWW!</p>}
