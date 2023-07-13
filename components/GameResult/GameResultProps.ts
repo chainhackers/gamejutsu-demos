@@ -1,5 +1,5 @@
-export type GameResult = 'win' | 'lose' | 'draw'
+export type TGameResult = 'win' | 'lose' | 'draw'
 
 export interface GameResultProps {
-  result: GameResult
+  result: TGameResult
 }
