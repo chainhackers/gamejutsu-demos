@@ -5,9 +5,9 @@ import styles from './Navigation.module.scss';
 import Link from 'next/link';
 import { useState } from 'react';
 export const Navigation: React.FC<NavigationPropsI> = ({ active }) => {
-	const { t } = useTranslation()
+  const { t } = useTranslation();
 
-	const [isBurgerActive, toggleBurgerMenu] = useState(false)
+  const [isBurgerActive, toggleBurgerMenu] = useState(false);
 
   return (
     <div className={styles.container}>
