@@ -1,6 +1,17 @@
-@import '../../styles/colors.scss';
+@import 'styles/colors.scss';
 .gameResult {
   color: $medium-purple;
   font-size: 24px;
   text-align: center;
+}
+.win {
+  // Стили для состояния выигрыша
+}
+
+.lose {
+  // Стили для состояния проигрыша
+}
+
+.draw {
+  // Стили для состояния ничьи
 }

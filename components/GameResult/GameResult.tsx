@@ -1,19 +1,38 @@
 'use client';
+import classNames from 'classnames';
 import styles from './GameResult.module.scss';
 import { GameResultProps } from './GameResultProps';
-
-
+import imgWin from 'public/images/win.png'
+import Image from 'next/image';
 export const GameResult = (props: GameResultProps) => {
   const { result } = props;
+  const resultClass = classNames(styles.gameResult, {
+    [styles.win]: result === 'win',
+    [styles.lose]: result === 'lose',
+    [styles.draw]: result === 'draw',
+  });
 
-  return (
-    <div className={styles.gameResult}>
-      <h1>HI PLAYER!</h1>
-      {result === 'win' && <p>YOU WON!</p>}
-      {result === 'lose' && <p>YOU LOSE!</p>}
-      {result === 'draw' && <p>DRAWW!</p>}
-    </div>
-  );
+  let content;
+  if (result === 'win') {
+    content = (
+      <div className={resultClass}>
+        <Image src={imgWin} alt='Win' />
+        <p>Вы выиграли! Поздравляем!</p>
+      </div>
+    );
+  } else if (result === 'lose') {
+    content = (
+      <div className={resultClass}>
+        <p>Вы проиграли!</p>
+      </div>
+    );
+  } else if (result === 'draw') {
+    content = (
+      <div className={resultClass}>
+        <h1>DRAW</h1>
+      </div>
+    );
+  }
+
+  return <>{content}</>;
 };
-
-
