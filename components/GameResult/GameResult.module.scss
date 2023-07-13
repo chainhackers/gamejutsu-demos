@@ -1,5 +1,6 @@
+@import '../../styles/colors.scss';
 .gameResult {
-  color: yellow;
+  color: $medium-purple;
   font-size: 24px;
   text-align: center;
 }

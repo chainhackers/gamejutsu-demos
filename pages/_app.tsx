@@ -40,7 +40,7 @@ const client = new ApolloClient({
   cache,
 });
 
-const version = '1.2.37';
+const version = 'v1.2.37AHABD';
 function MyApp({ Component, pageProps }: AppProps) {
   const props = { ...pageProps, version };
   return (

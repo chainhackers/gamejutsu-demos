@@ -8,10 +8,10 @@ export const GameResult = (props: GameResultProps) => {
 
   return (
     <div className={styles.gameResult}>
-      <h1>HI DSADASD</h1>
-      {result === 'win' && <p>Вы победили!</p>}
-      {result === 'lose' && <p>Вы проиграли!</p>}
-      {result === 'draw' && <p>Ничья!</p>}
+      <h1>HI PLAYER</h1>
+      {result === 'win' && <p>YOU WON!</p>}
+      {result === 'lose' && <p>YOU LOSE!</p>}
+      {result === 'draw' && <p>DRAWW!</p>}
     </div>
   );
 };
