@@ -6,7 +6,7 @@ import imgWin from 'public/images/win.png'
 import Image from 'next/image';
 export const GameResult = (props: GameResultProps) => {
   const { result } = props;
-  const resultClass = classNames(styles.gameResult, {
+  const resultClass = classNames(styles.container, {
     [styles.win]: result === 'win',
     [styles.lose]: result === 'lose',
     [styles.draw]: result === 'draw',
@@ -16,6 +16,10 @@ export const GameResult = (props: GameResultProps) => {
   if (result === 'win') {
     content = (
       <div className={resultClass}>
+        <h2 className={styles.title}>
+          <span>Winner!</span>
+          <span className={styles.titleRight}>Results</span>
+        </h2>
         <Image src={imgWin} alt='Win' />
         <p>Вы выиграли! Поздравляем!</p>
       </div>
