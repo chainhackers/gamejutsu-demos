@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { ScoreCard } from 'components/GameResult/ScoreCard/index';
 import playerImg from 'public/logo/account-avatar.png';
 import playerImg2 from 'public/logo/account-avatar2.png';
+
 export const GameResult = (props: GameResultProps) => {
   const { result } = props;
   const resultClass = classNames(styles.container, {
@@ -14,9 +15,18 @@ export const GameResult = (props: GameResultProps) => {
     [styles.lose]: result === 'lose',
     [styles.draw]: result === 'draw',
   });
-  const player1 = { name: '0xh20...7260', image: playerImg };
-  const player2 = { name: '0xh07...6035', image: playerImg2 };
+  const player1 = {
+    playerName: '0xh20...7260',
+    playerImg: playerImg,
+    showWinText: result === 'win',
+  };
+  const player2 = {
+    playerName: '0xh07...6035',
+    playerImg: playerImg2,
+    showWinText: result === 'lose',
+  };
   let content;
+
   if (result === 'win') {
     content = (
       <div className={resultClass}>
@@ -25,8 +35,10 @@ export const GameResult = (props: GameResultProps) => {
           <span className={styles.titleRight}>Results</span>
         </h2>
         <Image src={imgWin} alt='Win' />
-        <ScoreCard playerName={player1.name} result={result} playerImg={player1.image} />
-        <ScoreCard playerName={player2.name} result={result} playerImg={player2.image} />
+        <div className={styles.containerCard}>
+          <ScoreCard {...player1} result={result} />
+          <ScoreCard {...player2} result={result} />
+        </div>
         <p>Вы выиграли! Поздравляем!</p>
       </div>
     );
@@ -37,8 +49,8 @@ export const GameResult = (props: GameResultProps) => {
           <span>Better Luck Next Time</span>
           <span className={styles.titleRight}>Results</span>
         </h2>
-        <ScoreCard playerName={player1.name} result={result} playerImg={player1.image} />
-        <ScoreCard playerName={player2.name} result={result} playerImg={player2.image} />
+        <ScoreCard {...player1} result={result} />
+        <ScoreCard {...player2} result={result} />
         <p>Вы проиграли!</p>
       </div>
     );
@@ -49,8 +61,8 @@ export const GameResult = (props: GameResultProps) => {
           <span>Better Luck Next Time</span>
           <span className={styles.titleRight}>Results</span>
         </h2>
-        <ScoreCard playerName={player1.name} result={result} playerImg={player1.image} />
-        <ScoreCard playerName={player2.name} result={result} playerImg={player2.image} />
+        <ScoreCard {...player1} result={result} />
+        <ScoreCard {...player2} result={result} />
         <h1>DRAW</h1>
       </div>
     );

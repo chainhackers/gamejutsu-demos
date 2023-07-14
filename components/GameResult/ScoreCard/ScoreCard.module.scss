@@ -1,1 +1,18 @@
-.container{}
+.container {
+  display: flex;
+  color: var(--grey, #9c9eab);
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 130%;
+}
+
+.containerPlayer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.addressPlayer{
+  margin: 0 auto 0 4px;
+}

@@ -4,4 +4,5 @@ export interface ScoreCardProps {
   playerName: string;
   playerImg: string | StaticImageData;
   result: TGameResult;
+  showWinText: boolean;
 }

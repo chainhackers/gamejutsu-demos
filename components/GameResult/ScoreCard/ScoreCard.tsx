@@ -3,7 +3,7 @@ import styles from './ScoreCard.module.scss';
 import { ScoreCardProps } from './ScoreCardProps';
 import Image from 'next/image';
 export const ScoreCard = (props: ScoreCardProps) => {
-  const { playerName, result, playerImg } = props;
+  const { playerName, result, playerImg, showWinText } = props;
   const [highlight, setHighlight] = useState(false);
 
   const handleHighlight = () => {
@@ -11,10 +11,14 @@ export const ScoreCard = (props: ScoreCardProps) => {
   };
 
   return (
-    <div className={`${styles.card} ${highlight ? styles.highlight : ''}`}>
-      <Image src={playerImg} alt="Player" width={24} height={24}/>
-      <p>{playerName}</p>
-      {result === 'win' && <p>Win</p>}
+    <div className={styles.container}>
+      <div className={`${styles.card} ${highlight ? styles.highlight : ''}`}>
+        {result === 'win' && showWinText && <p>Winner!</p>}
+        <div className={styles.containerPlayer}>
+          <Image src={playerImg} alt='Player' width={24} height={24} />
+          <p className={styles.addressPlayer}>{playerName}</p>
+        </div>
+      </div>
     </div>
   );
 };
