@@ -37,8 +37,8 @@ export const GameResult = (props: GameResultProps) => {
           <span>Better Luck Next Time</span>
           <span className={styles.titleRight}>Results</span>
         </h2>
-        <ScoreCard player={player1} result={result} />
-        <ScoreCard player={player2} result={result} />
+        <ScoreCard playerName={player1.name} result={result} playerImg={player1.image} />
+        <ScoreCard playerName={player2.name} result={result} playerImg={player2.image} />
         <p>Вы проиграли!</p>
       </div>
     );
@@ -49,8 +49,8 @@ export const GameResult = (props: GameResultProps) => {
           <span>Better Luck Next Time</span>
           <span className={styles.titleRight}>Results</span>
         </h2>
-        <ScoreCard player={player1} result={result} />
-        <ScoreCard player={player2} result={result} />
+        <ScoreCard playerName={player1.name} result={result} playerImg={player1.image} />
+        <ScoreCard playerName={player2.name} result={result} playerImg={player2.image} />
         <h1>DRAW</h1>
       </div>
     );
