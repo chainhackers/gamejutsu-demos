@@ -4,7 +4,14 @@
   flex-direction: column;
   padding: 0 24px;
   max-width: 1600px;
-
+  align-items: center;
+  
+  @media (max-width: 1200px) {
+    max-width: 1000px;
+    flex-direction: column;
+    text-align: center;
+    padding: 17px 24px;
+  }
   @media (max-width: 390px) {
     flex-direction: column;
     text-align: center;
