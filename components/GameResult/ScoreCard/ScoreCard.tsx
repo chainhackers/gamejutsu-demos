@@ -18,7 +18,7 @@ export const ScoreCard = (props: ScoreCardProps) => {
         <div className={styles.containerPlayer}>
           <Image src={playerImg} alt='Player' width={24} height={24} />
           <p className={styles.addressPlayer}>{playerName}</p>
-          <PawnIcon />
+          <PawnIcon result={result}/>
         </div>
       </div>
     </div>
