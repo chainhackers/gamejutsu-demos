@@ -50,7 +50,7 @@ export const GameResult = (props: GameResultProps) => {
           <span className={styles.titleRight}>Results</span>
         </h2>
         <ScoreCard {...player1} result={result} />
-        <ScoreCard {...player2} result={result} />
+        <ScoreCard {...player2} result={'win'} />
         <p>Вы проиграли!</p>
       </div>
     );
