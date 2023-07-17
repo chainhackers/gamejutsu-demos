@@ -8,3 +8,13 @@
 @mixin linear-gradient-button($direction, $colors...) {
   background: linear-gradient($direction, $colors);
 }
+
+@mixin gradient-background-text($start-color, $end-color) {
+  background: linear-gradient(228deg, $start-color 0%, $end-color 100%);
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-text-fill-color: transparent;
+  text-fill-color: transparent;
+}

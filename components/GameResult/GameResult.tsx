@@ -7,7 +7,8 @@ import Image from 'next/image';
 import { ScoreCard } from 'components/GameResult/ScoreCard/index';
 import playerImg from 'public/logo/account-avatar.png';
 import playerImg2 from 'public/logo/account-avatar2.png';
-
+import loseImg from 'public/images/lose.svg';
+import drawImg from 'public/images/draw.svg'
 export const GameResult = (props: GameResultProps) => {
   const { result } = props;
   const resultClass = classNames(styles.container, {
@@ -49,8 +50,13 @@ export const GameResult = (props: GameResultProps) => {
           <span>Better Luck Next Time</span>
           <span className={styles.titleRight}>Results</span>
         </h2>
-        <ScoreCard {...player1} result={result} />
-        <ScoreCard {...player2} result={'win'} />
+        <h1 className={styles.titleResult}>
+          You lose <img src={loseImg.src} alt='lose' />
+        </h1>
+        <div className={styles.containerCard}>
+          <ScoreCard {...player1} result={result} />
+          <ScoreCard {...player2} result={'win'} />
+        </div>
         <p>Вы проиграли!</p>
       </div>
     );
@@ -61,8 +67,13 @@ export const GameResult = (props: GameResultProps) => {
           <span>Better Luck Next Time</span>
           <span className={styles.titleRight}>Results</span>
         </h2>
-        <ScoreCard {...player1} result={result} />
-        <ScoreCard {...player2} result={result} />
+        <h1 className={styles.titleResult}>
+          Draw <img src={drawImg.src} alt='draw' />
+        </h1>
+        <div className={styles.containerCard}>
+          <ScoreCard {...player1} result={result} />
+          <ScoreCard {...player2} result={result} />
+        </div>
         <h1>DRAW</h1>
       </div>
     );
