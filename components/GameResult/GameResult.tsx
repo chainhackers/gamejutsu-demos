@@ -37,7 +37,7 @@ export const GameResult = (props: GameResultProps) => {
         <Image src={imgWin} alt='Win' />
         <div className={styles.containerCard}>
           <ScoreCard {...player1} result={result} />
-          <ScoreCard {...player2} result={result} />
+          <ScoreCard {...player2} result={'lose'} />
         </div>
         <p>Вы выиграли! Поздравляем!</p>
       </div>

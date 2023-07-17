@@ -6,6 +6,27 @@
   font-style: normal;
   font-weight: 500;
   line-height: 130%;
+  min-height: 73px;
+  align-items: center;
+  justify-content: center;
+}
+.card {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding: 10px;
+  margin-right: 5px;
+  border-radius: 10px;
+  border: 1px solid var(--light-grey, #e8e8e8);
+  background: #fff;
+  min-height: 73px;
+  align-items: center;
+  justify-content: center;
+}
+.highlight {
+  border-radius: 10px;
+  border: 2px solid var(--purple, #8777da);
+  box-shadow: 0px 4px 6px 0px rgba(135, 119, 218, 0.3);
 }
 
 .containerPlayer {
@@ -13,6 +34,9 @@
   align-items: center;
   justify-content: space-between;
 }
-.addressPlayer{
+.addressPlayer {
   margin: 0 auto 0 4px;
+}
+.titleColor {
+  color: var(--purple, #8777da);
 }
