@@ -125,3 +125,28 @@ So why aren't there many more games making use of all the amazing blockchain tec
 * the problem with sending blockchain transactions can be partially solved by collecting multiple player signatures and verifying them combinations in contracts later, but still that's a pop-up and a button click per move is far from smooth user experience, even when you don't have to pay for each one
 
 GameJutsu skillfully attacks all 3 problems at once using state channels and session keys - just create a state channel and publish your session key address in a single transaction and then you don't have neither to send a transaction per move nor sign every single move with your wallet of choice. The game can progress as fast as game clients can exchange signed messages between themselves and process those. With message size under 1KB and today's internet that's pretty fast. Can you make a truly decentralized Dota-2 with that? Who knows, check out the 2 games ChainHackers made for you to try during ETHOnline2022 - pure old-fashioned game experience with almost no extra clicks!
+
+# BUG fix 
+---
+BUG
+```shell
+https://nextjs.org/docs/messages/module-not-found
+wait  - compiling /_error (client and server)...
+error - .generated/contracts/esm/index.js:2:0
+Module not found: Can't resolve '../../../eth-sdk/abis/polygon/arbiter.json'
+  1 | import { Contract } from 'ethers';
+> 2 | import polygon_arbiter_abi from '../../../eth-sdk/abis/polygon/arbiter.json';
+  3 | import polygon_checkersRules_abi from '../../../eth-sdk/abis/polygon/checkersRules.json';
+  4 | import polygon_ticTacToeRules_abi from '../../../eth-sdk/abis/polygon/ticTacToeRules.json';
+  5 | export function getContract(address, abi, defaultSignerOrProvider) {
+
+Import trace for requested module:
+./.generated/contracts/index.mjs
+./gameApi/index.ts
+./contexts/WalltetContext.tsx
+./pages/_app.tsx
+
+https://nextjs.org/docs/messages/module-not-found
+```
+is corrected by the `yarn generate` command
+---
