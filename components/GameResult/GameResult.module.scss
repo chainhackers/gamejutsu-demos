@@ -35,6 +35,7 @@
   display: flex;
   justify-content: space-between;
   place-items: center;
+  margin: 0 0 20px 0;
 }
 .title {
   color: var(--grey, #2e303d);
@@ -52,8 +53,17 @@
     justify-content: space-between;
   }
 }
+.imageSize{
+
+  @media (max-width: 390px) {
+    width: 49px;
+    height: 37px;
+    
+  }
+}
 .titleRight {
   display: none;
+  
   @media (max-width: 390px) {
     display: block;
   }
@@ -69,7 +79,7 @@
   display: flex;
   justify-content: center;
   gap:10px;
-  
+  align-items: center;
   margin-bottom: 22px;
   @media (max-width: 390px) {
     font-size: 36px;

@@ -1,14 +1,15 @@
 'use client';
+import Image from 'next/image';
 import classNames from 'classnames';
 import styles from './GameResult.module.scss';
 import { GameResultProps } from './GameResultProps';
-import imgWin from 'public/images/win.png';
-import Image from 'next/image';
+import { BlockPayedGame } from 'components/shared';
 import { ScoreCard } from 'components/GameResult/ScoreCard/index';
+import imgWin from 'public/images/win.png';
 import playerImg from 'public/logo/account-avatar.png';
 import playerImg2 from 'public/logo/account-avatar2.png';
 import loseImg from 'public/images/lose.svg';
-import drawImg from 'public/images/draw.svg'
+import drawImg from 'public/images/draw.svg';
 export const GameResult = (props: GameResultProps) => {
   const { result } = props;
   const resultClass = classNames(styles.container, {
@@ -40,7 +41,7 @@ export const GameResult = (props: GameResultProps) => {
           <ScoreCard {...player1} result={result} />
           <ScoreCard {...player2} result={'lose'} />
         </div>
-        <p>Вы выиграли! Поздравляем!</p>
+        <BlockPayedGame />
       </div>
     );
   } else if (result === 'lose') {
@@ -51,7 +52,7 @@ export const GameResult = (props: GameResultProps) => {
           <span className={styles.titleRight}>Results</span>
         </h2>
         <h1 className={styles.titleResult}>
-          You lose <img src={loseImg.src} alt='lose' />
+          You lose <img src={loseImg.src} alt='lose' className={styles.imageSize} />
         </h1>
         <div className={styles.containerCard}>
           <ScoreCard {...player1} result={result} />
@@ -68,7 +69,7 @@ export const GameResult = (props: GameResultProps) => {
           <span className={styles.titleRight}>Results</span>
         </h2>
         <h1 className={styles.titleResult}>
-          Draw <img src={drawImg.src} alt='draw' />
+          Draw <img src={drawImg.src} alt='draw' className={styles.imageSize} />
         </h1>
         <div className={styles.containerCard}>
           <ScoreCard {...player1} result={result} />
