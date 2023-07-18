@@ -18,3 +18,10 @@
   -moz-text-fill-color: transparent;
   text-fill-color: transparent;
 }
+
+@mixin button-size($width, $height, $padding, $gap) {
+  width: $width !important;
+  height: $height !important;
+  padding: $padding !important;
+  gap: $gap !important;
+}

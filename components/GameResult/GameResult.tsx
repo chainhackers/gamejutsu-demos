@@ -3,7 +3,7 @@ import Image from 'next/image';
 import classNames from 'classnames';
 import styles from './GameResult.module.scss';
 import { GameResultProps } from './GameResultProps';
-import { BlockPayedGame, Button } from 'components/shared';
+import { BlockPayedGame, Button, CustomButton } from 'components/shared';
 import { ScoreCard } from 'components/GameResult/ScoreCard/index';
 import imgWin from 'public/images/win.png';
 import playerImg from 'public/logo/account-avatar.png';
@@ -28,7 +28,10 @@ export const GameResult = (props: GameResultProps) => {
     showWinText: result === 'lose',
   };
   let content;
-
+  function handleDemoClick() {
+    // перенаправляем пользователя на страницу с демо
+    window.location.href = '/demo';
+  }
   if (result === 'win') {
     content = (
       <div className={resultClass}>
@@ -43,6 +46,7 @@ export const GameResult = (props: GameResultProps) => {
         </div>
         <BlockPayedGame />
         <h2 className={styles.titleCenter}>Read more about our technology</h2>
+        <CustomButton size='sm' color='transparent' gradient={false} radius='sm' text='TRY DEMO' imagePosition='left' image='/images/git.png' />
       </div>
     );
   } else if (result === 'lose') {
@@ -61,7 +65,7 @@ export const GameResult = (props: GameResultProps) => {
         </div>
         <BlockPayedGame />
         <h2 className={styles.titleCenter}>Read more about our technology</h2>
-        <Button title='Github' size='sm' color='' borderless/>
+        <CustomButton size='sm' color='transparent' gradient={false} radius='sm' text='TRY DEMO' imagePosition='left' image='/images/git.png' />
         <p>Вы проиграли!</p>
       </div>
     );
@@ -81,6 +85,7 @@ export const GameResult = (props: GameResultProps) => {
         </div>
         <BlockPayedGame />
         <h2 className={styles.titleCenter}>Read more about our technology</h2>
+        <CustomButton size='sm' color='transparent' gradient={false} radius='sm' text='TRY DEMO' imagePosition='left' image='/images/git.png' />
         <h1>DRAW</h1>
       </div>
     );
