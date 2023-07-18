@@ -58,6 +58,7 @@ export const GameResult = (props: GameResultProps) => {
           <ScoreCard {...player1} result={result} />
           <ScoreCard {...player2} result={'win'} />
         </div>
+        <BlockPayedGame />
         <p>Вы проиграли!</p>
       </div>
     );
@@ -75,6 +76,7 @@ export const GameResult = (props: GameResultProps) => {
           <ScoreCard {...player1} result={result} />
           <ScoreCard {...player2} result={result} />
         </div>
+        <BlockPayedGame />
         <h1>DRAW</h1>
       </div>
     );
