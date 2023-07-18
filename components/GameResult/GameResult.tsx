@@ -3,7 +3,7 @@ import Image from 'next/image';
 import classNames from 'classnames';
 import styles from './GameResult.module.scss';
 import { GameResultProps } from './GameResultProps';
-import { BlockPayedGame } from 'components/shared';
+import { BlockPayedGame, Button } from 'components/shared';
 import { ScoreCard } from 'components/GameResult/ScoreCard/index';
 import imgWin from 'public/images/win.png';
 import playerImg from 'public/logo/account-avatar.png';
@@ -42,6 +42,7 @@ export const GameResult = (props: GameResultProps) => {
           <ScoreCard {...player2} result={'lose'} />
         </div>
         <BlockPayedGame />
+        <h2 className={styles.titleCenter}>Read more about our technology</h2>
       </div>
     );
   } else if (result === 'lose') {
@@ -59,6 +60,8 @@ export const GameResult = (props: GameResultProps) => {
           <ScoreCard {...player2} result={'win'} />
         </div>
         <BlockPayedGame />
+        <h2 className={styles.titleCenter}>Read more about our technology</h2>
+        <Button title='Github' size='sm' color='' borderless/>
         <p>Вы проиграли!</p>
       </div>
     );
@@ -77,6 +80,7 @@ export const GameResult = (props: GameResultProps) => {
           <ScoreCard {...player2} result={result} />
         </div>
         <BlockPayedGame />
+        <h2 className={styles.titleCenter}>Read more about our technology</h2>
         <h1>DRAW</h1>
       </div>
     );

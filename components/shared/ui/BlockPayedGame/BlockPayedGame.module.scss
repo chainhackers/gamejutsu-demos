@@ -6,7 +6,7 @@
   align-items: center;
   border-radius: 10px;
   border: 1px solid var(--light-grey, #e8e8e8);
-
+  margin-bottom: 40px;
   @media (max-width: 320px) {
   }
   @media (max-width: 375px) {
@@ -45,4 +45,5 @@
     padding: 20px 10px;
     letter-spacing: -0.5px;
   }
+  
 }
