@@ -77,7 +77,11 @@ export const GameResult = (props: GameResultProps) => {
           <CustomButton size='sm' color='gradient' radius='lg' text='Github' imagePosition='right' image='/images/git.svg' />
           <CustomButton size='sm' color='gradient' radius='lg' text='Publications' imagePosition='right' image='/images/publ.svg' />
         </div>
-        <p>Вы проиграли!</p>
+        <h2 className={styles.titleCenter}>The dream team for your future games is here!</h2>
+        <div className={styles.containerBtnColumn}>
+          <CustomButton size='lg' color='gradient' radius='lg' text='Tell us about your idea' />
+          <CustomButton size='lg' color='transparent' radius='sm' text='Restart Demo' imagePosition='left' image='/images/dices.svg' />
+        </div>
       </div>
     );
   } else if (result === 'draw') {
@@ -100,7 +104,11 @@ export const GameResult = (props: GameResultProps) => {
           <CustomButton size='sm' color='gradient' radius='lg' text='Github' imagePosition='right' image='/images/git.svg' />
           <CustomButton size='sm' color='gradient' radius='lg' text='Publications' imagePosition='right' image='/images/publ.svg' />
         </div>
-        <h1>DRAW</h1>
+        <h2 className={styles.titleCenter}>The dream team for your future games is here!</h2>
+        <div className={styles.containerBtnColumn}>
+          <CustomButton size='lg' color='gradient' radius='lg' text='Tell us about your idea' />
+          <CustomButton size='lg' color='transparent' radius='sm' text='Restart Demo' imagePosition='left' image='/images/dices.svg' />
+        </div>
       </div>
     );
   }

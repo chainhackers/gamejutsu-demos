@@ -35,8 +35,11 @@
   justify-content: space-between;
 }
 .addressPlayer {
-  margin: 0 auto 0 4px;
+  margin: 0 6px 0 6px;
 }
 .titleColor {
+  @media (max-width: 390px) {
+    font-size: 16px;
+  }
   color: var(--purple, #8777da);
 }
