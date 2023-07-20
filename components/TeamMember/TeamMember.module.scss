@@ -2,7 +2,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  width: 850px;
+  width: 1280px;
   margin: auto;
   padding: 30px 60px;
   border-radius: 20px;
@@ -17,10 +17,13 @@
   }
   @media (max-width: 390px) {
     padding: 16px;
+    margin-bottom: 20px;
   }
   @media (max-width: 425px) {
+    padding: 20px;
   }
   @media (max-width: 768px) {
+    padding: 20px;
   }
 
   @media (max-width: 1440px) {
@@ -28,7 +31,7 @@
 
   @media (max-width: 1024px) {
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
     text-align: center;
     width: auto;
   }
@@ -54,7 +57,6 @@
   }
 
   .avatar {
-    /* Стили для аватара */
   }
 
   .nameRoleContainer {
@@ -80,7 +82,7 @@
     font-size: 17px;
     font-style: normal;
     font-weight: 600;
-    line-height: 130%; /* 22.1px */
+    line-height: 130%;
   }
 
   .description {
@@ -93,6 +95,7 @@
     font-style: normal;
     font-weight: 400;
     line-height: 150%;
+    margin-bottom: 20px;
   }
 
   .contactsContainer {
@@ -100,64 +103,12 @@
   }
 
   .contactsElement {
-    /* Стили для каждой кнопки контакта */
+    color: var(--white, #fff);
+    font-family: Inter;
+    font-size: 17px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 130%;
+    margin-right: 6px;
   }
-  // .infoContainer{
-  //   text-align: start;
-  //   display: flex;
-  //   flex-direction: column;
-  //   justify-content: center;
-
-  //   @media (max-width: 1024px) {
-  //     align-items: center;
-  //     word-break: break-word;
-  //     text-align: center;
-  //   }
-
-  //   .header {
-  //     display: flex;
-
-  //     @media (max-width: 1024px) {
-  //       display: flex;
-  //       flex-direction: column;
-  //       align-items: center;
-  //       word-break: break-word;
-  //     }
-
-  //     .name {
-  //       position: relative;
-  //       padding-right: 10px;
-  //       font-weight: 700;
-  //       font-size: 26px;
-  //       // width: 275px;
-
-  //       @media (max-width: 1024px) {
-  //         padding-right: 0;
-  //       }
-  //     }
-  //     .contacts {
-  //       display: inline-block;
-  //       .contactsElement {
-  //         display: inline-block;
-  //         padding-right: 10px;
-  //       }
-  //     }
-  //   }
-
-  //   .role {
-  //     padding-top: 5px;
-  //     font-weight: 700;
-  //     font-size: 16px;
-  //   }
-  //   .description {
-  //     padding-top: 5px;
-  //     font-weight: 350;
-  //     font-size: 14px;
-  //   }
-  //   .link {
-  //     padding-top: 5px;
-  //     font-weight: 400;
-  //     font-size: 14px;
-  //   }
-  // }
 }

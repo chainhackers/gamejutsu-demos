@@ -42,19 +42,55 @@
   align-items: center;
   justify-content: center;
   margin: 0 auto;
+  font-family: Inter;
 }
 
-.size-sm {
-  padding: 16px 40px 14px 40px;
+.size-xs {
+  padding: 4px 4px;
   border-radius: 60px;
   display: flex;
   font-family: Inter;
+  gap: 0px;
+  height: 32px;
+  .text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 10px;
+    font-family: Inter;
+  }
+  @media (max-width: 390px) {
+    width: 100px;
+    height: 32px;
+    padding: 4px 4px;
+    gap: 0px;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 130%;
+    .text {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+      font-family: Inter;
+    }
+  }
+}
+
+.size-sm {
+  padding: 4px 4px;
+  border-radius: 60px;
+  display: flex;
+  font-family: Inter;
+  gap: 0px;
+  height: 44px;
   @media (max-width: 390px) {
     width: 166px;
     height: 44px;
     padding: 4px 4px;
     gap: 0px;
-    font-size: 15px;
+    font-size: 17px;
     font-style: normal;
     font-weight: 700;
     line-height: 130%;
@@ -75,6 +111,9 @@
 
 .size-lg {
   font-family: Inter;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 130%;
   width: 342px;
   height: 56px;
   padding: 10px 36px 10px 40px;
@@ -122,93 +161,8 @@
 .image {
   width: 36px;
   height: 36px;
+  @media (max-width: 390px) {
+    width: 24px;
+    height: 24px;
+  }
 }
-
-// $border-radius: 5px;
-
-// .button {
-//   display: flex !important;
-//   align-items: center !important;
-//   justify-content: center !important;
-//   border: none !important;
-//   cursor: pointer !important;
-
-//   &-sm {
-//     @include button-size(166px, 44px, 4px 4px 4px 20px, 4px);
-//     .image {
-//       width: 25px;
-//       height: 24px;
-//       border-radius: 0%;
-//       border: none;
-//     }
-//   }
-
-//   &-md {
-//     @include button-size(342px, 56px, 16px 40px 14px 40px, 10px);
-//     .image {
-//       width: 25px;
-//       height: 24px;
-//       border-radius: 0%;
-//       border: none;
-//     }
-//   }
-
-//   &-lg {
-//     @include button-size(512px, 72px, 24px 64px 22px 64px, 16px);
-//     .image {
-//       width: 25px;
-//       height: 24px;
-//       border-radius: 0%;
-//       border: none;
-//     }
-//   }
-// }
-// .button-transparent {
-//   background-color: transparent;
-// }
-
-// .button-gradient {
-//   background: linear-gradient(to right, #8DC8E9, #8C5AE3);
-// }
-
-// .buttonStyle {
-//   border: none;
-//   cursor: pointer;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   &.ssm {
-//     height: 40px;
-//     padding: 8px 24px;
-//     justify-content: flex-end;
-//     gap: 8px;
-//     flex-shrink: 0;
-//   }
-//   &.sm {
-//     width: 166px;
-//     height: 44px;
-//     padding: 4px 4px 4px 20px;
-//     gap: 4px;
-//     flex-shrink: 0;
-//   }
-//   &.md {
-//     width: 342px;
-//     padding: 16px 40px 14px 40px;
-//     gap: 10px;
-//   }
-//   &.lg {
-//     width: 342px;
-//     height: 56px;
-//     padding: 10px 36px 10px 40px;
-
-//     gap: 4px;
-//     flex-shrink: 0;
-//   }
-//   &.xl {
-//     width: 415px;
-//     height: 56px;
-//     padding: 10px 36px 10px 40px;
-//     gap: 6px;
-//     flex-shrink: 0;
-//   }
-// }

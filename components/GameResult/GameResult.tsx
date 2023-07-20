@@ -10,6 +10,8 @@ import playerImg from 'public/logo/account-avatar.png';
 import playerImg2 from 'public/logo/account-avatar2.png';
 import loseImg from 'public/images/lose.svg';
 import drawImg from 'public/images/draw.svg';
+import { TeamMember } from 'components/TeamMember';
+import team from 'data/team.json';
 export const GameResult = (props: GameResultProps) => {
   const { result } = props;
   const resultClass = classNames(styles.container, {
@@ -47,12 +49,13 @@ export const GameResult = (props: GameResultProps) => {
         <BlockPayedGame />
         <h2 className={styles.titleCenter}>Read more about our technology</h2>
         <div className={styles.containerBtn}>
-          <CustomButton size='sm' color='gradient' radius='lg' text='Github' imagePosition='right' image='/images/git.svg' />
+          <CustomButton size='sm' color='gradient' radius='lg' text='Github' imagePosition='right' image='/images/git.svg' link='https://github.com/chainhackers' />
           <CustomButton size='sm' color='gradient' radius='lg' text='Publications' imagePosition='right' image='/images/publ.svg' />
         </div>
         <h2 className={styles.titleCenter}>The dream team for your future games is here!</h2>
+        {team && team.map((teamMember) => <TeamMember image={teamMember.image} name={teamMember.name} role={teamMember.role} />)}
         <div className={styles.containerBtnColumn}>
-          <CustomButton size='lg' color='gradient' radius='lg' text='Tell us about your idea'/>
+          <CustomButton size='lg' color='gradient' radius='lg' text='Tell us about your idea' />
           <CustomButton size='lg' color='transparent' radius='sm' text='Restart Demo' imagePosition='left' image='/images/dices.svg' />
         </div>
       </div>
