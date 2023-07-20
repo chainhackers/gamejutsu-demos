@@ -1,11 +1,11 @@
 import { CustomButtonProps } from './CustomButtonProps';
 import styles from './CustomButton.module.scss';
-import classNames from 'classnames';
+import cn from 'classnames';
 
 export const CustomButton = (props: CustomButtonProps) => {
   const { size, color, radius, text, image, imagePosition } = props;
 
-  const buttonClasses = classNames(styles.button, styles[`size-${size}`], styles[`color-${color}`], styles[`radius-${radius}`], {
+  const buttonClasses = cn(styles.button, styles[`size-${size}`], styles[`color-${color}`], styles[`radius-${radius}`], {
     [styles['text-center']]: imagePosition === 'left' || imagePosition === 'right',
   });
 

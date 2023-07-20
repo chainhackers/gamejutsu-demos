@@ -1,92 +1,163 @@
 .container {
-    position: relative;
-    display: flex;
-    width: 850px;
-    margin: auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 850px;
+  margin: auto;
+  padding: 30px 60px;
+  border-radius: 20px;
+  z-index: 0;
+  border-radius: 20px;
+  border: 2px solid var(--light-grey, #e8e8e8);
+  margin-bottom: 20px;
 
-    padding: 20px;
-    border-radius: 20px;
-    z-index: 0;
+  @media (max-width: 320px) {
+  }
+  @media (max-width: 375px) {
+  }
+  @media (max-width: 390px) {
+    padding: 16px;
+  }
+  @media (max-width: 425px) {
+  }
+  @media (max-width: 768px) {
+  }
+
+  @media (max-width: 1440px) {
+  }
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: auto;
+  }
+
+  .avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 10px;
+    margin: 0px 12px 10px 0px;
+    overflow: hidden;
+    flex-shrink: 0;
 
     @media (max-width: 1024px) {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        width: auto;
+      margin-right: 0;
     }
+  }
 
-    .avatar {
-        width: 155px;
-        height: 155px;
-
-        background: #0c0f1e;
-        border-radius: 10px;
-        margin: auto 50px auto 0;
-
-        overflow: hidden;
-        flex-shrink: 0;
-
-        @media (max-width: 1024px) {
-            margin-right: 0;
-        }
+  .infoContainer {
+    display: flex;
+    align-self: flex-start;
+    @media (max-width: 390px) {
     }
+  }
 
-    .information {
-        text-align: start;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+  .avatar {
+    /* Стили для аватара */
+  }
 
-        @media (max-width: 1024px) {
-            align-items: center;
-            word-break: break-word;
-            text-align: center;
-        }
+  .nameRoleContainer {
+    text-align: left;
+    text-align: justify;
+  }
 
-        .header {
-            display: flex;
+  .name {
+    color: var(--grey, #2e303d);
+    font-family: Inter;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 130%;
+    margin: 0 0 5px 0;
+  }
 
-            @media (max-width: 1024px) {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                word-break: break-word;
-            }
+  .role {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--grey, #9c9eab);
+    font-family: Inter;
+    font-size: 17px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 130%; /* 22.1px */
+  }
 
-            .name {
-                position: relative;
-                padding-right: 10px;
-                font-weight: 700;
-                font-size: 26px;
-                // width: 275px;
+  .description {
+    font-size: 14px;
+    text-align: left;
+    text-align: justify;
+    color: var(--grey, #2e303d);
+    font-family: Inter;
+    font-size: 17px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+  }
 
-                @media (max-width: 1024px) {
-                    padding-right: 0;
-                }
-            }
-            .contacts {
-                display: inline-block;
-                .contactsElement {
-                    display: inline-block;
-                    padding-right: 10px;
-                }
-            }
-        }
+  .contactsContainer {
+    display: flex;
+  }
 
-        .role {
-            padding-top: 5px;
-            font-weight: 700;
-            font-size: 16px;
-        }
-        .description {
-            padding-top: 5px;
-            font-weight: 350;
-            font-size: 14px;
-        }
-        .link {
-            padding-top: 5px;
-            font-weight: 400;
-            font-size: 14px;
-        }
-    }
+  .contactsElement {
+    /* Стили для каждой кнопки контакта */
+  }
+  // .infoContainer{
+  //   text-align: start;
+  //   display: flex;
+  //   flex-direction: column;
+  //   justify-content: center;
+
+  //   @media (max-width: 1024px) {
+  //     align-items: center;
+  //     word-break: break-word;
+  //     text-align: center;
+  //   }
+
+  //   .header {
+  //     display: flex;
+
+  //     @media (max-width: 1024px) {
+  //       display: flex;
+  //       flex-direction: column;
+  //       align-items: center;
+  //       word-break: break-word;
+  //     }
+
+  //     .name {
+  //       position: relative;
+  //       padding-right: 10px;
+  //       font-weight: 700;
+  //       font-size: 26px;
+  //       // width: 275px;
+
+  //       @media (max-width: 1024px) {
+  //         padding-right: 0;
+  //       }
+  //     }
+  //     .contacts {
+  //       display: inline-block;
+  //       .contactsElement {
+  //         display: inline-block;
+  //         padding-right: 10px;
+  //       }
+  //     }
+  //   }
+
+  //   .role {
+  //     padding-top: 5px;
+  //     font-weight: 700;
+  //     font-size: 16px;
+  //   }
+  //   .description {
+  //     padding-top: 5px;
+  //     font-weight: 350;
+  //     font-size: 14px;
+  //   }
+  //   .link {
+  //     padding-top: 5px;
+  //     font-weight: 400;
+  //     font-size: 14px;
+  //   }
+  // }
 }
