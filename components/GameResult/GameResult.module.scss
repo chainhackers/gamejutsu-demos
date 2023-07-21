@@ -1,10 +1,19 @@
 @import 'styles/colors.scss';
 @import 'styles/mixins.scss';
 .container {
-  color: $medium-purple;
   font-size: 24px;
   text-align: center;
-
+  position: relative;
+  .teamMemberWrapper {
+    overflow-x: auto;
+    max-width: 100%;
+    height: 200px;
+    position: absolute;
+    bottom: 125px;
+    .teamMemberContainer {
+      display: flex;
+    }
+  }
   @media (max-width: 320px) {
   }
   @media (max-width: 375px) {
@@ -75,6 +84,20 @@
     font-size: 20px;
   }
 }
+.titleCenterBottom {
+  color: var(--grey, #2e303d);
+  font-family: Inter;
+  font-size: 50px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 130%;
+  text-align: center;
+  margin-bottom: 12px;
+  padding-bottom: 200px;
+  @media (max-width: 390px) {
+    font-size: 20px;
+  }
+}
 .imageSize {
   @media (max-width: 390px) {
     width: 49px;
@@ -83,7 +106,6 @@
 }
 .titleRight {
   display: none;
-
   @media (max-width: 390px) {
     display: block;
   }
@@ -104,15 +126,4 @@
   @media (max-width: 390px) {
     font-size: 36px;
   }
-}
-.win {
-  // Стили для состояния выигрыша
-}
-
-.lose {
-  // Стили для состояния проигрыша
-}
-
-.draw {
-  // Стили для состояния ничьи
 }

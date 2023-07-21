@@ -2,15 +2,15 @@
 import Image from 'next/image';
 import classNames from 'classnames';
 import styles from './GameResult.module.scss';
-import { GameResultProps } from './GameResultProps';
-import { BlockPayedGame, Button, CustomButton } from 'components/shared';
-import { ScoreCard } from 'components/GameResult/ScoreCard/index';
 import imgWin from 'public/images/win.png';
 import playerImg from 'public/logo/account-avatar.png';
 import playerImg2 from 'public/logo/account-avatar2.png';
 import loseImg from 'public/images/lose.svg';
 import drawImg from 'public/images/draw.svg';
-import { TeamMember } from 'components/TeamMember';
+import { GameResultProps } from './GameResultProps';
+import { BlockPayedGame, Button, CustomButton } from 'components/shared';
+import { ScoreCard } from 'components/GameResult/ScoreCard/index';
+import { TeamMemberBasic } from 'components/shared/ui/TeamMemberBasic';
 import team from 'data/team.json';
 export const GameResult = (props: GameResultProps) => {
   const { result } = props;
@@ -30,10 +30,7 @@ export const GameResult = (props: GameResultProps) => {
     showWinText: result === 'lose',
   };
   let content;
-  function handleDemoClick() {
-    // перенаправляем пользователя на страницу с демо
-    window.location.href = '/demo';
-  }
+
   if (result === 'win') {
     content = (
       <div className={resultClass}>
@@ -49,11 +46,13 @@ export const GameResult = (props: GameResultProps) => {
         <BlockPayedGame />
         <h2 className={styles.titleCenter}>Read more about our technology</h2>
         <div className={styles.containerBtn}>
-          <CustomButton size='sm' color='gradient' radius='lg' text='Github' imagePosition='right' image='/images/git.svg' link='https://github.com/chainhackers' />
-          <CustomButton size='sm' color='gradient' radius='lg' text='Publications' imagePosition='right' image='/images/publ.svg' />
+          <CustomButton size='sm' color='gradient' radius='lg' text='Github' imagePosition='right' image='/images/git.svg' link='https://github.com/chainhackers' imageSize='36' />
+          <CustomButton size='sm' color='gradient' radius='lg' text='Publications' imagePosition='right' image='/images/publ.svg' imageSize='36' />
         </div>
-        <h2 className={styles.titleCenter}>The dream team for your future games is here!</h2>
-        {team && team.map((teamMember) => <TeamMember image={teamMember.image} name={teamMember.name} role={teamMember.role} />)}
+        <h2 className={styles.titleCenterBottom}>The dream team for your future games is here!</h2>
+        <div className={styles.teamMemberWrapper}>
+          <div className={styles.teamMemberContainer}>{team && team.map((teamMember) => <TeamMemberBasic image={teamMember.image} name={teamMember.name} role={teamMember.role} />)}</div>
+        </div>
         <div className={styles.containerBtnColumn}>
           <CustomButton size='lg' color='gradient' radius='lg' text='Tell us about your idea' />
           <CustomButton size='lg' color='transparent' radius='sm' text='Restart Demo' imagePosition='left' image='/images/dices.svg' />

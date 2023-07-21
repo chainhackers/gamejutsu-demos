@@ -1,0 +1,77 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-width: 230px;
+  margin: 0 5px 20px 0;
+  padding: 10px 8px 20px;
+  border-radius: 20px;
+  border: 2px solid var(--light-grey, #e8e8e8);
+  @media (max-width: 320px) {
+  }
+  @media (max-width: 375px) {
+  }
+  @media (max-width: 390px) {
+    padding: 16px;
+  }
+  @media (max-width: 425px) {
+    padding: 20px;
+  }
+  @media (max-width: 768px) {
+    padding: 20px;
+  }
+
+  @media (max-width: 1440px) {
+  }
+
+  @media (max-width: 1024px) {
+    display: flex;
+    white-space: nowrap;
+  }
+  .infoContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    @media (max-width: 390px) {
+    }
+  }
+}
+.avatar {
+  width: 70px;
+  height: 70px;
+  @media (max-width: 1024px) {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+}
+.nameRoleContainer {
+  text-align: center;
+}
+.name {
+  color: var(--grey, #2e303d);
+  font-family: Inter;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 130%;
+  margin-bottom: 5px;
+  @media (max-width: 1024px) {
+    font-size: 20px;
+  }
+}
+.role {
+  font-weight: 700;
+  color: var(--grey, #9c9eab);
+  font-family: Inter;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 130%;
+  @media (max-width: 1024px) {
+    font-size: 15px;
+  }
+}
