@@ -51,7 +51,9 @@ export const GameResult = (props: GameResultProps) => {
         </div>
         <h2 className={styles.titleCenterBottom}>The dream team for your future games is here!</h2>
         <div className={styles.teamMemberWrapper}>
-          <div className={styles.teamMemberContainer}>{team && team.map((teamMember) => <TeamMemberBasic key={teamMember.name} image={teamMember.image} name={teamMember.name} role={teamMember.role} />)}</div>
+          <div className={styles.teamMemberContainer}>
+            {team && team.map((teamMember) => <TeamMemberBasic key={teamMember.name} image={teamMember.image} name={teamMember.name} role={teamMember.role} />)}
+          </div>
         </div>
         <div className={styles.containerBtnColumn}>
           <CustomButton size='lg' color='gradient' radius='lg' text='Tell us about your idea' />
@@ -81,7 +83,9 @@ export const GameResult = (props: GameResultProps) => {
         </div>
         <h2 className={styles.titleCenterBottom}>The dream team for your future games is here!</h2>
         <div className={styles.teamMemberWrapper}>
-          <div className={styles.teamMemberContainer}>{team && team.map((teamMember) => <TeamMemberBasic key={teamMember.name} image={teamMember.image} name={teamMember.name} role={teamMember.role} />)}</div>
+          <div className={styles.teamMemberContainer}>
+            {team && team.map((teamMember) => <TeamMemberBasic key={teamMember.name} image={teamMember.image} name={teamMember.name} role={teamMember.role} />)}
+          </div>
         </div>
         <div className={styles.containerBtnColumn}>
           <CustomButton size='lg' color='gradient' radius='lg' text='Tell us about your idea' />
@@ -112,7 +116,7 @@ export const GameResult = (props: GameResultProps) => {
         <h2 className={styles.titleCenterBottom}>The dream team for your future games is here!</h2>
         <div className={styles.teamMemberWrapper}>
           <div className={styles.teamMemberContainer}>
-            {team && team.map((teamMember) => <TeamMemberBasic image={teamMember.image} name={teamMember.name} role={teamMember.role} />)}
+            {team && team.map((teamMember) => <TeamMemberBasic key={teamMember.name} image={teamMember.image} name={teamMember.name} role={teamMember.role} />)}
           </div>
         </div>
         <div className={styles.containerBtnColumn}>
