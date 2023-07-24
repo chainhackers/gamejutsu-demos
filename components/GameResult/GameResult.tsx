@@ -57,7 +57,7 @@ export const GameResult = (props: GameResultProps) => {
         </div>
         <div className={styles.containerBtnColumn}>
           <CustomButton size='lg' color='gradient' radius='lg' text='Tell us about your idea' />
-          <CustomButton size='lg' color='transparent' radius='sm' text='Restart Demo' imagePosition='left' image='/images/dices.svg' />
+          <CustomButton size='lg' color='transparent' radius='sm' text='Restart Demo' link='v2/games' imagePosition='left' image='/images/dices.svg' />
         </div>
       </div>
     );

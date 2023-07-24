@@ -1,48 +1,59 @@
 @import '../../styles/colors.scss';
 @import '../../styles/mixins.scss';
+.containerHeader {
+  background-color: #ffffff;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  @media (max-width: 390px) {
+    box-shadow: none;
+  }
+}
 .container {
   background-color: var(--white);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1250px;
-  margin: auto;
+  max-width: 1280px;
+  margin: 0 auto;
   padding: 20px;
   font-weight: bold;
   font-size: 1.6rem;
+  .container > div:first-child {
+    flex: 1;
+  }
   .containerNavBlock {
     display: flex;
     flex-direction: row;
+    margin-left: auto;
     @media (max-width: 390px) {
       display: none;
     }
-  }
-  @media (max-width: 320px) {
-  }
-  @media (max-width: 375px) {
   }
   @media (max-width: 390px) {
     margin: 0;
     padding: 10px 24px 20px;
     max-width: 390px;
   }
-  @media (max-width: 425px) {
-  }
   @media (max-width: 768px) {
-    max-width: 600px;
+    max-width: 700px;
   }
   @media (max-width: 1024px) {
-    max-width: 800px;
-  }
-  @media (max-width: 1440px) {
     max-width: 900px;
   }
-  @media (max-width: 1920px) {
+  @media (max-width: 1440px) {
+    max-width: 1200px;
   }
-  @media (max-width: 1024px) {
+  .logoDesktop {
+    display: flex;
+    margin-left: 3px;
+    @media (max-width: 390px) {
+      display: none;
+    }
   }
-
-  @media (max-width: 390px) {
+  .logoMobile {
+    display: none;
+    @media (max-width: 390px) {
+      display: flex;
+    }
   }
   .title {
     padding: 0 32px;
@@ -53,21 +64,16 @@
     align-items: center;
   }
   .left {
+    display: flex;
+    flex-direction: column;
+    margin-right: auto;
     @media (max-width: 576px) {
       display: flex;
       flex-direction: column;
     }
   }
 }
-.containerHeader {
-  display: flex;
-  flex-direction: column;
-  background-color: #ffffff;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  @media (max-width: 390px) {
-    box-shadow: none;
-  }
-}
+
 .containerNav {
   display: none;
   @media (max-width: 390px) {
@@ -80,7 +86,7 @@
   font-family: Assistant;
   font-size: 26px;
   font-style: normal;
-  font-weight: 700;
+  font-weight: 900;
   line-height: normal;
   @media (max-width: 390px) {
     font-size: 10px;

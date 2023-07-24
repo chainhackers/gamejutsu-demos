@@ -4,9 +4,10 @@
   font-size: 20px;
   font-weight: 600;
   color: #9c9eab;
+  justify-content: space-between;
   .text {
     font-family: Assistant;
-    font-size: 26.081px;
+    font-size: 26px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
@@ -14,14 +15,41 @@
   .nav {
     display: flex;
     gap: 50px;
-  }
-  .nav {
+    margin: 0 86px 0 248px;
+    color: #9c9eab;
+    font-size: 20px;
+    white-space: nowrap;
     @media (max-width: 390px) {
-      display: flex;
+      margin: 0;
       gap: 8px;
       font-size: 16px;
       font-weight: 600;
-      color: #9c9eab;
+    }
+    
+    @media (min-width: 1024px) and (max-width: 1440px) {
+      margin: 0 20px 0 290px;
+      gap: 8px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    @media (min-width: 1440px) {
+      margin: 0 86px 0 auto;
+      gap: 8px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .link {
+      &:nth-child(-n + 2) {
+        @media (max-width: 390px) {
+          display: none;
+        }
+      }
+      &.active {
+        color: black;
+      }
+      a:hover {
+        color: black;
+      }
     }
   }
 }

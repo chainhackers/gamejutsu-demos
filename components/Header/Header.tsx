@@ -21,11 +21,9 @@ export const Header: React.FC<HeaderPropsI> = ({ version }) => {
         {({ account, chain, openAccountModal, openChainModal, openConnectModal, authenticationStatus, mounted }) => {
           const ready = mounted && authenticationStatus !== 'loading';
           const connected = ready && account && chain && (!authenticationStatus || authenticationStatus === 'authenticated');
-
           if (currentPath?.split('?')[0] === 'connect') {
             return null;
           }
-
           if (!connected) {
             return (
               <button onClick={openConnectModal} type='button' className={styles.customConnect}>
@@ -33,7 +31,6 @@ export const Header: React.FC<HeaderPropsI> = ({ version }) => {
               </button>
             );
           }
-
           if (chain.unsupported) {
             return (
               <button onClick={openChainModal} type='button'>
@@ -58,22 +55,27 @@ export const Header: React.FC<HeaderPropsI> = ({ version }) => {
       </ConnectButton.Custom>
     );
   }
-
   return (
     <div className={styles.containerHeader}>
       <div className={styles.container}>
-        <div className={styles.left}>
+        <div className={styles.logoDesktop}>
           <Link href='/' passHref>
             <Logo image={logoNinja} />
           </Link>
+        </div>
+        <div className={styles.left}>
+          <div className={styles.logoMobile}>
+            <Link href='/' passHref>
+              <Logo image={logoNinja} />
+            </Link>
+          </div>
           <h3 className={styles.text}>
             GAME<span className={styles.textColor}>JUTSU</span>
           </h3>
           <span className={styles.version}>{`ver. ${version}`}</span>
         </div>
-        <div className={styles.containerNavBlock}>
-          {currentPath?.split('?')[0] !== 'connect' && <Navigation active={currentPath} />}
-        </div>
+        
+        <div className={styles.containerNavBlock}>{currentPath?.split('?')[0] !== 'connect' && <Navigation active={currentPath} />}</div>
         <div className={styles.right}>{currentPath?.split('?')[0] !== 'connect' && <div>{renderConnectButton()}</div>}</div>
       </div>
       <div className={styles.containerNav}>

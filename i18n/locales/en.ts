@@ -7,7 +7,7 @@ const en = {
       gameDemo: 'Game Demo',
       team: 'Team',
       gitHub: 'Git',
-      documents: 'Documents',
+      docs: 'Docs',
       discord: 'Discord'
     },
     buttons: {

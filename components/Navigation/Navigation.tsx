@@ -13,15 +13,21 @@ export const Navigation: React.FC<NavigationPropsI> = ({ active }) => {
     <div className={styles.container}>
       <nav>
         <ul className={styles.nav}>
-          <li className={cn(active && (active === 'team' ? styles.active : styles.inactive))}>
+          <li className={cn(styles.link, active && (active === 'game demo' ? styles.active : styles.inactive))}>
+            <Link href='/'>{t('navigation.gameDemo')}</Link>
+          </li>
+          <li className={cn(styles.link, active && (active === 'docs' ? styles.active : styles.inactive))}>
+            <Link href='/docs'>{t('navigation.docs')}</Link>
+          </li>
+          <li className={cn(styles.link, active && (active === 'team' ? styles.active : styles.inactive))}>
             <Link href='/team'>{t('navigation.team')}</Link>
           </li>
-          <li className={cn(active && (active === 'git' ? styles.active : styles.inactive))}>
+          <li className={cn(styles.link, active && (active === 'git' ? styles.active : styles.inactive))}>
             <a href='https://github.com/ChainHackers/GameJutsu#readme' target='_blank'>
               {t('navigation.gitHub')}
             </a>
           </li>
-          <li className={cn(active && (active === 'discord' ? styles.active : styles.inactive))}>
+          <li className={cn(styles.link, active && (active === 'discord' ? styles.active : styles.inactive))}>
             <a href='https://discord.gg/a5E9vWbp9R' target='_blank'>
               {t('navigation.discord')}
             </a>
