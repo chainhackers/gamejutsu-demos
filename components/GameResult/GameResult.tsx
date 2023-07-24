@@ -38,7 +38,7 @@ export const GameResult = (props: GameResultProps) => {
           <span>Winner!</span>
           <span className={styles.titleRight}>Results</span>
         </h2>
-        <Image src={imgWin} alt='Win' />
+        <Image src={imgWin} alt='Win' width={640} height={510} />
         <div className={styles.containerCard}>
           <ScoreCard {...player1} result={result} />
           <ScoreCard {...player2} result={'lose'} />

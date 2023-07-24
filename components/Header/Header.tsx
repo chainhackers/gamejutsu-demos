@@ -69,7 +69,10 @@ export const Header: React.FC<HeaderPropsI> = ({ version }) => {
           <h3 className={styles.text}>
             GAME<span className={styles.textColor}>JUTSU</span>
           </h3>
-          <div className={styles.version}>{`ver. ${version}`}</div>
+          <span className={styles.version}>{`ver. ${version}`}</span>
+        </div>
+        <div className={styles.containerNavBlock}>
+          {currentPath?.split('?')[0] !== 'connect' && <Navigation active={currentPath} />}
         </div>
         <div className={styles.right}>{currentPath?.split('?')[0] !== 'connect' && <div>{renderConnectButton()}</div>}</div>
       </div>

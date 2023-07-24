@@ -1,16 +1,27 @@
 .container {
   display: flex;
   font-family: Inter;
-
-  @media (max-width: 390px) {}
-
+  font-size: 20px;
+  font-weight: 600;
+  color: #9c9eab;
+  .text {
+    font-family: Assistant;
+    font-size: 26.081px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+  }
+  .nav {
+    display: flex;
+    gap: 50px;
+  }
   .nav {
     @media (max-width: 390px) {
       display: flex;
       gap: 8px;
       font-size: 16px;
       font-weight: 600;
-      color: #9C9EAB;
+      color: #9c9eab;
     }
   }
 }
