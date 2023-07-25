@@ -14,10 +14,10 @@
   }
   .nav {
     display: flex;
-    gap: 50px;
-    margin: 0 86px 0 248px;
+    gap: 8px;
+    margin: 0 8px 0 0px;
     color: #9c9eab;
-    font-size: 20px;
+    font-size: 15px;
     white-space: nowrap;
     @media (max-width: 390px) {
       margin: 0;
@@ -25,17 +25,16 @@
       font-size: 16px;
       font-weight: 600;
     }
-    
-    @media (min-width: 1024px) and (max-width: 1440px) {
-      margin: 0 20px 0 290px;
+    @media (min-width: 1024px) and (max-width: 1439px) {
+      margin: 0 20px 0 0px;
       gap: 8px;
-      font-size: 16px;
+      font-size: 20px;
       font-weight: 600;
     }
     @media (min-width: 1440px) {
-      margin: 0 86px 0 auto;
+      margin: 0 86px 0 0;
       gap: 8px;
-      font-size: 16px;
+      font-size: 20px;
       font-weight: 600;
     }
     .link {

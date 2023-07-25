@@ -74,7 +74,6 @@ export const Header: React.FC<HeaderPropsI> = ({ version }) => {
           </h3>
           <span className={styles.version}>{`ver. ${version}`}</span>
         </div>
-        
         <div className={styles.containerNavBlock}>{currentPath?.split('?')[0] !== 'connect' && <Navigation active={currentPath} />}</div>
         <div className={styles.right}>{currentPath?.split('?')[0] !== 'connect' && <div>{renderConnectButton()}</div>}</div>
       </div>

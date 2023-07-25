@@ -92,6 +92,10 @@
     font-size: 10px;
     font-weight: 800;
   }
+  @media (min-width: 390px) and (max-width: 767px) {
+    font-size: 18px;
+    font-weight: 800;
+  }
 }
 .textColor {
   @include linear-gradient(0deg, $light-blue 0%, $light-blue 100%, $medium-purple 100%, $medium-purple 200%);

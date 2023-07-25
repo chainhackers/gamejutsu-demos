@@ -8,22 +8,6 @@
   border-radius: 10px;
   border: 1px solid var(--light-grey, #e8e8e8);
   margin-bottom: 40px;
-  @media (max-width: 320px) {
-  }
-  @media (max-width: 375px) {
-  }
-  @media (max-width: 390px) {
-  }
-  @media (max-width: 425px) {
-  }
-  @media (max-width: 768px) {
-  }
-  @media (max-width: 1024px) {
-  }
-  @media (max-width: 1440px) {
-  }
-  @media (max-width: 1920px) {
-  }
 }
 
 .button {
@@ -52,6 +36,8 @@
   font-family: Inter;
   gap: 0px;
   height: 32px;
+  width: 100px;
+  height: 32px;
   .text {
     display: flex;
     align-items: center;
@@ -60,8 +46,8 @@
     font-family: Inter;
   }
   @media (max-width: 390px) {
-    width: 100px;
-    height: 32px;
+    width: 96px;
+    height: 30px;
     padding: 4px 4px;
     gap: 0px;
     font-size: 12px;

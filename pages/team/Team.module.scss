@@ -2,8 +2,10 @@
   padding: 100px;
   padding-top: 30px;
   text-align: center;
-  @media (max-width: 1024px) {
-    padding: 30px 15px;
+  padding: 30px 15px;
+  @media (min-width: 390px) and (max-width: 767px) {
+    padding: 17px 24px;
+    margin: 0 auto;
   }
   .margin {
     margin-bottom: 80px;
