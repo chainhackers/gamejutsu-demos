@@ -24,7 +24,7 @@
     display: flex;
     flex-direction: row;
     margin-left: auto;
-    @media (max-width: 390px) {
+    @media (min-width: 320px) and (max-width: 480px) {
       display: none;
     }
   }
@@ -78,7 +78,6 @@
     }
   }
 }
-
 .containerNav {
   display: none;
   @media (max-width: 390px) {
@@ -98,7 +97,7 @@
     font-weight: 800;
   }
   @media (min-width: 390px) and (max-width: 767px) {
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 800;
   }
 }
@@ -109,10 +108,15 @@
   position: relative;
   align-self: center;
   top: -0.4rem;
-  @media (max-width: 390px) {
-    font-size: 10px;
+  font-size: 8px;
+  font-weight: 200;
+  @media (min-width: 390px) and (max-width: 767px) {
+    font-size: 12px;
     font-weight: 400;
-    line-height: 12px;
+  }
+  @media (min-width: 768px) {
+    font-size: 14px;
+    font-weight: 700;
   }
 }
 button.customConnect {

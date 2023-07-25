@@ -45,7 +45,11 @@
     margin: 0 auto;
     font-family: Inter;
   }
-  @media (max-width: 390px) {
+  @media (min-width: 320px) and (max-width: 389px) {
+    max-width: 86px;
+    font-size: 11px;
+  }
+  @media (min-width: 390px) {
     max-width: 94px;
     height: 30px;
     padding: 4px 4px;
@@ -108,11 +112,13 @@
   gap: 4px;
   flex-shrink: 0;
   border-radius: 10px;
-  @media (max-width: 390px) {
+  @media (min-width: 320px) and (max-width: 389px) {
+    max-width: 292px;
     font-size: 20px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 130%;
+  }
+  @media (min-width: 390px) {
+    max-width: 342px;
+    font-size: 20px;
   }
 }
 
