@@ -6,7 +6,7 @@ import styles from './Team.module.scss';
 const Team: NextPage = () => {
   return (
     <div className={styles.container}>
-      {team && team.map((teamMember) => <TeamMember {...teamMember} />)}
+      {team && team.map((teamMember) => <TeamMember {...teamMember} key={teamMember.name}/>)}
       <div className={styles.margin}></div>
       <div className={styles.containerIdea}>
         <h2 className={styles.titleCenter}>You have an idea? We have the talents!</h2>
