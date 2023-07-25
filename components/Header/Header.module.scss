@@ -17,9 +17,7 @@
   padding: 20px;
   font-weight: bold;
   font-size: 1.6rem;
-  .container > div:first-child {
-    flex: 1;
-  }
+  
   .containerNavBlock {
     display: flex;
     flex-direction: row;
@@ -80,7 +78,7 @@
 }
 .containerNav {
   display: none;
-  @media (max-width: 390px) {
+  @media (min-width: 320px) and (max-width: 480px) {
     display: flex;
     padding: 0 24px;
     justify-content: space-between;
