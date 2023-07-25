@@ -3,31 +3,26 @@
   display: flex;
   flex-direction: column;
   max-width: 1280px;
-  margin: 0 auto;
   padding: 30px 60px;
   border-radius: 20px;
   border: 2px solid var(--light-grey, #e8e8e8);
   margin-bottom: 20px;
   @media (min-width: 390px) {
-    padding: 2px;
-    margin: 0 auto;
-    max-width: 280px;
+    padding: 16px;
+    max-width: 342px;
   }
   @media (min-width: 768px) and (max-width: 1023px) {
     padding: 20px;
     font-size: 14px;
     max-width: 900px;
-    margin: 10px auto;
   }
   @media (min-width: 1024px) and (max-width: 1439px) {
     padding: 22px;
     max-width: 870px;
-    margin: 12px auto;
   }
   @media (min-width: 1440px) {
     padding: 22px;
     max-width: 1280px;
-    margin: 20px auto;
   }
   .avatar {
     width: 70px;
@@ -93,11 +88,11 @@
     line-height: 150%;
     margin-bottom: 20px;
     @media (min-width: 768px) {
-      padding: 16px;
+      padding: 1px;
       font-size: 12px;
     }
     @media (min-width: 768px) and (max-width: 1023px) {
-      padding: 20px;
+      padding: 2px;
       font-size: 14px;
     }
     @media (min-width: 1024px) and (max-width: 1439px) {

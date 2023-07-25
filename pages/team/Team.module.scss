@@ -4,8 +4,7 @@
   text-align: center;
   padding: 30px 15px;
   @media (min-width: 390px) and (max-width: 767px) {
-    padding: 17px 24px;
-    margin: 0 auto;
+    padding: 17px 24px
   }
   .margin {
     margin-bottom: 80px;
@@ -37,6 +36,7 @@
     margin-bottom: 12px;
     @media (max-width: 390px) {
       font-size: 20px;
+      max-width: 206px;
     }
   }
   .dropdown {

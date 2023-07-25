@@ -10,7 +10,9 @@ const Team: NextPage = () => {
       <div className={styles.margin}></div>
       <div className={styles.containerIdea}>
         <h2 className={styles.titleCenter}>You have an idea? We have the talents!</h2>
-        <CustomButton size='lg' color='transparent' radius='sm' text='Contact us' />
+        <div className={styles.customButton}>
+          <CustomButton size='lg' color='transparent' radius='sm' text='Contact us' />
+        </div>
       </div>
     </div>
   );
