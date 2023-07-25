@@ -7,12 +7,12 @@ import playerImg from 'public/logo/account-avatar.png';
 import playerImg2 from 'public/logo/account-avatar2.png';
 import loseImg from 'public/images/lose.svg';
 import drawImg from 'public/images/draw.svg';
-import { GameResultProps } from './GameResultProps';
+import { IGameResultProps } from './GameResultProps';
 import { BlockPayedGame, Button, CustomButton } from 'components/shared';
 import { ScoreCard } from 'components/GameResult/ScoreCard/index';
 import { TeamMemberBasic } from 'components/shared/ui/TeamMemberBasic';
 import team from 'data/team.json';
-export const GameResult = (props: GameResultProps) => {
+export const GameResult = (props: IGameResultProps) => {
   const { result } = props;
   const resultClass = classNames(styles.container, {
     [styles.win]: result === 'win',
