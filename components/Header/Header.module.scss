@@ -28,7 +28,12 @@
       display: none;
     }
   }
-  @media (max-width: 390px) {
+  @media (min-width: 320px) and (max-width: 389px) {
+    margin: 0;
+    padding: 8px;
+    max-width: 390px;
+  }
+  @media (min-width: 390px) and (max-width: 367px) {
     margin: 0;
     padding: 10px 24px 20px;
     max-width: 390px;

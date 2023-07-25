@@ -16,8 +16,8 @@ export const TeamMember: React.FC<TeamMemberPropsI> = ({ image, name, role, desc
       </div>
       <div className={styles.description}>{description}</div>
       <div className={styles.contactsContainer}>
-        {contacts?.map((contact, idx) => (
-          <div className={styles.contactsElement} key={idx}>
+        {contacts?.map((contact) => (
+          <div className={styles.contactsElement} key={contact.ref}>
             <CustomButton size='xs' color='gradient' radius='md' text={contact.type} image={contact.image} imagePosition='right' link={contact.ref} imageSize='24' />
           </div>
         ))}
