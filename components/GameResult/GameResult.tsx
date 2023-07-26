@@ -14,11 +14,6 @@ import { TeamMemberBasic } from 'components/shared/ui/TeamMemberBasic';
 import team from 'data/team.json';
 export const GameResult = (props: IGameResultProps) => {
   const { result } = props;
-  const resultClass = classNames(styles.container, {
-    [styles.win]: result === 'win',
-    [styles.lose]: result === 'lose',
-    [styles.draw]: result === 'draw',
-  });
   const player1 = {
     playerName: '0xh20...7260',
     playerImg: playerImg,
@@ -29,103 +24,50 @@ export const GameResult = (props: IGameResultProps) => {
     playerImg: playerImg2,
     showWinText: result === 'lose',
   };
-  let content;
-
-  if (result === 'win') {
-    content = (
-      <div className={resultClass}>
-        <h2 className={styles.title}>
-          <span>Winner!</span>
-          <span className={styles.titleRight}>Results</span>
-        </h2>
-        <Image src={imgWin} alt='Win' width={640} height={510} />
-        <div className={styles.containerCard}>
-          <ScoreCard {...player1} result={result} />
-          <ScoreCard {...player2} result={'lose'} />
-        </div>
-        <BlockPayedGame />
-        <h2 className={styles.titleCenter}>Read more about our technology</h2>
-        <div className={styles.containerBtn}>
-          <CustomButton size='sm' color='gradient' radius='lg' text='Github' imagePosition='right' image='/images/git.svg' link='https://github.com/chainhackers' imageSize='36' />
-          <CustomButton size='sm' color='gradient' radius='lg' text='Publications' imagePosition='right' image='/images/publ.svg' imageSize='36' />
-        </div>
-        <h2 className={styles.titleCenterBottom}>The dream team for your future games is here!</h2>
-        <div className={styles.teamMemberWrapper}>
-          <div className={styles.teamMemberContainer}>
-            {team && team.map((teamMember) => <TeamMemberBasic key={teamMember.name} image={teamMember.image} name={teamMember.name} role={teamMember.role} />)}
-          </div>
-        </div>
-        <div className={styles.containerBtnColumn}>
-          <CustomButton size='lg' color='gradient' radius='lg' text='Tell us about your idea' />
-          <CustomButton size='lg' color='transparent' radius='sm' text='Restart Demo' link='v2/games' imagePosition='left' image='/images/dices.svg' />
-        </div>
-      </div>
-    );
-  } else if (result === 'lose') {
-    content = (
-      <div className={resultClass}>
-        <h2 className={styles.title}>
-          <span>Better Luck Next Time</span>
-          <span className={styles.titleRight}>Results</span>
-        </h2>
+  return (
+    <div
+      className={classNames(styles.container, {
+        [styles.win]: result === 'win',
+        [styles.lose]: result === 'lose',
+        [styles.draw]: result === 'draw',
+      })}>
+      <h2 className={styles.title}>
+        {result === 'win' && <span>Winner!</span>}
+        {result === 'lose' && <span>Better Luck Next Time</span>}
+        {result === 'draw' && <span>Better Luck Next Time</span>}
+        <span className={styles.titleRight}>Results</span>
+      </h2>
+      {result === 'win' && <Image src={imgWin} alt='Win' width={640} height={510} />}
+      {result === 'lose' && (
         <h1 className={styles.titleResult}>
           You lose <img src={loseImg.src} alt='lose' className={styles.imageSize} />
         </h1>
-        <div className={styles.containerCard}>
-          <ScoreCard {...player1} result={result} />
-          <ScoreCard {...player2} result={'win'} />
-        </div>
-        <BlockPayedGame />
-        <h2 className={styles.titleCenter}>Read more about our technology</h2>
-        <div className={styles.containerBtn}>
-          <CustomButton size='sm' color='gradient' radius='lg' text='Github' imagePosition='right' image='/images/git.svg' link='https://github.com/chainhackers' imageSize='36' />
-          <CustomButton size='sm' color='gradient' radius='lg' text='Publications' imagePosition='right' image='/images/publ.svg' imageSize='36' />
-        </div>
-        <h2 className={styles.titleCenterBottom}>The dream team for your future games is here!</h2>
-        <div className={styles.teamMemberWrapper}>
-          <div className={styles.teamMemberContainer}>
-            {team && team.map((teamMember) => <TeamMemberBasic key={teamMember.name} image={teamMember.image} name={teamMember.name} role={teamMember.role} />)}
-          </div>
-        </div>
-        <div className={styles.containerBtnColumn}>
-          <CustomButton size='lg' color='gradient' radius='lg' text='Tell us about your idea' />
-          <CustomButton size='lg' color='transparent' radius='sm' text='Restart Demo' imagePosition='left' image='/images/dices.svg' />
-        </div>
-      </div>
-    );
-  } else if (result === 'draw') {
-    content = (
-      <div className={resultClass}>
-        <h2 className={styles.title}>
-          <span>Better Luck Next Time</span>
-          <span className={styles.titleRight}>Results</span>
-        </h2>
+      )}
+      {result === 'draw' && (
         <h1 className={styles.titleResult}>
           Draw <img src={drawImg.src} alt='draw' className={styles.imageSize} />
         </h1>
-        <div className={styles.containerCard}>
-          <ScoreCard {...player1} result={result} />
-          <ScoreCard {...player2} result={result} />
-        </div>
-        <BlockPayedGame />
-        <h2 className={styles.titleCenter}>Read more about our technology</h2>
-        <div className={styles.containerBtn}>
-          <CustomButton size='sm' color='gradient' radius='lg' text='Github' imagePosition='right' image='/images/git.svg' link='https://github.com/chainhackers' imageSize='36' />
-          <CustomButton size='sm' color='gradient' radius='lg' text='Publications' imagePosition='right' image='/images/publ.svg' imageSize='36' />
-        </div>
-        <h2 className={styles.titleCenterBottom}>The dream team for your future games is here!</h2>
-        <div className={styles.teamMemberWrapper}>
-          <div className={styles.teamMemberContainer}>
-            {team && team.map((teamMember) => <TeamMemberBasic key={teamMember.name} image={teamMember.image} name={teamMember.name} role={teamMember.role} />)}
-          </div>
-        </div>
-        <div className={styles.containerBtnColumn}>
-          <CustomButton size='lg' color='gradient' radius='lg' text='Tell us about your idea' />
-          <CustomButton size='lg' color='transparent' radius='sm' text='Restart Demo' imagePosition='left' image='/images/dices.svg' />
+      )}
+      <div className={styles.containerCard}>
+        <ScoreCard {...player1} result={result} />
+        <ScoreCard {...player2} result={result === 'win' ? 'lose' : result === 'lose' ? 'win' : result} />
+      </div>
+      <BlockPayedGame />
+      <h2 className={styles.titleCenter}>Read more about our technology</h2>
+      <div className={styles.containerBtn}>
+        <CustomButton size='sm' color='gradient' radius='lg' text='Github' imagePosition='right' image='/images/git.svg' link='https://github.com/chainhackers' imageSize='36' />
+        <CustomButton size='sm' color='gradient' radius='lg' text='Publications' imagePosition='right' image='/images/publ.svg' imageSize='36' />
+      </div>
+      <h2 className={styles.titleCenterBottom}>The dream team for your future games is here!</h2>
+      <div className={styles.teamMemberWrapper}>
+        <div className={styles.teamMemberContainer}>
+          {team && team.map((teamMember) => <TeamMemberBasic key={teamMember.name} image={teamMember.image} name={teamMember.name} role={teamMember.role} />)}
         </div>
       </div>
-    );
-  }
-
-  return <>{content}</>;
+      <div className={styles.containerBtnColumn}>
+        <CustomButton size='lg' color='gradient' radius='lg' text='Tell us about your idea' />
+        <CustomButton size='lg' color='transparent' radius='sm' text='Restart Demo' imagePosition='left' image='/images/dices.svg' />
+      </div>
+    </div>
+  );
 };
