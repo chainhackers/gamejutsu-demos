@@ -59,15 +59,11 @@ export const Header: React.FC<HeaderPropsI> = ({ version }) => {
     <div className={styles.containerHeader}>
       <div className={styles.container}>
         <div className={styles.logoDesktop}>
-          <Link href='/' passHref>
-            <Logo image={logoNinja} />
-          </Link>
+          <Logo image={logoNinja} href='/' />
         </div>
         <div className={styles.left}>
           <div className={styles.logoMobile}>
-            <Link href='/' passHref>
-              <Logo image={logoNinja} />
-            </Link>
+            <Logo image={logoNinja} href='/' />
           </div>
           <h3 className={styles.text}>
             GAME<span className={styles.textColor}>JUTSU</span>

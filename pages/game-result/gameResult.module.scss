@@ -5,17 +5,10 @@
   padding: 0 24px;
   max-width: 1600px;
   align-items: center;
-
-  @media (max-width: 320px) {
-  }
-  @media (max-width: 375px) {
-  }
   @media (max-width: 390px) {
     flex-direction: column;
     text-align: center;
     padding: 17px 24px;
-  }
-  @media (max-width: 425px) {
   }
   @media (max-width: 768px) {
     max-width: 600px;
@@ -28,7 +21,5 @@
   }
   @media (max-width: 1440px) {
     max-width: 900px;
-  }
-  @media (max-width: 1920px) {
   }
 }

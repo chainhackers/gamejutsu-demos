@@ -66,7 +66,7 @@ export const GameResult = (props: IGameResultProps) => {
       </div>
       <div className={styles.containerBtnColumn}>
         <CustomButton size='lg' color='gradient' radius='lg' text='Tell us about your idea' />
-        <CustomButton size='lg' color='transparent' radius='sm' text='Restart Demo' imagePosition='left' image='/images/dices.svg' />
+        <CustomButton size='lg' color='transparent' radius='sm' text='Restart Demo' imagePosition='left' image='/images/dice.svg' />
       </div>
     </div>
   );

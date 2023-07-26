@@ -7,24 +7,7 @@
   border-radius: 10px;
   border: 1px solid var(--light-grey, #e8e8e8);
   margin-bottom: 40px;
-  @media (max-width: 320px) {
-  }
-  @media (max-width: 375px) {
-  }
-  @media (max-width: 390px) {
-  }
-  @media (max-width: 425px) {
-  }
-  @media (max-width: 768px) {
-  }
-  @media (max-width: 1024px) {
-  }
-  @media (max-width: 1440px) {
-  }
-  @media (max-width: 1920px) {
-  }
 }
-
 .imageSize {
   @media (max-width: 390px) {
     width: 50px;
@@ -35,7 +18,6 @@
 .text {
   color: var(--grey, #2e303d);
   font-family: Inter;
-
   @media (max-width: 390px) {
     font-size: 15px;
     font-style: normal;
