@@ -47,16 +47,16 @@
       padding: 10px 24px 20px;
       max-width: 1332px;
     }
-    .logoDesktop {
+    .logoMobile {
       display: flex;
       margin-left: 3px;
-      @media (max-width: 390px) {
+      @media (min-width: 767px) {
         display: none;
       }
     }
-    .logoMobile {
+    .logoDesktop {
       display: none;
-      @media (max-width: 390px) {
+      @media (min-width: 768px) {
         display: flex;
       }
     }
@@ -72,10 +72,6 @@
       display: flex;
       flex-direction: column;
       margin-right: auto;
-      @media (max-width: 576px) {
-        display: flex;
-        flex-direction: column;
-      }
     }
   }
 }
@@ -102,14 +98,14 @@
   position: relative;
   align-self: center;
   top: -0.4rem;
-  font-size: 8px;
+  font-size: 0.8rem;
   font-weight: 200;
-  @media (min-width: 390px) and (max-width: 767px) {
-    font-size: 12px;
+  @media (min-width: 390px) {
+    font-size: 1.2rem;
     font-weight: 400;
   }
   @media (min-width: 768px) {
-    font-size: 14px;
+    font-size: 1.4rem;
     font-weight: 700;
   }
 }
