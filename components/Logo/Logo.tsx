@@ -3,7 +3,8 @@ import { LogoPropsI } from './LogoProps';
 import Image from 'next/image';
 import styles from './Logo.module.scss';
 import Link from 'next/link';
-export const Logo = React.forwardRef<HTMLImageElement, LogoPropsI>(({ image, style }) => {
+export const Logo = (props: LogoPropsI) => {
+  const { image, style } = props;
   return (
     <Link href='/'>
       <a className={styles.container} style={style}>
@@ -11,4 +12,4 @@ export const Logo = React.forwardRef<HTMLImageElement, LogoPropsI>(({ image, sty
       </a>
     </Link>
   );
-});
+};

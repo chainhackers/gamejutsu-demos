@@ -42,8 +42,8 @@
   font-weight: 600;
   line-height: 130%;
   margin-bottom: 5px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
+  @media (min-width: 1024px) {
+    font-size: 2.4rem;
   }
 }
 .role {
@@ -54,7 +54,7 @@
   font-style: normal;
   font-weight: 600;
   line-height: 130%;
-  @media (max-width: 1024px) {
-    font-size: 15px;
+  @media (min-width: 1024px) {
+    font-size: 1.7rem;
   }
 }

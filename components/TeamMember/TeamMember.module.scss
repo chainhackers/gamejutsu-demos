@@ -27,7 +27,7 @@
   @media (min-width: 1024px) {
     margin-bottom: 20px;
     padding: 22px;
-    max-width: 1180px;
+    max-width: 1260px;
   }
   @media (min-width: 1440px) {
     margin-bottom: 30px;
@@ -62,12 +62,9 @@
     font-weight: 600;
     line-height: 130%;
     margin: 0 0 5px 0;
-    font-size: 24px;
-    @media (min-width: 768px) and (max-width: 1023px) {
-      font-size: 14px;
-    }
-    @media (min-width: 1024px) and (max-width: 1439px) {
-      font-size: 24px;
+    font-size: 2rem;
+    @media (min-width: 1024px) {
+      font-size: 2.4rem;
     }
   }
   .role {
@@ -76,14 +73,9 @@
     font-family: Inter;
     font-style: normal;
     line-height: 130%;
-    @media (min-width: 390px) {
-      font-size: 15px;
-    }
-    @media (min-width: 768px) and (max-width: 1023px) {
-      font-size: 18px;
-    }
-    @media (min-width: 1024px) and (max-width: 1439px) {
-      font-size: 24px;
+    font-size: 1.5rem;
+    @media (min-width: 1024px) {
+      font-size: 1.7rem;
     }
   }
 
@@ -110,14 +102,8 @@
   line-height: 150%;
   margin-bottom: 20px;
   font-size: 14px;
-  @media (min-width: 768px) and (max-width: 1023px) {
-    padding: 2px;
-    font-size: 18px;
-  }
-  @media (min-width: 1024px) and (max-width: 1439px) {
-    font-size: 22px;
-  }
-  @media (min-width: 1440px) {
-    font-size: 26px;
+  font-size: 1.5rem;
+  @media (min-width: 1024px) {
+    font-size: 1.7rem;
   }
 }
