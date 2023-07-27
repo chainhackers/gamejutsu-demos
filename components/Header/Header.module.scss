@@ -10,6 +10,12 @@
     display: flex;
     padding: 0 24px 6px;
     justify-content: space-between;
+    @media (min-width: 320px) {
+      padding: 0 15px 6px;
+    }
+    @media (min-width: 390px) {
+      padding: 0 24px 6px;
+    }
     @media (min-width: 768px) {
       display: none;
     }
@@ -33,7 +39,7 @@
     }
     @media (min-width: 320px) {
       margin: 0;
-      padding: 8px 24px;
+      padding: 8px 15px;
       max-width: 390px;
     }
     @media (min-width: 390px) {
