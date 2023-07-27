@@ -64,6 +64,7 @@ export const Header: React.FC<HeaderPropsI> = ({ version }) => {
         <div className={styles.left}>
           <div className={styles.logoMobile}>
             <Logo image={logoNinja} href='/' />
+
           </div>
           <h3 className={styles.text}>
             GAME<span className={styles.textColor}>JUTSU</span>

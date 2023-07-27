@@ -3,7 +3,7 @@
   padding-top: 30px;
   text-align: center;
   padding: 30px 15px;
-  @media (min-width: 390px) and (max-width: 767px) {
+  @media (min-width: 390px) {
     padding: 17px 24px;
   }
   .margin {
@@ -34,13 +34,13 @@
     line-height: 130%;
     text-align: center;
     margin-bottom: 12px;
-    @media (min-width: 319px) and (max-width: 389px) {
+    @media (min-width: 319px) {
       font-size: 20px;
       max-width: 206px;
       text-align: center;
       white-space: wrap;
     }
-    @media (min-width: 390px) and (max-width: 767px) {
+    @media (min-width: 390px) {
       font-size: 20px;
       max-width: 206px;
       text-align: center;

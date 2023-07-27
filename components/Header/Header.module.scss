@@ -1,100 +1,90 @@
 @import '../../styles/colors.scss';
 @import '../../styles/mixins.scss';
 .containerHeader {
-  background-color: #ffffff;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  @media (max-width: 390px) {
-    box-shadow: none;
+  box-shadow: none;
+  @media (min-width: 320px) {
+    background-color: #ffffff;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   }
-}
-.container {
-  background-color: var(--white);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 20px;
-  font-weight: bold;
-  font-size: 1.6rem;
-  
-  .containerNavBlock {
+  .containerNav {
     display: flex;
-    flex-direction: row;
-    margin-left: auto;
-    @media (min-width: 320px) and (max-width: 480px) {
+    padding: 0 24px 6px;
+    justify-content: space-between;
+    @media (min-width: 768px) {
       display: none;
     }
   }
-  @media (min-width: 320px) and (max-width: 389px) {
-    margin: 0;
-    padding: 8px;
-    max-width: 390px;
-  }
-  @media (min-width: 390px) and (max-width: 367px) {
-    margin: 0;
-    padding: 10px 24px 20px;
-    max-width: 390px;
-  }
-  @media (max-width: 768px) {
-    max-width: 700px;
-  }
-  @media (max-width: 1024px) {
-    max-width: 900px;
-  }
-  @media (max-width: 1440px) {
-    max-width: 1200px;
-  }
-  .logoDesktop {
+  .container {
+    background-color: var(--white);
     display: flex;
-    margin-left: 3px;
-    @media (max-width: 390px) {
-      display: none;
-    }
-  }
-  .logoMobile {
-    display: none;
-    @media (max-width: 390px) {
-      display: flex;
-    }
-  }
-  .title {
-    padding: 0 32px;
-  }
-  .right,
-  .left {
-    display: flex;
+    justify-content: space-between;
     align-items: center;
-  }
-  .left {
-    display: flex;
-    flex-direction: column;
-    margin-right: auto;
-    @media (max-width: 576px) {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 20px;
+    font-weight: bold;
+    font-size: 1.6rem;
+    .containerNavBlock {
+      display: none;
+      @media (min-width: 768px) {
+        display: flex;
+        flex-direction: row;
+      }
+    }
+    @media (min-width: 320px) {
+      margin: 0;
+      padding: 8px 24px;
+      max-width: 390px;
+    }
+    @media (min-width: 390px) {
+      margin: 0 auto;
+      padding: 10px 24px 20px;
+      max-width: 1280px;
+    }
+    .logoDesktop {
+      display: flex;
+      margin-left: 3px;
+      @media (max-width: 390px) {
+        display: none;
+      }
+    }
+    .logoMobile {
+      display: none;
+      @media (max-width: 390px) {
+        display: flex;
+      }
+    }
+    .title {
+      padding: 0 32px;
+    }
+    .right,
+    .left {
+      display: flex;
+      align-items: center;
+    }
+    .left {
       display: flex;
       flex-direction: column;
+      margin-right: auto;
+      @media (max-width: 576px) {
+        display: flex;
+        flex-direction: column;
+      }
     }
   }
 }
-.containerNav {
-  display: none;
-  @media (min-width: 320px) and (max-width: 480px) {
-    display: flex;
-    padding: 0 24px;
-    justify-content: space-between;
-  }
-}
+
 .text {
   font-family: Assistant;
   font-size: 26px;
   font-style: normal;
   font-weight: 900;
   line-height: normal;
-  @media (max-width: 390px) {
-    font-size: 10px;
+  @media (min-width: 320px) {
+    font-size: 12px;
     font-weight: 800;
   }
-  @media (min-width: 390px) and (max-width: 767px) {
+  @media (min-width: 390px) {
     font-size: 17px;
     font-weight: 800;
   }
@@ -127,10 +117,10 @@ button.customConnect {
   line-height: 20px;
   letter-spacing: 0.6px;
   font-style: normal;
-  @media (max-width: 390px) {
-    font-size: 16px;
+  @media (min-width: 320px) {
+    font-size: 2vw;
   }
-  @media (max-width: 576px) {
+  @media (min-width: 576px) {
     font-size: 16px;
   }
 }
@@ -142,7 +132,14 @@ button.customConnect {
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
   padding: 8px;
   border-radius: 12px;
-  font-size: 16px;
+  font-size: 1.6rem;
+  font-weight: 700;
+  @media (min-width: 320px) {
+    font-size: 1.2rem;
+  }
+  @media (min-width: 768px) {
+    font-size: 1.6rem;
+  }
 }
 .walletAddress {
   display: flex;
@@ -152,6 +149,12 @@ button.customConnect {
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
   padding: 8px;
   border-radius: 12px;
-  font-size: 16px;
+  font-size: 1.6rem;
   font-weight: 700;
+  @media (min-width: 320px) {
+    font-size: 1.2rem;
+  }
+  @media (min-width: 768px) {
+    font-size: 1.6rem;
+  }
 }

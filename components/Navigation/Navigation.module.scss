@@ -1,13 +1,12 @@
 .container {
   display: flex;
   font-family: Inter;
-  font-size: 20px;
   font-weight: 600;
   color: #9c9eab;
   justify-content: space-between;
   .text {
     font-family: Assistant;
-    font-size: 26px;
+    font-size: 2vw;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
@@ -17,30 +16,32 @@
     gap: 8px;
     margin: 0 8px 0 0px;
     color: #9c9eab;
-    font-size: 15px;
+    font-size: 2rem;
     white-space: nowrap;
-    @media (max-width: 390px) {
+    font-weight: 600;
+    gap: 8px;
+    @media (min-width: 320px) {
       margin: 0;
-      gap: 8px;
-      font-size: 16px;
-      font-weight: 600;
+      font-size: 1rem;
     }
-    @media (min-width: 1024px) and (max-width: 1439px) {
+    @media (min-width: 390px) {
       margin: 0 20px 0 0px;
-      gap: 8px;
-      font-size: 20px;
-      font-weight: 600;
+      font-size: 1.6rem;
+    }
+    @media (min-width: 1024px) {
+      margin: 0 56px 0 0px;
+      font-size: 2rem;
     }
     @media (min-width: 1440px) {
       margin: 0 86px 0 0;
-      gap: 8px;
-      font-size: 20px;
-      font-weight: 600;
     }
     .link {
       &:nth-child(-n + 2) {
-        @media (min-width: 320px) and (max-width: 480px){
+        @media (min-width: 320px) {
           display: none;
+        }
+        @media (min-width: 768px) {
+          display: flex;
         }
       }
       &.active {
