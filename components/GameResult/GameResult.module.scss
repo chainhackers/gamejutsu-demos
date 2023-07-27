@@ -14,20 +14,13 @@
       display: flex;
     }
   }
-  @media (max-width: 390px) {
+  @media (min-width: 320px) {
     flex-direction: column;
     text-align: center;
   }
-  @media (max-width: 768px) {
-    max-width: 600px;
-  }
-  @media (max-width: 1024px) {
-    max-width: 800px;
+  @media (min-width: 1024px) {
     flex-direction: column;
     text-align: center;
-  }
-  @media (max-width: 1440px) {
-    max-width: 900px;
   }
 }
 .containerCard {
@@ -57,7 +50,7 @@
   text-align: center;
   margin: 0 auto;
   margin-bottom: 24px;
-  @media (max-width: 390px) {
+  @media (min-width: 390px) {
     display: flex;
     font-size: 20px;
     justify-content: space-between;
@@ -72,7 +65,7 @@
   line-height: 130%;
   text-align: center;
   margin-bottom: 12px;
-  @media (max-width: 390px) {
+  @media (min-width: 390px) {
     font-size: 20px;
   }
 }
@@ -86,19 +79,19 @@
   text-align: center;
   margin-bottom: 12px;
   padding-bottom: 200px;
-  @media (max-width: 390px) {
+  @media (min-width: 320px) {
     font-size: 20px;
   }
 }
 .imageSize {
-  @media (max-width: 390px) {
+  @media (min-width: 320px) {
     width: 49px;
     height: 37px;
   }
 }
 .titleRight {
   display: none;
-  @media (max-width: 390px) {
+  @media (min-width: 320px) {
     display: block;
   }
 }
@@ -115,7 +108,7 @@
   gap: 10px;
   align-items: center;
   margin-bottom: 22px;
-  @media (max-width: 390px) {
+  @media (min-width: 390px) {
     font-size: 36px;
   }
 }
