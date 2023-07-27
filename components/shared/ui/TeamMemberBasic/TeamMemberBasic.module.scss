@@ -9,7 +9,7 @@
   padding: 10px 8px 20px;
   border-radius: 20px;
   border: 2px solid var(--light-grey, #e8e8e8);
-  @media (max-width: 1024px) {
+  @media (min-width: 320px) {
     display: flex;
     white-space: nowrap;
   }
@@ -19,14 +19,12 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    @media (max-width: 390px) {
-    }
   }
 }
 .avatar {
   width: 70px;
   height: 70px;
-  @media (max-width: 1024px) {
+  @media (min-width: 320px) {
     margin-right: 0;
     margin-bottom: 10px;
   }
@@ -37,11 +35,11 @@
 .name {
   color: var(--grey, #2e303d);
   font-family: Inter;
-  font-size: 24px;
   font-style: normal;
   font-weight: 600;
   line-height: 130%;
   margin-bottom: 5px;
+  font-size: 2rem;
   @media (min-width: 1024px) {
     font-size: 2.4rem;
   }
@@ -50,7 +48,7 @@
   font-weight: 700;
   color: var(--grey, #9c9eab);
   font-family: Inter;
-  font-size: 17px;
+  font-size: 1.5rem;
   font-style: normal;
   font-weight: 600;
   line-height: 130%;
