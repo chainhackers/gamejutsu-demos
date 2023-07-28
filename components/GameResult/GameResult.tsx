@@ -37,7 +37,7 @@ export const GameResult = (props: IGameResultProps) => {
         {result === 'draw' && <span>Better Luck Next Time</span>}
         <span className={styles.titleRight}>Results</span>
       </h2>
-      {result === 'win' && <img src={imgWin.src} alt='Win' width={640} height={510} className={styles.imageWin}/>}
+      {result === 'win' && <img src={imgWin.src} alt='Win' width={640} height={510} className={styles.imageWin} />}
       {result === 'lose' && (
         <h1 className={styles.titleResult}>
           You lose <img src={loseImg.src} alt='lose' className={styles.imageSize} />
@@ -55,10 +55,13 @@ export const GameResult = (props: IGameResultProps) => {
       <BlockPayedGame />
       <h2 className={styles.titleCenter}>Read more about our technology</h2>
       <div className={styles.containerBtn}>
-        <CustomButton size='sm' color='gradient' radius='lg' text='Github' imagePosition='right' image='/images/git.svg' link='https://github.com/chainhackers' imageSize='36' />
-        <CustomButton size='sm' color='gradient' radius='lg' text='Publications' imagePosition='right' image='/images/publ.svg' imageSize='36' />
+        <CustomButton size='sm' color='gradient' radius='lg' text='Github' imagePosition='right' image='/images/git.svg' link='https://github.com/chainhackers' />
+        <CustomButton size='sm' color='gradient' radius='lg' text='Publications' imagePosition='right' image='/images/publ.svg' />
       </div>
-      <h2 className={styles.titleCenterBottom}>The dream team for your future games is here!</h2>
+      <h2 className={styles.titleCenterBottom}>
+        The dream team for your future
+        <br /> games is here!
+      </h2>
       <div className={styles.teamMemberWrapper}>
         <div className={styles.teamMemberContainer}>
           {team && team.map((teamMember) => <TeamMemberBasic key={teamMember.name} image={teamMember.image} name={teamMember.name} role={teamMember.role} />)}

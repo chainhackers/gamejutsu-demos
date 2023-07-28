@@ -28,6 +28,9 @@
   margin: 0 auto;
   font-family: Inter;
   white-space: nowrap;
+  @media (min-width: 768px) {
+    font-size: 3.2rem;
+  }
 }
 
 .size-xs {
@@ -87,7 +90,14 @@
   }
   @media (min-width: 390px) {
     width: 16.6rem;
-    height: 4.4rem;
+    height: 3.6rem;
+  }
+  @media (min-width: 411px) {
+    height: 3.8rem;
+  }
+  @media (min-width: 768px) {
+    width: 31.6rem;
+    height: 7rem;
   }
 }
 
@@ -116,6 +126,11 @@
   gap: 4px;
   flex-shrink: 0;
   border-radius: 10px;
+  .text{
+    @media (min-width: 390px) {
+    font-size: 20px;
+  }
+  }
   @media (min-width: 320px) {
     max-width: 292px;
     font-size: 20px;
@@ -160,5 +175,9 @@
   @media (min-width: 320px) {
     width: 24px;
     height: 24px;
+  }
+  @media (min-width: 768px) {
+    width: 5rem;
+    height: 5rem;
   }
 }
