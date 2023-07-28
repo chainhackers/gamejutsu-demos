@@ -37,7 +37,7 @@ export const GameResult = (props: IGameResultProps) => {
         {result === 'draw' && <span>Better Luck Next Time</span>}
         <span className={styles.titleRight}>Results</span>
       </h2>
-      {result === 'win' && <Image src={imgWin} alt='Win' width={640} height={510} />}
+      {result === 'win' && <img src={imgWin.src} alt='Win' width={640} height={510} className={styles.imageWin}/>}
       {result === 'lose' && (
         <h1 className={styles.titleResult}>
           You lose <img src={loseImg.src} alt='lose' className={styles.imageSize} />
