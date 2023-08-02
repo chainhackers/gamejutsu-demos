@@ -42,4 +42,10 @@
       }
     }
   }
+  .break {
+    display: block;
+    @media (min-width: 447px) {
+      display: none;
+    }
+  }
 }
