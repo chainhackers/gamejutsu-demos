@@ -7,9 +7,19 @@
   .teamMemberWrapper {
     overflow-x: auto;
     max-width: 100%;
-    height: 20rem;
+    height: 19rem;
     position: absolute;
-    bottom: 125px;
+    bottom: 12.5rem;
+    @media (min-width: 1062px) {
+      left: 2vw;
+    }
+    @media (min-width: 1230px) {
+      left: 7vw;
+    }
+    @media (min-width: 1384px) {
+      overflow-x: hidden;
+      left: 0;
+    }
     .teamMemberContainer {
       display: flex;
       @media (min-width: 320px) {
