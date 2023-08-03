@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  margin: 0 5px 20px 0;
+  margin: 0 0.5rem 2rem 0;
   padding: 3px 2px 11px;
   border-radius: 20px;
   border: 2px solid var(--light-grey, #e8e8e8);
@@ -16,14 +16,14 @@
     min-height: 13rem;
   }
   @media (min-width: 1024px) {
-    display: flex;
-    white-space: wrap;
-    min-width: 15.5rem;
+    min-width: 14.5rem;
     min-height: 13rem;
-    margin-left: auto;
+    overflow: hidden;
+  }
+  @media (min-width: 1062px) {
+    min-width: 15.5rem;
   }
   @media (min-width: 1328px) {
-    display: flex;
     white-space: nowrap;
     min-width: 19.5rem;
     min-height: 15rem;
@@ -53,10 +53,13 @@
   font-size: 1.7rem;
   white-space: nowrap;
   @media (min-width: 1024px) {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
+  }
+  @media (min-width: 1280px) {
+    font-size: 1.6rem;
   }
   @media (min-width: 1440px) {
-    font-size: 2.1rem;
+    font-size: 1.8rem;
   }
 }
 .role {
@@ -69,7 +72,7 @@
   line-height: 130%;
   white-space: wrap;
   @media (min-width: 1024px) {
-    font-size: 1.1rem;
+    font-size: 1.3rem;
   }
   @media (min-width: 1440px) {
     font-size: 1.5rem;

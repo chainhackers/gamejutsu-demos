@@ -4,21 +4,21 @@
   font-size: 2.4rem;
   text-align: center;
   position: relative;
+  overflow: hidden;
   .teamMemberWrapper {
     overflow-x: auto;
-    max-width: 100%;
+    max-width: calc(100% - 2rem);
     height: 19rem;
     position: absolute;
     bottom: 12.5rem;
+    left: 50%;
+    transform: translateX(-50%);
     @media (min-width: 1062px) {
-      left: 2vw;
+      max-width: calc(100% - 2vw);
+      overflow-x: hidden;
     }
     @media (min-width: 1230px) {
-      left: 7vw;
-    }
-    @media (min-width: 1384px) {
-      overflow-x: hidden;
-      left: 0;
+      max-width: calc(100% - 2vw);
     }
     .teamMemberContainer {
       display: flex;
