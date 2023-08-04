@@ -18,6 +18,7 @@
   "dependencies": {
     "@apollo/client": "^3.6.9",
     "@rainbow-me/rainbowkit": "^0.8.1",
+    "@swc/helpers": "^0.5.1",
     "@walletconnect/web3-provider": "^1.8.0",
     "@xmtp/xmtp-js": "^7.7.2",
     "autoprefixer": "^10.4.12",

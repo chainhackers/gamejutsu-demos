@@ -1,0 +1,211 @@
+@import 'styles/colors.scss';
+@import 'styles/mixins.scss';
+.container {
+  font-size: 2.4rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  .teamMemberWrapper {
+    overflow-x: auto;
+    max-width: calc(100% - 2rem);
+    height: 19rem;
+    position: absolute;
+    bottom: 12.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    @media (min-width: 1062px) {
+      max-width: calc(100% - 2vw);
+      overflow-x: hidden;
+    }
+    @media (min-width: 1230px) {
+      max-width: calc(100% - 2vw);
+    }
+    .teamMemberContainer {
+      display: flex;
+      @media (min-width: 320px) {
+        margin-left: 2rem;
+      }
+      @media (min-width: 390px) {
+        margin-left: 0;
+      }
+    }
+  }
+  @media (min-width: 320px) {
+    flex-direction: column;
+    text-align: center;
+  }
+  @media (min-width: 1024px) {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .imageWin {
+    @media (min-width: 320px) {
+      padding: 0 2.4rem;
+      margin: 0 auto 2rem;
+    }
+    @media (min-width: 390px) {
+      padding: 0 1.2rem;
+      margin: 0 0 2rem;
+    }
+    @media (min-width: 768px) {
+      padding: 0;
+      margin: 0 auto 2rem;
+    }
+  }
+
+  .containerCard {
+    display: flex;
+    justify-content: space-between;
+    place-items: center;
+    margin: 0 0 2rem 0;
+    @media (min-width: 320px) {
+      margin: 0 2.1rem 2rem 2.1rem;
+    }
+    @media (min-width: 390px) {
+      margin: 0 1.1rem 2rem 1.1rem;
+    }
+    @media (min-width: 1024px) {
+      margin: 2rem auto;
+      max-width: 64rem;
+    }
+  }
+  .containerBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin: 0 0 4rem 0;
+    @media (min-width: 320px) {
+      margin: 0 1.2rem 4rem 1.2rem;
+      gap: 2rem;
+    }
+    @media (min-width: 390px) {
+      gap: 2rem;
+      margin: 0 1rem 4rem;
+    }
+    @media (min-width: 411px) {
+      gap: 5rem;
+      margin: 0 1rem 4rem;
+    }
+    @media (min-width: 480px) {
+      gap: 8rem;
+      margin: 0 1rem 4rem;
+    }
+    @media (min-width: 576px) {
+      gap: 24rem;
+      margin: 0 1rem 4rem;
+    }
+    @media (min-width: 768px) {
+      gap: 7rem;
+      margin: 0 1rem 4rem;
+    }
+    @media (min-width: 1024px) {
+      gap: 2rem;
+      margin: 0 auto 4rem;
+    }
+  }
+  .containerBtnColumn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .title {
+    color: var(--grey, #2e303d);
+    font-family: Inter;
+    font-size: 50px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 130%;
+    text-align: center;
+    margin: 0 auto;
+    margin-bottom: 24px;
+    padding: 0 2.4rem;
+    @media (min-width: 320px) {
+      font-size: 1.6rem;
+    }
+    @media (min-width: 390px) {
+      font-size: 2rem;
+      padding: 0 1.2rem;
+    }
+    @media (min-width: 768px) {
+      font-size: 5rem;
+    }
+  }
+  .titleCenter {
+    color: var(--grey, #2e303d);
+    font-family: Inter;
+    font-size: 5rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 130%;
+    text-align: center;
+    @media (min-width: 320px) {
+      font-size: 1.9rem;
+      white-space: nowrap;
+      margin: 0 1.2rem 1.2rem;
+    }
+    @media (min-width: 1024px) {
+      font-size: 5rem;
+    }
+  }
+  .titleCenterBottom {
+    color: var(--grey, #2e303d);
+    font-family: Inter;
+    font-size: 5rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 130%;
+    text-align: center;
+    margin-bottom: 1.2rem;
+    padding: 0 2.4rem 20rem;
+    @media (min-width: 320px) {
+      font-size: 2rem;
+    }
+    @media (min-width: 390px) {
+      padding: 0 0 20rem;
+      min-width: 36rem;
+    }
+    @media (min-width: 1024px) {
+      font-size: 5rem;
+    }
+  }
+  .imageSize {
+    @media (min-width: 320px) {
+      width: 49px;
+      height: 37px;
+    }
+  }
+  .titleRight {
+    @media (min-width: 320px) {
+      display: block;
+      font-size: 2rem;
+    }
+    @media (min-width: 768px) {
+      display: none;
+    }
+  }
+  .titleResult {
+    @include gradient-background-text(#8dc8e9, #8c5ae3);
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 130%;
+    white-space: nowrap;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 22px;
+    @media (min-width: 320px) {
+      font-size: 3.2rem;
+    }
+    @media (min-width: 390px) {
+      font-size: 3.6rem;
+    }
+    @media (min-width: 1024px) {
+      font-size: 11rem;
+    }
+  }
+}

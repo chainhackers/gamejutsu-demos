@@ -1,98 +1,132 @@
 @import '../../styles/colors.scss';
 @import '../../styles/mixins.scss';
-.container {
-  background-color: var(--white);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1250px;
-  margin: auto;
-  padding: 53px 15px 53px;
-  font-weight: bold;
-  font-size: 1.6rem;
-
-  @media (max-width: 1024px) {
-    padding: 15px 0;
+.containerHeader {
+  box-shadow: none;
+  @media (min-width: 320px) {
+    background-color: #ffffff;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   }
-
-  @media (max-width: 390px) {
-    margin: 0;
-    padding: 10px 24px 20px;
-    max-width: 390px;
-  }
-
-  .title {
-    padding: 0 32px;
-  }
-
-  .right,
-  .left {
+  .containerNav {
     display: flex;
-    align-items: center;
+    padding: 0 24px 6px;
+    justify-content: space-between;
+    @media (min-width: 320px) {
+      padding: 0 15px 6px;
+    }
+    @media (min-width: 390px) {
+      padding: 0 24px 6px;
+    }
+    @media (min-width: 768px) {
+      display: none;
+    }
   }
-
-  .left {
-    @media (max-width: 576px) {
+  .container {
+    background-color: var(--white);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 20px;
+    font-weight: bold;
+    font-size: 1.6rem;
+    .containerNavBlock {
+      display: none;
+      @media (min-width: 768px) {
+        display: flex;
+        flex-direction: row;
+      }
+    }
+    @media (min-width: 320px) {
+      margin: 0;
+      padding: 8px 15px;
+      max-width: 390px;
+    }
+    @media (min-width: 390px) {
+      margin: 0 auto;
+      padding: 10px 24px 20px;
+      max-width: 1332px;
+    }
+    .logoMobile {
+      display: flex;
+      margin-left: 3px;
+      @media (min-width: 767px) {
+        display: none;
+      }
+    }
+    .logoDesktop {
+      display: none;
+      @media (min-width: 768px) {
+        display: flex;
+      }
+    }
+    .title {
+      padding: 0 32px;
+    }
+    .right,
+    .left {
+      display: flex;
+      align-items: center;
+    }
+    .left {
       display: flex;
       flex-direction: column;
+      margin-right: auto;
     }
   }
 }
 
-.containerHeader {
-  display: flex;
-  flex-direction: column;
-}
-
-.containerNav {
-  display: flex;
-  padding: 0 24px;
-  justify-content: space-between;
-}
-
 .text {
-  font-size: 10px;
-  font-weight: 800;
   font-family: Assistant;
-
+  font-size: 26px;
+  font-style: normal;
+  font-weight: 900;
+  line-height: normal;
+  @media (min-width: 320px) {
+    font-size: 12px;
+    font-weight: 800;
+  }
+  @media (min-width: 390px) {
+    font-size: 17px;
+    font-weight: 800;
+  }
 }
-
 .textColor {
   @include linear-gradient(0deg, $light-blue 0%, $light-blue 100%, $medium-purple 100%, $medium-purple 200%);
 }
-
 .version {
   position: relative;
   align-self: center;
   top: -0.4rem;
-
-  @media (max-width: 390px) {
-    font-size: 10px;
+  font-size: 0.8rem;
+  font-weight: 200;
+  @media (min-width: 390px) {
+    font-size: 1.2rem;
     font-weight: 400;
-    line-height: 12px;
+  }
+  @media (min-width: 768px) {
+    font-size: 1.4rem;
+    font-weight: 700;
   }
 }
-
 button.customConnect {
-  padding: 10px 20px;
+  padding: 1rem 2rem;
   @include linear-gradient-button(225.67deg, $light-blue 3.57%, $medium-purple 115.97%, $neon-blue);
-  color: #FFFFFF;
+  color: #ffffff;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
   border-radius: 14px;
   font-weight: 700;
   line-height: 20px;
   letter-spacing: 0.6px;
   font-style: normal;
-
-  @media (max-width: 390px) {
-    font-size: 16px;
+  @media (min-width: 320px) {
+    font-size: 1.4rem;
+    padding: 0.8rem 1.6rem;
   }
-
-  @media (max-width: 576px) {
-    font-size: 16px;
+  @media (min-width: 576px) {
+    font-size: 1.6rem;
   }
 }
-
 .chainName {
   display: flex;
   gap: 8px;
@@ -101,9 +135,15 @@ button.customConnect {
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
   padding: 8px;
   border-radius: 12px;
-  font-size: 16px;
+  font-size: 1.6rem;
+  font-weight: 700;
+  @media (min-width: 320px) {
+    font-size: 1.2rem;
+  }
+  @media (min-width: 768px) {
+    font-size: 1.6rem;
+  }
 }
-
 .walletAddress {
   display: flex;
   gap: 8px;
@@ -112,6 +152,12 @@ button.customConnect {
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
   padding: 8px;
   border-radius: 12px;
-  font-size: 16px;
+  font-size: 1.6rem;
   font-weight: 700;
+  @media (min-width: 320px) {
+    font-size: 1.2rem;
+  }
+  @media (min-width: 768px) {
+    font-size: 1.6rem;
+  }
 }
