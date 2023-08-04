@@ -75,7 +75,7 @@ export const Header: React.FC<HeaderPropsI> = ({ version }) => {
       </div>
       <div className={styles.containerNav}>
         {currentPath?.split('?')[0] !== 'connect' && <Navigation active={currentPath} />}
-        {currentPath?.split('?')[0] !== 'connect' ? <NavPath path={asPath} /> : null}
+        {/* {currentPath?.split('?')[0] !== 'connect' ? <NavPath path={asPath} /> : null} */}
       </div>
     </div>
   );

@@ -35,7 +35,6 @@ export const GameResult = (props: IGameResultProps) => {
         {result === 'win' && <span>Winner!</span>}
         {result === 'lose' && <span>Better Luck Next Time</span>}
         {result === 'draw' && <span>Better Luck Next Time</span>}
-        <span className={styles.titleRight}>Results</span>
       </h2>
       {result === 'win' && <img src={imgWin.src} alt='Win' width={640} height={510} className={styles.imageWin} />}
       {result === 'lose' && (

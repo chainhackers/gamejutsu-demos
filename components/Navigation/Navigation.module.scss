@@ -4,6 +4,9 @@
   font-weight: 600;
   color: #9c9eab;
   justify-content: space-between;
+  @media (min-width: 320px) {
+    margin: 0 auto;
+  }
   .text {
     font-family: Assistant;
     font-size: 2vw;
@@ -23,27 +26,42 @@
     @media (min-width: 320px) {
       margin: 0;
       font-size: 1rem;
+      gap: 3rem;
     }
     @media (min-width: 390px) {
-      margin: 0 20px 0 0px;
+      margin: 0 2rem 0 0;
       font-size: 1.6rem;
+      gap: 2rem;
+    }
+    @media (min-width: 450px) {
+      font-size: 1.6rem;
+      gap: 3rem;
+    }
+    @media (min-width: 576px) {
+      font-size: 1.6rem;
+      gap: 4.5rem;
+    }
+    @media (min-width: 768px) {
+      margin: 0 2rem 0 0;
+      font-size: 1.6rem;
+      gap: 1rem;
     }
     @media (min-width: 1024px) {
-      margin: 0 56px 0 0px;
+      margin: 0 5.6rem 0 0px;
       font-size: 2rem;
     }
     @media (min-width: 1440px) {
-      margin: 0 86px 0 0;
+      margin: 0 8.6rem 0 0;
     }
     .link {
-      &:nth-child(-n + 2) {
-        @media (min-width: 320px) {
-          display: none;
-        }
-        @media (min-width: 768px) {
-          display: flex;
-        }
-      }
+      // &:nth-child(-n + 2) {
+      //   @media (min-width: 320px) {
+      //     display: none;
+      //   }
+      //   @media (min-width: 768px) {
+      //     display: flex;
+      //   }
+      // }
       &.active {
         color: black;
       }
