@@ -3,6 +3,7 @@ import styles from './ScoreCard.module.scss';
 import { ScoreCardProps } from './ScoreCardProps';
 import Image from 'next/image';
 import { PawnIcon } from 'components/shared/ui/PawnIcon/PawnIcon';
+import { XOIcon } from 'components/shared/ui/XOIcon';
 export const ScoreCard = (props: ScoreCardProps) => {
   const { playerName, result, playerImg, showWinText } = props;
 
@@ -14,6 +15,7 @@ export const ScoreCard = (props: ScoreCardProps) => {
           <Image src={playerImg} alt='Player' width={24} height={24} />
           <p className={styles.addressPlayer}>{playerName}</p>
           <PawnIcon result={result} />
+          <XOIcon result={result} />
         </div>
       </div>
     </div>
