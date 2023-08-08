@@ -11,6 +11,7 @@ import { IGameResultProps } from './GameResultProps';
 import { BlockPayedGame, Button, CustomButton } from 'components/shared';
 import { ScoreCard } from 'components/GameResult/ScoreCard/index';
 import { TeamMemberBasic } from 'components/shared/ui/TeamMemberBasic';
+
 import team from 'data/team.json';
 export const GameResult = (props: IGameResultProps) => {
   const { result } = props;
@@ -18,11 +19,13 @@ export const GameResult = (props: IGameResultProps) => {
     playerName: '0xh20...7260',
     playerImg: playerImg,
     showWinText: result === 'win',
+    gameType: 'tic-tac-toe'
   };
   const player2 = {
     playerName: '0xh07...6035',
     playerImg: playerImg2,
     showWinText: result === 'lose',
+    gameType: 'tic-tac-toe',
   };
   return (
     <div
