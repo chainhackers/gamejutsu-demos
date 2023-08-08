@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { GameResult } from 'components/GameResult';
 import { TGameResult } from 'components/GameResult/GameResultProps';
 import styles from './gameResult.module.scss';
@@ -22,7 +22,7 @@ const GameResultPage = () => {
           Переключить результат
         </button>
         <button onClick={handleGameTypeButtonClick} className='p-2 bg-slate-600 text-[#C89DFB] text-4xl w-[300px] rounded-3xl m-2 place-content-center'>
-          Переключить тип игры
+          Переключить игру
         </button>
         <GameResult result={currentResult} gameType={gameType} />
       </div>
