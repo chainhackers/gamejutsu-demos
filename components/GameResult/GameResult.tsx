@@ -1,5 +1,4 @@
 'use client';
-import Image from 'next/image';
 import classNames from 'classnames';
 import styles from './GameResult.module.scss';
 import imgWin from 'public/images/win.png';
@@ -7,25 +6,27 @@ import playerImg from 'public/logo/account-avatar.png';
 import playerImg2 from 'public/logo/account-avatar2.png';
 import loseImg from 'public/images/lose.svg';
 import drawImg from 'public/images/draw.svg';
+import team from 'data/team.json';
 import { IGameResultProps } from './GameResultProps';
-import { BlockPayedGame, Button, CustomButton } from 'components/shared';
+import { BlockPayedGame, CustomButton, PurpleIcon, WhiteIcon } from 'components/shared';
 import { ScoreCard } from 'components/GameResult/ScoreCard/index';
 import { TeamMemberBasic } from 'components/shared/ui/TeamMemberBasic';
-
-import team from 'data/team.json';
+import { OIcon, XIcon } from 'components/shared/ui/XOIcons';
 export const GameResult = (props: IGameResultProps) => {
-  const { result } = props;
+  const { result, gameType } = props;
   const player1 = {
     playerName: '0xh20...7260',
     playerImg: playerImg,
     showWinText: result === 'win',
-    gameType: 'tic-tac-toe'
+    gameType: 'tic-tac-toe',
+    icon: gameType === 'tic-tac-toe' ? <XIcon /> : <PurpleIcon />,
   };
   const player2 = {
     playerName: '0xh07...6035',
     playerImg: playerImg2,
     showWinText: result === 'lose',
     gameType: 'tic-tac-toe',
+    icon: gameType ===  'tic-tac-toe' ? <OIcon /> : <WhiteIcon />,
   };
   return (
     <div

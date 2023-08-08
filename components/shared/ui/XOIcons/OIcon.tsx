@@ -1,14 +1,5 @@
 import { SVGProps } from 'react';
-
-export const OIcon = (props: SVGProps<SVGSVGElement> & { result: 'win' | 'lose' | 'draw' }) => {
-  const { result } = props;
-  const crossStyles = {
-    fill1: result === 'win' ? '#E3CEFC' : 'white',
-    fill2: result === 'win' ? '#B4A1EA' : 'white',
-    stroke: result === 'win' ? '#B4A1EA' : '#DEDFE0',
-    shadow: result === 'win' ? 'rgba(0, 0, 0, 0.25)' : 'rgba(61, 66, 97, 0.30)',
-  };
-
+export const OIcon = (props: SVGProps<SVGSVGElement>) => {
   return (
     <svg xmlns='http://www.w3.org/2000/svg' width={30} height={31} viewBox='0 0 30 31' fill='none'>
       <circle cx={15.0742} cy={15.5742} r={12.375} stroke='url(#paint0_linear_1425_7608)' strokeWidth={3} />

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { SVGProps } from 'react';
 export const WhiteIcon = (props: SVGProps<SVGSVGElement>) => {
   return (
-    <svg xmlns='http://www.w3.org/2000/svg' width={68} height={68} viewBox='0 0 68 68' fill='none' {...props}>
+    <svg xmlns='http://www.w3.org/2000/svg' width={30} height={30} viewBox='0 0 68 68' fill='none' {...props}>
       <g filter='url(#filter0_d_768_24880)'>
         <circle cx={36} cy={32} r={30} fill='url(#paint0_linear_768_24880)' />
         <circle cx={35.9982} cy={31.9982} r={24.9865} fill='url(#paint1_linear_768_24880)' />
