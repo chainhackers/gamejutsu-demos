@@ -36,7 +36,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
 
   const { t } = useTranslation();
   const account = useAccount();
-
+  // TODO: delete badge @habdevs #190
   // const { data, error, loading } = useQuery(badgesQuery, {
   //   variables: { id: account.address?.toLowerCase() },
   // });
@@ -329,14 +329,16 @@ export const GameField: React.FC<GameFieldPropsI> = ({
               <div className={styles.small}>{makeFinishedGameReasonDescription(finishedGameState)}</div>
             </div>
           )}
-          {!!finishedGameState && (
+// TODO: delete badge @habdevs #190
+          {/* {!!finishedGameState && (
             <div className={styles.link}>
               <div className={styles.badges}>
                 <div className={styles.text}>Issue your ZK Badge</div>
+
                 {makeBadges()}
               </div>
             </div>
-          )}
+          )} */}
         </div>
       )}
       {!isShowShade && (
