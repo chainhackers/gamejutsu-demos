@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import cn from 'classnames';
 import { FinishedGameState } from 'gameApi';
+import { GameResult } from 'components/GameResult';
 export const GameField: React.FC<GameFieldPropsI> = ({
   children,
   rivalPlayerAddress,
@@ -29,6 +30,14 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [isShowReport, setShowReport] = useState<boolean>(false);
   const [isShowDispute, setShowDispute] = useState<boolean>(false);
+  const [showGameResult, setShowGameResult] = useState(false);
+
+  useEffect(() => {
+    if (!!finishedGameState) {
+      setShowGameResult(true);
+    }
+  }, [finishedGameState]);
+
   // TODO: delete badge @habdevs #190
   // type TMedal = 'bronze' | 'silver' | 'gold';
   // type TBelt = 'white' | 'green' | 'black';
@@ -204,9 +213,12 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   //   }
   //   return <div className={styles.row}>{badges}</div>;
   // };
-
+// TODO: add GameResult @habdevs #190
+  // return <div>{showGameResult && <GameResult result={'win'} gameType={'checkers'} />}</div>;
+  // TODO: delete badge @habdevs #190
   return (
     <div className={styles.container}>
+      {showGameResult && <GameResult result={'win'} gameType={'checkers'} />}
       {version && <div className={styles.version}>{`Ver.${version}`}</div>}
       {isShowShade && (
         <div className={styles.shade}>
@@ -329,7 +341,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
               <div className={styles.small}>{makeFinishedGameReasonDescription(finishedGameState)}</div>
             </div>
           )}
-// TODO: delete badge @habdevs #190
+          // TODO: delete badge @habdevs #190
           {/* {!!finishedGameState && (
             <div className={styles.link}>
               <div className={styles.badges}>
