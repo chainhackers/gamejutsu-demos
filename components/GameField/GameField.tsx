@@ -30,13 +30,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [isShowReport, setShowReport] = useState<boolean>(false);
   const [isShowDispute, setShowDispute] = useState<boolean>(false);
-  const [showGameResult, setShowGameResult] = useState(false);
-
-  useEffect(() => {
-    if (!!finishedGameState) {
-      setShowGameResult(true);
-    }
-  }, [finishedGameState]);
+ 
 
   // TODO: delete badge @habdevs #190
   // type TMedal = 'bronze' | 'silver' | 'gold';
@@ -218,7 +212,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   // TODO: delete badge @habdevs #190
   return (
     <div className={styles.container}>
-      {showGameResult && <GameResult result={'win'} gameType={'checkers'} />}
+      
       {version && <div className={styles.version}>{`Ver.${version}`}</div>}
       {isShowShade && (
         <div className={styles.shade}>

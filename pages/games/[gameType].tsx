@@ -33,6 +33,7 @@ import useConversation, { IAnyMessage } from "../../hooks/useConversation";
 import { PlayerI, TGameType } from 'types/game';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
+import { GameResult } from 'components/GameResult';
 
 
 interface IGamePageProps {
@@ -49,6 +50,18 @@ const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 const FETCH_OPPONENT_ADDRESS_TIMEOUT = 2500;
 
 const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
+// TODO: @habdevs #190
+const [gameResult, setGameResult] = useState<{ winner: PlayerI | null; loser: PlayerI | null; isDraw: boolean } | null>(null);
+const handleGameFinished = (finishedGameState: FinishedGameState, players: PlayerI[]) => {
+  const winner = players.find((player) => player.address === finishedGameState.winner);
+  const loser = players.find((player) => player.address === finishedGameState.loser);
+
+  setGameResult({
+    winner: winner || null,
+    loser: loser || null,
+    isDraw: finishedGameState.isDraw,
+  });
+};
 
   const [playerIngameId, setPlayerIngameId] = useState<0 | 1>(0);
   const [isInDispute, setIsInDispute] = useState<boolean>(false);
@@ -137,6 +150,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
   };
 
   const runFinishGameHandler = async () => {
+    
     if (!nextGameState) {
       throw 'no nextGameState';
     }
@@ -594,18 +608,25 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
             finishTimeout={finishTimeoutHandler}
             isTimeoutRequested={isTimeoutRequested}
             onRunDisput={runDisputeHandler}
-            isDisputAvailable={isDisputAvailable}          
+            isDisputAvailable={isDisputAvailable}
             gameId={gameId}
           />
-          {gameType === 'checkers' && <Link href="#disclaimer"><div className={styles.disclaimerLink}><DisclaimerNotice><strong>{t('games.checkers.disclaimer.notice')}
-          </strong></DisclaimerNotice></div></Link>}
-        
+          {gameType === 'checkers' && (
+            <Link href='#disclaimer'>
+              <div className={styles.disclaimerLink}>
+                <DisclaimerNotice>
+                  <strong>{t('games.checkers.disclaimer.notice')}</strong>
+                </DisclaimerNotice>
+              </div>
+            </Link>
+          )}
+
           <GameField
             gameId={gameId?.toString()}
             rivalPlayerAddress={opponentAddress}
             isConnected={!!client}
             isInDispute={isInDispute}
-            disputeMode={{isInDispute, disputeRunner}}
+            disputeMode={{ isInDispute, disputeRunner }}
             finishedGameState={finishedGameState}
             onConnect={setConversationHandler}
             players={players}
@@ -613,19 +634,29 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
             version={version}
             onClaimWin={runFinishGameHandler}
             onRunDisput={runDisputeHandler}
-            isInvalidMove={isInvalidMove}
-          >
+            isInvalidMove={isInvalidMove}>
             {gameComponent}
           </GameField>
+          {/* TODO: add props @habdevs #190 */}
+          {gameResult && <GameResult result={gameResult.isDraw ? 'draw' : gameResult.winner ? 'win' : 'lose'} player1={gameResult.winner} player2={gameResult.loser} gameType={gameType} 
+          />}
           <RightPanel>
-          <div style={{ position: 'absolute', right: '0'}}>
-              <GetHistory history={lastMessages} messageHistory={messageHistory} gameId={gameId}/>
+            <div style={{ position: 'absolute', right: '0' }}>
+              <GetHistory history={lastMessages} messageHistory={messageHistory} gameId={gameId} />
             </div>
             <XMTPChatLog anyMessages={collectedMessages} isLoading={loading} />
           </RightPanel>
-          {gameType === 'checkers' && <Disclaimer>{t('games.checkers.disclaimer.s1')} <strong>
-            <Link href='https://www.officialgamerules.org/checkers' target={'_blank'}>{t('games.checkers.disclaimer.l1')}</Link>
-            </strong> {t('games.checkers.disclaimer.s2')}</Disclaimer>}
+          {gameType === 'checkers' && (
+            <Disclaimer>
+              {t('games.checkers.disclaimer.s1')}{' '}
+              <strong>
+                <Link href='https://www.officialgamerules.org/checkers' target={'_blank'}>
+                  {t('games.checkers.disclaimer.l1')}
+                </Link>
+              </strong>{' '}
+              {t('games.checkers.disclaimer.s2')}
+            </Disclaimer>
+          )}
         </div>
       );
     }
@@ -646,8 +677,10 @@ export const getStaticPaths: GetStaticPaths<IParams> = () => {
   const gamesType = ['tic-tac-toe', 'checkers', 'other'];
   const paths = gamesType.map((gameType) => ({ params: { gameType } }));
   return {
+    
     paths,
     fallback: false,
+    
   };
 };
 

@@ -24,7 +24,7 @@ const GameResultPage = () => {
         <button onClick={handleGameTypeButtonClick} className='p-2 bg-slate-600 text-[#C89DFB] text-4xl w-[300px] rounded-3xl m-2 place-content-center'>
           Переключить игру
         </button>
-        <GameResult result={currentResult} gameType={gameType} />
+        <GameResult result={currentResult} gameType={gameType} player1={null} player2={null} />
       </div>
     </div>
   );

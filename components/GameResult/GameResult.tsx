@@ -13,21 +13,21 @@ import { ScoreCard } from 'components/GameResult/ScoreCard/index';
 import { TeamMemberBasic } from 'components/shared/ui/TeamMemberBasic';
 import { OIcon, XIcon } from 'components/shared/ui/XOIcons';
 export const GameResult = (props: IGameResultProps) => {
-  const { result, gameType } = props;
-  const player1 = {
-    playerName: '0xh20...7260',
-    playerImg: playerImg,
-    showWinText: result === 'win',
-    gameType: 'tic-tac-toe',
-    icon: gameType === 'tic-tac-toe' ? <XIcon /> : <PurpleIcon />,
-  };
-  const player2 = {
-    playerName: '0xh07...6035',
-    playerImg: playerImg2,
-    showWinText: result === 'lose',
-    gameType: 'tic-tac-toe',
-    icon: gameType ===  'tic-tac-toe' ? <OIcon /> : <WhiteIcon />,
-  };
+  const { result, player1, player2, gameType } = props;
+  // const player1 = {
+  //   playerName: '0xh20...7260',
+  //   playerImg: playerImg,
+  //   showWinText: result === 'win',
+  //   gameType: 'tic-tac-toe',
+  //   icon: gameType === 'tic-tac-toe' ? <XIcon /> : <PurpleIcon />,
+  // };
+  // const player2 = {
+  //   playerName: '0xh07...6035',
+  //   playerImg: playerImg2,
+  //   showWinText: result === 'lose',
+  //   gameType: 'tic-tac-toe',
+  //   icon: gameType ===  'tic-tac-toe' ? <OIcon /> : <WhiteIcon />,
+  // };
   return (
     <div
       className={classNames(styles.container, {
@@ -52,8 +52,26 @@ export const GameResult = (props: IGameResultProps) => {
         </h1>
       )}
       <div className={styles.containerCard}>
-        <ScoreCard {...player1} result={result} />
-        <ScoreCard {...player2} result={result === 'win' ? 'lose' : result === 'lose' ? 'win' : result} />
+        {player1 && (
+          <ScoreCard
+            playerName={player1.playerName}
+            avatarUrl={player1.avatarUrl}
+            showWinText={result === 'win'}
+            icon={gameType === 'tic-tac-toe' ? <XIcon /> : <PurpleIcon />}
+            result={result}
+            gameType={gameType}
+          />
+        )}
+        {player2 && (
+          <ScoreCard
+            playerName={player2.playerName}
+            avatarUrl={player2.avatarUrl}
+            showWinText={result === 'lose'}
+            icon={gameType === 'tic-tac-toe' ? <OIcon /> : <WhiteIcon />}
+            result={result === 'win' ? 'lose' : result === 'lose' ? 'win' : result}
+            gameType={gameType}
+          />
+        )}
       </div>
       <BlockPayedGame />
       <h2 className={styles.titleCenter}>Read more about our technology</h2>
