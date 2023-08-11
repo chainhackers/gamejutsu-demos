@@ -33,7 +33,6 @@ import useConversation, { IAnyMessage } from "../../hooks/useConversation";
 import { PlayerI, TGameType } from 'types/game';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
-import { GameResult } from 'components/GameResult';
 
 
 interface IGamePageProps {
@@ -51,18 +50,6 @@ const FETCH_OPPONENT_ADDRESS_TIMEOUT = 2500;
 
 const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
 // TODO: @habdevs #190
-const [gameResult, setGameResult] = useState<{ winner: PlayerI | null; loser: PlayerI | null; isDraw: boolean } | null>(null);
-const handleGameFinished = (finishedGameState: FinishedGameState, players: PlayerI[]) => {
-  const winner = players.find((player) => player.address === finishedGameState.winner);
-  const loser = players.find((player) => player.address === finishedGameState.loser);
-
-  setGameResult({
-    winner: winner || null,
-    loser: loser || null,
-    isDraw: finishedGameState.isDraw,
-  });
-};
-
   const [playerIngameId, setPlayerIngameId] = useState<0 | 1>(0);
   const [isInDispute, setIsInDispute] = useState<boolean>(false);
   const [disputeRunner, setDisputeRunner] = useState<string | null>(null);
@@ -637,9 +624,6 @@ const handleGameFinished = (finishedGameState: FinishedGameState, players: Playe
             isInvalidMove={isInvalidMove}>
             {gameComponent}
           </GameField>
-          {/* TODO: add props @habdevs #190 */}
-          {gameResult && <GameResult result={gameResult.isDraw ? 'draw' : gameResult.winner ? 'win' : 'lose'} player1={gameResult.winner} player2={gameResult.loser} gameType={gameType} 
-          />}
           <RightPanel>
             <div style={{ position: 'absolute', right: '0' }}>
               <GetHistory history={lastMessages} messageHistory={messageHistory} gameId={gameId} />

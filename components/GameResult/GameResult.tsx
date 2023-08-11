@@ -31,22 +31,22 @@ export const GameResult = (props: IGameResultProps) => {
   return (
     <div
       className={classNames(styles.container, {
-        [styles.win]: result === 'win',
-        [styles.lose]: result === 'lose',
-        [styles.draw]: result === 'draw',
+        [styles.win]: result === 'winner',
+        [styles.lose]: result === 'loser',
+        [styles.draw]: result === 'isDraw',
       })}>
       <h2 className={styles.title}>
-        {result === 'win' && <span>Winner!</span>}
-        {result === 'lose' && <span>Better Luck Next Time</span>}
-        {result === 'draw' && <span>Better Luck Next Time</span>}
+        {result === 'winner' && <span>Winner!</span>}
+        {result === 'loser' && <span>Better Luck Next Time</span>}
+        {result === 'isDraw' && <span>Better Luck Next Time</span>}
       </h2>
-      {result === 'win' && <img src={imgWin.src} alt='Win' width={640} height={510} className={styles.imageWin} />}
-      {result === 'lose' && (
+      {result === 'winner' && <img src={imgWin.src} alt='Win' width={640} height={510} className={styles.imageWin} />}
+      {result === 'loser' && (
         <h1 className={styles.titleResult}>
           You lose <img src={loseImg.src} alt='lose' className={styles.imageSize} />
         </h1>
       )}
-      {result === 'draw' && (
+      {result === 'isDraw' && (
         <h1 className={styles.titleResult}>
           Draw <img src={drawImg.src} alt='draw' className={styles.imageSize} />
         </h1>
@@ -56,7 +56,7 @@ export const GameResult = (props: IGameResultProps) => {
           <ScoreCard
             playerName={player1.playerName}
             avatarUrl={player1.avatarUrl}
-            showWinText={result === 'win'}
+            showWinText={result === 'winner'}
             icon={gameType === 'tic-tac-toe' ? <XIcon /> : <PurpleIcon />}
             result={result}
             gameType={gameType}
@@ -66,9 +66,9 @@ export const GameResult = (props: IGameResultProps) => {
           <ScoreCard
             playerName={player2.playerName}
             avatarUrl={player2.avatarUrl}
-            showWinText={result === 'lose'}
+            showWinText={result === 'loser'}
             icon={gameType === 'tic-tac-toe' ? <OIcon /> : <WhiteIcon />}
-            result={result === 'win' ? 'lose' : result === 'lose' ? 'win' : result}
+            result={result === 'winner' ? 'loser' : result === 'loser' ? 'winner' : result}
             gameType={gameType}
           />
         )}

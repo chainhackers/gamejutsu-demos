@@ -341,7 +341,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
               <div className={styles.small}>{makeFinishedGameReasonDescription(finishedGameState)}</div>
             </div>
           )}
-          // TODO: delete badge @habdevs #190
+// TODO: delete badge @habdevs #190
           {/* {!!finishedGameState && (
             <div className={styles.link}>
               <div className={styles.badges}>

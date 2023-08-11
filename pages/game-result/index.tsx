@@ -2,29 +2,28 @@ import { useState } from 'react';
 import { GameResult } from 'components/GameResult';
 import { TGameResult } from 'components/GameResult/GameResultProps';
 import styles from './gameResult.module.scss';
+import { FinishedGameState, finishGame } from 'gameApi/index';
+
 const GameResultPage = () => {
-  const [resultIndex, setResultIndex] = useState(0);
-  const [gameType, setGameType] = useState<'tic-tac-toe' | 'checkers'>('checkers');
-  const results: TGameResult[] = ['win', 'lose', 'draw'];
+const [finishedGameState, setFinishedGameState] = useState<FinishedGameState | null>(null);
 
-  const handleButtonClick = () => {
-    setResultIndex((prevIndex) => (prevIndex + 1) % results.length);
-  };
-  const handleGameTypeButtonClick = () => {
-    setGameType((prevGameType) => (prevGameType === 'tic-tac-toe' ? 'checkers' : 'tic-tac-toe'));
-  };
-
-  const currentResult = results[resultIndex];
   return (
     <div className={styles.wrapper}>
       <div className={styles.container}>
-        <button onClick={handleButtonClick} className='p-2 bg-slate-600 text-[#C89DFB] text-4xl w-[300px] rounded-3xl m-2 place-content-center'>
-          Переключить результат
-        </button>
-        <button onClick={handleGameTypeButtonClick} className='p-2 bg-slate-600 text-[#C89DFB] text-4xl w-[300px] rounded-3xl m-2 place-content-center'>
-          Переключить игру
-        </button>
-        <GameResult result={currentResult} gameType={gameType} player1={null} player2={null} />
+        {finishedGameState && (
+          <GameResult
+            result={finishedGameState.winner ? 'win' : finishedGameState.isDraw ? 'draw' : 'lose'}
+            gameType={gameType}
+            player1={{
+              playerName: finishedGameState.winner ? 'Your Name' : 'Opponent Name',
+              avatarUrl: '',
+            }}
+            player2={{
+              playerName: finishedGameState.winner ? 'Opponent Name' : 'Your Name',
+              avatarUrl: '',
+            }}
+          />
+        )}
       </div>
     </div>
   );
