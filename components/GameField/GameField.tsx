@@ -10,6 +10,7 @@ import Link from 'next/link';
 import cn from 'classnames';
 import { FinishedGameState } from 'gameApi';
 import { GameResult } from 'components/GameResult';
+import { useRouter } from 'next/router';
 export const GameField: React.FC<GameFieldPropsI> = ({
   children,
   rivalPlayerAddress,
@@ -72,14 +73,19 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   }
 
   function makeFinishedGameDescription(finishedGameState: FinishedGameState): string | undefined {
+    const router = useRouter();
+
     if (finishedGameState.isDraw) {
-      return 'Game end in a draw';
+      router.push('/game-result');
+      return undefined;
     }
     if (finishedGameState.winner) {
       if (isOpponentAddress(finishedGameState.winner)) {
-        return 'Your opponent wins';
+        router.push('/game-result');
+        return undefined;
       } else {
-        return 'You win';
+        router.push('/game-result');
+        return undefined;
       }
     }
   }
