@@ -14,20 +14,6 @@ import { TeamMemberBasic } from 'components/shared/ui/TeamMemberBasic';
 import { OIcon, XIcon } from 'components/shared/ui/XOIcons';
 export const GameResult = (props: IGameResultProps) => {
   const { result, player1, player2, gameType } = props;
-  // const player1 = {
-  //   playerName: '0xh20...7260',
-  //   playerImg: playerImg,
-  //   showWinText: result === 'win',
-  //   gameType: 'tic-tac-toe',
-  //   icon: gameType === 'tic-tac-toe' ? <XIcon /> : <PurpleIcon />,
-  // };
-  // const player2 = {
-  //   playerName: '0xh07...6035',
-  //   playerImg: playerImg2,
-  //   showWinText: result === 'lose',
-  //   gameType: 'tic-tac-toe',
-  //   icon: gameType ===  'tic-tac-toe' ? <OIcon /> : <WhiteIcon />,
-  // };
   return (
     <div
       className={classNames(styles.container, {

@@ -1,9 +1,9 @@
 import { TGameResult } from '../GameResultProps';
 import { StaticImageData } from 'next/image';
 import { ReactNode } from 'react';
-import { TGameType } from 'types/game';
+import { PlayerI, TGameType } from 'types/game';
 export interface ScoreCardProps {
-  playerName: string;
+  playerName: PlayerI[];
   avatarUrl: string | StaticImageData;
   result: TGameResult;
   showWinText: boolean;
