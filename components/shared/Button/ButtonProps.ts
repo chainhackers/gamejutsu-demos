@@ -5,4 +5,5 @@ export interface ButtonPropsI extends React.ButtonHTMLAttributes<HTMLButtonEleme
   color?: string;
   borderless?: boolean;
   size?: 'sm' | 'md';
+  onClick?: () => void
 }

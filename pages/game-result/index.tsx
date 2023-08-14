@@ -6,27 +6,12 @@ import { FinishedGameState } from 'gameApi/index';
 import { useRouter } from 'next/router';
 
 const GameResultPage = () => {
-const [finishedGameState, setFinishedGameState] = useState<FinishedGameState | null>(null);
-const router = useRouter();
-const dynamicGameType = router.query.gameType as TGameType;
+  const [finishedGameState, setFinishedGameState] = useState<FinishedGameState | null>(null);
+  const router = useRouter();
+  const getGameType = router.query.gameType as TGameType;
   return (
     <div className={styles.wrapper}>
-      <div className={styles.container}>
-        {finishedGameState && (
-          <GameResult
-            result={finishedGameState.winner ? 'winner' : finishedGameState.isDraw ? 'isDraw' : 'loser'}
-            gameType={dynamicGameType}
-            player1={{
-              playerName: finishedGameState.winner ? 'playerName' : 'Opponent Name',
-              avatarUrl: '',
-            }}
-            player2={{
-              playerName: finishedGameState.winner ? 'Opponent Name' : 'Your Name',
-              avatarUrl: '',
-            }}
-          />
-        )}
-      </div>
+      <div className={styles.container}>{finishedGameState && <GameResult gameType={getGameType} result={'winner'} player1={null} player2={null} />}</div>
     </div>
   );
 };

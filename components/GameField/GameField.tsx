@@ -31,7 +31,6 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [isShowReport, setShowReport] = useState<boolean>(false);
   const [isShowDispute, setShowDispute] = useState<boolean>(false);
- 
 
   // TODO: delete badge @habdevs #190
   // type TMedal = 'bronze' | 'silver' | 'gold';
@@ -213,12 +212,11 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   //   }
   //   return <div className={styles.row}>{badges}</div>;
   // };
-// TODO: add GameResult @habdevs #190
+  // TODO: add GameResult @habdevs #190
   // return <div>{showGameResult && <GameResult result={'win'} gameType={'checkers'} />}</div>;
   // TODO: delete badge @habdevs #190
   return (
     <div className={styles.container}>
-      
       {version && <div className={styles.version}>{`Ver.${version}`}</div>}
       {isShowShade && (
         <div className={styles.shade}>
@@ -341,7 +339,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
               <div className={styles.small}>{makeFinishedGameReasonDescription(finishedGameState)}</div>
             </div>
           )}
-// TODO: delete badge @habdevs #190
+          // TODO: delete badge @habdevs #190
           {/* {!!finishedGameState && (
             <div className={styles.link}>
               <div className={styles.badges}>
