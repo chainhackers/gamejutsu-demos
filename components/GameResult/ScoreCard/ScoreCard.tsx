@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 import { useAccount } from 'wagmi';
 export const ScoreCard = (props: ScoreCardProps) => {
   const { playerName, result, avatarUrl, showWinText, icon } = props;
-  
+
   const { query } = useRouter();
   const account = useAccount();
   const gameId = parseInt(query.game as string);
@@ -63,7 +63,7 @@ export const ScoreCard = (props: ScoreCardProps) => {
       clearInterval(interval);
     };
   }, [opponentAddress, gameId]);
-
+  console.log('game id', gameId);
   return (
     <div className={`${styles.container}`}>
       <div className={`${styles.card} ${result === 'winner' ? styles.highlight : ''}`}>
