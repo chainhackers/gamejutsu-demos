@@ -75,16 +75,13 @@ export const GameField: React.FC<GameFieldPropsI> = ({
     const router = useRouter();
 
     if (finishedGameState.isDraw) {
-      router.push('/game-result');
-      return undefined;
+      return 'isDraw';
     }
     if (finishedGameState.winner) {
       if (isOpponentAddress(finishedGameState.winner)) {
-        router.push('/game-result');
-        return undefined;
+        return 'winner';
       } else {
-        router.push('/game-result');
-        return undefined;
+        return 'looser';
       }
     }
   }

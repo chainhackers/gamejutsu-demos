@@ -38,7 +38,7 @@ export const GameResult = (props: IGameResultProps) => {
         </h1>
       )}
       <div className={styles.containerCard}>
-        {player1 && (
+        {/* {player1 && (
           <ScoreCard
             playerName={player1.playerName}
             avatarUrl={player1.avatarUrl}
@@ -57,7 +57,7 @@ export const GameResult = (props: IGameResultProps) => {
             result={result === 'winner' ? 'loser' : result === 'loser' ? 'winner' : result}
             gameType={gameType}
           />
-        )}
+        )} */}
       </div>
       <BlockPayedGame />
       <h2 className={styles.titleCenter}>Read more about our technology</h2>
