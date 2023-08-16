@@ -1,4 +1,4 @@
-export type TGameResult = 'win' | 'lose' | 'draw'
+export type TGameResult = 'winner' | 'loser' | 'isDraw'
 import { FinishedGameState } from 'gameApi';
 import { PlayerI, TGameType } from 'types/game';
 export interface IGameResultProps {
