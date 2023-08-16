@@ -32,7 +32,7 @@ export async function getSignerAddress(): Promise<string> {
   return (await getSigner()).getAddress();
 }
 
-type TGameFinished = { gameId: number, winner: string, loser: string, isDraw: boolean };
+export type TGameFinished = { gameId: number, winner: string, loser: string, isDraw: boolean };
 type TPlayerDisqualified = { gameId: number, player: string };
 type TPlayerResigned = { gameId: number, player: string };
 

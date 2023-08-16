@@ -30,10 +30,10 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   const [isShowReport, setShowReport] = useState<boolean>(false);
   const [isShowDispute, setShowDispute] = useState<boolean>(false);
   console.log('CLAIM WIN ', onClaimWin);
-  console.log('FINISHED game state ', finishedGameState);
-  console.log('FINISH game result ', finishGameCheckResult);
-  console.log('PLAYERS ', players)
-
+  console.log('FINISHED GameField game state ', finishedGameState);
+  console.log('FINISH GameField game result ', finishGameCheckResult);
+  console.log('PLAYERS ', players);
+  console.log('FINISH GameField FinishedGameState', FinishedGameState);
   type TMedal = 'bronze' | 'silver' | 'gold';
   type TBelt = 'white' | 'green' | 'black';
   type TAchievement = 'winner' | 'loser' | 'draw' | 'cheater';

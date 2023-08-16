@@ -12,53 +12,56 @@ import { BlockPayedGame, CustomButton, PurpleIcon, WhiteIcon } from 'components/
 import { ScoreCard } from 'components/GameResult/ScoreCard/index';
 import { TeamMemberBasic } from 'components/shared/ui/TeamMemberBasic';
 import { OIcon, XIcon } from 'components/shared/ui/XOIcons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FinishedGameState } from 'gameApi';
-export const GameResult = (props: IGameResultProps) => {
-  const { result, gameType, players } = props;
-  const [finishGameCheckResult, setFinishGameCheckResult] = useState<null | { winner: boolean; isDraw: boolean; cheatWin: boolean }>(null);
-  const [finishedGameState, setFinishedGameState] = useState<FinishedGameState | null>(null);
-  
+export const GameResult= (props: IGameResultProps) => {
+  const { gameType, players, finishGameCheckResult, finishedGameState } = props;
+
+  // const [finishGameCheckResult, setFinishGameCheckResult] = useState<null | { winner: boolean; isDraw: boolean; cheatWin: boolean }>(null);
+  // const [finishedGameState, setFinishedGameState] = useState<FinishedGameState | null>(null);
+  console.log('FInish GamefinishGameCheckResultfinishGameCheckResult', finishGameCheckResult);
+
   const player1 = {
     playerName: '0xh20...7260',
     playerImg: playerImg,
-    showWinText: result === 'winner',
+    showWinText: finishGameCheckResult?.winner === true,
     gameType: 'tic-tac-toe',
     icon: gameType === 'tic-tac-toe' ? <XIcon /> : <PurpleIcon />,
   };
   const player2 = {
     playerName: '0xh07...6035',
     playerImg: playerImg2,
-    showWinText: result === 'loser',
+    showWinText: finishGameCheckResult?.winner === false,
     gameType: 'tic-tac-toe',
     icon: gameType ===  'tic-tac-toe' ? <OIcon /> : <WhiteIcon />,
   };
+
   return (
     <div
       className={classNames(styles.container, {
-        [styles.win]: result === 'winner',
-        [styles.lose]: result === 'loser',
-        [styles.draw]: result === 'isDraw',
+        [styles.win]: finishGameCheckResult?.winner === true,
+        [styles.lose]: finishGameCheckResult?.winner === false,
+        [styles.draw]: finishGameCheckResult?.isDraw === true,
       })}>
       <h2 className={styles.title}>
-        {result === 'winner' && <span>Winner!</span>}
-        {result === 'loser' && <span>Better Luck Next Time</span>}
-        {result === 'isDraw' && <span>Better Luck Next Time</span>}
+        {finishGameCheckResult?.winner === true && <span>Winner!</span>}
+        {finishGameCheckResult?.winner === false && <span>Better Luck Next Time</span>}
+        {finishGameCheckResult?.isDraw === true && <span>Better Luck Next Time</span>}
       </h2>
-      {result === 'winner' && <img src={imgWin.src} alt='Win' width={640} height={510} className={styles.imageWin} />}
-      {result === 'loser' && (
+      {finishGameCheckResult?.winner && <img src={imgWin.src} alt='Win' width={640} height={510} className={styles.imageWin} />}
+      {finishGameCheckResult?.winner === false && (
         <h1 className={styles.titleResult}>
           You lose <img src={loseImg.src} alt='lose' className={styles.imageSize} />
         </h1>
       )}
-      {result === 'isDraw' && (
+      {finishGameCheckResult?.isDraw === true && (
         <h1 className={styles.titleResult}>
           Draw <img src={drawImg.src} alt='draw' className={styles.imageSize} />
         </h1>
       )}
       <div className={styles.containerCard}>
         <ScoreCard playerIndex={0} players={players} finishGameCheckResult={finishGameCheckResult} />
-        <ScoreCard playerIndex={1} players={players} result={finishGameCheckResult?.winner ? 'win' : finishGameCheckResult?.isDraw ? 'draw' : finishGameCheckResult?.cheatWin ? 'cheat' : 'lose'} />
+        <ScoreCard playerIndex={1} players={players} finishGameCheckResult={finishGameCheckResult} />
       </div>
       <BlockPayedGame />
       <h2 className={styles.titleCenter}>Read more about our technology</h2>
