@@ -29,11 +29,12 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [isShowReport, setShowReport] = useState<boolean>(false);
   const [isShowDispute, setShowDispute] = useState<boolean>(false);
-  console.log('CLAIM WIN ', onClaimWin);
+  console.log('CLAIM WIN GameField', onClaimWin);
   console.log('FINISHED GameField game state ', finishedGameState);
   console.log('FINISH GameField game result ', finishGameCheckResult);
-  console.log('PLAYERS ', players);
+  console.log('PLAYERS GameField', players);
   console.log('FINISH GameField FinishedGameState', FinishedGameState);
+  // console.log('FINISH Game Field MakeFinished', makeFinishedGameDescription)
   type TMedal = 'bronze' | 'silver' | 'gold';
   type TBelt = 'white' | 'green' | 'black';
   type TAchievement = 'winner' | 'loser' | 'draw' | 'cheater';

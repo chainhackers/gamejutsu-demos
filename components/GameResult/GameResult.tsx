@@ -17,24 +17,23 @@ import { FinishedGameState } from 'gameApi';
 export const GameResult= (props: IGameResultProps) => {
   const { gameType, players, finishGameCheckResult, finishedGameState } = props;
 
-  // const [finishGameCheckResult, setFinishGameCheckResult] = useState<null | { winner: boolean; isDraw: boolean; cheatWin: boolean }>(null);
-  // const [finishedGameState, setFinishedGameState] = useState<FinishedGameState | null>(null);
-  console.log('FInish GamefinishGameCheckResultfinishGameCheckResult', finishGameCheckResult);
+  console.log('FINISH GameResult FinishedGameState', FinishedGameState)
+  console.log('FINISH GameResult finishGameCheckResult', finishGameCheckResult);
 
-  const player1 = {
-    playerName: '0xh20...7260',
-    playerImg: playerImg,
-    showWinText: finishGameCheckResult?.winner === true,
-    gameType: 'tic-tac-toe',
-    icon: gameType === 'tic-tac-toe' ? <XIcon /> : <PurpleIcon />,
-  };
-  const player2 = {
-    playerName: '0xh07...6035',
-    playerImg: playerImg2,
-    showWinText: finishGameCheckResult?.winner === false,
-    gameType: 'tic-tac-toe',
-    icon: gameType ===  'tic-tac-toe' ? <OIcon /> : <WhiteIcon />,
-  };
+  // const player1 = {
+  //   playerName: '0xh20...7260',
+  //   playerImg: playerImg,
+  //   showWinText: finishGameCheckResult?.winner === true,
+  //   gameType: 'tic-tac-toe',
+  //   icon: gameType === 'tic-tac-toe' ? <XIcon /> : <PurpleIcon />,
+  // };
+  // const player2 = {
+  //   playerName: '0xh07...6035',
+  //   playerImg: playerImg2,
+  //   showWinText: finishGameCheckResult?.winner === false,
+  //   gameType: 'tic-tac-toe',
+  //   icon: gameType ===  'tic-tac-toe' ? <OIcon /> : <WhiteIcon />,
+  // };
 
   return (
     <div
@@ -60,8 +59,8 @@ export const GameResult= (props: IGameResultProps) => {
         </h1>
       )}
       <div className={styles.containerCard}>
-        <ScoreCard playerIndex={0} players={players} finishGameCheckResult={finishGameCheckResult} />
-        <ScoreCard playerIndex={1} players={players} finishGameCheckResult={finishGameCheckResult} />
+        <ScoreCard playerIndex={0} players={players} finishGameCheckResult={finishGameCheckResult} playerName={''} playerImg={''} showWinText={false} icon={undefined} />
+        <ScoreCard playerIndex={1} players={players} finishGameCheckResult={finishGameCheckResult} playerName={''} playerImg={''} showWinText={false} icon={undefined} />
       </div>
       <BlockPayedGame />
       <h2 className={styles.titleCenter}>Read more about our technology</h2>
