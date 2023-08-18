@@ -13,8 +13,6 @@ import '@rainbow-me/rainbowkit/styles.css';
 import 'styles/globals.css';
 import XmtpProvider from '../contexts/XmtpProvider';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
-import {ReactNode, useContext} from "react";
-import  {ReferenceDataContextProvider}  from "./games/[gameType]"
 
 const { chains, provider, webSocketProvider } = configureChains(
   [polygon],
@@ -42,7 +40,6 @@ const client = new ApolloClient({
 const version = 'v1.2.38';
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const { finishGameCheckResult, finishedGameState } = useContext(ReferenceDataContext)
   const props = { ...pageProps, version };
   return (
 
@@ -59,9 +56,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                       content="width=device-width, initial-scale=1"
                     />
                   </Head>
-                  <ReferenceDataContextProvider>
                   <Component {...props} />
-                  </ReferenceDataContextProvider>
                 </Layout>
               </XmtpProvider>
             </RainbowKitProvider>

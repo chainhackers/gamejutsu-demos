@@ -48,7 +48,6 @@ import {PlayerI, TGameType} from 'types/game';
 import {useTranslation} from 'react-i18next';
 import Link from 'next/link';
 
-
 interface IGamePageProps {
   gameType: TGameType,
   version?: string;
@@ -642,19 +641,19 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
     }
   }
 
-  interface IReferenceDataContextProvider {
-    children: ReactNode
-  }
-
-  const ReferenceDataContext = createContext({finishGameCheckResult, finishedGameState});
-
-  const ReferenceDataContextProvider: React.FC<IReferenceDataContextProvider> = ({children}) => {
-    return (
-      <ReferenceDataContext.Provider value={{finishGameCheckResult, finishedGameState}}>
-        {children}
-      </ReferenceDataContext.Provider>
-    )
-  }
+  // interface IReferenceDataContextProvider {
+  //   children: ReactNode
+  // }
+  //
+  // const ReferenceDataContext = createContext({finishGameCheckResult, finishedGameState});
+  //
+  // const ReferenceDataContextProvider: React.FC<IReferenceDataContextProvider> = ({children}) => {
+  //   return (
+  //     <ReferenceDataContext.Provider value={{finishGameCheckResult, finishedGameState}}>
+  //       {children}
+  //     </ReferenceDataContext.Provider>
+  //   )
+  // }
 
   console.log('REFERENCE CONTEXT', finishedGameState, finishGameCheckResult)
 
