@@ -16,6 +16,7 @@ import 'styles/globals.css';
 import XmtpProvider from '../contexts/XmtpProvider';
 
 import { alchemyProvider } from 'wagmi/providers/alchemy';
+import {ReactNode} from "react";
 
 const { chains, provider, webSocketProvider } = configureChains(
   [polygon],
@@ -41,9 +42,16 @@ const client = new ApolloClient({
 });
 
 const version = 'v1.2.38';
+
+
+function ReferenceDataContextProvider(props: { children: React.ReactNode }) {
+  return null;
+}
+
 function MyApp({ Component, pageProps }: AppProps) {
   const props = { ...pageProps, version };
   return (
+    <ReferenceDataContextProvider>
     <WagmiConfig client={wagmiClient}>
       <ApolloProvider client={client}>
         <WalletContextProvider>
@@ -65,6 +73,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         </WalletContextProvider>
       </ApolloProvider>
     </WagmiConfig>
+    </ReferenceDataContextProvider>
   );
 }
 
