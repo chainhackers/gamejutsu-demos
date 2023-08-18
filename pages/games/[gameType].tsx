@@ -641,19 +641,21 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
       );
     }
   }
-  
+
   interface IReferenceDataContextProvider {
     children: ReactNode
   }
- const  ReferenceDataContext = createContext({ finishGameCheckResult, finishedGameState });
-  
+
+  const ReferenceDataContext = createContext({finishGameCheckResult, finishedGameState});
+
   const ReferenceDataContextProvider: React.FC<IReferenceDataContextProvider> = ({children}) => {
     return (
-      <ReferenceDataContext.Provider value={{ finishGameCheckResult, finishedGameState}}>
+      <ReferenceDataContext.Provider value={{finishGameCheckResult, finishedGameState}}>
         {children}
       </ReferenceDataContext.Provider>
     )
   }
+
   console.log('REFERENCE CONTEXT', finishedGameState, finishGameCheckResult)
 
   return <div>Loading...</div>;
@@ -678,3 +680,4 @@ export const getStaticPaths: GetStaticPaths<IParams> = () => {
 };
 
 export default Game;
+

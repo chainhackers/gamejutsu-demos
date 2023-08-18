@@ -5,18 +5,16 @@ import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { polygon } from 'wagmi/chains';
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
 // import { publicProvider } from 'wagmi/providers/public';
-
 import { Layout } from 'components';
 import { WalletContextProvider } from 'contexts/WalltetContext';
 import { XmtpContextProvider } from 'contexts/XmtpContext';
 import 'i18n/index';
-
 import '@rainbow-me/rainbowkit/styles.css';
 import 'styles/globals.css';
 import XmtpProvider from '../contexts/XmtpProvider';
-
 import { alchemyProvider } from 'wagmi/providers/alchemy';
-import {ReactNode} from "react";
+import {ReactNode, useContext} from "react";
+import  {ReferenceDataContextProvider}  from "./games/[gameType]"
 
 const { chains, provider, webSocketProvider } = configureChains(
   [polygon],
@@ -43,15 +41,11 @@ const client = new ApolloClient({
 
 const version = 'v1.2.38';
 
-
-function ReferenceDataContextProvider(props: { children: React.ReactNode }) {
-  return null;
-}
-
 function MyApp({ Component, pageProps }: AppProps) {
+  const { finishGameCheckResult, finishedGameState } = useContext(ReferenceDataContext)
   const props = { ...pageProps, version };
   return (
-    <ReferenceDataContextProvider>
+
     <WagmiConfig client={wagmiClient}>
       <ApolloProvider client={client}>
         <WalletContextProvider>
@@ -65,7 +59,9 @@ function MyApp({ Component, pageProps }: AppProps) {
                       content="width=device-width, initial-scale=1"
                     />
                   </Head>
+                  <ReferenceDataContextProvider>
                   <Component {...props} />
+                  </ReferenceDataContextProvider>
                 </Layout>
               </XmtpProvider>
             </RainbowKitProvider>
@@ -73,7 +69,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         </WalletContextProvider>
       </ApolloProvider>
     </WagmiConfig>
-    </ReferenceDataContextProvider>
+
   );
 }
 
