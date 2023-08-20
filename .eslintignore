@@ -1,0 +1,4 @@
+# Ignore all files other than those specified
+*
+
+!GameStateContext.tsx

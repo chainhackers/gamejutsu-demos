@@ -11,20 +11,29 @@
 // // console.log('FINISH GameResult FinishedGameState', FinishedGameState)
 // // console.log('FINISH GameResult finishGameCheckResult', finishGameCheckResult);
 
-export const GameStateContextDefault = {
+export const GameStateContextDefault: GameStateType = {
   finishGameCheckResult: null,
   finishedGameState: null,
   gameId: 0,
   winner: null,
   loser: null,
-  isDraw:  null,
+  isDraw: false,
   disqualified: null,
   resigned: null,
 };
 
-//
-// export type GameStateType = {};
-//
+export type GameStateType = {
+  finishGameCheckResult: null;
+  finishedGameState: null;
+  gameId: number;
+  winner: string | null;
+  loser: string | null;
+  isDraw: boolean;
+  disqualified: string | null;
+  resigned: string | null;
+};
+
+
 // export const GameStateContext: React.FC<{ children: React.ReactNode }> = ({children,}) => {
 //
 //   const [providerState, setProviderState] = useState<XmtpContextType>({
