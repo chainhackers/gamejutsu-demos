@@ -11,6 +11,9 @@
 // // console.log('FINISH GameResult FinishedGameState', FinishedGameState)
 // // console.log('FINISH GameResult finishGameCheckResult', finishGameCheckResult);
 
+import {PlayerI, TGameType} from 'types/game';
+import {FinishedGameState} from "../gameApi";
+
 export const GameStateContextDefault: GameStateType = {
   finishGameCheckResult: null,
   finishedGameState: null,
@@ -20,17 +23,21 @@ export const GameStateContextDefault: GameStateType = {
   isDraw: false,
   disqualified: null,
   resigned: null,
+  players: null,
+
 };
 
-export type GameStateType = {
-  finishGameCheckResult: null;
-  finishedGameState: null;
+export interface GameStateType {
+  finishGameCheckResult: null | { winner: boolean; isDraw: boolean; cheatWin: boolean };
+  finishedGameState: FinishedGameState | null;
   gameId: number;
   winner: string | null;
   loser: string | null;
   isDraw: boolean;
   disqualified: string | null;
   resigned: string | null;
+  players: PlayerI[] | null;
+  gameType?: TGameType;
 };
 
 
