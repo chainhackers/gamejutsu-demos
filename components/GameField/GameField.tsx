@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import cn from 'classnames';
 import { FinishedGameState } from 'gameApi';
-import {useGameStateContext} from "../../contexts/GameStateContext";
+import {IGameStateContext, useGameStateContext} from "../../contexts/GameStateContext";
 export const GameField: React.FC<GameFieldPropsI> = ({
   children,
   rivalPlayerAddress,
@@ -212,9 +212,10 @@ export const GameField: React.FC<GameFieldPropsI> = ({
       isDraw: finishGameCheckResult.isDraw,
       cheatWin: finishGameCheckResult.cheatWin
     };
-    const gameStateContext = useGameStateContext();
+    const gameStateContext: IGameStateContext = useGameStateContext();
     gameStateContext.setFinishResult(result);
-    console.log('Сomponent GAMEFIELD', gameStateContext)
+    console.log('Сomponent GAMEFIELD обновление gameStateContext', gameStateContext)
+    console.log('Обновление контекста в GameField:', result);
   }
 
   return (

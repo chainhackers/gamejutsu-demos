@@ -14,11 +14,11 @@ import { TeamMemberBasic } from 'components/shared/ui/TeamMemberBasic';
 import { OIcon, XIcon } from 'components/shared/ui/XOIcons';
 import { useEffect, useState } from 'react';
 import { FinishedGameState } from 'gameApi';
-import {useGameStateContext} from "../../contexts/GameStateContext";
+import {IGameStateContext, useGameStateContext} from "../../contexts/GameStateContext";
 export const GameResult= () => {
-  const gameStateContext = useGameStateContext();
-  const { finishResult } = gameStateContext;
-  console.log('FINISH COMPONENT GameResult finishResult', finishResult);
+  const gameStateContext: IGameStateContext = useGameStateContext();
+  const {finishResult, setFinishResult } = gameStateContext
+  console.log('COMPONENT GameResult', gameStateContext);
 
   // const player1 = {
   //   playerName: '0xh20...7260',

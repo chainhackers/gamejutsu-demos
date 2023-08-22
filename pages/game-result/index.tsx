@@ -6,8 +6,8 @@ import {GameStateContextProvider, useGameStateContext} from "../../contexts/Game
 
 const GameResultPage = () => {
   const gameStateContext = useGameStateContext();
-  const {finishResult, setFinishResult} = gameStateContext;
-  console.log('FINISH Page GAMERESULT finishResult ', finishResult);
+  const { finishResult } = gameStateContext;
+  console.log('Данные из контекста в GameResultPage:', finishResult);
 
   return (
       <div className={styles.wrapper}>
@@ -18,3 +18,4 @@ const GameResultPage = () => {
   );
 };
 export default GameResultPage;
+
