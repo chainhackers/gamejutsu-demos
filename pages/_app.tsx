@@ -11,6 +11,7 @@ import 'i18n/index';
 import '@rainbow-me/rainbowkit/styles.css';
 import 'styles/globals.css';
 import XmtpProvider from '../contexts/XmtpProvider';
+// TODO: don't forget to bring back alchemy instead of publicProvider. @habdevs #190
 // import {alchemyProvider} from 'wagmi/providers/alchemy';
 import {GameStateContextProvider} from 'contexts/GameStateContext';
 import { publicProvider } from 'wagmi/providers/public';
