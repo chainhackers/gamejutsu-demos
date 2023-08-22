@@ -47,6 +47,7 @@ import useConversation, {IAnyMessage} from "../../hooks/useConversation";
 import {PlayerI, TGameType} from 'types/game';
 import {useTranslation} from 'react-i18next';
 import Link from 'next/link';
+import {useGameStateContext} from "../../contexts/GameStateContext";
 
 interface IGamePageProps {
   gameType: TGameType,
@@ -434,6 +435,11 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
           if (winnerId !== null) {
             setFinishGameCheckResult({winner: playerIngameId === winnerId, isDraw: false, cheatWin: isValid});
             setNextGameState(nextGameState);
+            // TODO: check context @habdevs #190
+            const gameStateContext = useGameStateContext();
+            gameStateContext.setFinishResult({winner: playerIngameId === winnerId, isDraw: false, cheatWin: isValid});
+            console.log('PAGE GameType ', gameStateContext)
+
           } else if (gameType === 'tic-tac-toe' && signedMove.gameMove.nonce === 8) {
             setFinishGameCheckResult({winner: false, isDraw: true, cheatWin: isValid});
             setNextGameState(nextGameState);
@@ -641,21 +647,6 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
     }
   }
 
-  // interface IReferenceDataContextProvider {
-  //   children: ReactNode
-  // }
-  //
-  // const ReferenceDataContext = createContext({finishGameCheckResult, finishedGameState});
-  //
-  // const ReferenceDataContextProvider: React.FC<IReferenceDataContextProvider> = ({children}) => {
-  //   return (
-  //     <ReferenceDataContext.Provider value={{finishGameCheckResult, finishedGameState}}>
-  //       {children}
-  //     </ReferenceDataContext.Provider>
-  //   )
-  // }
-
-  console.log('REFERENCE CONTEXT', finishedGameState, finishGameCheckResult)
 
   return <div>Loading...</div>;
 };
@@ -679,4 +670,5 @@ export const getStaticPaths: GetStaticPaths<IParams> = () => {
 };
 
 export default Game;
+
 

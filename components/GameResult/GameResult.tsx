@@ -14,23 +14,23 @@ import { TeamMemberBasic } from 'components/shared/ui/TeamMemberBasic';
 import { OIcon, XIcon } from 'components/shared/ui/XOIcons';
 import { useEffect, useState } from 'react';
 import { FinishedGameState } from 'gameApi';
-export const GameResult= (props: IGameResultProps) => {
-  const { gameType, players, finishGameCheckResult, finishedGameState } = props;
-
-  console.log('FINISH GameResult FinishedGameState', FinishedGameState)
-  console.log('FINISH GameResult finishGameCheckResult', finishGameCheckResult);
+import {useGameStateContext} from "../../contexts/GameStateContext";
+export const GameResult= () => {
+  const gameStateContext = useGameStateContext();
+  const { finishResult } = gameStateContext;
+  console.log('FINISH GameResult finishResult', finishResult);
 
   // const player1 = {
   //   playerName: '0xh20...7260',
   //   playerImg: playerImg,
-  //   showWinText: finishGameCheckResult?.winner === true,
+  //   showWinText: finishResult?.winner === true,
   //   gameType: 'tic-tac-toe',
   //   icon: gameType === 'tic-tac-toe' ? <XIcon /> : <PurpleIcon />,
   // };
   // const player2 = {
   //   playerName: '0xh07...6035',
   //   playerImg: playerImg2,
-  //   showWinText: finishGameCheckResult?.winner === false,
+  //   showWinText: finishResult?.winner === false,
   //   gameType: 'tic-tac-toe',
   //   icon: gameType ===  'tic-tac-toe' ? <OIcon /> : <WhiteIcon />,
   // };
@@ -38,29 +38,29 @@ export const GameResult= (props: IGameResultProps) => {
   return (
     <div
       className={classNames(styles.container, {
-        [styles.win]: finishGameCheckResult?.winner === true,
-        [styles.lose]: finishGameCheckResult?.winner === false,
-        [styles.draw]: finishGameCheckResult?.isDraw === true,
+        [styles.win]: finishResult?.winner === true,
+        [styles.lose]: finishResult?.winner === false,
+        [styles.draw]: finishResult?.isDraw === true,
       })}>
       <h2 className={styles.title}>
-        {finishGameCheckResult?.winner === true && <span>Winner!</span>}
-        {finishGameCheckResult?.winner === false && <span>Better Luck Next Time</span>}
-        {finishGameCheckResult?.isDraw === true && <span>Better Luck Next Time</span>}
+        {finishResult?.winner === true && <span>Winner!</span>}
+        {finishResult?.winner === false && <span>Better Luck Next Time</span>}
+        {finishResult?.isDraw === true && <span>Better Luck Next Time</span>}
       </h2>
-      {finishGameCheckResult?.winner && <img src={imgWin.src} alt='Win' width={640} height={510} className={styles.imageWin} />}
-      {finishGameCheckResult?.winner === false && (
+      {finishResult?.winner && <img src={imgWin.src} alt='Win' width={640} height={510} className={styles.imageWin} />}
+      {finishResult?.winner === false && (
         <h1 className={styles.titleResult}>
           You lose <img src={loseImg.src} alt='lose' className={styles.imageSize} />
         </h1>
       )}
-      {finishGameCheckResult?.isDraw === true && (
+      {finishResult?.isDraw === true && (
         <h1 className={styles.titleResult}>
           Draw <img src={drawImg.src} alt='draw' className={styles.imageSize} />
         </h1>
       )}
       <div className={styles.containerCard}>
-        <ScoreCard playerIndex={0} players={players} finishGameCheckResult={finishGameCheckResult} playerName={''} playerImg={''} showWinText={false} icon={undefined} />
-        <ScoreCard playerIndex={1} players={players} finishGameCheckResult={finishGameCheckResult} playerName={''} playerImg={''} showWinText={false} icon={undefined} />
+        {/*<ScoreCard playerIndex={0} players={players} finishResult={finishResult} playerName={''} playerImg={''} showWinText={false} icon={undefined} />*/}
+        {/*<ScoreCard playerIndex={1} players={players} finishResult={finishResult} playerName={''} playerImg={''} showWinText={false} icon={undefined} />*/}
       </div>
       <BlockPayedGame />
       <h2 className={styles.titleCenter}>Read more about our technology</h2>
