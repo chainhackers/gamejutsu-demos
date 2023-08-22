@@ -18,7 +18,7 @@ import {useGameStateContext} from "../../contexts/GameStateContext";
 export const GameResult= () => {
   const gameStateContext = useGameStateContext();
   const { finishResult } = gameStateContext;
-  console.log('FINISH GameResult finishResult', finishResult);
+  console.log('FINISH COMPONENT GameResult finishResult', finishResult);
 
   // const player1 = {
   //   playerName: '0xh20...7260',

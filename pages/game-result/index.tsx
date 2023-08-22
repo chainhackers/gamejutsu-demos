@@ -6,7 +6,7 @@ import {GameStateContextProvider, useGameStateContext} from "../../contexts/Game
 
 const GameResultPage = () => {
   const gameStateContext = useGameStateContext();
-  const {finishResult} = gameStateContext;
+  const {finishResult, setFinishResult} = gameStateContext;
   console.log('FINISH Page GAMERESULT finishResult ', finishResult);
 
   return (

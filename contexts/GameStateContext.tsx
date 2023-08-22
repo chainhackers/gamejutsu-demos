@@ -1,6 +1,4 @@
-import {PlayerI, TGameType} from 'types/game';
-import {FinishedGameState} from "../gameApi";
-import React, {createContext, useContext, useState} from "react";
+import React, {createContext, useContext, useMemo, useState} from "react";
 
 export interface IGameStateContext {
   finishResult: { winner: boolean, isDraw: boolean, cheatWin: boolean } | null;
@@ -17,8 +15,11 @@ export const GameStateContextDefault: IGameStateContext = {
 export const GameStateContext = createContext<IGameStateContext>(GameStateContextDefault);
 export const useGameStateContext = () => useContext(GameStateContext);
 export const GameStateContextProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
-  const [finishResult, setFinishResult] = useState<IGameStateContext["finishResult"]>(GameStateContextDefault.finishResult);
-  return <GameStateContext.Provider value={GameStateContextDefault}>{children}</GameStateContext.Provider>;
+  const [finishResult, setFinishResult] = useState<IGameStateContext["finishResult"] | null>(null);
+
+  const contextValue = useMemo(() => ({ finishResult, setFinishResult }), [finishResult, setFinishResult]);
+
+  return <GameStateContext.Provider value={contextValue}>{children}</GameStateContext.Provider>;
 }
 
 

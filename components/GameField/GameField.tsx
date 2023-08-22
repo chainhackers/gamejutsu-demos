@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import cn from 'classnames';
 import { FinishedGameState } from 'gameApi';
+import {useGameStateContext} from "../../contexts/GameStateContext";
 export const GameField: React.FC<GameFieldPropsI> = ({
   children,
   rivalPlayerAddress,
@@ -29,12 +30,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [isShowReport, setShowReport] = useState<boolean>(false);
   const [isShowDispute, setShowDispute] = useState<boolean>(false);
-  console.log('CLAIM WIN GameField', onClaimWin);
-  console.log('FINISHED GameField game state ', finishedGameState);
-  console.log('FINISH GameField game result ', finishGameCheckResult);
-  console.log('PLAYERS GameField', players);
-  console.log('FINISH GameField FinishedGameState', FinishedGameState);
-  // console.log('FINISH Game Field MakeFinished', makeFinishedGameDescription)
+
   type TMedal = 'bronze' | 'silver' | 'gold';
   type TBelt = 'white' | 'green' | 'black';
   type TAchievement = 'winner' | 'loser' | 'draw' | 'cheater';
@@ -209,6 +205,17 @@ export const GameField: React.FC<GameFieldPropsI> = ({
     }
     return <div className={styles.row}>{badges}</div>;
   };
+  // TODO: add CONTEXT #190 @habdevs
+  if (finishGameCheckResult !== null) {
+    const result = {
+      winner: finishGameCheckResult.winner,
+      isDraw: finishGameCheckResult.isDraw,
+      cheatWin: finishGameCheckResult.cheatWin
+    };
+    const gameStateContext = useGameStateContext();
+    gameStateContext.setFinishResult(result);
+    console.log('Сomponent GAMEFIELD', gameStateContext)
+  }
 
   return (
     <div className={styles.container}>

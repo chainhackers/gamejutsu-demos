@@ -312,9 +312,7 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
     if (!gameState.lastOpponentMove) {
       throw 'no lastOpponentMove';
     }
-
     setIsInDispute(true);
-
     setDisputeRunner(account.address!)
 
     await sendMessage({
@@ -436,9 +434,9 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
             setFinishGameCheckResult({winner: playerIngameId === winnerId, isDraw: false, cheatWin: isValid});
             setNextGameState(nextGameState);
             // TODO: check context @habdevs #190
-            const gameStateContext = useGameStateContext();
-            gameStateContext.setFinishResult({winner: playerIngameId === winnerId, isDraw: false, cheatWin: isValid});
-            console.log('PAGE GameType ', gameStateContext)
+            // const gameStateContext = useGameStateContext();
+            // gameStateContext.setFinishResult({winner: playerIngameId === winnerId, isDraw: false, cheatWin: isValid});
+            // console.log('PAGE GameType ', gameStateContext.finishResult)
 
           } else if (gameType === 'tic-tac-toe' && signedMove.gameMove.nonce === 8) {
             setFinishGameCheckResult({winner: false, isDraw: true, cheatWin: isValid});
@@ -647,8 +645,8 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
     }
   }
 
-
   return <div>Loading...</div>;
+
 };
 
 export const getStaticProps: GetStaticProps<IGamePageProps, IParams> = (context) => {

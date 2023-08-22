@@ -45,7 +45,6 @@ const version = 'v1.2.38';
 function MyApp({Component, pageProps}: AppProps) {
   const props = {...pageProps, version};
   return (
-
     <WagmiConfig client={wagmiClient}>
       <ApolloProvider client={client}>
         <GameStateContextProvider>
@@ -69,7 +68,6 @@ function MyApp({Component, pageProps}: AppProps) {
         </GameStateContextProvider>
       </ApolloProvider>
     </WagmiConfig>
-
   );
 }
 
