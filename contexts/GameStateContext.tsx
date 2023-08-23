@@ -21,7 +21,7 @@ export const GameStateContextProvider: React.FC<{ children: React.ReactNode }> =
 
   return <GameStateContext.Provider value={contextValue}>{children}</GameStateContext.Provider>;
 }
-// export const useGameStateContext = () => useContext(GameStateContext);
+export const useGameStateContext = () => useContext(GameStateContext);
 
 // export interface IGameStateContext {
 //   finishGameCheckResult: null | { winner: boolean; isDraw: boolean; cheatWin: boolean };

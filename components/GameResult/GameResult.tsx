@@ -12,18 +12,19 @@ import { BlockPayedGame, CustomButton, PurpleIcon, WhiteIcon } from 'components/
 import { ScoreCard } from 'components/GameResult/ScoreCard/index';
 import { TeamMemberBasic } from 'components/shared/ui/TeamMemberBasic';
 import { OIcon, XIcon } from 'components/shared/ui/XOIcons';
-import {useContext, useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import { FinishedGameState } from 'gameApi';
-import {GameStateContext, IGameStateContext,} from "../../contexts/GameStateContext";
+import {IGameStateContext, useGameStateContext} from "../../contexts/GameStateContext";
 export const GameResult= () => {
   const [countContextFinishResult, setCountContextFinishResult] = useState(0);
-  const { finishResult } = useContext(GameStateContext);
+  const gameStateContext = useGameStateContext();
+  const { finishResult } = gameStateContext;
 
   useEffect(() => {
     setCountContextFinishResult(prevCount => prevCount + 1);
   }, [finishResult]);
 
-  console.log('Контекст в компоненте GameResult:', GameStateContext);
+  console.log('Контекст в компоненте GameResult:', gameStateContext);
   console.log('Данные из контекста в GameResult:', finishResult);
   console.log('Счетчик обновлений данных:', countContextFinishResult);
 

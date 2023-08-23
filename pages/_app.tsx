@@ -14,7 +14,7 @@ import XmtpProvider from '../contexts/XmtpProvider';
 // TODO: don't forget to bring back alchemy instead of publicProvider. @habdevs #190
 // import {alchemyProvider} from 'wagmi/providers/alchemy';
 import {GameStateContextProvider} from 'contexts/GameStateContext';
-import { publicProvider } from 'wagmi/providers/public';
+import {publicProvider} from 'wagmi/providers/public';
 
 const {chains, provider, webSocketProvider} = configureChains(
   [polygon],
@@ -47,11 +47,11 @@ function MyApp({Component, pageProps}: AppProps) {
   return (
     <WagmiConfig client={wagmiClient}>
       <ApolloProvider client={client}>
-        <GameStateContextProvider>
-          <WalletContextProvider>
-            <XmtpContextProvider>
-              <RainbowKitProvider chains={chains}>
-                <XmtpProvider>
+        <WalletContextProvider>
+          <XmtpContextProvider>
+            <RainbowKitProvider chains={chains}>
+              <XmtpProvider>
+                <GameStateContextProvider>
                   <Layout version={version}>
                     <Head>
                       <meta
@@ -61,11 +61,11 @@ function MyApp({Component, pageProps}: AppProps) {
                     </Head>
                     <Component {...props} />
                   </Layout>
-                </XmtpProvider>
-              </RainbowKitProvider>
-            </XmtpContextProvider>
-          </WalletContextProvider>
-        </GameStateContextProvider>
+                </GameStateContextProvider>
+              </XmtpProvider>
+            </RainbowKitProvider>
+          </XmtpContextProvider>
+        </WalletContextProvider>
       </ApolloProvider>
     </WagmiConfig>
   );
