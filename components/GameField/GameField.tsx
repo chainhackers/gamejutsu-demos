@@ -122,8 +122,6 @@ export const GameField: React.FC<GameFieldPropsI> = ({
 
   useEffect(() => {
     if (!!finishGameCheckResult) {
-      console.log('use effect', finishGameCheckResult)
-
       setShowShade(true);
       setIsWaiting(false);
       setIsConnecting(false);
@@ -216,7 +214,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
     };
     const { setFinishResult } = useContext(GameStateContext);
     setFinishResult(result);
-    console.log('Обновление gameStateContext в GameField', GameStateContext)
+    console.log('Обновление gameStateContext в GameField', result)
     console.log('Обновление result в GameField:', result);
   }
 

@@ -12,12 +12,12 @@ export const GameStateContextDefault: IGameStateContext = {
   }
 }
 
-export const GameStateContext  = createContext<IGameStateContext>(GameStateContextDefault);
+export const GameStateContext = createContext<IGameStateContext>(GameStateContextDefault);
 
 export const GameStateContextProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
   const [finishResult, setFinishResult] = useState<IGameStateContext["finishResult"] | null>(null);
 
-  const contextValue = useMemo(() => ({ finishResult, setFinishResult }), [finishResult, setFinishResult]);
+  const contextValue = {finishResult, setFinishResult}
 
   return <GameStateContext.Provider value={contextValue}>{children}</GameStateContext.Provider>;
 }
