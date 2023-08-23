@@ -433,10 +433,7 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
           if (winnerId !== null) {
             setFinishGameCheckResult({winner: playerIngameId === winnerId, isDraw: false, cheatWin: isValid});
             setNextGameState(nextGameState);
-            // TODO: check context @habdevs #190
-            // const gameStateContext = useGameStateContext();
-            // gameStateContext.setFinishResult({winner: playerIngameId === winnerId, isDraw: false, cheatWin: isValid});
-            // console.log('PAGE GameType ', gameStateContext.finishResult)
+            // TODO: check for context overwriting? @habdevs  #190
 
           } else if (gameType === 'tic-tac-toe' && signedMove.gameMove.nonce === 8) {
             setFinishGameCheckResult({winner: false, isDraw: true, cheatWin: isValid});

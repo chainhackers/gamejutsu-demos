@@ -5,11 +5,11 @@ import { badgesQuery } from 'queries';
 import styles from './GameField.module.scss';
 import { Button } from 'components/shared';
 import { useAccount } from 'wagmi';
-import { useEffect, useState } from 'react';
+import {useContext, useEffect, useState} from 'react';
 import Link from 'next/link';
 import cn from 'classnames';
 import { FinishedGameState } from 'gameApi';
-import {IGameStateContext, useGameStateContext} from "../../contexts/GameStateContext";
+import {GameStateContext, IGameStateContext, useGameStateContext} from "../../contexts/GameStateContext";
 export const GameField: React.FC<GameFieldPropsI> = ({
   children,
   rivalPlayerAddress,
@@ -122,6 +122,8 @@ export const GameField: React.FC<GameFieldPropsI> = ({
 
   useEffect(() => {
     if (!!finishGameCheckResult) {
+      console.log('use effect', finishGameCheckResult)
+
       setShowShade(true);
       setIsWaiting(false);
       setIsConnecting(false);
@@ -212,10 +214,10 @@ export const GameField: React.FC<GameFieldPropsI> = ({
       isDraw: finishGameCheckResult.isDraw,
       cheatWin: finishGameCheckResult.cheatWin
     };
-    const gameStateContext: IGameStateContext = useGameStateContext();
-    gameStateContext.setFinishResult(result);
-    console.log('Сomponent GAMEFIELD обновление gameStateContext', gameStateContext)
-    console.log('Обновление контекста в GameField:', result);
+    const { setFinishResult } = useContext(GameStateContext);
+    setFinishResult(result);
+    console.log('Обновление gameStateContext в GameField', GameStateContext)
+    console.log('Обновление result в GameField:', result);
   }
 
   return (
