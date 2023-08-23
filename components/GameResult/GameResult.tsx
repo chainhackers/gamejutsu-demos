@@ -16,9 +16,11 @@ import { useEffect, useState } from 'react';
 import { FinishedGameState } from 'gameApi';
 import {IGameStateContext, useGameStateContext} from "../../contexts/GameStateContext";
 export const GameResult= () => {
-  const gameStateContext: IGameStateContext = useGameStateContext();
-  const {finishResult, setFinishResult } = gameStateContext
-  console.log('COMPONENT GameResult', gameStateContext);
+  const gameStateContext = useGameStateContext();
+  console.log('Контекст в компоненте GameResult:', gameStateContext);
+
+  const { finishResult } = gameStateContext;
+  console.log('Данные из контекста в GameResult:', finishResult);
 
   // const player1 = {
   //   playerName: '0xh20...7260',
