@@ -17,7 +17,7 @@ export const GameStateContext = createContext<IGameStateContext>(GameStateContex
 export const GameStateContextProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
   const [finishResult, setFinishResult] = useState<IGameStateContext["finishResult"] | null>(null);
 
-  const contextValue = {finishResult, setFinishResult}
+  const contextValue: IGameStateContext = {finishResult, setFinishResult}
 
   return <GameStateContext.Provider value={contextValue}>{children}</GameStateContext.Provider>;
 }
