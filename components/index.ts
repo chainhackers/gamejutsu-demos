@@ -33,3 +33,4 @@ export * from 'components/v2/MyGameCard';
 export * from 'components/v2/MyGamesList';
 export * from 'components/v2/Tabs';
 export * from 'components/v2/WalletModal';
+export * from 'components/shared'
