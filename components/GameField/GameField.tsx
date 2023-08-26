@@ -218,9 +218,6 @@ export const GameField: React.FC<GameFieldPropsI> = ({
     setFinishResult(newFinishResult);
     console.log('Обновление finishResult в GameField:', newFinishResult);
   }
-  // else {
-  //   return <div>Результат игры пока не доступен.</div>;
-  // }
 
   return (
     <div className={styles.container}>

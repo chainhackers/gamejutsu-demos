@@ -644,7 +644,17 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
       );
     }
   }
+  const { setFinishResult } = useGameStateContext();
+  if (finishGameCheckResult !== null) {
+    const newFinishResult = {
+      winner: finishGameCheckResult.winner,
+      isDraw: finishGameCheckResult.isDraw,
+      cheatWin: finishGameCheckResult.cheatWin
+    };
 
+    setFinishResult(newFinishResult);
+    console.log('GAME попытка записи в finishGameCheckResult')
+  }
   return <div>Loading...</div>;
 
 };
