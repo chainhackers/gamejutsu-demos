@@ -51,7 +51,7 @@ function MyApp({Component, pageProps}: AppProps) {
           <XmtpContextProvider>
             <RainbowKitProvider chains={chains}>
               <XmtpProvider>
-                <GameStateContextProvider>
+                {/*<GameStateContextProvider>*/}
                   <Layout version={version}>
                     <Head>
                       <meta
@@ -61,7 +61,7 @@ function MyApp({Component, pageProps}: AppProps) {
                     </Head>
                     <Component {...props} />
                   </Layout>
-                </GameStateContextProvider>
+                {/*</GameStateContextProvider>*/}
               </XmtpProvider>
             </RainbowKitProvider>
           </XmtpContextProvider>

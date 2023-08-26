@@ -207,15 +207,15 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   };
   // TODO: add CONTEXT #190 @habdevs
   if (finishGameCheckResult !== null) {
-    const result = {
+    const finishResult = {
       winner: finishGameCheckResult.winner,
       isDraw: finishGameCheckResult.isDraw,
       cheatWin: finishGameCheckResult.cheatWin
     };
     const { setFinishResult } = useContext(GameStateContext);
-    setFinishResult(result);
-    console.log('Обновление gameStateContext в GameField', result)
-    console.log('Обновление result в GameField:', result);
+    setFinishResult(finishResult);
+    console.log('Обновление gameStateContext в GameField', GameStateContext)
+    console.log('Обновление finishResult в GameField:', finishResult);
   }
 
   return (
