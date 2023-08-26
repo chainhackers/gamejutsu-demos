@@ -10,6 +10,7 @@ import Link from 'next/link';
 import cn from 'classnames';
 import { FinishedGameState } from 'gameApi';
 import {GameStateContext, IGameStateContext, useGameStateContext} from "../../contexts/GameStateContext";
+import {GameResult} from "../GameResult";
 export const GameField: React.FC<GameFieldPropsI> = ({
   children,
   rivalPlayerAddress,
@@ -207,16 +208,19 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   };
   // TODO: add CONTEXT #190 @habdevs
   if (finishGameCheckResult !== null) {
-    const finishResult = {
+    const newFinishResult = {
       winner: finishGameCheckResult.winner,
       isDraw: finishGameCheckResult.isDraw,
       cheatWin: finishGameCheckResult.cheatWin
     };
-    const { setFinishResult } = useContext(GameStateContext);
-    setFinishResult(finishResult);
-    console.log('Обновление gameStateContext в GameField', GameStateContext)
-    console.log('Обновление finishResult в GameField:', finishResult);
+    const { setFinishResult } = useGameStateContext();
+    console.log('Попытка записи данных в контекст:', newFinishResult);
+    setFinishResult(newFinishResult);
+    console.log('Обновление finishResult в GameField:', newFinishResult);
   }
+  // else {
+  //   return <div>Результат игры пока не доступен.</div>;
+  // }
 
   return (
     <div className={styles.container}>

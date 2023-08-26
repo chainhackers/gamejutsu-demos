@@ -2,25 +2,41 @@ import React, {createContext, useContext, useMemo, useState} from "react";
 
 export interface IGameStateContext {
   finishResult: { winner: boolean, isDraw: boolean, cheatWin: boolean } | null;
-  setFinishResult: (result: { winner: boolean, isDraw: boolean, cheatWin: boolean } | null) => void;
-
+  setFinishResult: (newFinishResult: { winner: boolean, isDraw: boolean, cheatWin: boolean } | null) => void;
 }
 
 export const GameStateContextDefault: IGameStateContext = {
   finishResult: null,
   setFinishResult: () => {}
 }
-
+export const useGameStateContext = () => useContext(GameStateContext);
 export const GameStateContext = createContext<IGameStateContext>(GameStateContextDefault);
 
 export const GameStateContextProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
-  const [finishResult, setFinishResult] = useState<{ winner: boolean, isDraw: boolean, cheatWin: boolean }| null>(null);
+  const [finishResult, setFinishResult] = useState<{ winner: boolean, isDraw: boolean, cheatWin: boolean } | null>(null);
 
-  const contextValue: IGameStateContext = {finishResult, setFinishResult}
+  const contextValue: IGameStateContext = {
+    finishResult,
+    setFinishResult
+  }
 
   return <GameStateContext.Provider value={contextValue}>{children}</GameStateContext.Provider>;
 }
-export const useGameStateContext = () => useContext(GameStateContext);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // export interface IGameStateContext {
 //   finishGameCheckResult: null | { winner: boolean; isDraw: boolean; cheatWin: boolean };

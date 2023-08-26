@@ -47,7 +47,7 @@ import useConversation, {IAnyMessage} from "../../hooks/useConversation";
 import {PlayerI, TGameType} from 'types/game';
 import {useTranslation} from 'react-i18next';
 import Link from 'next/link';
-import {useGameStateContext} from "../../contexts/GameStateContext";
+import {GameStateContext, GameStateContextProvider, useGameStateContext} from "../../contexts/GameStateContext";
 
 interface IGamePageProps {
   gameType: TGameType,
@@ -176,6 +176,7 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
         messageType: 'FinishedGameState',
         gameType
       });
+      // TODO: check update context @habdevs #190
       setFinishGameCheckResult(null);
       setFinishedGameState(finishedGameResult);
     } catch (error: any) {
@@ -463,6 +464,7 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
       console.log('last message proceess one message', lastMessage)
       console.log('GOT MESSAGE');
       if (finishedGameState === null) {
+        // TODO: check update context @habdevs #190
         setFinishGameCheckResult(null);
         setFinishedGameState(lastMessage.message as FinishedGameState);
       }
@@ -609,7 +611,7 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
               <div className={styles.disclaimerLink}><DisclaimerNotice><strong>{t('games.checkers.disclaimer.notice')}
               </strong></DisclaimerNotice></div>
           </Link>}
-
+<GameStateContextProvider>
           <GameField
             gameId={gameId?.toString()}
             rivalPlayerAddress={opponentAddress}
@@ -627,6 +629,7 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
           >
             {gameComponent}
           </GameField>
+</GameStateContextProvider>
           <RightPanel>
             <div style={{position: 'absolute', right: '0'}}>
               <GetHistory history={lastMessages} messageHistory={messageHistory} gameId={gameId}/>
