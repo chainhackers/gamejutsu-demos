@@ -213,10 +213,10 @@ export const GameField: React.FC<GameFieldPropsI> = ({
       isDraw: finishGameCheckResult.isDraw,
       cheatWin: finishGameCheckResult.cheatWin
     };
-    const { setFinishResult } = useGameStateContext();
-    console.log('Попытка записи данных в контекст:', newFinishResult);
+    const { finishResult, setFinishResult } = useGameStateContext();
+    console.log('Попытка записи данных в контекст:', newFinishResult, finishResult);
     setFinishResult(newFinishResult);
-    console.log('Обновление finishResult в GameField:', newFinishResult);
+    console.log('Обновление finishResult в GameField:', newFinishResult, finishResult);
   }
 
   return (

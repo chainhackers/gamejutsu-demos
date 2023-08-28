@@ -17,16 +17,19 @@ import {FinishedGameState} from 'gameApi';
 import {IGameStateContext, useGameStateContext} from "../../contexts/GameStateContext";
 
 export const GameResult = () => {
-    const {finishResult} = useGameStateContext();
-    let winner, isDraw, cheatWin = false
-    if (finishResult !== null) {
-        winner = finishResult.winner;
-        isDraw = finishResult.isDraw;
-        cheatWin = finishResult.cheatWin;
+    const {finishResult, setFinishResult} = useGameStateContext();
+    let winner, isDraw, cheatWin = true
+    console.log('Данные из finishResult: ', finishResult);
+    console.log('Данные из setFinishResult: ', setFinishResult)
 
-        console.log('Данные из контекста в GameResult: ', finishResult);
-        console.log('Данные из winner: ', winner)
-    } else return <div>finishResult NULL</div>
+    // if (finishResult !== null) {
+    //     winner = finishResult.winner;
+    //     isDraw = finishResult.isDraw;
+    //     cheatWin = finishResult.cheatWin;
+    //
+    //     console.log('Данные из контекста в GameResult: ', finishResult);
+    //     console.log('Данные из winner: ', winner)
+    // } else return <div>finishResult NULL</div>
 
 
     // const player1 = {
