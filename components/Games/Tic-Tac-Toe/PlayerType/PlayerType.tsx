@@ -17,7 +17,7 @@ export const PlayerType: React.FC<IPlayerTypeProps> = ({ playerIngameId }) => {
         // [styles.round]: playerIngameId === 1,
       })}
     >
-      {playerIngameId === 0 ? <XIcon width={60} height={60}/> : <OIcon width={60} height={60}/>}
+      {playerIngameId === 0 ? <XIcon width={30} height={30}/> : <OIcon width={30} height={30}/>}
     </div>
   )
 };
