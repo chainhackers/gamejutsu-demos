@@ -18,6 +18,7 @@ import {IGameStateContext, useGameStateContext} from "../../contexts/GameStateCo
 
 export const GameResult = () => {
     const {finishResult, setFinishResult} = useGameStateContext();
+
     let winner, isDraw, cheatWin = true
     console.log('Данные из finishResult: ', finishResult);
     console.log('Данные из setFinishResult: ', setFinishResult)
