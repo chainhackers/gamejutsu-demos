@@ -611,7 +611,7 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
               <div className={styles.disclaimerLink}><DisclaimerNotice><strong>{t('games.checkers.disclaimer.notice')}
               </strong></DisclaimerNotice></div>
           </Link>}
-<GameStateContextProvider>
+{/*<GameStateContextProvider>*/}
           <GameField
             gameId={gameId?.toString()}
             rivalPlayerAddress={opponentAddress}
@@ -629,7 +629,7 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
           >
             {gameComponent}
           </GameField>
-</GameStateContextProvider>
+{/*</GameStateContextProvider>*/}
           <RightPanel>
             <div style={{position: 'absolute', right: '0'}}>
               <GetHistory history={lastMessages} messageHistory={messageHistory} gameId={gameId}/>

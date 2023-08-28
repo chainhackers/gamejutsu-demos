@@ -6,9 +6,9 @@ const GameResultPage = () => {
   return (
       <div className={styles.wrapper}>
         <div className={styles.container}>
-          <GameStateContextProvider>
+          {/*<GameStateContextProvider>*/}
           <GameResult />
-          </GameStateContextProvider>
+          {/*</GameStateContextProvider>*/}
         </div>
       </div>
   );
