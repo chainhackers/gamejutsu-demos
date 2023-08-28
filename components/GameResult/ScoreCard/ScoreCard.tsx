@@ -6,10 +6,6 @@ import { FinishedGameState } from 'gameApi';
 export const ScoreCard = (props: ScoreCardProps) => {
   const { playerImg, showWinText, icon, playerIndex, players, finishGameCheckResult } = props;
   const playerData = players ? players[playerIndex] : null;
-  // console.log('CLAIM WIN  onClaimWin ', onClaimWin);
-  // console.log('FINISH scoreCard finishGameCheckResult ', finishGameCheckResult);
-  // console.log('PLAYERS scoreCard', players);
-  // console.log('FINISH scoreCard FinishedGameState', FinishedGameState);
   return (
     <div className={`${styles.container}`}>
       <div className={`${styles.card} ${finishGameCheckResult?.winner === true ? styles.highlight : ''}`}>
