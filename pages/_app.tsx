@@ -46,12 +46,13 @@ function MyApp({Component, pageProps}: AppProps) {
   const props = {...pageProps, version};
   return (
     <WagmiConfig client={wagmiClient}>
-      <ApolloProvider client={client}>
-        <WalletContextProvider>
-          <XmtpContextProvider>
-            <RainbowKitProvider chains={chains}>
-              <XmtpProvider>
-                <GameStateContextProvider>
+      <GameStateContextProvider>
+        <ApolloProvider client={client}>
+          <WalletContextProvider>
+            <XmtpContextProvider>
+              <RainbowKitProvider chains={chains}>
+                <XmtpProvider>
+
                   <Layout version={version}>
                     <Head>
                       <meta
@@ -61,12 +62,13 @@ function MyApp({Component, pageProps}: AppProps) {
                     </Head>
                     <Component {...props} />
                   </Layout>
-                </GameStateContextProvider>
-              </XmtpProvider>
-            </RainbowKitProvider>
-          </XmtpContextProvider>
-        </WalletContextProvider>
-      </ApolloProvider>
+
+                </XmtpProvider>
+              </RainbowKitProvider>
+            </XmtpContextProvider>
+          </WalletContextProvider>
+        </ApolloProvider>
+      </GameStateContextProvider>
     </WagmiConfig>
   );
 }

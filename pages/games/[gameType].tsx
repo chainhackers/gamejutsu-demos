@@ -1,6 +1,6 @@
 import {createContext, ReactNode, useEffect, useState} from 'react';
 import {GetStaticPaths, GetStaticProps, NextPage} from 'next';
-import {useRouter} from 'next/router';
+import router, {useRouter} from 'next/router';
 
 import {ParsedUrlQuery} from 'querystring';
 import {XMTPChatLog} from 'components/XMTPChatLog';
@@ -145,6 +145,7 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
   };
 
   const runFinishGameHandler = async () => {
+    const {finishResult, setFinishResult} = useGameStateContext();
     if (!nextGameState) {
       throw 'no nextGameState';
     }
@@ -169,22 +170,49 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
         [nextGameState.lastMove, lastOpponentMoveSignedByAll];
       const finishedGameResult = await finishGame(await getArbiter(), moves)
 
-
       await sendMessage({
         gameId: gameId,
         message: finishedGameResult,
         messageType: 'FinishedGameState',
         gameType
       });
-      // TODO: check update context @habdevs #190
-      setFinishGameCheckResult(null);
+      // TODO: check update context @habdevs #190 add router.push
+      router.push('/game-result');
+      // TODO: check update context @habdevs #190 add write to context data
+      console.log('Записываем данные в контекст');
+      const newFinishResult = {
+        winner: finishGameCheckResult?.winner || false,
+        isDraw: finishGameCheckResult?.isDraw || false,
+        cheatWin: finishGameCheckResult?.cheatWin || false
+      };
+      console.log('Попытка записи данных в контекст:', newFinishResult);
+      setFinishResult(newFinishResult);
+      // setFinishGameCheckResult(null);
       setFinishedGameState(finishedGameResult);
+      console.log('Завершение выполнения runFinishGameHandler', finishedGameResult);
+      console.log('finish gametype запись 1', newFinishResult)
     } catch (error: any) {
       if (error.reason.includes('invalid game move')) {
         setFinishGameCheckResult({winner: false, isDraw: false, cheatWin: true})
+        router.push('/game-result');
+        const newFinishResult = {
+          winner: false,
+          isDraw: false,
+          cheatWin: true
+        };
+        setFinishResult(newFinishResult);
+        console.log('finish gametype запись 2', newFinishResult)
       }
       if (error.reason.includes('moves are not in sequence')) {
         console.log('moves are not in sequence');
+        router.push('/game-result');
+        const newFinishResult = {
+          winner: false,
+          isDraw: false,
+          cheatWin: true
+        };
+        setFinishResult(newFinishResult);
+        console.log('finish gametype запись 3', newFinishResult)
       }
     }
   };
@@ -611,7 +639,7 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
               <div className={styles.disclaimerLink}><DisclaimerNotice><strong>{t('games.checkers.disclaimer.notice')}
               </strong></DisclaimerNotice></div>
           </Link>}
-{/*<GameStateContextProvider>*/}
+          {/*<GameStateContextProvider>*/}
           <GameField
             gameId={gameId?.toString()}
             rivalPlayerAddress={opponentAddress}
@@ -629,7 +657,7 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
           >
             {gameComponent}
           </GameField>
-{/*</GameStateContextProvider>*/}
+          {/*</GameStateContextProvider>*/}
           <RightPanel>
             <div style={{position: 'absolute', right: '0'}}>
               <GetHistory history={lastMessages} messageHistory={messageHistory} gameId={gameId}/>
@@ -644,17 +672,18 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
       );
     }
   }
-  const { setFinishResult } = useGameStateContext();
-  if (finishGameCheckResult !== null) {
-    const newFinishResult = {
-      winner: finishGameCheckResult.winner,
-      isDraw: finishGameCheckResult.isDraw,
-      cheatWin: finishGameCheckResult.cheatWin
-    };
-
-    setFinishResult(newFinishResult);
-    console.log('GAME попытка записи в finishGameCheckResult')
-  }
+  // TODO: Clear @habdevs #190 add context
+  // const {setFinishResult} = useGameStateContext();
+  // if (finishGameCheckResult !== null) {
+  //   const newFinishResult = {
+  //     winner: finishGameCheckResult.winner,
+  //     isDraw: finishGameCheckResult.isDraw,
+  //     cheatWin: finishGameCheckResult.cheatWin
+  //   };
+  //
+  //   setFinishResult(newFinishResult);
+  //   console.log('GAME попытка записи в finishGameCheckResult')
+  // }
   return <div>Loading...</div>;
 
 };

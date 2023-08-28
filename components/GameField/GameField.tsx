@@ -34,9 +34,9 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   const [isShowDispute, setShowDispute] = useState<boolean>(false);
   const {setFinishResult} = useGameStateContext();
 
-  type TMedal = 'bronze' | 'silver' | 'gold';
-  type TBelt = 'white' | 'green' | 'black';
-  type TAchievement = 'winner' | 'loser' | 'draw' | 'cheater';
+  // type TMedal = 'bronze' | 'silver' | 'gold';
+  // type TBelt = 'white' | 'green' | 'black';
+  // type TAchievement = 'winner' | 'loser' | 'draw' | 'cheater';
 
   const {t} = useTranslation();
   const account = useAccount();
@@ -132,83 +132,83 @@ export const GameField: React.FC<GameFieldPropsI> = ({
     }
   });
 
-  const isBadgeAvailable = (data: any, medal: TMedal, achievement: TAchievement): boolean => {
-    let entity = data && data.inRowCounterEntities[0];
-    if (!entity) {
-      return false;
-    }
-    let maxValue = entity[`${achievement}MaxValue`];
-    if (medal == 'bronze') return maxValue >= 1;
-    if (medal == 'silver') return maxValue >= 5;
-    if (medal == 'gold') return maxValue >= 10;
-    return false;
-  };
+  // const isBadgeAvailable = (data: any, medal: TMedal, achievement: TAchievement): boolean => {
+  //   let entity = data && data.inRowCounterEntities[0];
+  //   if (!entity) {
+  //     return false;
+  //   }
+  //   let maxValue = entity[`${achievement}MaxValue`];
+  //   if (medal == 'bronze') return maxValue >= 1;
+  //   if (medal == 'silver') return maxValue >= 5;
+  //   if (medal == 'gold') return maxValue >= 10;
+  //   return false;
+  // };
 
-  function countToMedal(count: number, maxValue: number): TMedal | undefined {
-    //TODO need guarantee that graph is old. The same for other badges
-    if (count == 9 && maxValue == 9) return 'gold';
-    if (count == 4 && maxValue == 4) return 'silver';
-    if (count == 0 && maxValue == 0) return 'bronze';
-  }
+  // function countToMedal(count: number, maxValue: number): TMedal | undefined {
+  //   //TODO need guarantee that graph is old. The same for other badges
+  //   if (count == 9 && maxValue == 9) return 'gold';
+  //   if (count == 4 && maxValue == 4) return 'silver';
+  //   if (count == 0 && maxValue == 0) return 'bronze';
+  // }
 
-  const isJustObtainedBadge = (data: any, medal: TMedal, achievement: TAchievement): boolean => {
-    let entity = data && data.inRowCounterEntities[0];
-    if (!entity || !finishedGameState) {
-      return false;
-    }
-    let maxValue = entity[`${achievement}MaxValue`];
-    let count = entity[`${achievement}Count`];
-    if (countToMedal(count, maxValue) !== medal) {
-      return false;
-    }
-    if (achievement == 'draw') {
-      return finishedGameState.isDraw;
-    }
-    if (isCurrentPlayerAddress(finishedGameState.winner)) {
-      return achievement == 'winner';
-    }
-    if (isCurrentPlayerAddress(finishedGameState.loser)) {
-      return achievement == 'loser';
-    }
-    if (isCurrentPlayerAddress(finishedGameState.disqualified)) {
-      return achievement == 'cheater';
-    }
-    return false;
-  };
+  // const isJustObtainedBadge = (data: any, medal: TMedal, achievement: TAchievement): boolean => {
+  //   let entity = data && data.inRowCounterEntities[0];
+  //   if (!entity || !finishedGameState) {
+  //     return false;
+  //   }
+  //   let maxValue = entity[`${achievement}MaxValue`];
+  //   let count = entity[`${achievement}Count`];
+  //   if (countToMedal(count, maxValue) !== medal) {
+  //     return false;
+  //   }
+  //   if (achievement == 'draw') {
+  //     return finishedGameState.isDraw;
+  //   }
+  //   if (isCurrentPlayerAddress(finishedGameState.winner)) {
+  //     return achievement == 'winner';
+  //   }
+  //   if (isCurrentPlayerAddress(finishedGameState.loser)) {
+  //     return achievement == 'loser';
+  //   }
+  //   if (isCurrentPlayerAddress(finishedGameState.disqualified)) {
+  //     return achievement == 'cheater';
+  //   }
+  //   return false;
+  // };
 
-  const makeBadge = (medal: TMedal, achievement: TAchievement) => {
-    const generateLink = (medal: TMedal, achievement: TAchievement) => {
-      return `https://playground.sismo.io/gamejutsu-${medal}-${achievement}`;
-    };
-    const getBeltFromMedal = (medal: TMedal): TBelt | undefined => {
-      if (medal == 'bronze') return 'white';
-      if (medal == 'silver') return 'green';
-      if (medal == 'gold') return 'black';
-    };
-    const generateFilename = (medal: TMedal, achievement: TAchievement) => {
-      return `/badges/gamejutsu_${achievement}_${getBeltFromMedal(medal)}.svg`;
-    };
-
-    return (
-      <Link key={`${achievement}-${medal}`} target='_blank' href={generateLink(medal, achievement)}>
-        <a>
-          <div
-            className={cn(styles.badge, isBadgeAvailable(data, medal, achievement) ? styles.available : null, isJustObtainedBadge(data, medal, achievement) ? styles.obtained : null)}>
-            <img src={generateFilename(medal, achievement)}></img>
-          </div>
-        </a>
-      </Link>
-    );
-  };
-  const makeBadges = () => {
-    let badges = [];
-    for (let achievement of ['winner', 'loser', 'draw', 'cheater'] as TAchievement[]) {
-      for (let medal of ['bronze', 'silver', 'gold'] as TMedal[]) {
-        badges.push(makeBadge(medal, achievement));
-      }
-    }
-    return <div className={styles.row}>{badges}</div>;
-  };
+  // const makeBadge = (medal: TMedal, achievement: TAchievement) => {
+  //   const generateLink = (medal: TMedal, achievement: TAchievement) => {
+  //     return `https://playground.sismo.io/gamejutsu-${medal}-${achievement}`;
+  //   };
+    // const getBeltFromMedal = (medal: TMedal): TBelt | undefined => {
+    //   if (medal == 'bronze') return 'white';
+    //   if (medal == 'silver') return 'green';
+    //   if (medal == 'gold') return 'black';
+    // };
+  //   const generateFilename = (medal: TMedal, achievement: TAchievement) => {
+  //     return `/badges/gamejutsu_${achievement}_${getBeltFromMedal(medal)}.svg`;
+  //   };
+  //
+  //   return (
+  //     <Link key={`${achievement}-${medal}`} target='_blank' href={generateLink(medal, achievement)}>
+  //       <a>
+  //         <div
+  //           className={cn(styles.badge, isBadgeAvailable(data, medal, achievement) ? styles.available : null, isJustObtainedBadge(data, medal, achievement) ? styles.obtained : null)}>
+  //           <img src={generateFilename(medal, achievement)}></img>
+  //         </div>
+  //       </a>
+  //     </Link>
+  //   );
+  // };
+  // const makeBadges = () => {
+  //   let badges = [];
+  //   for (let achievement of ['winner', 'loser', 'draw', 'cheater'] as TAchievement[]) {
+  //     for (let medal of ['bronze', 'silver', 'gold'] as TMedal[]) {
+  //       badges.push(makeBadge(medal, achievement));
+  //     }
+  //   }
+  //   return <div className={styles.row}>{badges}</div>;
+  // };
   // TODO: add CONTEXT #190 @habdevs
   // if (finishGameCheckResult !== null) {
   //   const newFinishResult = {
@@ -222,19 +222,19 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   //   console.log('Обновление finishResult в GameField:', newFinishResult, finishResult);
   // }
   // TODO: intermediate handler so that setState is not accessed directly @habdevs #190
-  const handleFinishGameCheckResult = () => {
-    if (finishGameCheckResult !== null) {
-      const newFinishResult = {
-        winner: finishGameCheckResult.winner,
-        isDraw: finishGameCheckResult.isDraw,
-        cheatWin: finishGameCheckResult.cheatWin
-      };
-      console.log('Попытка записи данных в контекст:', newFinishResult);
-      setFinishResult(newFinishResult);
-      console.log('Обновление finishResult в GameField:', newFinishResult);
-    }
-  };
-  handleFinishGameCheckResult();
+  // const handleFinishGameCheckResult = () => {
+  //   if (finishGameCheckResult !== null) {
+  //     const newFinishResult = {
+  //       winner: finishGameCheckResult.winner,
+  //       isDraw: finishGameCheckResult.isDraw,
+  //       cheatWin: finishGameCheckResult.cheatWin
+  //     };
+  //     console.log('Попытка записи данных в контекст:', newFinishResult);
+  //     setFinishResult(newFinishResult);
+  //     console.log('Обновление finishResult в GameField:', newFinishResult);
+  //   }
+  // };
+  // handleFinishGameCheckResult();
 
   return (
     <div className={styles.container}>
@@ -365,7 +365,8 @@ export const GameField: React.FC<GameFieldPropsI> = ({
             <div className={styles.link}>
               <div className={styles.badges}>
                 <div className={styles.text}>Issue your ZK Badge</div>
-                {makeBadges()}
+                //TODO: clear badges #190 @habdevs
+                {/*{makeBadges()}*/}
               </div>
             </div>
           )}
