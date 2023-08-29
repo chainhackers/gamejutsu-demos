@@ -151,7 +151,8 @@ const en = {
       },
     },
     leftpanel: {
-      gameId: 'Game ID',
+      protocolLogs: 'Protocol logs',
+      gameId: 'Game id',
     },
     games: {
       checkers: {

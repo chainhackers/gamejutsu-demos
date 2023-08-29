@@ -20,10 +20,15 @@
   }
 
   .gameid {
-    font-size: 1.6rem;
+    font-size: 1.7rem;
     flex: 0 0 25px;
+    color: #9C9EAB;
+    font-family: Inter;
+    font-size: 15px;
   }
-
+  .protocolLogs{
+    color: #5f5afa;
+  }
   .buttons {
     flex: 0 0 12rem;    
     display: flex;

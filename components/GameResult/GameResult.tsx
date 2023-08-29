@@ -22,14 +22,14 @@ export const GameResult = () => {
 
   console.log('Данные из finishResult: ', finishResult);
   console.log('Данные из setFinishResult: ', setFinishResult)
-  let winner, isDraw, cheatWin = true
-  // if (finishResult !== null) {
-  //     winner = finishResult.winner;
-  //     isDraw = finishResult.isDraw;
-  //     cheatWin = finishResult.cheatWin;
-  //
-  //     console.log('Данные из контекста в GameResult: ', finishResult);
-  //     console.log('Данные из winner: ', winner)
+  let winner, isDraw, cheatWin = false
+  if (finishResult !== null) {
+    winner = finishResult.winner;
+    isDraw = finishResult.isDraw;
+    cheatWin = finishResult.cheatWin;
+  }
+      console.log('Данные из контекста в GameResult: ', finishResult);
+      console.log('Данные из winner: ', winner)
   // } else return <div>finishResult NULL</div>
 
 

@@ -85,6 +85,7 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
   const [messageHistory, setMessageHistory] = useState<{ [id: string]: any }[]>([])
   const {query} = useRouter();
   const account = useAccount();
+  const {finishResult, setFinishResult} = useGameStateContext();
   const playersTypesMap: { [id in TGameType]: { 0: JSX.Element, 1: JSX.Element } } = {
     'tic-tac-toe': {
       0: <TicTacToePlayerType playerIngameId={0}/>,
@@ -145,7 +146,7 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
   };
 
   const runFinishGameHandler = async () => {
-    const {finishResult, setFinishResult} = useGameStateContext();
+
     if (!nextGameState) {
       throw 'no nextGameState';
     }

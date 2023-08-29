@@ -13,6 +13,7 @@ export const LeftPanel: React.FC<LeftPanelPropsI> = ({
   return (
     <div className={styles.container}>
       <div className={styles.gameid}>
+        <strong className={styles.protocolLogs}>{t('leftpanel.protocolLogs')} </strong>
         <strong>{t('leftpanel.gameId')}:</strong>
         &nbsp;{gameId && !Number.isNaN(gameId) ? gameId : 'n/a'}
       </div>
