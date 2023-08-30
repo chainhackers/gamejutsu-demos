@@ -1,48 +1,41 @@
-import {useTranslation} from 'react-i18next';
-import {GameFieldPropsI} from './GameFieldProps';
-import {useQuery} from '@apollo/client';
-import {badgesQuery} from 'queries';
+import { useTranslation } from 'react-i18next';
+import { GameFieldPropsI } from './GameFieldProps';
+import { useQuery } from '@apollo/client';
+import { badgesQuery } from 'queries';
 import styles from './GameField.module.scss';
-import {Button} from 'components/shared';
-import {useAccount} from 'wagmi';
-import {useContext, useEffect, useState} from 'react';
-import Link from 'next/link';
+import { Button } from 'components/shared';
+import { useAccount } from 'wagmi';
+import {  useEffect, useState } from 'react';
 import cn from 'classnames';
-import {FinishedGameState} from 'gameApi';
-import {GameStateContext, IGameStateContext, useGameStateContext} from "../../contexts/GameStateContext";
-import {GameResult} from "../GameResult";
+import { FinishedGameState } from 'gameApi';
+import { useGameStateContext } from '../../contexts/GameStateContext';
 
 export const GameField: React.FC<GameFieldPropsI> = ({
-                                                       children,
-                                                       rivalPlayerAddress,
-                                                       isConnected,
-                                                       disputeMode,
-                                                       finishedGameState,
-                                                       onConnect,
-                                                       players,
-                                                       finishGameCheckResult,
-                                                       onClaimWin,
-                                                       version,
-                                                       isInvalidMove,
-                                                       onRunDisput,
-                                                     }) => {
+  children,
+  rivalPlayerAddress,
+  isConnected,
+  disputeMode,
+  finishedGameState,
+  onConnect,
+  players,
+  finishGameCheckResult,
+  onClaimWin,
+  version,
+  isInvalidMove,
+  onRunDisput,
+}) => {
   const [isShowShade, setShowShade] = useState<boolean>(true);
   const [isShowExplainMove, SetShowExplainMove] = useState<boolean>(false);
   const [isWaiting, setIsWaiting] = useState<boolean>(true);
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [isShowReport, setShowReport] = useState<boolean>(false);
   const [isShowDispute, setShowDispute] = useState<boolean>(false);
-  const {setFinishResult} = useGameStateContext();
-
-  // type TMedal = 'bronze' | 'silver' | 'gold';
-  // type TBelt = 'white' | 'green' | 'black';
-  // type TAchievement = 'winner' | 'loser' | 'draw' | 'cheater';
-
-  const {t} = useTranslation();
+  const { setFinishResult } = useGameStateContext();
+  const { t } = useTranslation();
   const account = useAccount();
 
-  const {data, error, loading} = useQuery(badgesQuery, {
-    variables: {id: account.address?.toLowerCase()},
+  const { data, error, loading } = useQuery(badgesQuery, {
+    variables: { id: account.address?.toLowerCase() },
   });
 
   console.log('dispute mode', disputeMode, account.address);
@@ -94,14 +87,12 @@ export const GameField: React.FC<GameFieldPropsI> = ({
     if (!!rivalPlayerAddress) {
       setIsWaiting(false);
       setIsConnecting(true);
-      // return;
     }
     if (isConnected) {
       console.log('isConnected gameField', isConnected);
       setIsConnecting(false);
       setIsWaiting(false);
       setShowShade(false);
-      // return;
     }
   }, [rivalPlayerAddress, isConnected]);
 
@@ -131,111 +122,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
       setShowDispute(false);
     }
   });
-
-  // const isBadgeAvailable = (data: any, medal: TMedal, achievement: TAchievement): boolean => {
-  //   let entity = data && data.inRowCounterEntities[0];
-  //   if (!entity) {
-  //     return false;
-  //   }
-  //   let maxValue = entity[`${achievement}MaxValue`];
-  //   if (medal == 'bronze') return maxValue >= 1;
-  //   if (medal == 'silver') return maxValue >= 5;
-  //   if (medal == 'gold') return maxValue >= 10;
-  //   return false;
-  // };
-
-  // function countToMedal(count: number, maxValue: number): TMedal | undefined {
-  //   //TODO need guarantee that graph is old. The same for other badges
-  //   if (count == 9 && maxValue == 9) return 'gold';
-  //   if (count == 4 && maxValue == 4) return 'silver';
-  //   if (count == 0 && maxValue == 0) return 'bronze';
-  // }
-
-  // const isJustObtainedBadge = (data: any, medal: TMedal, achievement: TAchievement): boolean => {
-  //   let entity = data && data.inRowCounterEntities[0];
-  //   if (!entity || !finishedGameState) {
-  //     return false;
-  //   }
-  //   let maxValue = entity[`${achievement}MaxValue`];
-  //   let count = entity[`${achievement}Count`];
-  //   if (countToMedal(count, maxValue) !== medal) {
-  //     return false;
-  //   }
-  //   if (achievement == 'draw') {
-  //     return finishedGameState.isDraw;
-  //   }
-  //   if (isCurrentPlayerAddress(finishedGameState.winner)) {
-  //     return achievement == 'winner';
-  //   }
-  //   if (isCurrentPlayerAddress(finishedGameState.loser)) {
-  //     return achievement == 'loser';
-  //   }
-  //   if (isCurrentPlayerAddress(finishedGameState.disqualified)) {
-  //     return achievement == 'cheater';
-  //   }
-  //   return false;
-  // };
-
-  // const makeBadge = (medal: TMedal, achievement: TAchievement) => {
-  //   const generateLink = (medal: TMedal, achievement: TAchievement) => {
-  //     return `https://playground.sismo.io/gamejutsu-${medal}-${achievement}`;
-  //   };
-    // const getBeltFromMedal = (medal: TMedal): TBelt | undefined => {
-    //   if (medal == 'bronze') return 'white';
-    //   if (medal == 'silver') return 'green';
-    //   if (medal == 'gold') return 'black';
-    // };
-  //   const generateFilename = (medal: TMedal, achievement: TAchievement) => {
-  //     return `/badges/gamejutsu_${achievement}_${getBeltFromMedal(medal)}.svg`;
-  //   };
-  //
-  //   return (
-  //     <Link key={`${achievement}-${medal}`} target='_blank' href={generateLink(medal, achievement)}>
-  //       <a>
-  //         <div
-  //           className={cn(styles.badge, isBadgeAvailable(data, medal, achievement) ? styles.available : null, isJustObtainedBadge(data, medal, achievement) ? styles.obtained : null)}>
-  //           <img src={generateFilename(medal, achievement)}></img>
-  //         </div>
-  //       </a>
-  //     </Link>
-  //   );
-  // };
-  // const makeBadges = () => {
-  //   let badges = [];
-  //   for (let achievement of ['winner', 'loser', 'draw', 'cheater'] as TAchievement[]) {
-  //     for (let medal of ['bronze', 'silver', 'gold'] as TMedal[]) {
-  //       badges.push(makeBadge(medal, achievement));
-  //     }
-  //   }
-  //   return <div className={styles.row}>{badges}</div>;
-  // };
-  // TODO: add CONTEXT #190 @habdevs
-  // if (finishGameCheckResult !== null) {
-  //   const newFinishResult = {
-  //     winner: finishGameCheckResult.winner,
-  //     isDraw: finishGameCheckResult.isDraw,
-  //     cheatWin: finishGameCheckResult.cheatWin
-  //   };
-  //   const { finishResult, setFinishResult } = useGameStateContext();
-  //   console.log('Попытка записи данных в контекст:', newFinishResult, finishResult);
-  //   setFinishResult(newFinishResult);
-  //   console.log('Обновление finishResult в GameField:', newFinishResult, finishResult);
-  // }
-  // TODO: intermediate handler so that setState is not accessed directly @habdevs #190
-  // const handleFinishGameCheckResult = () => {
-  //   if (finishGameCheckResult !== null) {
-  //     const newFinishResult = {
-  //       winner: finishGameCheckResult.winner,
-  //       isDraw: finishGameCheckResult.isDraw,
-  //       cheatWin: finishGameCheckResult.cheatWin
-  //     };
-  //     console.log('Попытка записи данных в контекст:', newFinishResult);
-  //     setFinishResult(newFinishResult);
-  //     console.log('Обновление finishResult в GameField:', newFinishResult);
-  //   }
-  // };
-  // handleFinishGameCheckResult();
-
+  
   return (
     <div className={styles.container}>
       {version && <div className={styles.version}>{`Ver.${version}`}</div>}
@@ -310,15 +197,14 @@ export const GameField: React.FC<GameFieldPropsI> = ({
             <div className={styles.report}>
               <div className={styles.whatToReport}>{t('shade.whatToReport')}</div>
               <div className={styles.buttons}>
-                <Button title={t('shade.cheating')} color='black' borderless/>
-                <Button title={t('shade.inactive')}/>
+                <Button title={t('shade.cheating')} color='black' borderless />
+                <Button title={t('shade.inactive')} />
               </div>
             </div>
           )}
           {isShowDispute && (
             <div className={styles.appeal}>
-              <div
-                className={styles.madeAppeal}>{disputeMode.disputeRunner === account.address ? `${t('shade.madeAppeal.runner')}` : `Opponent ${t('shade.madeAppeal.cheater')}`}</div>
+              <div className={styles.madeAppeal}>{disputeMode.disputeRunner === account.address ? `${t('shade.madeAppeal.runner')}` : `Opponent ${t('shade.madeAppeal.cheater')}`}</div>
               <div className={styles.notice}>{t('shade.notice')}</div>
             </div>
           )}
@@ -327,7 +213,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
               {finishGameCheckResult && finishGameCheckResult.winner && !isInvalidMove && !finishGameCheckResult.isDraw && (
                 <>
                   <p className={styles.message}>{t('shade.checking.winner')}</p>
-                  <Button title={t('shade.checking.checkingWinner')} onClick={onClaimWin}/>
+                  <Button title={t('shade.checking.checkingWinner')} onClick={onClaimWin} />
                 </>
               )}
               {finishGameCheckResult && !finishGameCheckResult.winner && !isInvalidMove && !finishGameCheckResult.isDraw && (
@@ -338,19 +224,19 @@ export const GameField: React.FC<GameFieldPropsI> = ({
               {finishGameCheckResult && finishGameCheckResult.isDraw && !finishGameCheckResult.winner && (
                 <>
                   <p className={styles.message}>{t('shade.checking.draw')}</p>
-                  <Button title={t('shade.checking.checkingDraw')} onClick={onClaimWin}/>
+                  <Button title={t('shade.checking.checkingDraw')} onClick={onClaimWin} />
                 </>
               )}
               {finishGameCheckResult && finishGameCheckResult.winner && isInvalidMove && (
                 <>
                   <p className={styles.message}>{t('shade.checking.cheatGame')}</p>
-                  <Button title={t('shade.checking.checkingCheat')} onClick={onRunDisput}/>
+                  <Button title={t('shade.checking.checkingCheat')} onClick={onRunDisput} />
                 </>
               )}
               {finishGameCheckResult && !finishGameCheckResult.winner && isInvalidMove && (
                 <>
                   <p className={styles.message}>{t('shade.checking.cheatGame')}</p>
-                  <Button title={t('shade.checking.checkingCheat')} onClick={onRunDisput}/>
+                  <Button title={t('shade.checking.checkingCheat')} onClick={onRunDisput} />
                 </>
               )}
             </div>
@@ -365,8 +251,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
             <div className={styles.link}>
               <div className={styles.badges}>
                 <div className={styles.text}>Issue your ZK Badge</div>
-                //TODO: clear badges #190 @habdevs
-                {/*{makeBadges()}*/}
+                // TODO: тут были бейджи @habdevs #190
               </div>
             </div>
           )}
@@ -374,8 +259,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
       )}
       {!isShowShade && (
         <div className={styles.header}>
-          <div className={styles.message}>{players && (players[0]?.moves || players[1]?.moves) && <div
-              className={styles.moveMessage}>{players[0].moves ? 'Your move' : "Opponent's move"}</div>}</div>
+          <div className={styles.message}>{players && (players[0]?.moves || players[1]?.moves) && <div className={styles.moveMessage}>{players[0].moves ? 'Your move' : "Opponent's move"}</div>}</div>
           <div className={styles.prize}></div>
         </div>
       )}
