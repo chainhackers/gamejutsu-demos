@@ -344,16 +344,12 @@ export const resign = async (
   return FinishedGameState.fromGameFinishedArgs(gameFinishedEvent.args)
     .addPlayerResigned(PlayerResignedEvent);
 };
-// TODO: ADD COUNTER @habdevs #190
-// let counterGetPlayers = 0;
+
 export const getPlayers = async (contract: ethers.Contract, gameId: BigNumber) => {
-  // counterGetPlayers += 1;
-  // console.log('COUNTER GET PLAYERS', counterGetPlayers)
   const _getPlayers = async () => {
     try {
       console.log('GameAPI getPlayers: ', contract, gameId);
       const response = await contract.getPlayers(gameId);
-      // TODO: add counter @habdevs #190
       return response;
     } catch (error) {
       console.error('GameAPI getPlayers error: ', error);

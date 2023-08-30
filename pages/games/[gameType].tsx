@@ -1,24 +1,14 @@
-import {createContext, ReactNode, useEffect, useState} from 'react';
-import {GetStaticPaths, GetStaticProps, NextPage} from 'next';
-import router, {useRouter} from 'next/router';
+import { createContext, ReactNode, useEffect, useState } from 'react';
+import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
+import router, { useRouter } from 'next/router';
 
-import {ParsedUrlQuery} from 'querystring';
-import {XMTPChatLog} from 'components/XMTPChatLog';
-import {
-  Disclaimer,
-  DisclaimerNotice,
-  GameField,
-  GetHistory,
-  JoinGame,
-  LeftPanel,
-  RightPanel,
-  SelectGame,
-  SelectPrize,
-} from 'components';
+import { ParsedUrlQuery } from 'querystring';
+import { XMTPChatLog } from 'components/XMTPChatLog';
+import { Disclaimer, DisclaimerNotice, GameField, GetHistory, JoinGame, LeftPanel, RightPanel, SelectGame, SelectPrize } from 'components';
 
 import styles from 'pages/games/gameType.module.scss';
-import {TicTacToe, PlayerType as TicTacToePlayerType} from "components/Games/Tic-Tac-Toe";
-import {TicTacToeState} from "components/Games/Tic-Tac-Toe/types";
+import { TicTacToe, PlayerType as TicTacToePlayerType } from 'components/Games/Tic-Tac-Toe';
+import { TicTacToeState } from 'components/Games/Tic-Tac-Toe/types';
 import gameApi, {
   isValidSignedMove,
   getArbiter,
@@ -32,25 +22,25 @@ import gameApi, {
   FinishedGameState,
   RunDisputeState,
   getArbiterRead,
-  isValidGameMove
-} from "../../gameApi";
-import {ISignedGameMove, SignedGameMove} from "../../types/arbiter";
-import {signMoveWithAddress} from 'helpers/session_signatures';
-import {useAccount} from 'wagmi';
-import {Checkers, PlayerType as CheckersPlayerType} from 'components/Games/Checkers';
-import {CheckersState} from 'components/Games/Checkers/types';
-import {IGameState, TPlayer} from 'components/Games/types';
-import {GameProposedEvent, GameProposedEventObject} from "../../.generated/contracts/esm/types/polygon/Arbiter";
-import {BigNumber} from 'ethers';
-import {useInterval} from 'hooks/useInterval';
-import useConversation, {IAnyMessage} from "../../hooks/useConversation";
-import {PlayerI, TGameType} from 'types/game';
-import {useTranslation} from 'react-i18next';
+  isValidGameMove,
+} from '../../gameApi';
+import { ISignedGameMove, SignedGameMove } from '../../types/arbiter';
+import { signMoveWithAddress } from 'helpers/session_signatures';
+import { useAccount } from 'wagmi';
+import { Checkers, PlayerType as CheckersPlayerType } from 'components/Games/Checkers';
+import { CheckersState } from 'components/Games/Checkers/types';
+import { IGameState, TPlayer } from 'components/Games/types';
+import { GameProposedEvent, GameProposedEventObject } from '../../.generated/contracts/esm/types/polygon/Arbiter';
+import { BigNumber } from 'ethers';
+import { useInterval } from 'hooks/useInterval';
+import useConversation, { IAnyMessage } from '../../hooks/useConversation';
+import { PlayerI, TGameType } from 'types/game';
+import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
-import {GameStateContext, GameStateContextProvider, useGameStateContext} from "../../contexts/GameStateContext";
+import { GameStateContext, GameStateContextProvider, useGameStateContext } from '../../contexts/GameStateContext';
 
 interface IGamePageProps {
-  gameType: TGameType,
+  gameType: TGameType;
   version?: string;
 }
 
@@ -63,13 +53,13 @@ const ACCEPTER_INGAME_ID = 1;
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 const FETCH_OPPONENT_ADDRESS_TIMEOUT = 2500;
 
-const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
+const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
   const [playerIngameId, setPlayerIngameId] = useState<0 | 1>(0);
   const [isInDispute, setIsInDispute] = useState<boolean>(false);
   const [disputeRunner, setDisputeRunner] = useState<string | null>(null);
   const [finishedGameState, setFinishedGameState] = useState<FinishedGameState | null>(null);
   const [isDisputAvailable, setIsDisputeAvailavle] = useState<boolean>(false);
-  const [opponentAddress, setOpponentAddress] = useState<string | null>(null,);
+  const [opponentAddress, setOpponentAddress] = useState<string | null>(null);
   const [isInvalidMove, setIsInvalidMove] = useState<boolean>(false);
   const [players, setPlayers] = useState<PlayerI[]>([]);
   const [isTimeoutInited, setIsTimeoutInited] = useState<boolean>(false);
@@ -77,63 +67,52 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
   const [isFinishTimeoutAllowed, setIsFinishTimeoutAllowed] = useState<boolean>(false);
   const [isTimeoutRequested, setIsTimeoutRequested] = useState<boolean>(false);
   const [finishGameCheckResult, setFinishGameCheckResult] = useState<null | {
-    winner: boolean,
-    isDraw: boolean,
-    cheatWin: boolean
+    winner: boolean;
+    isDraw: boolean;
+    cheatWin: boolean;
   }>(null);
   const [nextGameState, setNextGameState] = useState<IGameState<any, any> | null>(null);
-  const [messageHistory, setMessageHistory] = useState<{ [id: string]: any }[]>([])
-  const {query} = useRouter();
+  const [messageHistory, setMessageHistory] = useState<{ [id: string]: any }[]>([]);
+  const { query } = useRouter();
   const account = useAccount();
-  const {finishResult, setFinishResult} = useGameStateContext();
-  const playersTypesMap: { [id in TGameType]: { 0: JSX.Element, 1: JSX.Element } } = {
+  const { finishResult, setFinishResult } = useGameStateContext();
+  const playersTypesMap: { [id in TGameType]: { 0: JSX.Element; 1: JSX.Element } } = {
     'tic-tac-toe': {
-      0: <TicTacToePlayerType playerIngameId={0}/>,
-      1: <TicTacToePlayerType playerIngameId={1}/>,
-    }, 'checkers': {
-      0: <CheckersPlayerType playerIngameId={0}/>,
-      1: <CheckersPlayerType playerIngameId={1}/>,
-    }
-  }
+      0: <TicTacToePlayerType playerIngameId={0} />,
+      1: <TicTacToePlayerType playerIngameId={1} />,
+    },
+    checkers: {
+      0: <CheckersPlayerType playerIngameId={0} />,
+      1: <CheckersPlayerType playerIngameId={1} />,
+    },
+  };
 
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const gameId = parseInt(query.game as string);
 
   const getInitialState = () => {
-    const playerType: TPlayer = playerIngameId === 0 ? 'X' : 'O'
+    const playerType: TPlayer = playerIngameId === 0 ? 'X' : 'O';
     if (gameType == 'tic-tac-toe') {
-      return new TicTacToeState({gameId, playerType})
+      return new TicTacToeState({ gameId, playerType });
     }
-    return new CheckersState({gameId, playerType})
-  }
+    return new CheckersState({ gameId, playerType });
+  };
 
   const [gameState, setGameState] = useState<IGameState<any, any>>(getInitialState());
 
-  const {
-    loading,
-    collectedMessages,
-    sendMessage,
-    lastMessages,
-    initClient,
-    client,
-    disconnect
-  } = useConversation(
-    opponentAddress!,
-    gameId,
-    true
-  )
+  const { loading, collectedMessages, sendMessage, lastMessages, initClient, client, disconnect } = useConversation(opponentAddress!, gameId, true);
 
   const setConversationHandler = async (opponentAddress: string) => {
-    console.log("setConversationHandler", opponentAddress);
+    console.log('setConversationHandler', opponentAddress);
     if (!gameId) {
-      throw "No gameId"
+      throw 'No gameId';
     }
     if (!opponentAddress) {
       console.error('cant connect: no opponent address');
       return;
     }
     setOpponentAddress(opponentAddress);
-    initClient(await getSigner())
+    initClient(await getSigner());
   };
 
   const sendSignedMoveHandler = async (signedMove: ISignedGameMove) => {
@@ -141,12 +120,11 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
       gameId: gameId,
       message: signedMove,
       messageType: 'ISignedGameMove',
-      gameType
-    })
+      gameType,
+    });
   };
 
   const runFinishGameHandler = async () => {
-
     if (!nextGameState) {
       throw 'no nextGameState';
     }
@@ -154,55 +132,49 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
       throw 'no lastOpponentMove';
     }
     if (!nextGameState.lastMove) {
-      throw 'no lastMove'
+      throw 'no lastMove';
     }
 
     const address = await (await getSigner()).getAddress();
     const signature = await signMoveWithAddress(nextGameState.lastOpponentMove.gameMove, address);
     const signatures = [...nextGameState.lastOpponentMove.signatures, signature];
-    const lastOpponentMoveSignedByAll = new SignedGameMove(
-      nextGameState.lastOpponentMove.gameMove,
-      signatures,
-    );
+    const lastOpponentMoveSignedByAll = new SignedGameMove(nextGameState.lastOpponentMove.gameMove, signatures);
 
     try {
-      const moves: [ISignedGameMove, ISignedGameMove] = playerIngameId === 0 ?
-        [lastOpponentMoveSignedByAll, nextGameState.lastMove] :
-        [nextGameState.lastMove, lastOpponentMoveSignedByAll];
-      const finishedGameResult = await finishGame(await getArbiter(), moves)
+      const moves: [ISignedGameMove, ISignedGameMove] = playerIngameId === 0 ? [lastOpponentMoveSignedByAll, nextGameState.lastMove] : [nextGameState.lastMove, lastOpponentMoveSignedByAll];
+      const finishedGameResult = await finishGame(await getArbiter(), moves);
 
       await sendMessage({
         gameId: gameId,
         message: finishedGameResult,
         messageType: 'FinishedGameState',
-        gameType
+        gameType,
       });
       // TODO: check update context @habdevs #190 add router.push
       router.push('/game-result');
-      // TODO: check update context @habdevs #190 add write to context data
       console.log('Записываем данные в контекст');
       const newFinishResult = {
         winner: finishGameCheckResult?.winner || false,
         isDraw: finishGameCheckResult?.isDraw || false,
-        cheatWin: finishGameCheckResult?.cheatWin || false
+        cheatWin: finishGameCheckResult?.cheatWin || false,
       };
       console.log('Попытка записи данных в контекст:', newFinishResult);
       setFinishResult(newFinishResult);
       // setFinishGameCheckResult(null);
       setFinishedGameState(finishedGameResult);
       console.log('Завершение выполнения runFinishGameHandler', finishedGameResult);
-      console.log('finish gametype запись 1', newFinishResult)
+      console.log('finish gametype запись 1', newFinishResult);
     } catch (error: any) {
       if (error.reason.includes('invalid game move')) {
-        setFinishGameCheckResult({winner: false, isDraw: false, cheatWin: true})
+        setFinishGameCheckResult({ winner: false, isDraw: false, cheatWin: true });
         router.push('/game-result');
         const newFinishResult = {
           winner: false,
           isDraw: false,
-          cheatWin: true
+          cheatWin: true,
         };
         setFinishResult(newFinishResult);
-        console.log('finish gametype запись 2', newFinishResult)
+        console.log('finish gametype запись 2', newFinishResult);
       }
       if (error.reason.includes('moves are not in sequence')) {
         console.log('moves are not in sequence');
@@ -210,10 +182,10 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
         const newFinishResult = {
           winner: false,
           isDraw: false,
-          cheatWin: true
+          cheatWin: true,
         };
         setFinishResult(newFinishResult);
-        console.log('finish gametype запись 3', newFinishResult)
+        console.log('finish gametype запись 3', newFinishResult);
       }
     }
   };
@@ -223,7 +195,7 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
       throw 'no lastOpponentMove';
     }
     if (!gameState.lastMove) {
-      throw 'no lastMove'
+      throw 'no lastMove';
     }
     setIsTimeoutInited(true);
     setIsFinishTimeoutAllowed(true);
@@ -232,23 +204,17 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
       const address = await (await getSigner()).getAddress();
       const signature = await signMoveWithAddress(gameState.lastOpponentMove.gameMove, address);
       const signatures = [...gameState.lastOpponentMove.signatures, signature];
-      const lastOpponentMoveSignedByAll = new SignedGameMove(
-        gameState.lastOpponentMove.gameMove,
-        signatures,
-      );
+      const lastOpponentMoveSignedByAll = new SignedGameMove(gameState.lastOpponentMove.gameMove, signatures);
       console.log('lastOpponentMoveSignedByAll', lastOpponentMoveSignedByAll);
 
-      const initTimeoutResult = await initTimeout(await getArbiter(), [
-        lastOpponentMoveSignedByAll,
-        gameState.lastMove,
-      ]);
+      const initTimeoutResult = await initTimeout(await getArbiter(), [lastOpponentMoveSignedByAll, gameState.lastMove]);
 
       await sendMessage({
         gameId: gameId,
         message: initTimeoutResult,
         messageType: 'TimeoutStartedEvent',
-        gameType
-      })
+        gameType,
+      });
     } catch (error) {
       setIsTimeoutInited(false);
       setIsFinishTimeoutAllowed(false);
@@ -267,8 +233,8 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
       gameId: gameId,
       message: resolveTimeoutResult,
       messageType: 'TimeoutResolvedEvent',
-      gameType
-    })
+      gameType,
+    });
     setIsTimeoutInited(false);
     setIsResolveTimeOutAllowed(false);
     setIsFinishTimeoutAllowed(false);
@@ -276,23 +242,18 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
   };
 
   const createNewGameHandler = async (isPaid: boolean = false) => {
-
-    let proposeGameResult: GameProposedEventObject = await gameApi.proposeGame(
-      await getArbiter(),
-      (await getRulesContract(gameType)).address,
-      isPaid,
-    );
+    let proposeGameResult: GameProposedEventObject = await gameApi.proposeGame(await getArbiter(), (await getRulesContract(gameType)).address, isPaid);
 
     await sendMessage({
       gameId: proposeGameResult.gameId.toNumber(),
       message: proposeGameResult,
       messageType: 'GameProposedEvent',
-      gameType
-    })
+      gameType,
+    });
 
     setPlayerIngameId(PROPOSER_INGAME_ID);
     return proposeGameResult.gameId.toNumber();
-  }
+  };
 
   const acceptGameHandler = async (acceptedGameId: number, stake: string): Promise<void> => {
     if (!account) {
@@ -301,18 +262,14 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
     if (!acceptedGameId) {
       throw new Error(`No game id`);
     }
-    const acceptGameResult = await gameApi.acceptGame(
-      await getArbiter(),
-      BigNumber.from(acceptedGameId),
-      stake,
-    );
+    const acceptGameResult = await gameApi.acceptGame(await getArbiter(), BigNumber.from(acceptedGameId), stake);
 
     await sendMessage({
       gameId: acceptGameResult.gameId.toNumber(),
       message: acceptGameResult,
       messageType: 'GameStartedEvent',
-      gameType
-    })
+      gameType,
+    });
 
     let opponent = acceptGameResult.players[PROPOSER_INGAME_ID];
     setOpponentAddress(opponent);
@@ -326,8 +283,8 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
         gameId: gameId,
         message: finishedGameResult,
         messageType: 'FinishedGameState',
-        gameType
-      })
+        gameType,
+      });
 
       setFinishedGameState(finishedGameResult);
       setIsTimeoutInited(false);
@@ -343,14 +300,14 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
       throw 'no lastOpponentMove';
     }
     setIsInDispute(true);
-    setDisputeRunner(account.address!)
+    setDisputeRunner(account.address!);
 
     await sendMessage({
       gameId: gameId,
       messageType: 'RunDisputeState',
       gameType,
-      message: {gameId, disputeRunner: account.address!}
-    })
+      message: { gameId, disputeRunner: account.address! },
+    });
 
     const lastNonce = gameState.lastMove?.gameMove?.nonce ?? -Infinity;
     const lastOpponentNonce = gameState.lastOpponentMove.gameMove.nonce;
@@ -358,21 +315,21 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
     const lastMove = lastMoveOrLastOpponentMove ? gameState.lastMove : gameState.lastOpponentMove;
 
     const finishedGameResult = await disputeMove(await getArbiter(), lastMove!);
-    console.log('finishedGameResult dispute move', finishedGameResult)
+    console.log('finishedGameResult dispute move', finishedGameResult);
     await sendMessage({
       gameId: gameId,
       message: finishedGameResult,
       messageType: 'FinishedGameState',
-      gameType
-    })
+      gameType,
+    });
 
     setFinishedGameState(finishedGameResult);
     setIsInDispute(false);
-    setFinishGameCheckResult(null)
+    setFinishGameCheckResult(null);
   };
 
-
-  async function processOneMessage(i: number) {//TODO
+  async function processOneMessage(i: number) {
+    //TODO
     console.log(lastMessages);
 
     const lastMessage = lastMessages[i];
@@ -391,7 +348,6 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
     if (lastMessage.messageType === 'ISignedGameMove') {
       console.log('ISignedGameMove ISignedGameMove', lastMessage);
 
-
       const signedMove = lastMessage.message as ISignedGameMove;
       console.log(`[gameType] processOneMessage signedMove: nonce: ${signedMove.gameMove.nonce}`, signedMove);
       const isOpponentMove = signedMove.gameMove.player === opponentAddress;
@@ -408,21 +364,18 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
 
           const message = {
             contractAddress: contract.address,
-            arguments: [
-              {signedMove}
-            ],
-            validity: {isValidFront: frontIsValidMove, isValidMove, isValidSignedMove: isValid}
+            arguments: [{ signedMove }],
+            validity: { isValidFront: frontIsValidMove, isValidMove, isValidSignedMove: isValid },
           };
-          const polygonMessageGameMove = [signedMove.gameMove.gameId,
+          const polygonMessageGameMove = [
+            signedMove.gameMove.gameId,
             signedMove.gameMove.nonce,
             signedMove.gameMove.player,
             signedMove.gameMove.oldState,
             signedMove.gameMove.newState,
-            signedMove.gameMove.move];
-          const polygonMessageSignedMove = [
-            polygonMessageGameMove,
-            signedMove.signatures
+            signedMove.gameMove.move,
           ];
+          const polygonMessageSignedMove = [polygonMessageGameMove, signedMove.signatures];
           console.log('Requested move validation, contract message: ', JSON.stringify(polygonMessageSignedMove));
           console.log(`Requested move validation, nonce: ${signedMove.gameMove.nonce}\n`, JSON.stringify(message, null, ' '));
 
@@ -430,7 +383,7 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
           const storedSignatures = localStorage.getItem('signatures');
           const parsedStoredSignatures = !storedSignatures ? null : JSON.parse(storedSignatures);
           const signatureInfo = !parsedStoredSignatures ? null : parsedStoredSignatures[signedMove.signatures[0]];
-          console.log('Requested move validation, signature data:', !parsedStoredSignatures ? 'not available' : signatureInfo)
+          console.log('Requested move validation, signature data:', !parsedStoredSignatures ? 'not available' : signatureInfo);
           // END ******* DEBUG AND DEMO PURPOSE ONLY. TODO: DON'T DO THIS IN NON-DEMO APPS ******
 
           setMessageHistory((prev) => [
@@ -443,40 +396,33 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
               // END ******* DEBUG AND DEMO PURPOSE ONLY. TODO: DON'T DO THIS IN NON-DEMO APPS ******
               polygonMessageGameMove: JSON.stringify(polygonMessageGameMove),
               polygonMessageSignedMove: JSON.stringify(polygonMessageSignedMove),
-            }])
+            },
+          ]);
 
           if (isValidMove !== isValid) {
             throw new Error(`isValidGameMove: ${isValidMove} is not equal to isValidSignedMove: ${isValid}`);
           }
 
-          const previouseMove = i + 1 === lastMessages.length ? null : lastMessages[i + 1].message as ISignedGameMove;
-          const nextGameState = gameState.makeNewGameStateFromSignedMove(
-            signedMove,
-            isValid,
-            isOpponentMove,
-            previouseMove,
-          );
+          const previouseMove = i + 1 === lastMessages.length ? null : (lastMessages[i + 1].message as ISignedGameMove);
+          const nextGameState = gameState.makeNewGameStateFromSignedMove(signedMove, isValid, isOpponentMove, previouseMove);
 
           setGameState(nextGameState);
           setIsInvalidMove(!isValid);
           const winnerId = nextGameState.getWinnerId();
           if (winnerId !== null) {
-            setFinishGameCheckResult({winner: playerIngameId === winnerId, isDraw: false, cheatWin: isValid});
+            setFinishGameCheckResult({ winner: playerIngameId === winnerId, isDraw: false, cheatWin: isValid });
             setNextGameState(nextGameState);
-            // TODO: check for context overwriting? @habdevs  #190
-
           } else if (gameType === 'tic-tac-toe' && signedMove.gameMove.nonce === 8) {
-            setFinishGameCheckResult({winner: false, isDraw: true, cheatWin: isValid});
+            setFinishGameCheckResult({ winner: false, isDraw: true, cheatWin: isValid });
             setNextGameState(nextGameState);
           }
           return;
-
         } catch (error) {
           console.error('[gameType] processOneMessage messageType: ISignedGameMove error: ', count, error);
           if (count >= 10) return;
           setTimeout(setNewGameState, 3000);
         }
-      }
+      };
 
       try {
         setNewGameState();
@@ -485,12 +431,12 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
       }
     }
     if (lastMessage.messageType === 'RunDisputeState') {
-      const {disputeRunner} = lastMessage.message as RunDisputeState;
+      const { disputeRunner } = lastMessage.message as RunDisputeState;
       if (disputeRunner !== account.address) setDisputeRunner(disputeRunner);
       setIsInDispute(true);
     }
-    if (lastMessage.messageType === "FinishedGameState") {
-      console.log('last message proceess one message', lastMessage)
+    if (lastMessage.messageType === 'FinishedGameState') {
+      console.log('last message proceess one message', lastMessage);
       console.log('GOT MESSAGE');
       if (finishedGameState === null) {
         // TODO: check update context @habdevs #190
@@ -510,12 +456,11 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
       if (messages.length === 0) return;
       await processOneMessage(messages.length - 1);
       setTimeout(() => runLastMessages(messages.slice(0, messages.length - 1)), 500);
-    }
+    };
     runLastMessages(lastMessages);
   }, [lastMessages]);
 
   useEffect(() => {
-
     const isPlayerMoves = (gameType: TGameType, gameState: IGameState<any, any>, playerIngameId: 0 | 1) => {
       switch (gameType) {
         case 'checkers':
@@ -525,7 +470,7 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
         default:
           throw new Error(`unknown game type: ${gameType}`);
       }
-    }
+    };
 
     setPlayers([
       {
@@ -561,10 +506,7 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
       return;
     }
     console.log('polling for opponent address, gameId=', gameId);
-    let players: [string, string] = await gameApi.getPlayers(
-      await getArbiterRead(),
-      BigNumber.from(gameId),
-    );
+    let players: [string, string] = await gameApi.getPlayers(await getArbiterRead(), BigNumber.from(gameId));
     const address = account.address;
     if (!address || !players) {
       return;
@@ -582,41 +524,39 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
   }, FETCH_OPPONENT_ADDRESS_TIMEOUT);
 
   if (!!gameType && !!query && query?.join === 'true') {
-    return <JoinGame acceptGameHandler={acceptGameHandler}/>;
+    return <JoinGame acceptGameHandler={acceptGameHandler} />;
   }
   if (!!gameType && !!query && query?.select === 'true') {
-    return (
-      <SelectGame
-        userName={account.address}
-        gameType={gameType}
-      />
-    );
+    return <SelectGame userName={account.address} gameType={gameType} />;
   }
 
   if (!!gameType && !!query && query?.prize === 'true') {
-    return <SelectPrize gameId={gameId?.toString()} createNewGameHandler={createNewGameHandler}/>;
+    return <SelectPrize gameId={gameId?.toString()} createNewGameHandler={createNewGameHandler} />;
   }
 
   let gameComponent = null;
   if (gameType === 'tic-tac-toe') {
-    gameComponent = <TicTacToe
-      gameState={gameState as TicTacToeState}
-      getSignerAddress={async () => {
-        return (await getSigner()).getAddress()
-      }}
-      sendSignedMove={sendSignedMoveHandler}
-    />
+    gameComponent = (
+      <TicTacToe
+        gameState={gameState as TicTacToeState}
+        getSignerAddress={async () => {
+          return (await getSigner()).getAddress();
+        }}
+        sendSignedMove={sendSignedMoveHandler}
+      />
+    );
   }
   if (gameType === 'checkers') {
-    gameComponent =
+    gameComponent = (
       <Checkers
         gameState={gameState as CheckersState}
         getSignerAddress={async () => {
-          return (await getSigner()).getAddress()
+          return (await getSigner()).getAddress();
         }}
         sendSignedMove={sendSignedMoveHandler}
         playerIngameId={playerIngameId}
       />
+    );
   }
   if (gameComponent && gameId) {
     if (gameType === 'checkers' || gameType === 'tic-tac-toe') {
@@ -636,17 +576,22 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
             isDisputAvailable={isDisputAvailable}
             gameId={gameId}
           />
-          {gameType === 'checkers' && <Link href="#disclaimer">
-              <div className={styles.disclaimerLink}><DisclaimerNotice><strong>{t('games.checkers.disclaimer.notice')}
-              </strong></DisclaimerNotice></div>
-          </Link>}
+          {gameType === 'checkers' && (
+            <Link href='#disclaimer'>
+              <div className={styles.disclaimerLink}>
+                <DisclaimerNotice>
+                  <strong>{t('games.checkers.disclaimer.notice')}</strong>
+                </DisclaimerNotice>
+              </div>
+            </Link>
+          )}
           {/*<GameStateContextProvider>*/}
           <GameField
             gameId={gameId?.toString()}
             rivalPlayerAddress={opponentAddress}
             isConnected={!!client}
             isInDispute={isInDispute}
-            disputeMode={{isInDispute, disputeRunner}}
+            disputeMode={{ isInDispute, disputeRunner }}
             finishedGameState={finishedGameState}
             onConnect={setConversationHandler}
             players={players}
@@ -654,39 +599,32 @@ const Game: NextPage<IGamePageProps> = ({gameType, version}) => {
             version={version}
             onClaimWin={runFinishGameHandler}
             onRunDisput={runDisputeHandler}
-            isInvalidMove={isInvalidMove}
-          >
+            isInvalidMove={isInvalidMove}>
             {gameComponent}
           </GameField>
           {/*</GameStateContextProvider>*/}
           <RightPanel>
-            <div style={{position: 'absolute', right: '0'}}>
-              <GetHistory history={lastMessages} messageHistory={messageHistory} gameId={gameId}/>
+            <div style={{ position: 'absolute', right: '0' }}>
+              <GetHistory history={lastMessages} messageHistory={messageHistory} gameId={gameId} />
             </div>
-            <XMTPChatLog anyMessages={collectedMessages} isLoading={loading}/>
+            <XMTPChatLog anyMessages={collectedMessages} isLoading={loading} />
           </RightPanel>
-          {gameType === 'checkers' && <Disclaimer>{t('games.checkers.disclaimer.s1')} <strong>
-              <Link href='https://www.officialgamerules.org/checkers'
-                    target={'_blank'}>{t('games.checkers.disclaimer.l1')}</Link>
-          </strong> {t('games.checkers.disclaimer.s2')}</Disclaimer>}
+          {gameType === 'checkers' && (
+            <Disclaimer>
+              {t('games.checkers.disclaimer.s1')}{' '}
+              <strong>
+                <Link href='https://www.officialgamerules.org/checkers' target={'_blank'}>
+                  {t('games.checkers.disclaimer.l1')}
+                </Link>
+              </strong>{' '}
+              {t('games.checkers.disclaimer.s2')}
+            </Disclaimer>
+          )}
         </div>
       );
     }
   }
-  // TODO: Clear @habdevs #190 add context
-  // const {setFinishResult} = useGameStateContext();
-  // if (finishGameCheckResult !== null) {
-  //   const newFinishResult = {
-  //     winner: finishGameCheckResult.winner,
-  //     isDraw: finishGameCheckResult.isDraw,
-  //     cheatWin: finishGameCheckResult.cheatWin
-  //   };
-  //
-  //   setFinishResult(newFinishResult);
-  //   console.log('GAME попытка записи в finishGameCheckResult')
-  // }
   return <div>Loading...</div>;
-
 };
 
 export const getStaticProps: GetStaticProps<IGamePageProps, IParams> = (context) => {
@@ -700,7 +638,7 @@ export const getStaticProps: GetStaticProps<IGamePageProps, IParams> = (context)
 
 export const getStaticPaths: GetStaticPaths<IParams> = () => {
   const gamesType = ['tic-tac-toe', 'checkers', 'other'];
-  const paths = gamesType.map((gameType) => ({params: {gameType}}));
+  const paths = gamesType.map((gameType) => ({ params: { gameType } }));
   return {
     paths,
     fallback: false,
@@ -708,5 +646,3 @@ export const getStaticPaths: GetStaticPaths<IParams> = () => {
 };
 
 export default Game;
-
-
