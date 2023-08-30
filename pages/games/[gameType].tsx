@@ -563,19 +563,6 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
       return (
         <div className={styles.container}>
           <div className={styles.version}>{`Ver.${version}`}</div>
-          <LeftPanel
-            players={players}
-            isTimeoutAllowed={!isTimeoutInited}
-            initTimeout={initTimeoutHandler}
-            isResolveTimeoutAllowed={isResolveTimeOutAllowed}
-            resolveTimeout={resolveTimeoutHandler}
-            isFinishTimeOutAllowed={isFinishTimeoutAllowed}
-            finishTimeout={finishTimeoutHandler}
-            isTimeoutRequested={isTimeoutRequested}
-            onRunDisput={runDisputeHandler}
-            isDisputAvailable={isDisputAvailable}
-            gameId={gameId}
-          />
           {gameType === 'checkers' && (
             <Link href='#disclaimer'>
               <div className={styles.disclaimerLink}>
@@ -585,7 +572,6 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
               </div>
             </Link>
           )}
-          {/*<GameStateContextProvider>*/}
           <GameField
             gameId={gameId?.toString()}
             rivalPlayerAddress={opponentAddress}
@@ -602,7 +588,19 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
             isInvalidMove={isInvalidMove}>
             {gameComponent}
           </GameField>
-          {/*</GameStateContextProvider>*/}
+          <LeftPanel
+            players={players}
+            isTimeoutAllowed={!isTimeoutInited}
+            initTimeout={initTimeoutHandler}
+            isResolveTimeoutAllowed={isResolveTimeOutAllowed}
+            resolveTimeout={resolveTimeoutHandler}
+            isFinishTimeOutAllowed={isFinishTimeoutAllowed}
+            finishTimeout={finishTimeoutHandler}
+            isTimeoutRequested={isTimeoutRequested}
+            onRunDisput={runDisputeHandler}
+            isDisputAvailable={isDisputAvailable}
+            gameId={gameId}
+          />
           <RightPanel>
             <div style={{ position: 'absolute', right: '0' }}>
               <GetHistory history={lastMessages} messageHistory={messageHistory} gameId={gameId} />
