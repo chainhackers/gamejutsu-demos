@@ -15,6 +15,8 @@ import {OIcon, XIcon} from 'components/shared/ui/XOIcons';
 import {useEffect, useState} from 'react';
 import {FinishedGameState} from 'gameApi';
 import {IGameStateContext, useGameStateContext} from "../../contexts/GameStateContext";
+import { Player } from '../Player'
+import { Players } from '../Players'
 
 export const GameResult = () => {
   const {finishResult, setFinishResult} = useGameStateContext();
@@ -57,7 +59,7 @@ export const GameResult = () => {
       })}>
       <h2 className={styles.title}>
         {winner === true && <span>Winner!</span>}
-        {winner === false && <span>Better Luck Next Time</span>}
+        {!winner === true && <span>Better Luck Next Time</span>}
         {isDraw === true && <span>Better Luck Next Time</span>}
       </h2>
       {winner && <img src={imgWin.src} alt='Win' width={640} height={510} className={styles.imageWin}/>}
@@ -72,6 +74,7 @@ export const GameResult = () => {
         </h1>
       )}
       <div className={styles.containerCard}>
+        {/*<Players player1={players[0]} player2={players[1]} {...props} />*/}
         {/*<ScoreCard playerIndex={0} players={players} setFinishResult={setFinishResult} playerName={''} playerImg={''} showWinText={false} icon={undefined} />*/}
         {/*<ScoreCard playerIndex={1} players={players} setFinishResult={setFinishResult} playerName={''} playerImg={''} showWinText={false} icon={undefined} />*/}
       </div>

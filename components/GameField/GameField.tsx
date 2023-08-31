@@ -216,6 +216,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
                   <Button title={t('shade.checking.checkingWinner')} onClick={onClaimWin} />
                 </>
               )}
+              // TODO: clear shadow FIELD #190 next task
               {finishGameCheckResult && !finishGameCheckResult.winner && !isInvalidMove && !finishGameCheckResult.isDraw && (
                 <p className={styles.message}>
                   {t('shade.checking.loser')} {t('shade.checking.checkingLoser')}
