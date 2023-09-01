@@ -2,24 +2,52 @@ import React, {createContext, useContext, useMemo, useState} from "react";
 
 export interface IGameStateContext {
   finishResult: { winner: boolean, isDraw: boolean, cheatWin: boolean } | null;
-  setFinishResult: (newFinishResult: { winner: boolean, isDraw: boolean, cheatWin: boolean } | null) => void;
-  playerResult: {playerName: string | null, address: string | null, avatarUrl: string, moves?: boolean} | null;
+  setFinishResult: (newFinishResult: {
+    winner: boolean,
+    isDraw: boolean,
+    cheatWin: boolean
+  } | null) => void;
+  playerResult: {
+    playerName: string | null,
+    address: string | null,
+    avatarUrl: string,
+    moves?: boolean
+  } | null;
+  setPlayerResult: (newPlayerResult: {
+    playerName: string | null,
+    address: string | null,
+    avatarUrl: string,
+    moves?: boolean
+  } | null) => void;
 }
 
 export const GameStateContextDefault: IGameStateContext = {
   finishResult: null,
   setFinishResult: () => {},
   playerResult: null,
+  setPlayerResult: () => {},
 }
 export const useGameStateContext = () => useContext(GameStateContext);
 export const GameStateContext = createContext<IGameStateContext>(GameStateContextDefault);
 
 export const GameStateContextProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
-  const [finishResult, setFinishResult] = useState<{ winner: boolean, isDraw: boolean, cheatWin: boolean } | null>(null);
+  const [finishResult, setFinishResult] = useState<{
+    winner: boolean,
+    isDraw: boolean,
+    cheatWin: boolean
+  } | null>(null)
+  const [playerResult, setPlayerResult] = useState<{
+    playerName: string | null,
+    address: string | null,
+    avatarUrl: string,
+    moves?: boolean
+  } | null>(null)
 
   const contextValue: IGameStateContext = {
     finishResult,
-    setFinishResult
+    setFinishResult,
+    playerResult,
+    setPlayerResult,
   }
   console.log('CONTEXT setFinishResult',setFinishResult)
   console.log('CONTEXT finishResult', finishResult)
