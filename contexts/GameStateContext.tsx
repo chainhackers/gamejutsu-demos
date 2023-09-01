@@ -3,11 +3,13 @@ import React, {createContext, useContext, useMemo, useState} from "react";
 export interface IGameStateContext {
   finishResult: { winner: boolean, isDraw: boolean, cheatWin: boolean } | null;
   setFinishResult: (newFinishResult: { winner: boolean, isDraw: boolean, cheatWin: boolean } | null) => void;
+  playerResult: {playerName: string | null, address: string | null, avatarUrl: string, moves?: boolean} | null;
 }
 
 export const GameStateContextDefault: IGameStateContext = {
   finishResult: null,
-  setFinishResult: () => {}
+  setFinishResult: () => {},
+  playerResult: null,
 }
 export const useGameStateContext = () => useContext(GameStateContext);
 export const GameStateContext = createContext<IGameStateContext>(GameStateContextDefault);
