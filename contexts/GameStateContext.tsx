@@ -51,6 +51,8 @@ export const GameStateContextProvider: React.FC<{ children: React.ReactNode }> =
   }
   console.log('CONTEXT setFinishResult',setFinishResult)
   console.log('CONTEXT finishResult', finishResult)
+  console.log('CONTEXT setPlayerResult',setPlayerResult)
+  console.log('CONTEXT PlayerResult', playerResult)
   return <GameStateContext.Provider value={contextValue}>{children}</GameStateContext.Provider>;
 }
 
