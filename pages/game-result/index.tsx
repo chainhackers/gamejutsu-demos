@@ -1,17 +1,12 @@
-import {GameResult} from 'components/GameResult';
-import styles from './gameResult.module.scss';
-import {GameStateContextProvider} from "../../contexts/GameStateContext";
+import { GameResult } from 'components/GameResult'
+import styles from './gameResult.module.scss'
 
 const GameResultPage = () => {
-  return (
-      <div className={styles.wrapper}>
-        <div className={styles.container}>
-          {/*<GameStateContextProvider>*/}
-          <GameResult />
-          {/*</GameStateContextProvider>*/}
-        </div>
+  return (<div className={styles.wrapper}>
+      <div className={styles.container}>
+        <GameResult/>
       </div>
-  );
-};
-export default GameResultPage;
+    </div>)
+}
+export default GameResultPage
 

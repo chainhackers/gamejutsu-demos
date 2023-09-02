@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next'
 import router, { useRouter } from 'next/router'
 
@@ -54,7 +54,7 @@ import { PlayerI, TGameType } from 'types/game'
 import { useTranslation } from 'react-i18next'
 import Link from 'next/link'
 import {
-  GameStateContext, GameStateContextProvider, useGameStateContext,
+  useGameStateContext,
 } from '../../contexts/GameStateContext'
 
 interface IGamePageProps {
@@ -96,7 +96,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
     [])
   const { query } = useRouter()
   const account = useAccount()
-  const { finishResult, setFinishResult } = useGameStateContext()
+  const { setPlayerResult, setFinishResult } = useGameStateContext()
   const playersTypesMap: {
     [id in TGameType]: {
       0: JSX.Element; 1: JSX.Element
@@ -196,6 +196,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
         isDraw: finishGameCheckResult?.isDraw || false,
         cheatWin: finishGameCheckResult?.cheatWin || false,
       }
+      
       console.log('Попытка записи данных в контекст:', newFinishResult)
       setFinishResult(newFinishResult)
       // setFinishGameCheckResult(null);
@@ -379,7 +380,6 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
   }
   
   async function processOneMessage (i: number) {
-    //TODO
     console.log(lastMessages)
     
     const lastMessage = lastMessages[i]
@@ -569,6 +569,11 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
         moves: !finishedGameState && !isInDispute &&
           !isPlayerMoves(gameType, gameState, playerIngameId),
       }])
+    // TODO: check update context @habdevs #190 setPlayerResult
+    const newPlayerResult = { players }
+    setPlayerResult(newPlayerResult)
+    console.log('попытка записи в SETPLAYERRESULT', newPlayerResult)
+    
   }, [opponentAddress, gameId, gameType, gameState])
   
   useEffect(() => {
