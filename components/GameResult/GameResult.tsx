@@ -12,13 +12,12 @@ import { useGameStateContext } from '../../contexts/GameStateContext';
 import { Player } from '../Player';
 import { PlayerI } from '../../types/game';
 import { Players } from '../Players';
-import { ScoreCard } from './ScoreCard'
+import { ScoreCard } from './ScoreCard';
 
 export const GameResult = () => {
   const { finishResult, setFinishResult, playerResult, setPlayerResult } = useGameStateContext();
 
-  console.log('Данные из finishResult: ', finishResult);
-  console.log('Данные из setFinishResult: ', setFinishResult);
+  console.log('GAMERESULT log finishResult: ', finishResult);
   let winner,
     isDraw,
     cheatWin = false;
@@ -38,7 +37,7 @@ export const GameResult = () => {
   //
   // const player1 = players[0]
   // const player2 = players[1]
-  
+
   // const player1 = playerResult?.players ? players : [0];
   // const player2 = playerResult?.players ? players : [1];
   console.log('Данные из playerResult в GameResult', playerResult);
@@ -73,8 +72,12 @@ export const GameResult = () => {
         {/*<Player {...player2} />*/}
         {/*<Player {...player1} />*/}
         {/*<Players player1={players ? players : [0]} player2={players ? players : [1]} {...props} />*/}
-        <ScoreCard playerResult={playerResult} finishResult={finishResult}/>
-        <ScoreCard playerResult={playerResult} finishResult={finishResult}/>
+        {playerResult && playerResult.players && playerResult.players.length === 2 (
+          <>
+            <ScoreCard finishResult={finishResult} playerResult={playerResult.players[0]} />
+            <ScoreCard finishResult={finishResult} playerResult={playerResult.players[1]} />
+          </>
+        )}
       </div>
       <BlockPayedGame />
       <h2 className={styles.titleCenter}>Read more about our technology</h2>

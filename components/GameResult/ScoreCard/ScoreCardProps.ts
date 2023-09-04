@@ -4,10 +4,12 @@ import { PlayerI } from 'types/game';
 import { PlayerPropsI } from '../../Player/PlayerProps'
 export interface IScoreCardProps extends PlayerPropsI{
   playerResult: {
-    address?: string | null;
-    playerType?: React.ReactNode;
-    moves?: boolean;
-  } | null;
+    players: ({
+      address?: string | null;
+      playerType?: React.ReactNode;
+      moves?: boolean;
+    } | null)[];
+  };
   showWinText?: boolean,
   finishResult: { winner: boolean; isDraw: boolean; cheatWin: boolean } | null
 }
