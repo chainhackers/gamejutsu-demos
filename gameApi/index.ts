@@ -304,7 +304,7 @@ export const acceptGame = async (
     {value});
 
   console.log('GameAPI acceptGame: gasEstimated = ', gasEstimated, Number(gasEstimated));
-
+//TODO why const address is declared twice on line 270 and 308
   const address = await (await getSigner()).getAddress();
 
   let wallet = await getSessionWallet(address);

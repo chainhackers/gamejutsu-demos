@@ -1,19 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styles from './ScoreCard.module.scss';
-import { ScoreCardProps } from './ScoreCardProps';
+import { IScoreCardProps } from './ScoreCardProps';
 import Image from 'next/image';
-import { FinishedGameState } from 'gameApi';
-export const ScoreCard = (props: ScoreCardProps) => {
-  const { playerImg, showWinText, icon, playerIndex, players, finishGameCheckResult } = props;
-  const playerData = players ? players[playerIndex] : null;
+import playerImg from 'public/images/empty_avatar.png';
+
+export const ScoreCard: React.FC<IScoreCardProps> = ({
+  address,
+  playerType,
+  moves,
+  finishResult,
+  showWinText,
+}) => {
+  // const playerData = players ? players[playerIndex] : null;
+  const truncatedAddress = address ? address.slice(0, 5) + '...' + address.slice(-5) : null;
   return (
     <div className={`${styles.container}`}>
-      <div className={`${styles.card} ${finishGameCheckResult?.winner === true ? styles.highlight : ''}`}>
-        {finishGameCheckResult?.winner === true && showWinText && <p className={styles.titleColor}>Winner!</p>}
+      <div className={`${styles.card} ${finishResult?.winner === true ? styles.highlight : ''}`}>
+        {finishResult?.winner === true && showWinText && (
+          <p className={styles.titleColor}>Winner!</p>
+        )}
         <div className={styles.containerPlayer}>
-          <Image src={playerImg} alt='Player' width={24} height={24} />
-          <p className={styles.addressPlayer}>{playerData?.playerName}</p>
-          {icon}
+          <Image src={playerImg.src} alt='Player' width={24} height={24} />
+          <p className={styles.addressPlayer}>{truncatedAddress}</p>
+          {/*{icon}*/}
         </div>
       </div>
     </div>
