@@ -72,12 +72,13 @@ export const GameResult = () => {
         {/*<Player {...player2} />*/}
         {/*<Player {...player1} />*/}
         {/*<Players player1={players ? players : [0]} player2={players ? players : [1]} {...props} />*/}
-        {playerResult && playerResult.players && playerResult.players.length === 2 (
+        {playerResult.length === 2 && (
           <>
-            <ScoreCard finishResult={finishResult} playerResult={playerResult.players[0]} />
-            <ScoreCard finishResult={finishResult} playerResult={playerResult.players[1]} />
+            <ScoreCard finishResult={finishResult} playerResult={playerResult[0]} />
+            <ScoreCard finishResult={finishResult} playerResult={playerResult[1]} />
           </>
         )}
+      
       </div>
       <BlockPayedGame />
       <h2 className={styles.titleCenter}>Read more about our technology</h2>

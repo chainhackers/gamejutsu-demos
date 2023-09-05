@@ -11,13 +11,13 @@ export const ScoreCard: React.FC<IScoreCardProps> = ({
   finishResult,
   showWinText,
 }) => {
-  const address = playerResult!.address
-  const moves = playerResult!.moves
-  const playerType = playerResult!.playerType
+  const { address, playerType, moves } = playerResult;
+  // const address = playerResult!.players
+  // const moves = playerResult!.players
+  // const playerType = playerResult!.players
   console.log('SCORE CARD log playerType', playerType)
   console.log('SCORE CARD log address', address)
   console.log('SCORE CARD log address', moves)
-  // const playerData = players ? players[playerIndex] : null;
   const truncatedAddress = address ? address.slice(0, 5) + '...' + address.slice(-5) : null;
   return (
     <div className={`${styles.container}`}>

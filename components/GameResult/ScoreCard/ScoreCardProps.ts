@@ -1,17 +1,13 @@
 import { StaticImageData } from 'next/image';
 import React, { ReactNode } from 'react';
 import { PlayerI } from 'types/game';
-import { PlayerPropsI } from '../../Player/PlayerProps'
-export interface IScoreCardProps extends PlayerPropsI{
-  playerResult: {
-    players: ({
-      address?: string | null;
-      playerType?: React.ReactNode;
-      moves?: boolean;
-    } | null)[];
-  };
-  showWinText?: boolean,
-  finishResult: { winner: boolean; isDraw: boolean; cheatWin: boolean } | null
+import { PlayerPropsI } from '../../Player/PlayerProps';
+import { PlayerInfo } from '../../../contexts/GameStateContext'
+
+export interface IScoreCardProps extends PlayerPropsI {
+  playerResult: PlayerInfo
+  showWinText?: boolean;
+  finishResult: { winner: boolean; isDraw: boolean; cheatWin: boolean } | null;
 }
 
 // playerName: string,
