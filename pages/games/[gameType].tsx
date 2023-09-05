@@ -37,7 +37,10 @@ import useConversation, { IAnyMessage } from '../../hooks/useConversation';
 import { PlayerI, TGameType } from 'types/game';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
-import { useGameStateContext } from '../../contexts/GameStateContext';
+import {
+  PlayerInfo,
+  useGameStateContext,
+} from '../../contexts/GameStateContext'
 
 interface IGamePageProps {
   gameType: TGameType;
@@ -500,7 +503,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
       },
     ]);
     // TODO: check update context @habdevs #190 setPlayerResult
-    const newPlayerResult = { players };
+    const newPlayerResult: PlayerInfo[] = players;
     setPlayerResult(newPlayerResult);
     console.log('попытка записи в SETPLAYERRESULT', newPlayerResult);
   }, [opponentAddress, gameId, gameType, gameState]);
