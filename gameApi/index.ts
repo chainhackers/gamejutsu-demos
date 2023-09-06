@@ -13,6 +13,7 @@ import {fetchSigner} from '@wagmi/core';
 import {useState} from "react";
 
 const provider = new ethers.providers.AlchemyProvider('matic', process.env.NEXT_PUBLIC_ALCHEMY_API_KEY!);
+console.log('ALCHEMY KEY', provider)
 const getSdk = async () => getPolygonSdk(await getSigner())
 const getSdkRead = () => getPolygonSdk(provider);
 export const getArbiter = async (): Promise<Arbiter> => (await getSdk()).arbiter;
