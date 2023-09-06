@@ -26,7 +26,8 @@ jobs:
       - run: npm install
       - run: npm run generate
       - run: npm run test
-      - run: echo ${{ secrets.env_local }} > ./..env.local
+      - run: echo ${{ secrets.ENV_LOCAL }} > ./.env.local
+      - run: cat ./.env.local
       - run: npm run build
       - run: npm run export
       - name: Gamejutsu Frontend Build
