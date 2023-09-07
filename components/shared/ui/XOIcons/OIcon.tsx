@@ -1,7 +1,11 @@
-import { SVGProps } from 'react';
-export const OIcon = (props: SVGProps<SVGSVGElement>) => {
+import React, { SVGProps } from 'react';
+interface IIconProps extends SVGProps<SVGSVGElement>{
+  width?: number;
+  height?: number;
+}
+export const OIcon: React.FC<IIconProps> = ({width = 30, height = 30, ...props}) => {
   return (
-    <svg xmlns='http://www.w3.org/2000/svg' width={30} height={31} viewBox='0 0 30 31' fill='none'>
+    <svg xmlns='http://www.w3.org/2000/svg' width={width} height={height} viewBox='0 0 30 31' fill='none'>
       <circle cx={15.0742} cy={15.5742} r={12.375} stroke='url(#paint0_linear_1425_7608)' strokeWidth={3} />
       <circle cx={15.0766} cy={15.5746} r={9.975} stroke='url(#paint1_linear_1425_7608)' strokeWidth={3} />
       <defs>

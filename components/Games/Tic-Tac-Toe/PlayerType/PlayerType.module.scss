@@ -1,8 +1,4 @@
-.container { 
-  
-  width: 25px;
-  height: 25px;
-
+.container {
   &.round {
     border-radius: 50%;
     border: 3px solid black;

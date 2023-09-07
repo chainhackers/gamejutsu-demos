@@ -1,68 +1,7 @@
-//$moveColor: rgb(25, 160, 22);
-//.container {
-//  margin: 30px 3px;
-//  display: flex;
-//  align-items: center;
-//  @media (max-width: 992px) {
-//    margin: 0;
-//    order: 2;
-//  }
-//  .avatar {
-//    margin-right: 10px;
-//    padding-top: 5px;
-//  }
-//  .playerData {
-//    position: relative;
-//    flex-grow: 1;
-//    .name {
-//      font-size: 16px;
-//
-//      padding-bottom: 5px;
-//    }
-//    .address {
-//      font-size: 16px;
-//    }
-//
-//    .move {
-//      position: absolute;
-//      top: 0;
-//      font-size: 1.5rem;
-//      font-weight: 500;
-//      display: inline-block;
-//      color: $moveColor;
-//      padding: 1px 4px;
-//      animation-name: blinking;
-//      animation-duration: 2s;
-//      animation-iteration-count: infinite;
-//      text-transform: uppercase;
-//    }
-//  }
-//
-//  .playerType {
-//    padding: 10px;
-//  }
-//}
-//
-//@keyframes blinking {
-//  0% {
-//    opacity: 0;
-//  }
-//
-//  50% {
-//    opacity: 1;
-//  }
-//  100% {
-//    opacity: 0;
-//  }
-//}
-
-
-
 .container {
   display: flex;
-  //flex-direction: column;
   color: var(--grey, #9c9eab);
-  font-family: Inter;
+  font-family: Inter, sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 500;
@@ -79,6 +18,7 @@
   @media (min-width: 640px) {
   }
 }
+
 .card {
   display: flex;
   flex-direction: column;
@@ -88,44 +28,50 @@
   border-radius: 10px;
   border: 1px solid var(--light-grey, #e8e8e8);
   background: #fff;
-  min-height: 73px;
+
   align-items: center;
   justify-content: center;
-  .avatar{
+
+  .avatar {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
+    margin-bottom: 0.8rem;
     font-size: 1.7rem;
     font-style: normal;
     font-weight: 500;
     line-height: 130%;
-  }
-  .playerType{
 
   }
+
+  .playerType {
+
+  }
+
   @media (min-width: 320px) {
     padding: 5px;
     margin-right: 0;
-    min-width: 12rem;
+    width: 16.6rem;
+    height: 5rem;
   }
   @media (min-width: 390px) {
-    padding: 10px;
-    min-width: 17rem;
+
+
   }
   @media (min-width: 480px) {
-    min-width: 20rem;
+    width: 20.3rem;
+    height: 13.3rem;
   }
   @media (min-width: 576px) {
-    min-width: 25rem;
+
   }
   @media (min-width: 640px) {
-    min-width: 28rem;
+
   }
-  @media (min-width: 768px) {
-    min-width: 30.4rem;
-  }
+
 }
+
 .highlight {
   border-radius: 10px;
   border: 2px solid var(--purple, #8777da);
@@ -141,6 +87,7 @@
   align-items: center;
   justify-content: space-between;
 }
+
 .addressPlayer {
   margin: 0 6px 0 6px;
   @media (min-width: 320px) {
@@ -153,6 +100,7 @@
     font-size: 2rem;
   }
 }
+
 .titleColor {
   @media (min-width: 320px) {
     font-size: 1.3rem;

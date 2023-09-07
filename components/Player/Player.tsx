@@ -22,15 +22,14 @@ export const Player: React.FC<PlayerPropsI> = ({
           {address ? (
             <Blockies
               seed={!!address ? address : '0x00000000000'}
-              size={10}
+              size={7}
               className='rounded-full'
             />
           ) : (
-            <Image src={empty_avatar} alt='avatar' width='30px' height='30px'></Image>
+            <Image src={empty_avatar} alt='avatar' width={28} height={28}></Image>
           )}
           {address ? (
             <div className={styles.playerData}>
-              {/*<div className={styles.name}>{playerName}&nbsp;{moves && (<span className={styles.move}>move</span>)}</div>*/}
               <div className={styles.address}>{truncatedAddress}</div>
             </div>
           ) : (
