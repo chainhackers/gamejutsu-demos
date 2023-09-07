@@ -41,6 +41,8 @@ export const LeftPanel: React.FC<LeftPanelPropsI> = ({
             image={hourglassIcon.src}
             imageSize='24'
             imagePosition={"right"}
+            disabled={!isDisputAvailable}
+            onClick={onRunDisput}
           />
           <CustomButton
             size='sm'

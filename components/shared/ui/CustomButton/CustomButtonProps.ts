@@ -1,5 +1,6 @@
 export interface ICustomButtonProps {
-  onClick?: () => void;
+  disabled?: boolean;
+  onClick: () => Promise<void>;
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   color?: 'transparent' | 'dark' | 'gradient';
   textColor?: string;

@@ -10,9 +10,7 @@
   border: 1px solid var(--light-grey, #e8e8e8);
   margin-bottom: 40px;
 
-  &.disabled {
-    cursor: not-allowed;
-  }
+
 }
 
 .button {
@@ -25,6 +23,9 @@
   font-weight: 500;
   line-height: 1.2;
   text-decoration: none;
+  &.disabled {
+    cursor: not-allowed;
+  }
 }
 
 .text {
@@ -43,7 +44,10 @@
   @media (min-width: 1024px) {
     font-size: 2rem;
   }
-  @media (min-width: 1368px) {
+  @media (min-width: 1200px) {
+    font-size: 2.2rem;
+  }
+  @media (min-width: 1920px) {
     font-size: 2.7rem;
   }
 }

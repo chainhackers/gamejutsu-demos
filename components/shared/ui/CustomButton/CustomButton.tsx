@@ -34,8 +34,8 @@ export const CustomButton: FC<ICustomButtonProps> = ({
 
   if (link) {
     return (
-      <Link href={link} target='_blank'>
-        <a target='_blank' className={buttonClasses}>
+      <Link href={link} target='_blank' >
+        <a target='_blank' className={buttonClasses} {...rest}>
           {imagePosition === 'left' && (
             <img src={image} alt='Button Image' className={styles.image} style={imageStyles} />
           )}
