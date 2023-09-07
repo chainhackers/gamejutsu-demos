@@ -4,6 +4,7 @@ import { LeftPanelPropsI } from './LeftPanelProps';
 import styles from './LeftPanel.module.scss';
 import React from 'react';
 import disputeIcon from 'public/images/disputeIcon.svg';
+import hourglassIcon from 'public/images/hourglassIcon.svg'
 
 export const LeftPanel: React.FC<LeftPanelPropsI> = ({
   players,
@@ -30,14 +31,26 @@ export const LeftPanel: React.FC<LeftPanelPropsI> = ({
           disabled={!isDisputAvailable}
           onClick={onRunDisput}
         />
-        <CustomButton
-          size='sm'
-          color='transparent'
-          radius='sm'
-          text='Dispute Move'
-          image={disputeIcon.src}
-          imageSize='40'
-        />
+        <div className={styles.containerBtn}>
+          <CustomButton
+            size='sm'
+            color='transparent'
+            radius='sm'
+            text='Init Timeout'
+            image={hourglassIcon.src}
+            imageSize='24'
+            imagePosition={"right"}
+          />
+          <CustomButton
+            size='sm'
+            color='transparent'
+            radius='sm'
+            text='Dispute Move'
+            image={disputeIcon.src}
+            imageSize='24'
+            imagePosition={"right"}
+          />
+        </div>
       </div>
     </div>
   );
