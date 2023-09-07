@@ -1,8 +1,10 @@
 import { useTranslation } from 'react-i18next';
-import { Button, Players } from 'components';
+import { Button, CustomButton, Players } from 'components';
 import { LeftPanelPropsI } from './LeftPanelProps';
 import styles from './LeftPanel.module.scss';
-import React from "react";
+import React from 'react';
+import disputeIcon from 'public/images/disputeIcon.svg';
+
 export const LeftPanel: React.FC<LeftPanelPropsI> = ({
   players,
   isDisputAvailable,
@@ -21,12 +23,20 @@ export const LeftPanel: React.FC<LeftPanelPropsI> = ({
       <Players player1={players[0]} player2={players[1]} {...props} />
       <div className={styles.buttons}>
         <Button
-          size="sm"
-          color="red"
+          size='sm'
+          color='red'
           borderless
-          title="Dispute move"
+          title='Dispute move'
           disabled={!isDisputAvailable}
           onClick={onRunDisput}
+        />
+        <CustomButton
+          size='sm'
+          color='transparent'
+          radius='sm'
+          text='Dispute Move'
+          image={disputeIcon.src}
+          imageSize='40'
         />
       </div>
     </div>

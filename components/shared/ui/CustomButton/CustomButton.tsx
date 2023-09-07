@@ -6,9 +6,15 @@ import Link from 'next/link';
 export const CustomButton = (props: CustomButtonProps) => {
   const { size, color, radius, text, image, imagePosition, link, imageSize } = props;
 
-  const buttonClasses = cn(styles.button, styles[`size-${size}`], styles[`color-${color}`], styles[`radius-${radius}`], {
-    [styles['text-center']]: imagePosition === 'left' || imagePosition === 'right',
-  });
+  const buttonClasses = cn(
+    styles.button,
+    styles[`size-${size}`],
+    styles[`color-${color}`],
+    styles[`radius-${radius}`],
+    {
+      [styles['text-center']]: imagePosition === 'left' || imagePosition === 'right',
+    },
+  );
 
   const imageStyles = {
     width: imageSize ? `${imageSize}px` : undefined,
@@ -19,9 +25,13 @@ export const CustomButton = (props: CustomButtonProps) => {
     return (
       <Link href={link} target='_blank'>
         <a target='_blank' className={buttonClasses}>
-          {imagePosition === 'left' && <img src={image} alt='Button Image' className={styles.image} style={imageStyles} />}
+          {imagePosition === 'left' && (
+            <img src={image} alt='Button Image' className={styles.image} style={imageStyles} />
+          )}
           <span className={styles.text}>{text}</span>
-          {imagePosition === 'right' && <img src={image} alt='Button Image' className={styles.image} style={imageStyles} />}
+          {imagePosition === 'right' && (
+            <img src={image} alt='Button Image' className={styles.image} style={imageStyles} />
+          )}
         </a>
       </Link>
     );
@@ -29,9 +39,13 @@ export const CustomButton = (props: CustomButtonProps) => {
 
   return (
     <button className={buttonClasses}>
-      {imagePosition === 'left' && <img src={image} alt='Button Image' className={styles.image} style={imageStyles} />}
+      {imagePosition === 'left' && (
+        <img src={image} alt='Button Image' className={styles.image} style={imageStyles} />
+      )}
       <span className={styles.text}>{text}</span>
-      {imagePosition === 'right' && <img src={image} alt='Button Image' className={styles.image} style={imageStyles} />}
+      {imagePosition === 'right' && (
+        <img src={image} alt='Button Image' className={styles.image} style={imageStyles} />
+      )}
     </button>
   );
 };
