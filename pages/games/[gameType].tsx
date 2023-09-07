@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import router, { useRouter } from 'next/router';
-
 import { ParsedUrlQuery } from 'querystring';
 import { XMTPChatLog } from 'components/XMTPChatLog';
 import { Disclaimer, DisclaimerNotice, GameField, GetHistory, JoinGame, LeftPanel, RightPanel, SelectGame, SelectPrize } from 'components';
-
 import styles from 'pages/games/gameType.module.scss';
 import { TicTacToe, PlayerType as TicTacToePlayerType } from 'components/Games/Tic-Tac-Toe';
 import { TicTacToeState } from 'components/Games/Tic-Tac-Toe/types';

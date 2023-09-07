@@ -1,5 +1,5 @@
 .container {
-  background-color: var(--gray-lightest);
+  //background-color: var(--gray-lightest);
   border-radius: 1rem;
   margin-right: 25px;
   overflow: hidden;
@@ -9,7 +9,7 @@
   justify-content: space-between;
 
   @media (min-width: 480px) {
-    width: 42rem;
+    width: 45rem;
     height: 61rem;
   }
   @media (max-width: 992px) {
