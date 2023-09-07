@@ -1,16 +1,17 @@
 .container {
-  background-color: var(--gray-lightest);  
-  width: 250px;
-  height: 610px;
-  border-radius: 10px;
+  background-color: var(--gray-lightest);
+  border-radius: 1rem;
   margin-right: 25px;
-  padding: 25px 15px;
   overflow: hidden;
 
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 
+  @media (min-width: 480px) {
+    width: 42rem;
+    height: 61rem;
+  }
   @media (max-width: 992px) {
     width: 95%;
     height: auto;
@@ -19,18 +20,19 @@
     padding: 10px 5px;
   }
 
-  .gameid {
+  .gameId {
     font-size: 1.7rem;
     flex: 0 0 25px;
     color: #9C9EAB;
-    font-family: Inter;
-    font-size: 15px;
+    font-family: Inter, sans-serif;
   }
-  .protocolLogs{
+
+  .protocolLogs {
     color: #5f5afa;
   }
+
   .buttons {
-    flex: 0 0 12rem;    
+    flex: 0 0 12rem;
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -38,9 +40,9 @@
     @media (max-width: 992px) {
       flex: auto;
     }
-    
+
     > *:not(:last-child) {
-     margin-bottom: 5px;
-   }
+      margin-bottom: 5px;
+    }
   }
 }

@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Button, Players } from 'components';
 import { LeftPanelPropsI } from './LeftPanelProps';
 import styles from './LeftPanel.module.scss';
+import React from "react";
 export const LeftPanel: React.FC<LeftPanelPropsI> = ({
   players,
   isDisputAvailable,
@@ -12,7 +13,7 @@ export const LeftPanel: React.FC<LeftPanelPropsI> = ({
   const { t } = useTranslation();
   return (
     <div className={styles.container}>
-      <div className={styles.gameid}>
+      <div className={styles.gameId}>
         <strong className={styles.protocolLogs}>{t('leftpanel.protocolLogs')} </strong>
         <strong>{t('leftpanel.gameId')}:</strong>
         &nbsp;{gameId && !Number.isNaN(gameId) ? gameId : 'n/a'}
