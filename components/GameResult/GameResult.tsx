@@ -9,9 +9,6 @@ import team from 'data/team.json';
 import { BlockPayedGame, CustomButton } from 'components/shared';
 import { TeamMemberBasic } from 'components/shared/ui/TeamMemberBasic';
 import { useGameStateContext } from '../../contexts/GameStateContext';
-import { Player } from '../Player';
-import { PlayerI } from '../../types/game';
-import { Players } from '../Players';
 import { ScoreCard } from './ScoreCard';
 
 export const GameResult = () => {
@@ -29,17 +26,6 @@ export const GameResult = () => {
 
   console.log('Данные из finishResult в GameResult: ', finishResult);
   console.log('Данные из winner: ', winner);
-  // if (playerResult !== null) {
-  //   const players = playerResult
-  // }
-
-  // const players = playerResult as unknown as PlayerI[];
-  //
-  // const player1 = players[0]
-  // const player2 = players[1]
-
-  // const player1 = playerResult?.players ? players : [0];
-  // const player2 = playerResult?.players ? players : [1];
   console.log('Данные из playerResult в GameResult', playerResult);
 
   return (
@@ -68,10 +54,6 @@ export const GameResult = () => {
         </h1>
       )}
       <div className={styles.containerCard}>
-        {/*<Players player1={players[0]} player2={players[1]} {...props}/>*/}
-        {/*<Player {...player2} />*/}
-        {/*<Player {...player1} />*/}
-        {/*<Players player1={players ? players : [0]} player2={players ? players : [1]} {...props} />*/}
         {playerResult.length === 2 && (
           <>
             <ScoreCard finishResult={finishResult} playerResult={playerResult[0]} />
@@ -133,17 +115,3 @@ export const GameResult = () => {
   );
 };
 
-// const player1 = {
-//   playerName: '0xh20...7260',
-//   playerImg: playerImg,
-//   showWinText: setFinishResult?.winner === true,
-//   gameType: 'tic-tac-toe',
-//   icon: gameType === 'tic-tac-toe' ? <XIcon /> : <PurpleIcon />,
-// };
-// const player2 = {
-//   playerName: '0xh07...6035',
-//   playerImg: playerImg2,
-//   showWinText: setFinishResult?.winner === false,
-//   gameType: 'tic-tac-toe',
-//   icon: gameType ===  'tic-tac-toe' ? <OIcon /> : <WhiteIcon />,
-// };
