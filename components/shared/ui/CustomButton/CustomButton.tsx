@@ -4,7 +4,7 @@ import cn from 'classnames';
 import Link from 'next/link';
 
 export const CustomButton = (props: CustomButtonProps) => {
-  const { size, color, radius, text, image, imagePosition, link, imageSize } = props;
+  const { disabled, size, color, radius, text, image, imagePosition, link, imageSize } = props;
 
   const buttonClasses = cn(
     styles.button,
@@ -14,6 +14,7 @@ export const CustomButton = (props: CustomButtonProps) => {
     {
       [styles['text-center']]: imagePosition === 'left' || imagePosition === 'right',
     },
+    props.disabled ? styles.disabled : null,
   );
 
   const imageStyles = {
@@ -38,7 +39,7 @@ export const CustomButton = (props: CustomButtonProps) => {
   }
 
   return (
-    <button className={buttonClasses}>
+    <button className={buttonClasses} {...props}>
       {imagePosition === 'left' && (
         <img src={image} alt='Button Image' className={styles.image} style={imageStyles} />
       )}

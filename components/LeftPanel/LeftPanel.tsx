@@ -14,6 +14,7 @@ export const LeftPanel: React.FC<LeftPanelPropsI> = ({
   ...props
 }) => {
   const { t } = useTranslation();
+  console.log('DISABLED', onRunDisput)
   return (
     <div className={styles.container}>
       <div className={styles.gameId}>
@@ -23,14 +24,14 @@ export const LeftPanel: React.FC<LeftPanelPropsI> = ({
       </div>
       <Players player1={players[0]} player2={players[1]} {...props} />
       <div className={styles.buttons}>
-        <Button
-          size='sm'
-          color='red'
-          borderless
-          title='Dispute move'
-          disabled={!isDisputAvailable}
-          onClick={onRunDisput}
-        />
+        {/*<Button*/}
+        {/*  size='sm'*/}
+        {/*  color='red'*/}
+        {/*  borderless*/}
+        {/*  title='Dispute move'*/}
+        {/*  // disabled={!isDisputAvailable}*/}
+        {/*  // onClick={onRunDisput}*/}
+        {/*/>*/}
         <div className={styles.containerBtn}>
           <CustomButton
             size='sm'
@@ -49,6 +50,8 @@ export const LeftPanel: React.FC<LeftPanelPropsI> = ({
             image={disputeIcon.src}
             imageSize='24'
             imagePosition={"right"}
+            disabled={!isDisputAvailable}
+            onClick={onRunDisput}
           />
         </div>
       </div>

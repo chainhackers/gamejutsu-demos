@@ -9,4 +9,5 @@ export interface CustomButtonProps {
   imagePosition?: 'left' | 'right';
   link?: string;
   imageSize?: string;
+  disabled?: boolean
 }
