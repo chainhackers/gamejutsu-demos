@@ -1,4 +1,4 @@
-export interface CustomButtonProps {
+export interface ICustomButtonProps {
   onClick?: () => void;
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   color?: 'transparent' | 'dark' | 'gradient';
@@ -9,5 +9,4 @@ export interface CustomButtonProps {
   imagePosition?: 'left' | 'right';
   link?: string;
   imageSize?: string;
-  disabled?: boolean
 }
