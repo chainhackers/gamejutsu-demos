@@ -4,7 +4,6 @@ import { IScoreCardProps } from './ScoreCardProps';
 import Image from 'next/image';
 import playerImg from 'public/images/empty_avatar.png';
 import Blockies from 'react-blockies';
-import empty_avatar from '../../../public/images/empty_avatar.png';
 
 export const ScoreCard: React.FC<IScoreCardProps> = ({
   playerResult,

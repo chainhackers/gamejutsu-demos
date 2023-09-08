@@ -388,7 +388,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
           const polygonMessageSignedMove = [polygonMessageGameMove, signedMove.signatures];
           console.log('Requested move validation, contract message: ', JSON.stringify(polygonMessageSignedMove));
           console.log(`Requested move validation, nonce: ${signedMove.gameMove.nonce}\n`, JSON.stringify(message, null, ' '));
-
+          // TODO @habdevs #190 session key
           // START ***** DEBUG AND DEMO PURPOSE ONLY. TODO: DON'T DO THIS IN NON-DEMO APPS ******
           const storedSignatures = localStorage.getItem('signatures');
           const parsedStoredSignatures = !storedSignatures ? null : JSON.parse(storedSignatures);
