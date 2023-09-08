@@ -7,7 +7,7 @@ import React from 'react';
 
 export const PlayerType: React.FC<IPlayerTypeProps> = ({ playerIngameId }) => {
   return (
-    <div className={cn(styles.container, {})}>
+    <div className={styles.container}>
       {playerIngameId === 0 ? <XIcon size='medium' /> : <OIcon size='medium' />}
     </div>
   );

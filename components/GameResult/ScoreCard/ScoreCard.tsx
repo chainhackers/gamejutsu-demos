@@ -11,9 +11,6 @@ export const ScoreCard: React.FC<IScoreCardProps> = ({
   showWinText,
 }) => {
   const { address, playerType, moves } = playerResult;
-  // const address = playerResult!.players
-  // const moves = playerResult!.players
-  // const playerType = playerResult!.players
   console.log('SCORE CARD log playerType', playerType)
   console.log('SCORE CARD log address', address)
   console.log('SCORE CARD log address', moves)

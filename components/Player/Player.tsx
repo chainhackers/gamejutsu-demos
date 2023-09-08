@@ -34,7 +34,7 @@ export const Player: React.FC<PlayerPropsI> = ({
             <div className={styles.playerData}>Waiting...</div>
           )}
         </div>
-        <div className={styles.playerType}>{playerType}</div>
+        {playerType}
       </div>
     </div>
   );
