@@ -149,6 +149,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
     try {
       const moves: [ISignedGameMove, ISignedGameMove] = playerIngameId === 0 ? [lastOpponentMoveSignedByAll, nextGameState.lastMove] : [nextGameState.lastMove, lastOpponentMoveSignedByAll];
       const finishedGameResult = await finishGame(await getArbiter(), moves);
+      console.log('GAMETYPE ЛОГ finishedGameResult', finishedGameResult)
 
       await sendMessage({
         gameId: gameId,
@@ -157,8 +158,7 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
         gameType,
       });
       // TODO: check update context @habdevs #190 add router.push
-      router.push('/game-result');
-      console.log('Записываем данные в контекст');
+      // router.push('/game-result');
       const newFinishResult = {
         winner: finishGameCheckResult?.winner || false,
         isDraw: finishGameCheckResult?.isDraw || false,
@@ -167,34 +167,36 @@ const Game: NextPage<IGamePageProps> = ({ gameType, version }) => {
 
       console.log('Попытка записи данных в контекст:', newFinishResult);
       setFinishResult(newFinishResult);
-      // setFinishGameCheckResult(null);
+      setFinishGameCheckResult(null);
       setFinishedGameState(finishedGameResult);
       console.log('Завершение выполнения runFinishGameHandler', finishedGameResult);
       console.log('finish gametype запись 1', newFinishResult);
     } catch (error: any) {
       if (error.reason.includes('invalid game move')) {
         setFinishGameCheckResult({ winner: false, isDraw: false, cheatWin: true });
-        router.push('/game-result');
+        // router.push('/game-result');
         const newFinishResult = {
-          winner: false,
-          isDraw: false,
-          cheatWin: true,
+          winner: finishGameCheckResult?.winner || false,
+          isDraw: finishGameCheckResult?.isDraw || false,
+          cheatWin: finishGameCheckResult?.cheatWin || true,
         };
         setFinishResult(newFinishResult);
         console.log('finish gametype запись 2', newFinishResult);
       }
       if (error.reason.includes('moves are not in sequence')) {
         console.log('moves are not in sequence');
-        router.push('/game-result');
+        // router.push('/game-result');
         const newFinishResult = {
-          winner: false,
-          isDraw: false,
-          cheatWin: true,
+          winner: finishGameCheckResult?.winner || false,
+          isDraw: finishGameCheckResult?.isDraw || false,
+          cheatWin: finishGameCheckResult?.cheatWin || true,
         };
         setFinishResult(newFinishResult);
         console.log('finish gametype запись 3', newFinishResult);
       }
     }
+    // TODO habdevs@ #190 route gameresult Page
+    router.push('/game-result');
   };
 
   const initTimeoutHandler = async () => {
