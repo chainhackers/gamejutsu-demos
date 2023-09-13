@@ -33,11 +33,19 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   const [isShowDispute, setShowDispute] = useState<boolean>(false);
   const { t } = useTranslation();
   const account = useAccount();
-
+  const { setFinishResult } = useGameStateContext();
   const { data, error, loading } = useQuery(badgesQuery, {
     variables: { id: account.address?.toLowerCase() },
   });
-
+  // TODO added context @habdevs #190
+  if (finishGameCheckResult) {
+    setFinishResult({
+      winner: finishGameCheckResult.winner,
+      isDraw: finishGameCheckResult.isDraw,
+      cheatWin: finishGameCheckResult.cheatWin,
+    });
+    console.log('CONTEXT GAMEFIELD', setFinishResult)
+  }
   console.log('dispute mode', disputeMode, account.address);
 
   function isOpponentAddress(address: string): boolean {
