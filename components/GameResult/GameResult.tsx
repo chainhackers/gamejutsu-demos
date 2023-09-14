@@ -32,23 +32,23 @@ export const GameResult = () => {
     <div
       className={classNames(styles.container, {
         [styles.win]: winner,
-        [styles.lose]: !winner,
+        [styles.lose]: !winner && !isDraw,
         [styles.draw]: isDraw,
       })}>
       <h2 className={styles.title}>
         {winner === true && <span>Winner!</span>}
-        {!winner && <span>Better Luck Next Time</span>}
+        {!winner && !isDraw && <span>Better Luck Next Time</span>}
         {isDraw === true && <span>Better Luck Next Time</span>}
       </h2>
       {winner && (
         <img src={imgWin.src} alt='Win' width={640} height={510} className={styles.imageWin} />
       )}
-      {winner === false && (
+      {!!winner && (
         <h1 className={styles.titleResult}>
           You lose <img src={loseImg.src} alt='lose' className={styles.imageSize} />
         </h1>
       )}
-      {isDraw === true && (
+      {isDraw && (
         <h1 className={styles.titleResult}>
           Draw <img src={drawImg.src} alt='draw' className={styles.imageSize} />
         </h1>
