@@ -5,11 +5,11 @@ import { badgesQuery } from 'queries';
 import styles from './GameField.module.scss';
 import { Button } from 'components/shared';
 import { useAccount } from 'wagmi';
-import {  useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import cn from 'classnames';
 import { FinishedGameState } from 'gameApi';
 import { useGameStateContext } from '../../contexts/GameStateContext';
-import router from "next/router";
+import router from 'next/router';
 
 export const GameField: React.FC<GameFieldPropsI> = ({
   children,
@@ -37,18 +37,6 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   const { data, error, loading } = useQuery(badgesQuery, {
     variables: { id: account.address?.toLowerCase() },
   });
-  // TODO added context @habdevs #190
-  if (finishGameCheckResult) {
-
-    const newFinishResult = {
-      winner: finishGameCheckResult?.winner || false,
-      isDraw: finishGameCheckResult?.isDraw || false,
-      cheatWin: finishGameCheckResult?.cheatWin || false,
-    };
-
-    setFinishResult(newFinishResult);
-    console.log('CONTEXT GAMEFIELD', newFinishResult)
-  }
 
   console.log('dispute mode', disputeMode, account.address);
 
@@ -60,7 +48,9 @@ export const GameField: React.FC<GameFieldPropsI> = ({
     return !!address && !isOpponentAddress(address);
   }
 
-  function makeFinishedGameReasonDescription(finishedGameState: FinishedGameState): string | undefined {
+  function makeFinishedGameReasonDescription(
+    finishedGameState: FinishedGameState,
+  ): string | undefined {
     if (finishedGameState.disqualified) {
       if (isOpponentAddress(finishedGameState.disqualified)) {
         return 'and opponent was disqualified';
@@ -83,16 +73,14 @@ export const GameField: React.FC<GameFieldPropsI> = ({
     }
     if (finishedGameState.winner) {
       if (isOpponentAddress(finishedGameState.winner)) {
-
         // TODO added router push to /game-result
-        console.log('WINNER /game-result', finishedGameState.winner)
+        console.log('WINNER /game-result', finishedGameState.winner);
         router.push('/game-result');
         return 'Your opponent wins';
       } else {
         return 'You win';
       }
     }
-
   }
 
   useEffect(() => {
@@ -139,7 +127,19 @@ export const GameField: React.FC<GameFieldPropsI> = ({
       setShowDispute(false);
     }
   });
-  
+// TODO added context @habdevs #190
+  useEffect(() => {
+    if (finishGameCheckResult) {
+      const newFinishResult = {
+        winner: finishGameCheckResult?.winner || false,
+        isDraw: finishGameCheckResult?.isDraw || false,
+        cheatWin: finishGameCheckResult?.cheatWin || false,
+      };
+      setFinishResult(newFinishResult);
+      console.log('CONTEXT GAMEFIELD', newFinishResult);
+    }
+  }, [finishGameCheckResult]);
+
   return (
     <div className={styles.container}>
       {version && <div className={styles.version}>{`Ver.${version}`}</div>}
@@ -227,32 +227,43 @@ export const GameField: React.FC<GameFieldPropsI> = ({
           {/*//TODO @habdevs #190 Если isShowDispute равно true, отображается информация о споре.*/}
           {isShowDispute && (
             <div className={styles.appeal}>
-              <div className={styles.madeAppeal}>{disputeMode.disputeRunner === account.address ? `${t('shade.madeAppeal.runner')}` : `Opponent ${t('shade.madeAppeal.cheater')}`}</div>
+              <div className={styles.madeAppeal}>
+                {disputeMode.disputeRunner === account.address
+                  ? `${t('shade.madeAppeal.runner')}`
+                  : `Opponent ${t('shade.madeAppeal.cheater')}`}
+              </div>
               <div className={styles.notice}>{t('shade.notice')}</div>
             </div>
           )}
           {/*//TODO @habdevs #190 Если finishGameCheckResult существует, отображается информация о проверке завершения игры*/}
           {!!finishGameCheckResult && (
             <div className={styles.checking_results}>
-              {finishGameCheckResult && finishGameCheckResult.winner && !isInvalidMove && !finishGameCheckResult.isDraw && (
-                <>
-                  <p className={styles.message}>{t('shade.checking.winner')}</p>
-                  <Button title={t('shade.checking.checkingWinner')} onClick={onClaimWin} />
-                </>
-              )}
+              {finishGameCheckResult &&
+                finishGameCheckResult.winner &&
+                !isInvalidMove &&
+                !finishGameCheckResult.isDraw && (
+                  <>
+                    <p className={styles.message}>{t('shade.checking.winner')}</p>
+                    <Button title={t('shade.checking.checkingWinner')} onClick={onClaimWin} />
+                  </>
+                )}
               {/*// TODO: clear shadow FIELD #190 next task """You lose Please wait for the winner's confirmation""" */}
-              {finishGameCheckResult && !finishGameCheckResult.winner && !isInvalidMove && !finishGameCheckResult.isDraw && (
-
-                <p className={styles.message}>
-                  {t('shade.checking.loser')} {t('shade.checking.checkingLoser')}
-                </p>
-              )}
-              {finishGameCheckResult && finishGameCheckResult.isDraw && !finishGameCheckResult.winner && (
-                <>
-                  <p className={styles.message}>{t('shade.checking.draw')}</p>
-                  <Button title={t('shade.checking.checkingDraw')} onClick={onClaimWin} />
-                </>
-              )}
+              {finishGameCheckResult &&
+                !finishGameCheckResult.winner &&
+                !isInvalidMove &&
+                !finishGameCheckResult.isDraw && (
+                  <p className={styles.message}>
+                    {t('shade.checking.loser')} {t('shade.checking.checkingLoser')}
+                  </p>
+                )}
+              {finishGameCheckResult &&
+                finishGameCheckResult.isDraw &&
+                !finishGameCheckResult.winner && (
+                  <>
+                    <p className={styles.message}>{t('shade.checking.draw')}</p>
+                    <Button title={t('shade.checking.checkingDraw')} onClick={onClaimWin} />
+                  </>
+                )}
               {finishGameCheckResult && finishGameCheckResult.winner && isInvalidMove && (
                 <>
                   <p className={styles.message}>{t('shade.checking.cheatGame')}</p>
@@ -270,7 +281,9 @@ export const GameField: React.FC<GameFieldPropsI> = ({
           {!!finishedGameState && (
             <div className={styles.win}>
               {makeFinishedGameDescription(finishedGameState)}
-              <div className={styles.small}>{makeFinishedGameReasonDescription(finishedGameState)}</div>
+              <div className={styles.small}>
+                {makeFinishedGameReasonDescription(finishedGameState)}
+              </div>
             </div>
           )}
           {/*      // TODO: тут были бейджи @habdevs #190a*/}
@@ -286,10 +299,17 @@ export const GameField: React.FC<GameFieldPropsI> = ({
 
       {!isShowShade && (
         <div className={styles.header}>
-          <div className={styles.message}>{players && (players[0]?.moves || players[1]?.moves) && <div className={styles.moveMessage}>{players[0].moves ? 'Your move' : "Opponent's move"}</div>}</div>
+          <div className={styles.message}>
+            {players && (players[0]?.moves || players[1]?.moves) && (
+              <div className={styles.moveMessage}>
+                {players[0].moves ? 'Your move' : "Opponent's move"}
+              </div>
+            )}
+          </div>
           <div className={styles.prize}></div>
         </div>
       )}
+
       <div className={styles.gameBoardContainer}>{children}</div>
     </div>
   );

@@ -43,7 +43,7 @@ export const GameResult = () => {
       {winner && (
         <img src={imgWin.src} alt='Win' width={640} height={510} className={styles.imageWin} />
       )}
-      {!!winner && (
+      {!winner && !isDraw && (
         <h1 className={styles.titleResult}>
           You lose <img src={loseImg.src} alt='lose' className={styles.imageSize} />
         </h1>
