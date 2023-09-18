@@ -6,9 +6,11 @@ import styles from './GameField.module.scss';
 import { Button } from 'components/shared';
 import { useAccount } from 'wagmi';
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import cn from 'classnames';
 import { FinishedGameState } from 'gameApi';
+import { useGameStateContext } from '../../contexts/GameStateContext';
+import router from 'next/router';
+
 export const GameField: React.FC<GameFieldPropsI> = ({
   children,
   rivalPlayerAddress,
@@ -29,19 +31,17 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   const [isConnecting, setIsConnecting] = useState<boolean>(false);
   const [isShowReport, setShowReport] = useState<boolean>(false);
   const [isShowDispute, setShowDispute] = useState<boolean>(false);
-
-  type TMedal = 'bronze' | 'silver' | 'gold';
-  type TBelt = 'white' | 'green' | 'black';
-  type TAchievement = 'winner' | 'loser' | 'draw' | 'cheater';
-
   const { t } = useTranslation();
   const account = useAccount();
-
+  const [isClaimed, setIsClaimed] = useState(false);
+  const [isDrawConfirmed, setIsDrawConfirmed] = useState(false);
+  const [transactionResult, setTransactionResult] = useState<{ winner: boolean; isDraw: boolean; cheatWin: boolean } | null>(null);
+  const { setFinishResult, finishResult } = useGameStateContext();
   const { data, error, loading } = useQuery(badgesQuery, {
     variables: { id: account.address?.toLowerCase() },
   });
 
-  console.log('dispute mode', disputeMode, account.address)
+  console.log('dispute mode', disputeMode, account.address);
 
   function isOpponentAddress(address: string): boolean {
     return address === rivalPlayerAddress;
@@ -51,33 +51,37 @@ export const GameField: React.FC<GameFieldPropsI> = ({
     return !!address && !isOpponentAddress(address);
   }
 
-  function makeFinishedGameReasonDescription(finishedGameState: FinishedGameState): string | undefined {
+  function makeFinishedGameReasonDescription(
+    finishedGameState: FinishedGameState,
+  ): string | undefined {
     if (finishedGameState.disqualified) {
       if (isOpponentAddress(finishedGameState.disqualified)) {
-        return 'and opponent was disqualified'
+        return 'and opponent was disqualified';
       } else {
-        return 'because you were disqualified'
+        return 'because you were disqualified';
       }
     }
     if (finishedGameState.resigned) {
       if (isOpponentAddress(finishedGameState.resigned)) {
-        return 'by resignation'
+        return 'by resignation';
       } else {
-        return 'by resignation'
+        return 'by resignation';
       }
     }
   }
 
   function makeFinishedGameDescription(finishedGameState: FinishedGameState): string | undefined {
     if (finishedGameState.isDraw) {
-      return 'Game end in a draw'
+      return 'Game end in a draw';
     }
     if (finishedGameState.winner) {
       if (isOpponentAddress(finishedGameState.winner)) {
-        return 'Your opponent wins'
-      }
-      else {
-        return 'You win'
+        // TODO added router push to /game-result
+        console.log('WINNER /game-result', finishedGameState.winner);
+        router.push('/game-result');
+        return 'Your opponent wins';
+      } else {
+        return 'You win';
       }
     }
   }
@@ -91,14 +95,12 @@ export const GameField: React.FC<GameFieldPropsI> = ({
     if (!!rivalPlayerAddress) {
       setIsWaiting(false);
       setIsConnecting(true);
-      // return;
     }
     if (isConnected) {
       console.log('isConnected gameField', isConnected);
       setIsConnecting(false);
       setIsWaiting(false);
       setShowShade(false);
-      // return;
     }
   }, [rivalPlayerAddress, isConnected]);
 
@@ -127,106 +129,49 @@ export const GameField: React.FC<GameFieldPropsI> = ({
       setIsConnecting(false);
       setShowDispute(false);
     }
-  })
+  });
+  // TODO added context @habdevs #190
+  useEffect(() => {
+    if (finishGameCheckResult) {
+      const newFinishResult = {
+        winner: finishGameCheckResult?.winner || false,
+        isDraw: finishGameCheckResult?.isDraw || false,
+        cheatWin: finishGameCheckResult?.cheatWin || false,
+      };
+      setFinishResult(newFinishResult);
+      console.log('CONTEXT GAMEFIELD', newFinishResult);
+    }
 
-  const isBadgeAvailable = (data: any, medal: TMedal, achievement: TAchievement): boolean => {
-    let entity = data && data.inRowCounterEntities[0];
-    if (!entity) {
-      return false;
-    }
-    let maxValue = entity[`${achievement}MaxValue`];
-    if (medal == 'bronze') return maxValue >= 1;
-    if (medal == 'silver') return maxValue >= 5;
-    if (medal == 'gold') return maxValue >= 10;
-    return false;
-  }
+  }, [finishGameCheckResult]);
 
-  function countToMedal(count: number, maxValue: number): TMedal | undefined {
-    //TODO need guarantee that graph is old. The same for other badges
-    if ((count == 9) && (maxValue == 9)) return 'gold';
-    if ((count == 4) && (maxValue == 4)) return 'silver';
-    if ((count == 0) && (maxValue == 0)) return 'bronze';
-  }
+  useEffect(() => {
+    if (finishGameCheckResult && finishGameCheckResult.isDraw) {
+      setTransactionResult({ winner: false, isDraw: true, cheatWin: false });
+    }
+  }, [finishGameCheckResult]);
 
-  const isJustObtainedBadge = (data: any, medal: TMedal, achievement: TAchievement): boolean => {
-    let entity = data && data.inRowCounterEntities[0];
-    if (!entity || !finishedGameState) {
-      return false;
+  const handleClaimDraw = async () => {
+    if (!isClaimed) {
+      setIsClaimed(true);
     }
-    let maxValue = entity[`${achievement}MaxValue`];
-    let count = entity[`${achievement}Count`];
-    if (countToMedal(count, maxValue) !== medal) {
-      return false;
-    }
-    if (achievement == 'draw') {
-      return finishedGameState.isDraw;
-    }
-    if (isCurrentPlayerAddress(finishedGameState.winner)) {
-      return achievement == 'winner'
-    }
-    if (isCurrentPlayerAddress(finishedGameState.loser)) {
-      return achievement == 'loser'
-    }
-    if (isCurrentPlayerAddress(finishedGameState.disqualified)) {
-      return achievement == 'cheater'
-    }
-    return false;
-  }
-
-  const makeBadge = (medal: TMedal, achievement: TAchievement) => {
-    const generateLink = (medal: TMedal, achievement: TAchievement) => {
-      return `https://playground.sismo.io/gamejutsu-${medal}-${achievement}`;
-    };
-    const getBeltFromMedal = (medal: TMedal): TBelt | undefined => {
-      if (medal == 'bronze') return 'white';
-      if (medal == 'silver') return 'green';
-      if (medal == 'gold') return 'black';
-    };
-    const generateFilename = (medal: TMedal, achievement: TAchievement) => {
-      return `/badges/gamejutsu_${achievement}_${getBeltFromMedal(medal)}.svg`;
-    };
-
-    return <Link key={`${achievement}-${medal}`} target="_blank" href={generateLink(medal, achievement)}>
-      <a>
-        <div
-          className={cn(
-            styles.badge,
-            isBadgeAvailable(data, medal, achievement) ? styles.available : null,
-            isJustObtainedBadge(data, medal, achievement) ? styles.obtained : null,
-          )}
-        >
-          <img
-            src={generateFilename(medal, achievement)}
-          ></img>
-        </div>
-      </a>
-    </Link>
-  }
-  const makeBadges = () => {
-    let badges = [];
-    for (let achievement of ['winner', 'loser', 'draw', 'cheater'] as TAchievement[]) {
-      for (let medal of ['bronze', 'silver', 'gold'] as TMedal[]) {
-        badges.push(makeBadge(medal, achievement));
-      }
-    }
-    return (<div className={styles.row}>
-      {badges}
-    </div>);
-  }
+  };
 
   return (
     <div className={styles.container}>
       {version && <div className={styles.version}>{`Ver.${version}`}</div>}
+      {/* //TODO @habdevs #190 isShowShade равно true, отображается "затенение" игры */}
       {isShowShade && (
         <div className={styles.shade}>
+          {/*TODO @habdevs #190 Если isWaiting равно true, отображается сообщение ожидания.*/}
           {isWaiting && <div className={styles.wait}>{t('shade.wait')}</div>}
+          {/*TODO @haabdevs #190 Если isConnecting равно true, отображается сообщение о подключении и кнопка для подключения.*/}
           {isConnecting && (
             <div className={styles.wait}>
               {t('shade.connecting')}
               <div className={styles.connectButton}>
                 <Button
                   borderless
-                  size="sm"
+                  size='sm'
                   title={t('buttons.connect')}
                   onClick={() => {
                     onConnect(rivalPlayerAddress!);
@@ -235,6 +180,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
               </div>
             </div>
           )}
+          {/*TODO @habdevs #190 Если isShowExplainMove равно true, отображается информация о ходе игрока.*/}
           {isShowExplainMove && (
             <div className={styles.wait}>
               {t('shade.connecting')}
@@ -242,8 +188,8 @@ export const GameField: React.FC<GameFieldPropsI> = ({
                 <Button
                   borderless
                   color='black'
-                  size="sm"
-                  title="No jump. I move"
+                  size='sm'
+                  title='No jump. I move'
                   onClick={() => {
                     onConnect(rivalPlayerAddress!);
                   }}
@@ -253,8 +199,8 @@ export const GameField: React.FC<GameFieldPropsI> = ({
                 <Button
                   borderless
                   color='black'
-                  size="sm"
-                  title="No jump. Let opponent move"
+                  size='sm'
+                  title='No jump. Let opponent move'
                   onClick={() => {
                     onConnect(rivalPlayerAddress!);
                   }}
@@ -264,8 +210,8 @@ export const GameField: React.FC<GameFieldPropsI> = ({
                 <Button
                   borderless
                   color='black'
-                  size="sm"
-                  title="Jump. I move"
+                  size='sm'
+                  title='Jump. I move'
                   onClick={() => {
                     onConnect(rivalPlayerAddress!);
                   }}
@@ -275,8 +221,8 @@ export const GameField: React.FC<GameFieldPropsI> = ({
                 <Button
                   borderless
                   color='black'
-                  size="sm"
-                  title="Jump. Let opponent move"
+                  size='sm'
+                  title='Jump. Let opponent move'
                   onClick={() => {
                     onConnect(rivalPlayerAddress!);
                   }}
@@ -284,78 +230,111 @@ export const GameField: React.FC<GameFieldPropsI> = ({
               </div>
             </div>
           )}
+          {/*//TODO @habdevs #190 Если isShowReport равно true, отображается информация о возможности подать жалобу.*/}
           {isShowReport && (
             <div className={styles.report}>
               <div className={styles.whatToReport}>{t('shade.whatToReport')}</div>
               <div className={styles.buttons}>
-                <Button title={t('shade.cheating')} color="black" borderless />
+                <Button title={t('shade.cheating')} color='black' borderless />
                 <Button title={t('shade.inactive')} />
               </div>
             </div>
           )}
+          {/*//TODO @habdevs #190 Если isShowDispute равно true, отображается информация о споре.*/}
           {isShowDispute && (
             <div className={styles.appeal}>
-              <div className={styles.madeAppeal}>{disputeMode.disputeRunner === account.address ? `${t('shade.madeAppeal.runner')}` : `Opponent ${t(
-                'shade.madeAppeal.cheater',
-              )}`}</div>
+              <div className={styles.madeAppeal}>
+                {disputeMode.disputeRunner === account.address
+                  ? `${t('shade.madeAppeal.runner')}`
+                  : `Opponent ${t('shade.madeAppeal.cheater')}`}
+              </div>
               <div className={styles.notice}>{t('shade.notice')}</div>
             </div>
           )}
-          {(!!finishGameCheckResult) &&
+          {/*//TODO @habdevs #190 Если finishGameCheckResult существует, отображается информация о проверке завершения игры*/}
+          {!!finishGameCheckResult && (
             <div className={styles.checking_results}>
-              {finishGameCheckResult && finishGameCheckResult.winner && !isInvalidMove && !finishGameCheckResult.isDraw && 
+              {finishGameCheckResult &&
+                finishGameCheckResult.winner &&
+                !isInvalidMove &&
+                !finishGameCheckResult.isDraw && (
+                  <>
+                    <p className={styles.message}>{t('shade.checking.winner')}</p>
+                    <Button title={t('shade.checking.checkingWinner')} onClick={onClaimWin} />
+                  </>
+                )}
+              {/*// TODO: clear shadow FIELD #190 next task """You lose Please wait for the winner's confirmation""" */}
+              {finishGameCheckResult &&
+                !finishGameCheckResult.winner &&
+                !isInvalidMove &&
+                !finishGameCheckResult.isDraw && (
+                  <p className={styles.message}>
+                    {t('shade.checking.loser')} {t('shade.checking.checkingLoser')}
+                  </p>
+                )}
+              {/* TODO: finalise the correct display of the draw message @habdevs #190 */}
+              {finishGameCheckResult &&
+                finishGameCheckResult.isDraw &&
+                !finishGameCheckResult.winner && (
+                  <>
+                    {isClaimed ? (
+                      isDrawConfirmed ? (
+                        <p className={styles.message}>{t('shade.checking.drawConfirmed')}</p>
+                      ) : (
+                        <p className={styles.message}>{t('shade.checking.drawWaiting')}</p>
+                      )
+                    ) : (
+                      <Button title={t('shade.checking.checkingDraw')} onClick={handleClaimDraw} />
+                    )}
+                  </>
+                )}
+
+
+              {finishGameCheckResult && finishGameCheckResult.winner && isInvalidMove && (
                 <>
-                  <p className={styles.message}>{t('shade.checking.winner')}</p>
-                  <Button title={t('shade.checking.checkingWinner')} onClick={onClaimWin} />
+                  <p className={styles.message}>{t('shade.checking.cheatGame')}</p>
+                  <Button title={t('shade.checking.checkingCheat')} onClick={onRunDisput} />
                 </>
-              }
-              {finishGameCheckResult && !finishGameCheckResult.winner && !isInvalidMove && !finishGameCheckResult.isDraw && 
-                <p className={styles.message}>{t('shade.checking.loser')} {t('shade.checking.checkingLoser')}</p>
-              }
-              {finishGameCheckResult && finishGameCheckResult.isDraw && !finishGameCheckResult.winner && 
+              )}
+              {finishGameCheckResult && !finishGameCheckResult.winner && isInvalidMove && (
                 <>
-                  <p className={styles.message}>{t('shade.checking.draw')}</p>
-                  <Button title={t('shade.checking.checkingDraw')} onClick={onClaimWin} />
+                  <p className={styles.message}>{t('shade.checking.cheatGame')}</p>
+                  <Button title={t('shade.checking.checkingCheat')} onClick={onRunDisput} />
                 </>
-              }
-              {finishGameCheckResult && finishGameCheckResult.winner && isInvalidMove &&
-              <>
-               <p className={styles.message}>{t('shade.checking.cheatGame')}</p>
-               <Button title={t('shade.checking.checkingCheat')} onClick={onRunDisput} />
-              </> 
-              }
-              {finishGameCheckResult && !finishGameCheckResult.winner && isInvalidMove &&
-              <>
-               <p className={styles.message}>{t('shade.checking.cheatGame')}</p>
-               <Button title={t('shade.checking.checkingCheat')} onClick={onRunDisput} />
-              </> 
-              }
-              </div>}
-          {!!finishedGameState && (            
-              <div className={styles.win}>
-                {makeFinishedGameDescription(finishedGameState)}
-                <div className={styles.small}>
-                  {makeFinishedGameReasonDescription(finishedGameState)}
-                </div>
-              </div>
+              )}
+            </div>
           )}
           {!!finishedGameState && (
-            <div className={styles.link}>
-              <div className={styles.badges}>
-                <div className={styles.text}>Issue your ZK Badge</div>
-                {makeBadges()}
+            <div className={styles.win}>
+              {makeFinishedGameDescription(finishedGameState)}
+              <div className={styles.small}>
+                {makeFinishedGameReasonDescription(finishedGameState)}
               </div>
             </div>
           )}
+          {/*      // TODO: тут были бейджи @habdevs #190a*/}
+          {/*{!!finishedGameState && (*/}
+          {/*  <div className={styles.link}>*/}
+          {/*    <div className={styles.badges}>*/}
+          {/*      /!*<div className={styles.text}>Issue your ZK Badge</div>*!/*/}
+          {/*    </div>*/}
+          {/*  </div>*/}
+          {/*)}*/}
         </div>
       )}
-   {!isShowShade && <div className={styles.header}>
-        <div className={styles.message}>
-          {players && (players[0]?.moves || players[1]?.moves) &&
-            <div className={styles.moveMessage}>{players[0].moves ? 'Your move' : 'Opponent\'s move'}</div>}
+
+      {!isShowShade && (
+        <div className={styles.header}>
+          <div className={styles.message}>
+            {players && (players[0]?.moves || players[1]?.moves) && (
+              <div className={styles.moveMessage}>
+                {players[0].moves ? 'Your move' : "Opponent's move"}
+              </div>
+            )}
+          </div>
+          <div className={styles.prize}></div>
         </div>
-        <div className={styles.prize}></div>
-      </div>}
+      )}
       <div className={styles.gameBoardContainer}>{children}</div>
     </div>
   );

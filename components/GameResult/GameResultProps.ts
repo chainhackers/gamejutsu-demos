@@ -1,6 +1,9 @@
-export type TGameResult = 'win' | 'lose' | 'draw'
-import { TGameType } from 'types/game';
+import { FinishedGameState } from 'gameApi';
+import { PlayerI, TGameType } from 'types/game';
 export interface IGameResultProps {
-  result: TGameResult;
-  gameType: TGameType;
+  finishGameCheckResult: { winner: boolean; isDraw: boolean; cheatWin: boolean } | null;
+  finishedGameState: FinishedGameState | null;
+  players: PlayerI[] | null;
+  gameType?: TGameType;
+  gameId?: string | undefined;
 }

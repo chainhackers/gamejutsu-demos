@@ -1,4 +1,5 @@
 @import '/styles/mixins.scss';
+
 .container {
   color: #2e303d;
   font-size: 24px;
@@ -8,6 +9,8 @@
   border-radius: 10px;
   border: 1px solid var(--light-grey, #e8e8e8);
   margin-bottom: 40px;
+
+
 }
 
 .button {
@@ -20,7 +23,11 @@
   font-weight: 500;
   line-height: 1.2;
   text-decoration: none;
+  &.disabled {
+    cursor: not-allowed;
+  }
 }
+
 .text {
   display: flex;
   align-items: center;
@@ -28,9 +35,21 @@
   margin: 0 auto;
   font-family: Inter;
   white-space: nowrap;
-  @media (min-width: 768px) {
-    font-size: 2.7rem;
+  @media (min-width: 320px) {
+    font-size: 1.4rem;
   }
+  @media (min-width: 480px) {
+    font-size: 1.6rem;
+  }
+  @media (min-width: 1024px) {
+    font-size: 1.7rem;
+  }
+  //@media (min-width: 1200px) {
+  //  font-size: 2rem;
+  //}
+  //@media (min-width: 1920px) {
+  //  font-size: 2.2rem;
+  //}
 }
 
 .size-xs {
@@ -40,6 +59,7 @@
   font-family: Inter;
   gap: 0px;
   height: 3.5rem;
+
   .text {
     display: flex;
     align-items: center;
@@ -48,6 +68,7 @@
     font-family: Inter;
     padding: 0.6rem 0.6rem 0.6rem 0.6rem;
   }
+
   @media (min-width: 320px) {
     max-width: 86px;
     font-size: 11px;
@@ -132,11 +153,13 @@
   gap: 4px;
   flex-shrink: 0;
   border-radius: 10px;
+
   .text {
     @media (min-width: 390px) {
       font-size: 20px;
     }
   }
+
   @media (min-width: 320px) {
     max-width: 292px;
     font-size: 20px;

@@ -1,57 +1,115 @@
-$moveColor: rgb(25, 160, 22);
 .container {
-  margin: 30px 3px;
   display: flex;
+  color: var(--grey, #9c9eab);
+  font-family: Inter, sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 130%;
+  min-height: 73px;
   align-items: center;
-  @media (max-width: 992px) {
+  justify-content: center;
+  margin: 0 auto;
+  @media (min-width: 390px) {
     margin: 0;
-    order: 2;
   }
-  .avatar {
-    margin-right: 10px;
-    padding-top: 5px;
+  @media (min-width: 480px) {
   }
-  .playerData {
-    position: relative;
-    flex-grow: 1;
-    .name {
-      font-size: 16px;
-
-      padding-bottom: 5px;
-    }
-    .address {
-      font-size: 16px;
-    }
-
-    .move {
-      position: absolute;
-      top: 0;
-      font-size: 1.5rem;
-      font-weight: 500;
-      display: inline-block;
-      color: $moveColor;
-      padding: 1px 4px;
-      animation-name: blinking;
-      animation-duration: 2s;
-      animation-iteration-count: infinite;
-      text-transform: uppercase;
-    }
-  }
-
-  .playerType {
-    padding: 10px;
+  @media (min-width: 640px) {
   }
 }
 
-@keyframes blinking {
-  0% {
-    opacity: 0;
+.card {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding: 10px;
+  margin-right: 5px;
+  border-radius: 10px;
+  border: 2px solid var(--light-grey, #e8e8e8);
+  background: #fff;
+
+  align-items: center;
+  justify-content: center;
+
+  .avatar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.8rem;
+    font-size: 1.7rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 130%;
+
+    .address {
+      font-family: Inter, sans-serif;
+      font-size: 1.7rem;
+      font-weight: 500;
+      line-height: 2rem;
+    }
   }
 
-  50% {
-    opacity: 1;
+
+  @media (min-width: 320px) {
+    padding: 5px;
+    margin-right: 0;
+    width: 16.6rem;
+    height: 5rem;
   }
-  100% {
-    opacity: 0;
+  @media (min-width: 390px) {
+
+
   }
+  @media (min-width: 480px) {
+    width: 20.3rem;
+    height: 13.3rem;
+  }
+  @media (min-width: 576px) {
+
+  }
+  @media (min-width: 640px) {
+
+  }
+
+}
+
+.highlight {
+  border-radius: 1rem;
+  border: 3px solid var(--purple, #8777da);
+  box-shadow: 0px 4px 6px 0px rgba(135, 119, 218, 0.3);
+  animation-name: blinking;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  text-transform: uppercase;
+}
+
+.containerPlayer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.addressPlayer {
+  margin: 0 6px 0 6px;
+  @media (min-width: 320px) {
+    font-size: 0.8rem;
+  }
+  @media (min-width: 480px) {
+    font-size: 1.8rem;
+  }
+  @media (min-width: 1024px) {
+    font-size: 2rem;
+  }
+}
+
+.titleColor {
+  @media (min-width: 320px) {
+    font-size: 1.3rem;
+  }
+  @media (min-width: 390px) {
+    font-size: 1.6rem;
+  }
+  color: var(--purple, #8777da);
 }

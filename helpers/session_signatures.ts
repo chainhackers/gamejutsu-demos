@@ -20,11 +20,13 @@ export async function getSessionWallet(
 export const createSessionWallet = (address: string): ethers.Wallet => {
   const privateKey = getStoredPrivateKey(address);
   if (!!privateKey) throw new Error(`Private key for address ${address} exists`);
-  
+
   const privateStore = `${address}_private`;
   const localStorage = window.localStorage;
   const wallet = ethers.Wallet.createRandom();
   localStorage.setItem(privateStore, wallet.privateKey);
+  // TODO @habdevs #190 SESSION KEY
+  console.log('SESSION KEY ', wallet);
   return wallet;
 }
 
@@ -46,7 +48,7 @@ const types = {
     { name: 'move', type: 'bytes' },
   ],
 };
-
+// TODO @habdevs #190 session key
 export async function signMove(
   gameMove: IGameMove,
   wallet: ethers.Wallet,
@@ -58,6 +60,7 @@ export async function signMove(
   const privateKey = getStoredPrivateKey(playerAddress);
   if (storedSignatures === null) {
     localStorage.setItem('signatures', JSON.stringify({ [signature]: { sessionWalletAddress: wallet.address, privateKey, playerAddress }}))
+
   } else {
     const parsedStoredSignatures = JSON.parse(storedSignatures);
     parsedStoredSignatures[signature] = { sessionWalletAddress: wallet.address, privateKey, playerAddress };

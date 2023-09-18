@@ -111,6 +111,7 @@ const en = {
       wallets: '👛👝',
       createWallet: 'Create wallet',
     },
+    // TODO #190 @habdevs modal
     shade: {
       wait: 'Waiting for a new player. . .',
       connecting: 'Connecting to another player. . .',
@@ -151,7 +152,8 @@ const en = {
       },
     },
     leftpanel: {
-      gameId: 'Game ID',
+      protocolLogs: 'Protocol logs',
+      gameId: 'Game id',
     },
     games: {
       checkers: {
