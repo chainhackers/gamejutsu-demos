@@ -33,6 +33,9 @@ export const GameField: React.FC<GameFieldPropsI> = ({
   const [isShowDispute, setShowDispute] = useState<boolean>(false);
   const { t } = useTranslation();
   const account = useAccount();
+  const [isClaimed, setIsClaimed] = useState(false);
+  const [isDrawConfirmed, setIsDrawConfirmed] = useState(false);
+  const [transactionResult, setTransactionResult] = useState<{ winner: boolean; isDraw: boolean; cheatWin: boolean } | null>(null);
   const { setFinishResult, finishResult } = useGameStateContext();
   const { data, error, loading } = useQuery(badgesQuery, {
     variables: { id: account.address?.toLowerCase() },
@@ -127,7 +130,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
       setShowDispute(false);
     }
   });
-// TODO added context @habdevs #190
+  // TODO added context @habdevs #190
   useEffect(() => {
     if (finishGameCheckResult) {
       const newFinishResult = {
@@ -138,7 +141,20 @@ export const GameField: React.FC<GameFieldPropsI> = ({
       setFinishResult(newFinishResult);
       console.log('CONTEXT GAMEFIELD', newFinishResult);
     }
+
   }, [finishGameCheckResult]);
+
+  useEffect(() => {
+    if (finishGameCheckResult && finishGameCheckResult.isDraw) {
+      setTransactionResult({ winner: false, isDraw: true, cheatWin: false });
+    }
+  }, [finishGameCheckResult]);
+
+  const handleClaimDraw = async () => {
+    if (!isClaimed) {
+      setIsClaimed(true);
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -260,10 +276,19 @@ export const GameField: React.FC<GameFieldPropsI> = ({
                 finishGameCheckResult.isDraw &&
                 !finishGameCheckResult.winner && (
                   <>
-                    <p className={styles.message}>{t('shade.checking.draw')}</p>
-                    <Button title={t('shade.checking.checkingDraw')} onClick={onClaimWin} />
+                    {isClaimed ? (
+                      isDrawConfirmed ? (
+                        <p className={styles.message}>{t('shade.checking.drawConfirmed')}</p>
+                      ) : (
+                        <p className={styles.message}>{t('shade.checking.drawWaiting')}</p>
+                      )
+                    ) : (
+                      <Button title={t('shade.checking.checkingDraw')} onClick={handleClaimDraw} />
+                    )}
                   </>
                 )}
+
+
               {finishGameCheckResult && finishGameCheckResult.winner && isInvalidMove && (
                 <>
                   <p className={styles.message}>{t('shade.checking.cheatGame')}</p>
@@ -309,7 +334,6 @@ export const GameField: React.FC<GameFieldPropsI> = ({
           <div className={styles.prize}></div>
         </div>
       )}
-
       <div className={styles.gameBoardContainer}>{children}</div>
     </div>
   );
