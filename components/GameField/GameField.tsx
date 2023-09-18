@@ -272,6 +272,7 @@ export const GameField: React.FC<GameFieldPropsI> = ({
                     {t('shade.checking.loser')} {t('shade.checking.checkingLoser')}
                   </p>
                 )}
+              {/* TODO: finalise the correct display of the draw message @habdevs #190 */}
               {finishGameCheckResult &&
                 finishGameCheckResult.isDraw &&
                 !finishGameCheckResult.winner && (
